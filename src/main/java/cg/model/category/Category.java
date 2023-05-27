@@ -1,5 +1,4 @@
-package cg.model;
-
+package cg.model.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,20 +7,19 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Setter
+
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "brands")
-public class Brand {
+@Table(name = "categories")
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "names", nullable = false)
+    @Column(name = "names" , nullable = false)
     private String name;
-
-
 
 }
