@@ -26,9 +26,9 @@ public class Color {
     @Column(length = 10)
     private EColor color;
 
-    @OneToMany(targetEntity = Product.class , fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Product.class , fetch = FetchType.EAGER)
     private List<Product> productList;
 
-    @OneToMany(targetEntity = Size.class , fetch = FetchType.EAGER)
-    private List<Size> sizeList;
+//    @OneToMany(targetEntity = Size.class , fetch = FetchType.EAGER)
+//    private List<Size> sizeList;
 }

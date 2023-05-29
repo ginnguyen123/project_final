@@ -27,8 +27,8 @@ public class Size {
     @OneToMany(targetEntity = Product.class , fetch = FetchType.EAGER)
     private List<Product> productList;
 
-    @OneToMany(targetEntity = Color.class , fetch = FetchType.EAGER)
-    private List<Color> colorList;
+//    @OneToMany(targetEntity = Color.class , fetch = FetchType.EAGER)
+//    private List<Color> colorList;
 
 
 
