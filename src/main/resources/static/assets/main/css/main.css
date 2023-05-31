@@ -2087,6 +2087,26 @@ select.form-control:focus::-ms-value {
   border-width: 2px 0;
 }
 
+ul.lich-su-danh-muc{
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+
+}
+.danh-muc{
+  background-color: #d0d0d0;;
+  padding: 5px;
+  font-size: 13px;
+  line-height: 1.5;
+
+  padding-left: 10px;
+  border-radius: 0.357rem;
+  padding-right: 10px;
+  font-weight: 500;
+  margin: 10px;
+
+}
+
 .form-control-plaintext.form-control-sm, .input-group-sm > .form-control-plaintext.form-control,
 .input-group-sm > .input-group-prepend > .form-control-plaintext.input-group-text,
 .input-group-sm > .input-group-append > .form-control-plaintext.input-group-text,
@@ -2567,8 +2587,11 @@ a.btn.disabled,
 fieldset:disabled a.btn {
   pointer-events: none;
 }
-
-.btn-primary {
+.edit{
+  background: rgb(251 226 197)  !important;
+  color: rgb(245 157 57)  !important;
+}
+.btn-edit {
   color: rgb(245 157 57);
   background-color: rgb(251 226 197);
   border-color: none;
@@ -2580,13 +2603,6 @@ fieldset:disabled a.btn {
 }
 
 
-.btn-save{
-  background-color: rgb(166 236 171);
-  color: rgb(1 123 10);
-  /* width: 100px; */
-  font-weight: 600;
-  letter-spacing: 1px;
-}
 .btn-cancel{
   background-color: rgb(255 197 197);
   color: rgb(190, 40, 40);
@@ -2594,6 +2610,11 @@ fieldset:disabled a.btn {
   font-weight: 600;
   letter-spacing: 1px;
 }
+.cancel{
+  background-color: rgb(255 197 197);!important;
+  color: rgb(190, 40, 40);!important;
+}
+
 
 .btn-primary.disabled, .btn-primary:disabled {
   color: #FFF;
@@ -2626,41 +2647,45 @@ border: none !important;
 
 
 
-
-
-
-.btn-success {
-  color: #FFF;
-  background-color: #28a745;
-  border-color: #28a745;
+.btn-luu-lai {
+  color: red;
+  border-color: red;
+  background-color: red;
 }
 
-.btn-success:hover {
+
+.btn-save {
+    color: #FFF;
+    background-color: rgb(124, 234, 131) !important;
+    border-color: #1e7e34;
+}
+
+.btn-save:hover {
   color: #FFF;
-  background-color: #218838;
+  background-color: rgb(124, 234, 131) !important;
   border-color: #1e7e34;
 }
 
-.btn-success:focus, .btn-success.focus {
+.btn-save:focus, .btn-save.focus {
   -webkit-box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
           box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
 }
 
-.btn-success.disabled, .btn-success:disabled {
+.btn-save.disabled, .btn-save:disabled {
   color: #FFF;
   background-color: #28a745;
   border-color: #28a745;
 }
 
-.btn-success:not(:disabled):not(.disabled):active, .btn-success:not(:disabled):not(.disabled).active,
-.show > .btn-success.dropdown-toggle {
+.btn-save:not(:disabled):not(.disabled):active, .btn-save:not(:disabled):not(.disabled).active,
+.show > .btn-save.dropdown-toggle {
   color: #FFF;
   background-color: #1e7e34;
   border-color: #1c7430;
 }
 
-.btn-success:not(:disabled):not(.disabled):active:focus, .btn-success:not(:disabled):not(.disabled).active:focus,
-.show > .btn-success.dropdown-toggle:focus {
+.btn-save:not(:disabled):not(.disabled):active:focus, .btn-save:not(:disabled):not(.disabled).active:focus,
+.show > .btn-save.dropdown-toggle:focus {
   -webkit-box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
           box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
 }
@@ -2737,38 +2762,38 @@ border: none !important;
           box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5);
 }
 
-.btn-danger {
-  color: #FFF;
-  background-color: #dc3545;
+.btn-cancel {
+  color: rgb(190, 40, 40) !important;
+  background-color: rgb(255 197 197)  !important;
   border-color: #dc3545;
 }
 
-.btn-danger:hover {
-  color: #FFF;
-  background-color: #c82333;
-  border-color: #bd2130;
+.btn-cancel:hover {
+  color: rgb(190, 40, 40);
+  background-color: rgb(232, 70, 70);
+  border-color: #dc3545;
 }
 
-.btn-danger:focus, .btn-danger.focus {
+.btn-cancel:focus, .btn-cancel.focus {
   -webkit-box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
           box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
 }
 
-.btn-danger.disabled, .btn-danger:disabled {
-  color: #FFF;
-  background-color: #dc3545;
+.btn-cancel.disabled, .btn-cancel:disabled {
+  color: rgb(190, 40, 40);
+  background-color: rgb(255 197 197);
   border-color: #dc3545;
 }
 
-.btn-danger:not(:disabled):not(.disabled):active, .btn-danger:not(:disabled):not(.disabled).active,
-.show > .btn-danger.dropdown-toggle {
-  color: #FFF;
-  background-color: #bd2130;
-  border-color: #b21f2d;
+.btn-cancel:not(:disabled):not(.disabled):active, .btn-cancel:not(:disabled):not(.disabled).active,
+.show > .btn-cancel.dropdown-toggle {
+  color: rgb(190, 40, 40);
+  background-color: rgb(255 197 197);
+  border-color: #dc3545;
 }
 
-.btn-danger:not(:disabled):not(.disabled):active:focus, .btn-danger:not(:disabled):not(.disabled).active:focus,
-.show > .btn-danger.dropdown-toggle:focus {
+.btn-cancel:not(:disabled):not(.disabled):active:focus, .btn-cancel:not(:disabled):not(.disabled).active:focus,
+.show > .btn-cancel.dropdown-toggle:focus {
   -webkit-box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
           box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
 }
@@ -3204,7 +3229,7 @@ border: none !important;
   padding-right: 10px;
   font-weight: 500;
 }
-.pdf-file{
+.delete{
   background: #efcaca  !important;
   color: #bf0000  !important;
 }
@@ -15428,10 +15453,13 @@ be a descendant of the grid when it is being dragged.
 .swal-modal{
  border-radius: .357rem;
 }
+.btn-trash{
+  background: #d0d0d0;
+  color: #f99a9a;
+}
 .trash{
-  background: #f7c3c2;
-  border: none;
-  color: #de0400;
+  background: #efcaca  !important;
+  color: #bf0000  !important;
 }
 .app-menu{
   padding: 5px;
@@ -15714,7 +15742,7 @@ text-align:center;
   width: 30px;
   background-color: #E2DCC8;
   position: relative;
-  margin-right: 1540px;
+  margin-right: 72vw;
   margin-top: 25px;
   background-color: transparent;
 }

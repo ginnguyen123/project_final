@@ -9,8 +9,8 @@
 <body onload="time()" class="app sidebar-mini rtl">
 <!-- Navbar-->
 <header class="app-header">
-  <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar"
-                                  aria-label="Hide Sidebar"></a>
+  <!-- Sidebar toggle button-->
+  <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
   <!-- Navbar Right Menu-->
   <ul class="app-nav">
     <div class="menu-bar">
@@ -58,7 +58,7 @@
               <th>Tình trạng</th>
               <th>Giá tiền</th>
               <th>Danh mục</th>
-              <th></th>
+              <th>Tính năng</th>
             </tr>
             </thead>
             <tbody>
@@ -70,15 +70,15 @@
               <td>Áo chống nắng SunStop UV Master mũ liền nữ K2/F9UVJ056K</td>
               <td><img src="/assets/img-sanpham/theresa.jpg" alt="" width="100px;"></td>
               <td>40</td>
-              <td><span class="badge bg-success">Còn hàng</span></td>
+              <td><span class="badge btn-add btn-sm">Còn hàng</span></td>
               <td>400.000 đ</td>
               <td>Áo</td>
 
-              <td>
-                <button class="btn btn-sm edit" type="button" title="Sửa" id="show-emp"
-                        data-toggle="modal" data-target="#ModalUP">
-                  <i class="fa-solid fa-pen-to-square"></i>
-                </button>
+              <td><button class="btn btn-delete btn-sm delete" type="button" title="Xóa"
+                          onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
+              </button>
+                <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" id="show-emp" data-toggle="modal"
+                        data-target="#ModalUP"><i class="fas fa-edit"></i></button>
               </td>
             </tr>
             </tbody>
