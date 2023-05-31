@@ -8,7 +8,9 @@ public enum EColor {
     PURPLE("Purple"),
     GREEN("Green"),
     BLUE("Blue"),
-    YELLOW("Yellow");
+    YELLOW("Yellow"),
+
+    VIOLET("Violet");
 
     private final String value;
 

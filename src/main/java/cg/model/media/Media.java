@@ -1,6 +1,8 @@
-package cg.model.product;
+package cg.model.media;
 
 import cg.model.BaseEntity;
+import cg.model.product.Product;
+import cg.model.product.ProductImport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,14 +10,15 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @Entity
-@Table(name = "product_media")
-public class ProductMedia extends BaseEntity {
+@Table(name = "medias")
+public class Media extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -36,6 +39,8 @@ public class ProductMedia extends BaseEntity {
 
     @Column(name = "cloud_id")
     private String cloudId;
-    
 
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 }
