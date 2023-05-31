@@ -7,7 +7,7 @@ import cg.service.IGeneralService;
 
 import java.util.List;
 
-public interface IProductImportService extends IGeneralService<ProductImport , Long> {
+public interface IProductImportService extends IGeneralService<Long , ProductImport> {
 
     List<ProductImport> findAllProductImport();
 

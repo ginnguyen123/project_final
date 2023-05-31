@@ -20,12 +20,12 @@ public class ProductImportService implements IProductImportService {
 
 
     @Override
-    public List<Long> findAll() {
+    public List<ProductImport> findAll() {
         return null;
     }
 
     @Override
-    public Optional<Long> findById(Long id) {
+    public Optional<ProductImport> findById(Long id) {
         return Optional.empty();
     }
 
@@ -35,14 +35,15 @@ public class ProductImportService implements IProductImportService {
     }
 
     @Override
-    public Long save(ProductImport productImport) {
+    public ProductImport save(Long aLong) {
         return null;
     }
 
     @Override
-    public void delete(ProductImport productImport) {
+    public void delete(Long aLong) {
 
     }
+
 
     @Override
     public void deleteById(Long id) {
