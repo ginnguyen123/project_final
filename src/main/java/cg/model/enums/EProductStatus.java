@@ -2,8 +2,8 @@ package cg.model.enums;
 
 public enum EProductStatus {
     STOCKING ("Stocking"),
-    OUT_OF_STOCK ("Out-of-stock"),
-    ENTERING ("entering");
+    OUT_STOCK ("Out-stock"),
+    ENTERING ("Entering");
 
     private final String value;
 

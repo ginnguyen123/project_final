@@ -1,4 +1,4 @@
-package cg.model.customer;
+package cg.model.location_region;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
