@@ -11,25 +11,28 @@ import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table(name = "discount")
-public class Discounts extends BaseEntity {
+public class Discount extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private String name;
     @DecimalMax(value = "100", message = "Maximum discount is 100(%)")
     @DecimalMin(value = "0", message = "Minimum discount is 0(%)")
-    @Column(name = "discounts", nullable = false)
+    @Column(nullable = false)
     private Long discount;
 
     @Column(name = "discount_amounts", precision = 10, scale = 0)
     private BigDecimal discountAmount;
 
+    @OneToMany
+    @JoinColumn(name = "discount_id", referencedColumnName = "id")
+    private List<Product> products;
 }
