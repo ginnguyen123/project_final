@@ -1,52 +1,60 @@
 package cg.dto.productImport;
 
-import cg.model.enums.EColor;
-import cg.model.enums.EProductStatus;
-import cg.model.enums.ESize;
-import cg.model.product.ProductImport;
+import cg.dto.product.ProductCreDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
+import javax.validation.constraints.NotEmpty;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-public class ProductImportCreDTO implements Validator {
+public class ProductImportCreDTO { //implements Validator
 
-    private Long id;
-    private ESize size;
-    private EColor color;
+//    private Long id;
+
+    @NotEmpty(message = "Size can't empty")
+    private String size;
+
+    @NotEmpty(message = "Color can't empty")
+    private String color;
+
+    @NotEmpty(message = "Code can't empty")
     private String code;
+
     private Long quantity;
 
-    private EProductStatus productStatus;
+    @NotEmpty(message = "Status can't empty")
+    private String productStatus;
 
-    private String productCode;
+    private ProductCreDTO productCreDTO;
 
 
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return false;
-    }
-
-    @Override
-    public void validate(Object target, Errors errors) {
-
-    }
-
-    public ProductImport toProductImport(ProductImportCreDTO productImportCreDTO) {
-        return new ProductImport()
-                .setId(id)
-                .setSize(size)
-                .setColor(color)
-                .setQuantity(quantity)
-                .setProductStatus(productStatus);
-    }
+//    @Override
+//    public boolean supports(Class<?> clazz) {
+//        return false;
+//    }
+//
+//    @Override
+//    public void validate(Object target, Errors errors) {
+//
+//    }
+//
+//    public ProductImport toProductImport() {
+//        return new ProductImport()
+////                .setId(id)
+//                .setSize(size)
+//                .setColor(color)
+//                .setQuantity(quantity)
+//                .setProductStatus(productStatus)
+////                .setProduct(product)
+//                ;
+//
+//
+//    }
 }

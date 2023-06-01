@@ -1,33 +1,39 @@
 package cg.service.product;
 
 import cg.dto.productImport.ProductImportCreDTO;
-import cg.model.category.Category;
+import cg.dto.productImport.ProductImportDTO;
 import cg.model.product.ProductImport;
 import cg.repository.ProductImportRepository;
+import cg.utils.mapper.ProductImportMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class ProductImportService implements IProductImportService {
 
-    @Autowired
-    private ProductImportRepository productImportRepository;
+    private final ProductImportRepository productImportRepository;
+
+    private final ProductImportMapper productImportMapper;
 
 
     @Override
     public List<ProductImport> findAll() {
-        return null;
+        return productImportRepository.findAll();
     }
 
     @Override
     public Optional<ProductImport> findById(Long id) {
         return Optional.empty();
     }
+
 
     @Override
     public Boolean existById(Long id) {
@@ -50,20 +56,14 @@ public class ProductImportService implements IProductImportService {
 
     }
 
-    @Override
-    public List<ProductImport> findAllProductImport() {
-        return null;
-    }
 
     @Override
-    public ProductImportCreDTO create(ProductImportCreDTO productImportCreDTO) {
+    public ProductImportDTO create(ProductImportCreDTO productImportCreDTO) {
+        ProductImport productImport = productImportMapper.convertDTOToModel(productImportCreDTO);
 
-        if (productImportCreDTO.getProductCode() == null){
-            productImportCreDTO.setId(null);
-        }
+        ProductImport result = productImportRepository.save(productImport);
+        ProductImportDTO productImportDTO = productImportMapper.convertModelToDTO(result);
 
-        ProductImport productImport = productImportCreDTO.toProductImport(productImportCreDTO);
-
-        return null;
+        return productImportDTO;
     }
 }

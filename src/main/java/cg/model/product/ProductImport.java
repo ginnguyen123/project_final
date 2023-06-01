@@ -39,4 +39,16 @@ public class ProductImport extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+//    public ProductImportDTO toProductImportDTO() {
+//        return new ProductImportDTO()
+//                .setId(id)
+//                .setSize(size)
+//                .setColor(color)
+//                .setQuantity(quantity)
+//                .setProductStatus(productStatus)
+////                .setProduct(product.toProductDTO)
+//                ;
+//
+//    }
 }

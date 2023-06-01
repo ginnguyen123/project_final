@@ -17,13 +17,14 @@ public class CategoryService implements ICategory{
     @Autowired
     private CategoryRepository categoryRepository;
 
+
     @Override
-    public List<Long> findAll() {
+    public List<Category> findAll() {
         return null;
     }
 
     @Override
-    public Optional<Long> findById(Long id) {
+    public Optional<Category> findById(Long id) {
         return Optional.empty();
     }
 
@@ -33,12 +34,12 @@ public class CategoryService implements ICategory{
     }
 
     @Override
-    public Long save(Category category) {
+    public Category save(Long aLong) {
         return null;
     }
 
     @Override
-    public void delete(Category category) {
+    public void delete(Long aLong) {
 
     }
 
