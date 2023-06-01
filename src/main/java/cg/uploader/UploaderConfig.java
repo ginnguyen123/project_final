@@ -1,4 +1,4 @@
-package cg.config.cloudinary;
+package cg.uploader;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

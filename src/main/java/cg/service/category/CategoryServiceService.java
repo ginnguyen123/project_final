@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class CategoryService implements ICategory{
+public class CategoryServiceService implements ICategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -20,11 +20,29 @@ public class CategoryService implements ICategory{
 
     @Override
     public List<Category> findAll() {
+<<<<<<< HEAD:src/main/java/cg/service/category/CategoryServiceService.java
+        return categoryRepository.findAll();
+=======
         return null;
+>>>>>>> 843b4696ed0e2431b9474ace965d17e65af1b678:src/main/java/cg/service/category/CategoryService.java
     }
 
     @Override
     public Optional<Category> findById(Long id) {
+<<<<<<< HEAD:src/main/java/cg/service/category/CategoryServiceService.java
+        return categoryRepository.findById(id);
+    }
+
+    @Override
+    public Category save(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public void delete(Category category) {
+        category.setDeleted(true);
+        categoryRepository.save(category);
+=======
         return Optional.empty();
     }
 
@@ -41,10 +59,12 @@ public class CategoryService implements ICategory{
     @Override
     public void delete(Long aLong) {
 
+>>>>>>> 843b4696ed0e2431b9474ace965d17e65af1b678:src/main/java/cg/service/category/CategoryService.java
     }
 
     @Override
     public void deleteById(Long id) {
-
+        Category category = categoryRepository.findById(id).get();
+        delete(category);
     }
 }

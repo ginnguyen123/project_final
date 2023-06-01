@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/productImport")
+@RequestMapping("/api/product-import")
 public class ProductImportAPI {
 
     @Autowired
@@ -31,13 +31,11 @@ public class ProductImportAPI {
         return new ResponseEntity<>(productImportDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping()
-    public ResponseEntity<?> getAllProductImport(){
-        List<ProductImport> productImportList = productImportService.findAll();
-        return new ResponseEntity<>(productImportList, HttpStatus.OK);
-    }
-
-
+//    @GetMapping()
+//    public ResponseEntity<?> getAllProductImport(){
+//        //List<ProductImport> productImportList = productImportService.findAll();
+//        return new ResponseEntity<>(productImportList, HttpStatus.OK);
+//    }
 
 
 }

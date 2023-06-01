@@ -1,5 +1,7 @@
 package cg.model.category;
 
+import cg.dto.category.CategoryCreReqDTO;
+import cg.dto.category.CategoryCreResDTO;
 import cg.model.BaseEntity;
 import cg.model.product.Product;
 import lombok.AllArgsConstructor;
@@ -32,5 +34,13 @@ public class Category extends BaseEntity {
 
     @OneToMany(mappedBy = "category")
     private Set<Product> products;
+
+    public CategoryCreResDTO toCategoryCreResDTO(){
+        return new CategoryCreResDTO()
+                .setId(id)
+                .setName(name)
+                .setCategoryParentId(categoryParent.id)
+                .setCategoryParentName(categoryParent.name);
+    }
 
 }

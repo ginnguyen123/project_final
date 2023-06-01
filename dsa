@@ -1,0 +1,38 @@
+[33m7b4479f[m[33m ([m[1;36mHEAD -> [m[1;32mnghia_dev[m[33m)[m HEAD@{0}: commit: api-category, api-brand
+[33mc475dcf[m HEAD@{1}: pull origin development: Fast-forward
+[33mcd3eab1[m HEAD@{2}: checkout: moving from development to nghia_dev
+[33mab92f8f[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{3}: checkout: moving from nghia_dev to development
+[33mcd3eab1[m HEAD@{4}: checkout: moving from development to nghia_dev
+[33mab92f8f[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{5}: checkout: moving from nghia_dev to development
+[33mcd3eab1[m HEAD@{6}: commit: update 31-05
+[33m92ce3c2[m HEAD@{7}: commit: model-product-ProductImport
+[33m8fbe8b5[m HEAD@{8}: pull origin development: Fast-forward
+[33m2d9f7f4[m HEAD@{9}: commit: basic view
+[33mab92f8f[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{10}: pull origin development: Fast-forward
+[33mfd90501[m HEAD@{11}: checkout: moving from development to nghia_dev
+[33mab92f8f[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{12}: checkout: moving from nghia_dev to development
+[33mfd90501[m HEAD@{13}: checkout: moving from development to nghia_dev
+[33mab92f8f[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{14}: pull: Fast-forward
+[33mfd90501[m HEAD@{15}: checkout: moving from nghia_dev to development
+[33mfd90501[m HEAD@{16}: checkout: moving from development to nghia_dev
+[33mfd90501[m HEAD@{17}: checkout: moving from nghia_dev to development
+[33mfd90501[m HEAD@{18}: pull origin development: Fast-forward
+[33mf90e0c1[m HEAD@{19}: checkout: moving from nghia_dev to nghia_dev
+[33mf90e0c1[m HEAD@{20}: checkout: moving from development to nghia_dev
+[33mfd90501[m HEAD@{21}: checkout: moving from nghia_dev to development
+[33mf90e0c1[m HEAD@{22}: checkout: moving from development to nghia_dev
+[33mfd90501[m HEAD@{23}: pull: Fast-forward
+[33m6d60f97[m HEAD@{24}: checkout: moving from nghia_dev to development
+[33mf90e0c1[m HEAD@{25}: checkout: moving from development to nghia_dev
+[33m6d60f97[m HEAD@{26}: checkout: moving from development to development
+[33m6d60f97[m HEAD@{27}: checkout: moving from nghia_dev to development
+[33mf90e0c1[m HEAD@{28}: checkout: moving from nhan_dev to nghia_dev
+[33m187fc87[m[33m ([m[1;32mnhan_dev[m[33m)[m HEAD@{29}: checkout: moving from nghia_dev to nhan_dev
+[33mf90e0c1[m HEAD@{30}: pull origin development: Merge made by the 'ort' strategy.
+[33m3abbf98[m HEAD@{31}: commit: delete
+[33me190455[m HEAD@{32}: commit: 24/05
+[33mddc9fc6[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{33}: checkout: moving from development to nghia_dev
+[33mddc9fc6[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{34}: checkout: moving from nghia_dev to development
+[33mddc9fc6[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{35}: checkout: moving from main to nghia_dev
+[33mddc9fc6[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{36}: Branch: renamed refs/heads/master to refs/heads/main
+[33mddc9fc6[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m HEAD@{38}: commit (initial): first commit

@@ -1,6 +1,5 @@
 package cg.dto.category;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +11,13 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class CategoryDTO {
+public class CategoryCreResDTO {
 
     private Long id;
 
     private String name;
 
-    private Long category_parent_id;
+    private Long categoryParentId;
 
+    private String categoryParentName;
 }
