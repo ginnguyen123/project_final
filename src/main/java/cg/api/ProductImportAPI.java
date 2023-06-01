@@ -2,7 +2,6 @@ package cg.api;
 
 import cg.dto.productImport.ProductImportCreDTO;
 import cg.dto.productImport.ProductImportDTO;
-import cg.model.product.ProductImport;
 
 import cg.service.product.IProductImportService;
 import cg.utils.AppUtils;
