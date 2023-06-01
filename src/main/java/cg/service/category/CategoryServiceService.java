@@ -18,32 +18,29 @@ public class CategoryService implements ICategory{
     private CategoryRepository categoryRepository;
 
     @Override
-    public List<Long> findAll() {
-        return null;
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
     }
 
     @Override
-    public Optional<Long> findById(Long id) {
-        return Optional.empty();
+    public Optional<Category> findById(Long id) {
+        return categoryRepository.findById(id);
     }
 
     @Override
-    public Boolean existById(Long id) {
-        return null;
-    }
-
-    @Override
-    public Long save(Category category) {
-        return null;
+    public Category save(Category category) {
+        return categoryRepository.save(category);
     }
 
     @Override
     public void delete(Category category) {
-
+        category.setDeleted(true);
+        categoryRepository.save(category);
     }
 
     @Override
     public void deleteById(Long id) {
-
+        Category category = categoryRepository.findById(id).get();
+        delete(category);
     }
 }
