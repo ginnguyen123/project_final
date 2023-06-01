@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ProductImportRepository extends JpaRepository<ProductImport, Long> {
-    public List<ProductImport> findAllProductImport();
 
 }

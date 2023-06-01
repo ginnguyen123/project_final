@@ -5,15 +5,13 @@ import java.util.Optional;
 
 public interface IGeneralService<E,T> {
 
-    List<T> findAll();
+    List<E> findAll();
 
-    Optional<T> findById(Long id);
+    Optional<E> findById(T id);
 
-    Boolean existById(Long id);
-
-    T save(E e);
+    E save(E e);
 
     void delete(E e);
 
-    void deleteById(Long id);
+    void deleteById(T id);
 }

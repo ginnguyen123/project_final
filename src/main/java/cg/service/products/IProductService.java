@@ -1,2 +1,7 @@
-package cg.service.products;public interface IProductService {
+package cg.service.products;
+
+import cg.model.product.Product;
+import cg.service.IGeneralService;
+
+public interface IProductService extends IGeneralService<Product,Long> {
 }

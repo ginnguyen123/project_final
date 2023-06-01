@@ -3,5 +3,5 @@ package cg.service.category;
 import cg.model.category.Category;
 import cg.service.IGeneralService;
 
-public interface ICategory extends IGeneralService<Category,Long> {
+public interface ICategoryService extends IGeneralService<Category,Long> {
 }

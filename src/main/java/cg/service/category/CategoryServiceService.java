@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class CategoryService implements ICategory{
+public class CategoryServiceService implements ICategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;

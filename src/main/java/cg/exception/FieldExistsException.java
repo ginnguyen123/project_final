@@ -1,2 +1,13 @@
-package cg.exception;public class FieldExistsException {
+package cg.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(value = HttpStatus.CONFLICT)
+public class FieldExistsException extends RuntimeException{
+    private static final long serialVersionUID = 1L;
+
+    public FieldExistsException(String message) {
+        super(message);
+    }
 }
