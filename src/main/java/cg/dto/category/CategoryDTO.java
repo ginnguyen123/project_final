@@ -19,4 +19,5 @@ public class CategoryDTO {
     private String name;
 
     private Long category_parent_id;
+
 }
