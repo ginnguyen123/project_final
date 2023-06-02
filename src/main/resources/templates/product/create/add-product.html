@@ -78,6 +78,8 @@
         transform: rotate(-45deg);
         margin-top: -2px;
     }
+
+
 </style>
 <!-- Navbar-->
 <header class="app-header">
@@ -107,7 +109,7 @@
                 <h3 class="tile-title">Tạo mới sản phẩm</h3>
                 <div class="tile-body">
                     <div class="row element-button">
-                        <div class="col-sm-2" >
+                        <div class="col-sm-2">
                             <a class="btn btn-add btn-sm" id="addNhaCungCap">
                                 <i class="fas fa-folder-plus"></i> Thêm nhà cung cấp
                             </a>
@@ -116,12 +118,6 @@
                         <div class="col-sm-2" id="addDanhMuc">
                             <a class="btn btn-add btn-sm">
                                 <i class="fas fa-folder-plus"></i> Thêm danh mục
-                            </a>
-                        </div>
-
-                        <div class="col-sm-2" id="addTinhTrang">
-                            <a class="btn btn-add btn-sm" >
-                                <i class="fas fa-folder-plus"></i> Thêm tình trạng
                             </a>
                         </div>
                     </div>
@@ -176,14 +172,15 @@
                         <div class="form-group col-md-12">
                             <label class="control-label">Ảnh sản phẩm</label>
                             <div id="myfileupload">
-                                <input type="file" id="uploadfile" name="ImageUpload" onchange="readURL(this);" />
+                                <input type="file" id="uploadfile" name="ImageUpload" onchange="readURL(this);"/>
                             </div>
                             <div id="thumbbox">
-                                <img height="450" width="400" alt="Thumb image" id="thumbimage" style="display: none" />
+                                <img height="450" width="400" alt="Thumb image" id="thumbimage" style="display: none"/>
                                 <a class="removeimg" href="javascript:"></a>
                             </div>
                             <div id="boxchoice">
-                                <a href="javascript:" class="Choicefile"><i class="fas fa-cloud-upload-alt"></i> Chọn ảnh</a>
+                                <a href="javascript:" class="Choicefile"><i class="fas fa-cloud-upload-alt"></i> Chọn
+                                    ảnh</a>
                                 <p style="clear:both"></p>
                             </div>
 
@@ -194,10 +191,10 @@
                             <script>CKEDITOR.replace('mota');</script>
                         </div>
                         <div>
-                <button class="btn btn-primary" type="button">Lưu lại</button>
-                <a class="btn btn-danger" href="/products">Hủy bỏ</a>
-            </div>
-            </form>
+                            <button class="btn btn-save btn-luu-lai " type="button">Lưu lại</button>
+                            <a class="btn btn-cancel " href="/products">Hủy bỏ</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -205,6 +202,9 @@
 
     <!--Modal thêm nhà cung cấp-->
     <th:block th:replace="product/create/modal-nha-cung-cap :: modal-nha-cung-cap"/>
+    <!-- Modal thêm danh mục   -->
+    <th:block th:replace="product/create/modal-danh-muc :: modal-danh-muc"/>
+
 
 </main>
 
@@ -212,10 +212,19 @@
 
 <script>
 
-    $('#addNhaCungCap').on('click', ()=>{
+    $('#addNhaCungCap').on('click', () => {
         $('#modalNhaCungCap').modal('show');
     })
+    $('.btn-cancel').on('click', () => {
+        $('#modalNhaCungCap').modal('hide');
+    })
 
+    $('#addDanhMuc').on('click', () => {
+        $('#modalAddDanhMuc').modal('show');
+    })
+    $('.btn-cancel').on('click', () => {
+        $('#modalAddDanhMuc').modal('hide');
+    })
 </script>
 
 </body>

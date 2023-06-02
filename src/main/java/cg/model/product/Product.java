@@ -4,12 +4,11 @@ package cg.model.product;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
-import cg.model.media.Media;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import cg.model.media.Media;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -53,5 +52,6 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product")
     private List<ProductImport> productImports;
+
 
 }

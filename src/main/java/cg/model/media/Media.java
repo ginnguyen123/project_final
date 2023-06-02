@@ -1,8 +1,7 @@
-package cg.model.media;
 
+package cg.model.media;
 import cg.model.BaseEntity;
 import cg.model.product.Product;
-import cg.model.product.ProductImport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
