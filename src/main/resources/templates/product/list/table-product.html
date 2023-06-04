@@ -20,7 +20,7 @@
     <!-- User Menu-->
 <!--    <li><a class="app-nav__item" href="/templates/index.html"><i class='bx bx-log-out bx-rotate-180'></i> </a>-->
 
-    </li>
+<!--    </li>-->
   </ul>
 </header>
 <!-- Sidebar menu-->
@@ -29,7 +29,7 @@
 <main class="app-content">
   <div class="app-title">
     <ul class="app-breadcrumb breadcrumb side">
-      <li class="breadcrumb-item active"><a href="#"><b>Danh sách sản phẩm</b></a></li>
+      <li class="breadcrumb-item active"><a><b>Danh sách sản phẩm</b></a></li>
     </ul>
     <div id="clock"></div>
   </div>
@@ -43,45 +43,41 @@
                 Thêm mới sản phẩm</a>
             </div>
 
-            <div class="col-sm-10 d-flex justify-content-end" id="delete">
-              <a class="btn btn btn-secondary btn-delete btn-sm " title="Xóa"><i
+            <div class="col-sm-10 d-flex justify-content-end">
+              <a class="btn btn btn-secondary btn-delete btn-sm" id="delete" title="Xóa"><i
                       class="fas fa-trash-alt"></i> Xóa </a>
             </div>
           </div>
-          <table class="table table-hover table-bordered" id="sampleTable">
+          <table class="table table-hover table-bordered" id="tbProduct">
             <thead>
             <tr>
               <th><input type="checkbox" id="all-delete"></th>
               <th>Mã sản phẩm</th>
-              <th>Tên sản phẩm</th>
               <th>Ảnh</th>
-              <th>Số lượng</th>
-              <th>Tình trạng</th>
+              <th>Tên sản phẩm</th>
               <th>Giá tiền</th>
               <th>Danh mục</th>
               <th>Tính năng</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>
-                <input type="checkbox" name="check1" value="1">
-              </td>
-              <td>76392984</td>
-              <td>Áo chống nắng SunStop UV Master mũ liền nữ K2/F9UVJ056K</td>
-              <td><img src="/assets/img-sanpham/theresa.jpg" alt="" width="100px;"></td>
-              <td>40</td>
-              <td><span class="badge btn-add btn-sm">Còn hàng</span></td>
-              <td>400.000 đ</td>
-              <td>Áo</td>
-
-              <td><button class="btn btn-delete btn-sm delete" type="button" title="Xóa"
-                          onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
-              </button>
-                <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" id="show-emp" data-toggle="modal"
-                        data-target="#ModalUP"><i class="fas fa-edit"></i></button>
-              </td>
-            </tr>
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <input type="checkbox" name="check1" value="1">-->
+<!--              </td>-->
+<!--              <td>76392984</td>-->
+<!--              <td><img src="/assets/img-sanpham/theresa.jpg" alt="" width="100px;"></td>-->
+<!--              <td>Áo chống nắng SunStop UV Master mũ liền nữ K2/F9UVJ056K</td>-->
+<!--              <td>40</td>-->
+<!--              <td>400.000 đ</td>-->
+<!--              <td>Áo</td>-->
+<!--              <td><button class="btn btn-delete btn-sm delete" type="button" title="Xóa"-->
+<!--                          onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>-->
+<!--              </button>-->
+<!--                <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" id="show-emp" data-toggle="modal"-->
+<!--                        data-target="#ModalUP"><i class="fas fa-edit"></i></button>-->
+<!--              </td>-->
+<!--            </tr>-->
             </tbody>
           </table>
         </div>
@@ -91,8 +87,8 @@
 </main>
 
 <!-- javascripts for application to work-->
-<script src="product.js"></script>
 <th:block th:replace="layout/script :: script"/>
+<th:block th:replace="product/list/productJs :: productJs"/>
 </body>
 
 </html>

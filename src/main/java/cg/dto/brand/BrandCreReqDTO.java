@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -19,8 +20,7 @@ public class BrandCreReqDTO implements Validator {
 
     private Long id;
 
-    @NotNull(message = "The name is required")
-    @NotEmpty(message = "The name is required")
+    @Length(min = 2, message = "Minimum length 2 characters")
     private String name;
 
     @Override

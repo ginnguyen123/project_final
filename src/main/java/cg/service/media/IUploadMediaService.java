@@ -1,10 +1,12 @@
 package cg.service.media;
 
+import cg.model.media.Media;
+import cg.service.IGeneralService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
-public interface IUploadMediaService {
+public interface IUploadMediaService extends IGeneralService<Media, String> {
 
     Map uploadImage(MultipartFile multipartFile, Map params) throws IOException;
 
@@ -13,4 +15,6 @@ public interface IUploadMediaService {
     Map uploadVideo(MultipartFile multipartFile, Map options) throws IOException;
 
     Map destroyVideo(String publicId, Map options) throws IOException;
+
+
 }

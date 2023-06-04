@@ -29,6 +29,11 @@ public class CategoryServiceService implements ICategoryService {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return categoryRepository.existsById(id);
+    }
+
+    @Override
     public Category save(Category category) {
         return categoryRepository.save(category);
     }
