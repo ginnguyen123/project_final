@@ -1,8 +1,10 @@
 package cg.service.product;
 
+import cg.dto.product.ProductDTO;
 import cg.dto.productImport.ProductImportCreReqDTO;
 import cg.dto.productImport.ProductImportCreResDTO;
 import cg.dto.productImport.ProductImportDTO;
+import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import cg.repository.ProductImportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,11 +57,13 @@ public class ProductImportService implements IProductImportService {
 
 
     @Override
-    public ProductImportCreResDTO create(ProductImportCreReqDTO productImportCreReqDTO) {
+    public ProductImportCreResDTO create(ProductDTO productDTO, ProductImportCreReqDTO productImportCreReqDTO) {
         ProductImport productImport = productImportCreReqDTO.toProductImport();
 
+        productImport.setProduct(productDTO.toProduct());
+
        productImportRepository.save(productImport);
-        ProductImportCreResDTO ProductImportCreResDTO = new ProductImportCreResDTO(productImport);
+       ProductImportCreResDTO ProductImportCreResDTO = new ProductImportCreResDTO(productImport);
 
         return ProductImportCreResDTO;
 

@@ -4,41 +4,47 @@ import cg.dto.brand.BrandDTO;
 import cg.dto.category.CategoryDTO;
 import cg.dto.media.MediaDTO;
 import cg.dto.productImport.ProductImportDTO;
+import cg.model.product.Product;
+import cg.model.product.ProductImport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
 @Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductDTO {
-
     private Long id;
-
-    @NotEmpty
     private String title;
-
-    @NotEmpty
     private String code;
 
-    @NotEmpty
     private BigDecimal price;
 
     private String description;
 
-    private MediaDTO productAvatarDTO;
+    private MediaDTO productAvatar;
 
-    private BrandDTO brandDTO;
+    private BrandDTO brand;
 
-    private CategoryDTO categoryDTO;
+    private CategoryDTO category;
 
-    private List<MediaDTO> mediasDTO;
 
-    private List<ProductImportDTO> productImportsDTO;
+    public Product toProduct(){
+        return new Product()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setPrice(price)
+                .setDescription(description)
+                .setBrand(brand.toBrand())
+                .setProductAvatar(productAvatar.toMedia())
+                .setCategory(category.toCategory());
+
+    }
+
 }

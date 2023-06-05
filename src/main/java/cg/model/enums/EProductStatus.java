@@ -1,5 +1,13 @@
 package cg.model.enums;
 
+import cg.exception.DataInputException;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public enum EProductStatus {
     STOCKING ("Stocking"),
     OUT_STOCK ("Out-stock"),
@@ -12,6 +20,17 @@ public enum EProductStatus {
     }
 
     public String getValue() {
-        return this.value;
+        return value;
+    }
+
+    private static final Map<String, EProductStatus> NAME_MAP = Stream.of(values())
+            .collect(Collectors.toMap(EProductStatus::toString, Function.identity()));
+
+    public static EProductStatus fromString(final String name) {
+        EProductStatus productStatus = NAME_MAP.get(name);
+        if (null == productStatus) {
+            throw new DataInputException(String.format("'%s' has no corresponding value. Accepted values: %s", name, Arrays.asList(values())));
+        }
+        return productStatus;
     }
 }

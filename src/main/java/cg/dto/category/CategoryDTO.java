@@ -1,6 +1,7 @@
 package cg.dto.category;
 
 
+import cg.model.category.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,14 @@ public class CategoryDTO {
 
     private String name;
 
-    private Long category_parent_id;
+    private Long categoryParentId;
+
+    private String categoryParentName;
+
+    public Category toCategory(){
+        return new Category()
+                .setId(id)
+                .setName(name);
+    }
 
 }

@@ -1,15 +1,18 @@
 package cg.dto.productImport;
 
+import cg.dto.media.MediaDTO;
 import cg.dto.product.ProductDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
+import cg.model.product.ProductImport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,16 +31,18 @@ public class ProductImportDTO {
     //private Product product;
     private ProductDTO product;
 
+    private List<MediaDTO> mediaDTOList;
 
-//    private ProductImport toProductImport() {
-//        return new ProductImport()
-//                .setId(id)
-//                .setSize(size)
-//                .setColor(color)
-//                .setCode(code)
-//                .setQuantity(quantity)
-//                .setProductStatus(productStatus)
-//                //.setProduct(product.toProduct())
-//                ;
-//    }
+
+    public ProductImport toProductImport() {
+        return new ProductImport()
+                .setId(id)
+                .setSize(ESize.valueOf(size))
+                .setColor(EColor.valueOf(color))
+                .setCode(code)
+                .setQuantity(quantity)
+                .setProductStatus(EProductStatus.valueOf(productStatus))
+                .setProduct(product.toProduct())
+                ;
+    }
 }

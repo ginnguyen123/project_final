@@ -40,12 +40,9 @@ public class ProductImport extends BaseEntity {
     private EProductStatus productStatus;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
-
-    @OneToMany(mappedBy = "productImport")
-    private List<Media> medias;
 
     public ProductImportDTO toProductImportDTO(){
         return new ProductImportDTO()
@@ -55,7 +52,7 @@ public class ProductImport extends BaseEntity {
                 .setCode(code)
                 .setQuantity(quantity)
                 .setProductStatus(productStatus.getValue())
-//                .setProduct(product.toProduct())
+                .setProduct(product.toProductDTO())
                 ;
     }
 }

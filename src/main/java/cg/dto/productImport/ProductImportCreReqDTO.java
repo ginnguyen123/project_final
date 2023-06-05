@@ -1,6 +1,9 @@
 package cg.dto.productImport;
 
-import cg.dto.product.ProductCreDTO;
+
+
+import cg.dto.product.ProductCreReqDTO;
+import cg.dto.product.ProductDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
@@ -12,9 +15,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotEmpty;
 
 
 @AllArgsConstructor
@@ -35,12 +36,12 @@ public class ProductImportCreReqDTO implements Validator {
     private String code;
 
 
-    private Long quantity;
+    private String quantity;
 
 
     private String productStatus;
 
-    private ProductCreDTO productCreD;
+    private ProductDTO productDTO;//productCrReqDTO
 
     public ProductImport toProductImport(){
         return new ProductImport()
@@ -48,9 +49,9 @@ public class ProductImportCreReqDTO implements Validator {
                 .setSize(ESize.valueOf(size))
                 .setColor(EColor.valueOf(color))
                 .setCode(code)
-                .setQuantity(quantity)
+                .setQuantity(Long.valueOf(quantity))
                 .setProductStatus(EProductStatus.valueOf(productStatus))
-//                .setProduct(productCreDTO.toProduct())
+                .setProduct(productDTO.toProduct())
                 ;
     }
 
@@ -67,8 +68,45 @@ public class ProductImportCreReqDTO implements Validator {
         String size = productImportCreReqDTO.getSize();
         String color = productImportCreReqDTO.getColor();
         String code = productImportCreReqDTO.getCode();
-        Long quantity = productImportCreReqDTO.getQuantity();
+        String quantity = productImportCreReqDTO.getQuantity();
         String productStatus = productImportCreReqDTO.getProductStatus();
+//        ProductCreReqDTO productCreReqDTO = productImportCreReqDTO.getProductCre();
+
+        if (size.isEmpty()){
+            errors.reject("size.null" , "Product size must not be null");
+        }
+        if (color.isEmpty()){
+            errors.reject("color.null" , "Product color must not be null");
+        }
+        if (code.isEmpty()){
+            errors.reject("code.null" , "Product code must not be null");
+        }
+        if (productStatus.isEmpty()){
+            errors.reject("productStatus.null" , "Product productStatus must not be null");
+        }
+
+
+        if (quantity != null && quantity.length() > 0) {
+            if (!quantity.matches("(^$|[0-9]*$)")) {
+                errors.rejectValue("quantity", "quantity.number", "Quantity must be a number");
+
+            }
+            if (Long.parseLong(quantity) < 0) {
+                errors.rejectValue("quantity", "quantity.min", "The minimum product quantity is 0");
+
+            }
+            if (quantity.length() > 3) {
+                errors.rejectValue("quantity", "quantity.max", "The quantity of the product is not more than 100.");
+            }
+        } else {
+            errors.rejectValue("quantity", "quantity.null", "Quantity must not be null");
+        }
+
+//        if (productCreReqDTO.getId() != null) {
+//            errors.rejectValue("productId", "productId.null", "Product's id must not be null");
+//        }
+
+
 
 
 

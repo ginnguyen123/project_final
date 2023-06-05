@@ -1,6 +1,7 @@
 package cg.dto.productImport;
 
-import cg.dto.product.ProductCreDTO;
+import cg.dto.product.ProductCreResDTO;
+import cg.dto.product.ProductDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,7 +37,9 @@ public class ProductImportCreResDTO {
 
     private EProductStatus productStatus;
 
-    private ProductCreDTO productCreDTO;
+    private ProductDTO productDTO;
+
+    List<ProductImportDTO> productImportDTOList;
 
 
     public ProductImportCreResDTO(ProductImport productImport) {
@@ -46,7 +50,21 @@ public class ProductImportCreResDTO {
         this.code = productImport.getCode();
         this.quantity = productImport.getQuantity();
         this.productStatus = productImport.getProductStatus();
-//        this.productCreDTO = productCreDTO.toProductCreDTO();
+        this.productDTO = productImport.toProductImportDTO().getProduct();
 
     }
+
+    public ProductImport toProductImport(){
+        return new ProductImport()
+                .setId(id)
+                .setSize(size)
+                .setColor(color)
+                .setCode(code)
+                .setQuantity(Long.valueOf(quantity))
+                .setProductStatus(productStatus)
+                .setProduct(productDTO.toProduct());
+
+    }
+
+
 }

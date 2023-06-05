@@ -1,5 +1,6 @@
 
 package cg.model.media;
+import cg.dto.media.MediaDTO;
 import cg.model.BaseEntity;
 import cg.model.product.Product;
 import cg.model.product.ProductImport;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -18,6 +20,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "medias")
+@Accessors(chain = true)
 public class Media extends BaseEntity {
 
     @Id
@@ -43,4 +46,14 @@ public class Media extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_import_id", referencedColumnName = "id")
     private ProductImport productImport;
+
+    public MediaDTO toMediaDTO(){
+        return new MediaDTO()
+                .setId(id)
+                .setFileName(fileName)
+                .setFileFolder(fileFolder)
+                .setFileUrl(fileUrl)
+                .setFileType(fileType)
+                .setCloudId(cloudId);
+    }
 }
