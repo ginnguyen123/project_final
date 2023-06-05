@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <title>Thêm sản phẩm vào kho | Quản trị Admin</title>
+  <!-- Main CSS-->
+  <th:block th:replace="layout/head :: head"/>
+
+</head>
+
+<body class="app sidebar-mini rtl">
+<style>
+  .Choicefile {
+    display: block;
+    background: #14142B;
+    border: 1px solid #fff;
+    color: #fff;
+    width: 150px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 5px 0px;
+    border-radius: 5px;
+    font-weight: 500;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .Choicefile:hover {
+    text-decoration: none;
+    color: white;
+  }
+
+  #uploadfile,
+  .removeimg {
+    display: none;
+  }
+
+  #thumbbox {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .removeimg {
+    height: 25px;
+    position: absolute;
+    background-repeat: no-repeat;
+    top: 5px;
+    left: 5px;
+    background-size: 25px;
+    width: 25px;
+    /* border: 3px solid red; */
+    border-radius: 50%;
+
+  }
+
+  .removeimg::before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    content: '';
+    border: 1px solid red;
+    background: red;
+    text-align: center;
+    display: block;
+    margin-top: 11px;
+    transform: rotate(45deg);
+  }
+
+  .removeimg::after {
+    /* color: #FFF; */
+    /* background-color: #DC403B; */
+    content: '';
+    background: red;
+    border: 1px solid red;
+    text-align: center;
+    display: block;
+    transform: rotate(-45deg);
+    margin-top: -2px;
+  }
+
+
+</style>
+<!-- Navbar-->
+<header class="app-header">
+  <!-- Sidebar toggle button-->
+  <a class="app-sidebar__toggle" href="#" data-toggle="sidebar"
+     aria-label="Hide Sidebar"></a>
+  <!-- Navbar Right Menu-->
+  <ul class="app-nav">
+
+  </ul>
+</header>
+<!-- Sidebar menu-->
+<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+
+<th:block th:replace="layout/left-side-bar :: left-side-bar"/>
+
+<main class="app-content">
+  <div class="app-title">
+    <ul class="app-breadcrumb breadcrumb">
+      <li class="breadcrumb-item">Danh sách sản phẩm</li>
+      <li class="breadcrumb-item">Thêm sản phẩm</li>
+    </ul>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tile">
+        <h3 class="tile-title">Tạo mới sản phẩm</h3>
+        <div class="tile-body">
+
+          <form class="row">
+
+            <div class="form-group col-md-3">
+              <label class="control-label">Mã sản phẩm </label>
+              <input class="form-control" type="number" placeholder="">
+            </div>
+            <div class="form-group col-md-3">
+              <label  for="exampleSelect1" class="control-label">Tên sản phẩm</label>
+              <select class="form-control" id="exampleSelect5">
+                <option>-- Chọn tên sản phẩm --</option>
+                <option>Áo bomber</option>
+                <option>Váy xuông</option>
+              </select>
+            </div>
+            <div class="form-group  col-md-3">
+              <label class="control-label">Số lượng</label>
+              <input class="form-control" type="number">
+            </div>
+            <div class="form-group col-md-3 ">
+              <label for="exampleSelect1" class="control-label">Tình trạng</label>
+              <select class="form-control" id="exampleSelect1">
+                <option>-- Chọn tình trạng --</option>
+                <option>Còn hàng</option>
+                <option>Hết hàng</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="exampleSelect2" class="control-label">Kích cỡ</label>
+              <select class="form-control" id="exampleSelect4">
+                <option>-- Chọn Kích cỡ --</option>
+                <option>XS</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="exampleSelect2" class="control-label">Màu sắc</label>
+              <select class="form-control" id="exampleSelect2">
+                <option>-- Chọn màu --</option>
+                <option>Black</option>
+                <option>Red</option>
+                <option>white</option>
+                <option>yellow</option>
+              </select>
+            </div>
+            <div class="form-group col-md-12">
+              <label class="control-label">Ảnh sản phẩm</label>
+              <div id="myfileupload">
+                <input type="file" id="uploadfile" name="ImageUpload" onchange="readURL(this);"/>
+              </div>
+              <div id="thumbbox">
+                <img height="450" width="400" alt="Thumb image" id="thumbimage" style="display: none"/>
+                <a class="removeimg" href="javascript:"></a>
+              </div>
+              <div id="boxchoice">
+                <a href="javascript:" class="Choicefile"><i class="fas fa-cloud-upload-alt"></i> Chọn
+                  ảnh</a>
+                <p style="clear:both"></p>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-save btn-luu-lai " type="button">Lưu lại</button>
+              <a class="btn btn-cancel " href="/product-import">Hủy bỏ</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</main>
+
+<th:block th:replace="layout/script :: script"/>
+
+
+</body>
+
+</html>

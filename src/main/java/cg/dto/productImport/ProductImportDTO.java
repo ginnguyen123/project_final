@@ -17,29 +17,17 @@ import java.util.Date;
 @NoArgsConstructor
 public class ProductImportDTO {
     private Long id;
-    private ESize size;
-    private EColor color;
+    private String size;
+    private String color;
     private String code;
     private Long quantity;
 
-    private EProductStatus productStatus;
+    private String productStatus;
 
     //dto giao tiep vs nhau thong qua dto, khong dung entity o day
     //private Product product;
-    private ProductDTO productDTO;
+    private ProductDTO product;
 
-    private boolean deleted;
-
-    private Date createdAt;
-
-    private Long createdBy;
-
-    private Date updateAt;
-
-    private Long updateBy;
-
-    //theo nguyen tac single responsive cua SOLID thi khong chuyen dto sang entity o day
-    // ma chuyen sang lop ProductMapper
 
 //    private ProductImport toProductImport() {
 //        return new ProductImport()

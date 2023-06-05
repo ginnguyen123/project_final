@@ -2,6 +2,7 @@
 package cg.model.media;
 import cg.model.BaseEntity;
 import cg.model.product.Product;
+import cg.model.product.ProductImport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,6 @@ public class Media extends BaseEntity {
     private String cloudId;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
+    @JoinColumn(name = "product_import_id", referencedColumnName = "id")
+    private ProductImport productImport;
 }

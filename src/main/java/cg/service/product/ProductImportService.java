@@ -1,10 +1,10 @@
 package cg.service.product;
 
-import cg.dto.productImport.ProductImportCreDTO;
+import cg.dto.productImport.ProductImportCreReqDTO;
+import cg.dto.productImport.ProductImportCreResDTO;
 import cg.dto.productImport.ProductImportDTO;
 import cg.model.product.ProductImport;
 import cg.repository.ProductImportRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,39 +27,47 @@ public class ProductImportService implements IProductImportService {
 
     @Override
     public Optional<ProductImport> findById(Long id) {
-        return Optional.empty();
+        return productImportRepository.findById(id);
     }
 
 
     @Override
     public Boolean existById(Long id) {
-        return false;
+        return productImportRepository.existsById(id);
     }
 
     @Override
     public ProductImport save(ProductImport productImport) {
-        return null;
+        return productImportRepository.save(productImport);
     }
 
     @Override
     public void delete(ProductImport productImport) {
-
+        productImport.setDeleted(true);
+        productImportRepository.save(productImport);
     }
 
 
     @Override
     public void deleteById(Long id) {
-
+        productImportRepository.deleteById(id);
     }
 
 
     @Override
-    public ProductImportDTO create(ProductImportCreDTO productImportCreDTO) {
-//        ProductImport productImport = productImportMapper.convertDTOToModel(productImportCreDTO);
-//
-//        ProductImport result = productImportRepository.save(productImport);
-//        ProductImportDTO productImportDTO = productImportMapper.convertModelToDTO(result);
+    public ProductImportCreResDTO create(ProductImportCreReqDTO productImportCreReqDTO) {
+        ProductImport productImport = productImportCreReqDTO.toProductImport();
 
-        return new ProductImportDTO();
+       productImportRepository.save(productImport);
+        ProductImportCreResDTO ProductImportCreResDTO = new ProductImportCreResDTO(productImport);
+
+        return ProductImportCreResDTO;
+
+    }
+
+    @Override
+    public ProductImportCreResDTO update(ProductImport productImport) {
+        productImportRepository.save(productImport);
+        return new ProductImportCreResDTO(productImport);
     }
 }

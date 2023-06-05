@@ -1,14 +1,17 @@
 package cg.model.product;
 
+import cg.dto.productImport.ProductImportDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
+import cg.model.media.Media;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import java.util.List;
 
 @Setter
 @Getter
@@ -40,15 +43,19 @@ public class ProductImport extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-//    public ProductImportDTO toProductImportDTO() {
-//        return new ProductImportDTO()
-//                .setId(id)
-//                .setSize(size)
-//                .setColor(color)
-//                .setQuantity(quantity)
-//                .setProductStatus(productStatus)
-////                .setProduct(product.toProductDTO)
-//                ;
-//
-//    }
+
+    @OneToMany(mappedBy = "productImport")
+    private List<Media> medias;
+
+    public ProductImportDTO toProductImportDTO(){
+        return new ProductImportDTO()
+                .setId(id)
+                .setSize(size.getValue())
+                .setColor(color.getValue())
+                .setCode(code)
+                .setQuantity(quantity)
+                .setProductStatus(productStatus.getValue())
+//                .setProduct(product.toProduct())
+                ;
+    }
 }

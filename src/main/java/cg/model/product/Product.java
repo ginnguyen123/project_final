@@ -48,9 +48,6 @@ public class Product extends BaseEntity {
     private Category category;
 
     @OneToMany(mappedBy = "product")
-    private List<Media> medias;
-
-    @OneToMany(mappedBy = "product")
     private List<ProductImport> productImports;
 
 
