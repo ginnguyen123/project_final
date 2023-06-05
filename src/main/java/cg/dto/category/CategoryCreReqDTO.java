@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,10 +14,8 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 public class CategoryCreReqDTO {
 
-    @NotNull(message = "The category's id is required")
     private Long id;
+    @Length(min = 2, message = "Minimum length 2 characters")
     private String name;
-    @NotNull(message = "The category's name is required")
-    @NotEmpty(message = "The category's name is required")
     private String categoryParentName;
 }

@@ -11,4 +11,6 @@ public interface IBrandService extends IGeneralService<Brand, Long> {
 
     Boolean existsBrandByName(String name);
 
+    Boolean existsBrandById(Long id);
+
 }

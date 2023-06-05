@@ -1,6 +1,5 @@
 package cg.dto.productImport;
 
-import cg.dto.product.ProductCreDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,10 +29,6 @@ public class ProductImportCreDTO { //implements Validator
 
     @NotEmpty(message = "Status can't empty")
     private String productStatus;
-
-    private ProductCreDTO productCreDTO;
-
-
 
 //    @Override
 //    public boolean supports(Class<?> clazz) {

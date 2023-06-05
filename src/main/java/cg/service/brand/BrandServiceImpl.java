@@ -32,6 +32,11 @@ public class BrandServiceImpl implements IBrandService{
     }
 
     @Override
+    public Boolean existsBrandById(Long id) {
+        return brandRepository.existsBrandById(id);
+    }
+
+    @Override
     public Brand save(Brand brand) {
         return brandRepository.save(brand);
     }

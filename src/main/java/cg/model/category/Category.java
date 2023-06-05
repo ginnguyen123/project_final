@@ -2,6 +2,7 @@ package cg.model.category;
 
 import cg.dto.category.CategoryCreReqDTO;
 import cg.dto.category.CategoryCreResDTO;
+import cg.dto.category.CategoryDTO;
 import cg.model.BaseEntity;
 import cg.model.product.Product;
 import lombok.AllArgsConstructor;
@@ -43,4 +44,11 @@ public class Category extends BaseEntity {
                 .setCategoryParentName(categoryParent.name);
     }
 
+    public CategoryDTO toCategoryDTO(){
+        return new CategoryDTO()
+                .setId(id)
+                .setName(name)
+                .setCategoryParentId(categoryParent.id)
+                .setCategoryParentName(categoryParent.name);
+    }
 }

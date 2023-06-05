@@ -6,25 +6,23 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO {
+@Accessors(chain = true)
+public class ProductCreResDTO {
+
     private Long id;
     private String title;
     private String code;
-
     private BigDecimal price;
-
     private String description;
-
-    private String url;
-
+    private String urlAvatar;
     private BrandDTO brand;
-
     private CategoryDTO category;
-
 }

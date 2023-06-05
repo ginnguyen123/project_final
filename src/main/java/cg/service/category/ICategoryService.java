@@ -5,5 +5,5 @@ import cg.service.IGeneralService;
 
 
 public interface ICategoryService extends IGeneralService<Category,Long> {
-
+    boolean existsById(Long id);
 }
