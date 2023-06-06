@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/product-import")
@@ -42,57 +43,23 @@ public class ProductImportAPI {
     private AppUtils appUtils;
 
 
+
     @PostMapping
-    public ResponseEntity<?> createNewProductImport(@RequestBody @Validated ProductImportCreReqDTO productImportCreReqDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> createNewProductImport(
+            @RequestBody @Validated ProductImportCreReqDTO productImportCreReqDTO,
+            BindingResult bindingResult
+    ) {
 
+        //validate vai bua chuyen qua service sau
+        //ko viet nghiep vu o tang RestController
         new ProductImportCreReqDTO().validate(productImportCreReqDTO, bindingResult);
-        productImportCreReqDTO.setId(null);
-
-
-        EColor eColor = EColor.fromString(productImportCreReqDTO.getColor().toUpperCase());
-        for (EColor e: EColor.values()) {
-            assert eColor != null;
-            if (eColor.getValue().equals(e.getValue())){
-                ProductImport c = new ProductImport();
-                c.setColor(eColor);
-                break ;
-            }else {
-                throw new DataInputException("Not found color ");
-            }
-        }
-
-
-        ESize size = ESize.parseESize(productImportCreReqDTO.getSize().toUpperCase());
-        ESize eSize = ESize.parseESize(ESize.value());
-
-
-
-
-        EProductStatus productStatus = EProductStatus.fromString(productImportCreReqDTO.getProductStatus().toUpperCase());
-        for (EProductStatus ep: EProductStatus.values()) {
-            assert productStatus != null;
-            if (productStatus.getValue().equals(ep.getValue())){
-                ProductImport p = new ProductImport();
-                p.setProductStatus(productStatus);
-                break ;
-            }else {
-                throw new DataInputException("Not found productStatus ");
-            }
-        }
-
-        Optional<Product> productDTOOptional = productService.findById(productImportCreReqDTO.getProductDTO().getId());
-
-        if (productDTOOptional.isEmpty()) {
-            throw new ResourceNotFoundException("Not found this product");
-        }
 
         if (bindingResult.hasFieldErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
+//        productImportCreReqDTO.setId(null);
 
-
-
-        ProductImportCreResDTO productImportCreResDTO = productImportService.create(productDTOOptional.get().toProductDTO(),productImportCreReqDTO);
+        ProductImportCreResDTO productImportCreResDTO = productImportService.create(productImportCreReqDTO);
 
         return new ResponseEntity<>(productImportCreResDTO, HttpStatus.CREATED);
     }
@@ -100,7 +67,10 @@ public class ProductImportAPI {
     @GetMapping()
     public ResponseEntity<?> getAllProductImport(){
         List<ProductImport> productImportList = productImportService.findAll();
-        return new ResponseEntity<>(productImportList, HttpStatus.OK);
+        List<ProductImportCreResDTO> productImportCreResDTOS = productImportList
+                .stream().map(item -> item.toProductImportCreResDTO()).collect(Collectors.toList());
+
+        return new ResponseEntity<>(productImportCreResDTOS, HttpStatus.OK);
     }
 
     @DeleteMapping()

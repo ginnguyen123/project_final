@@ -1,8 +1,5 @@
 package cg.dto.productImport;
 
-
-
-import cg.dto.product.ProductCreReqDTO;
 import cg.dto.product.ProductDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
@@ -12,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -25,7 +21,7 @@ import org.springframework.validation.Validator;
 
 public class ProductImportCreReqDTO implements Validator {
 
-    private Long id;
+//    private Long id;
 
     private String size;
 
@@ -45,7 +41,7 @@ public class ProductImportCreReqDTO implements Validator {
 
     public ProductImport toProductImport(){
         return new ProductImport()
-                .setId(id)
+//                .setId(id)
                 .setSize(ESize.valueOf(size))
                 .setColor(EColor.valueOf(color))
                 .setCode(code) // bị đá ra

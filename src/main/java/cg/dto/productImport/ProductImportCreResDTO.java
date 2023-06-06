@@ -5,6 +5,7 @@ import cg.dto.product.ProductDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
+import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,10 +24,10 @@ public class ProductImportCreResDTO {
     private Long id;
 
 
-    private ESize size;
+    private String size;
 
 
-    private EColor color;
+    private String color;
 
 
     private String code;
@@ -35,33 +36,22 @@ public class ProductImportCreResDTO {
     private Long quantity;
 
 
-    private EProductStatus productStatus;
+    private String productStatus;
 
     private ProductDTO productDTO;
 
-    List<ProductImportDTO> productImportDTOList;
-
-
-    public ProductImportCreResDTO(ProductDTO productDTO,ProductImport productImport) {
-
-        this.id = productImport.getId();
-        this.size = productImport.getSize();
-        this.color = productImport.getColor();
-        this.code = productImport.getCode();
-        this.quantity = productImport.getQuantity();
-        this.productStatus = productImport.getProductStatus();
-        this.productDTO = productDTO.toProduct().toProductDTO();
-
+    public ProductImportCreResDTO(Product product, ProductImport productImport) {
     }
+
 
     public ProductImport toProductImport(){
         return new ProductImport()
                 .setId(id)
-                .setSize(size)
-                .setColor(color)
+                .setSize(ESize.getESize(size))
+                .setColor(EColor.getEColor(color))
                 .setCode(code)
                 .setQuantity(Long.valueOf(quantity))
-                .setProductStatus(productStatus)
+                .setProductStatus(EProductStatus.getEProductStatus(productStatus))
                 .setProduct(productDTO.toProduct());
 
     }

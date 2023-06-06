@@ -44,7 +44,7 @@ public enum EColor {
     }
 
     public static EColor getEColor(String value){
-        for (EColor ecolor: EColor.values()){
+        for (EColor ecolor : EColor.values()){
             if (ecolor.getValue().equalsIgnoreCase(value)){
                 return ecolor;
             }

@@ -1,5 +1,6 @@
 package cg.model.product;
 
+import cg.dto.productImport.ProductImportCreResDTO;
 import cg.dto.productImport.ProductImportDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.EColor;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -54,5 +56,29 @@ public class ProductImport extends BaseEntity {
                 .setProductStatus(productStatus.getValue())
                 .setProduct(product.toProductDTO())
                 ;
+    }
+
+    public ProductImportCreResDTO toProductImportCreResDTO(){
+        return new ProductImportCreResDTO()
+                .setId(id)
+                .setCode(code)
+                .setColor(color.getValue())
+                .setSize(size.getValue())
+                .setQuantity(quantity)
+                .setProductStatus(productStatus.getValue())
+                .setProductDTO(product.toProductDTO());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductImport that = (ProductImport) o;
+        return size == that.size && color == that.color && Objects.equals(code, that.code) && productStatus == that.productStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(size, color, code, productStatus);
     }
 }

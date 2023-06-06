@@ -37,22 +37,14 @@ public enum ESize {
         return eSize;
     }
 
-//    public static ESize getESize(String value){
-//        for (ESize[] esize: values()){
-//            if (esize.getValue().equalsIgnoreCase(value)){
-//                return esize;
-//            }
-//        }
-//        return null;
-//    }
-    public static ESize parseESize(String value) {
-        ESize[] item = values();
-        for (ESize size : item) {
-            if (size.value.equals(value)) {
-                return size;
+    public static ESize getESize(String value){
+        for (ESize esize: values()){
+            if (esize.getValue().equalsIgnoreCase(value)){
+                return esize;
             }
         }
-        throw new IllegalArgumentException("invalid");
+        return null;
     }
+
 
 }
