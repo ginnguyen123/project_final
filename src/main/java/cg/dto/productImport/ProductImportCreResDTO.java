@@ -42,7 +42,7 @@ public class ProductImportCreResDTO {
     List<ProductImportDTO> productImportDTOList;
 
 
-    public ProductImportCreResDTO(ProductImport productImport) {
+    public ProductImportCreResDTO(ProductDTO productDTO,ProductImport productImport) {
 
         this.id = productImport.getId();
         this.size = productImport.getSize();
@@ -50,7 +50,7 @@ public class ProductImportCreResDTO {
         this.code = productImport.getCode();
         this.quantity = productImport.getQuantity();
         this.productStatus = productImport.getProductStatus();
-        this.productDTO = productImport.toProductImportDTO().getProduct();
+        this.productDTO = productDTO.toProduct().toProductDTO();
 
     }
 

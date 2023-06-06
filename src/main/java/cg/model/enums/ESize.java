@@ -25,6 +25,7 @@ public enum ESize {
         return value;
     }
 
+
     private static final Map<String, ESize> NAME_MAP = Stream.of(values())
             .collect(Collectors.toMap(ESize::toString, Function.identity()));
 
@@ -34,6 +35,24 @@ public enum ESize {
             throw new DataInputException(String.format("'%s' has no corresponding value. Accepted values: %s", name, Arrays.asList(values())));
         }
         return eSize;
+    }
+
+//    public static ESize getESize(String value){
+//        for (ESize[] esize: values()){
+//            if (esize.getValue().equalsIgnoreCase(value)){
+//                return esize;
+//            }
+//        }
+//        return null;
+//    }
+    public static ESize parseESize(String value) {
+        ESize[] item = values();
+        for (ESize size : item) {
+            if (size.value.equals(value)) {
+                return size;
+            }
+        }
+        throw new IllegalArgumentException("invalid");
     }
 
 }

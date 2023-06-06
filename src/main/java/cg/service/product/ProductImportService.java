@@ -7,6 +7,7 @@ import cg.dto.productImport.ProductImportDTO;
 import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import cg.repository.ProductImportRepository;
+import cg.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,9 @@ public class ProductImportService implements IProductImportService {
 
     @Autowired
     private ProductImportRepository productImportRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
 
     @Override
@@ -58,20 +62,21 @@ public class ProductImportService implements IProductImportService {
 
     @Override
     public ProductImportCreResDTO create(ProductDTO productDTO, ProductImportCreReqDTO productImportCreReqDTO) {
-        ProductImport productImport = productImportCreReqDTO.toProductImport();
+        ProductImport productImport = productImportCreReqDTO.toProductImport();// k tim dc bien productImportCreReqDTO
 
         productImport.setProduct(productDTO.toProduct());
 
        productImportRepository.save(productImport);
-       ProductImportCreResDTO ProductImportCreResDTO = new ProductImportCreResDTO(productImport);
+       ProductImportCreResDTO productImportCreResDTO = new ProductImportCreResDTO(productDTO,productImport);
 
-        return ProductImportCreResDTO;
+        return productImportCreResDTO;
 
     }
 
     @Override
-    public ProductImportCreResDTO update(ProductImport productImport) {
+    public ProductImportCreResDTO update(ProductDTO productDTO ,ProductImport productImport) {
+        productRepository.save(productDTO.toProduct());
         productImportRepository.save(productImport);
-        return new ProductImportCreResDTO(productImport);
+        return new ProductImportCreResDTO(productDTO ,productImport);
     }
 }

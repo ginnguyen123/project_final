@@ -34,6 +34,7 @@ public class ProductImportAPI {
     @Autowired
     private IProductImportService productImportService;
 
+
     @Autowired
     private IProductService productService;
 
@@ -47,48 +48,32 @@ public class ProductImportAPI {
         new ProductImportCreReqDTO().validate(productImportCreReqDTO, bindingResult);
         productImportCreReqDTO.setId(null);
 
-        EnumSet<EColor> allColor = EnumSet.allOf(EColor.class);
-        List<EColor> listColor = new ArrayList<>( allColor.size());
-        for (EColor s : allColor) {
-            listColor.add( s);
-        }
+
         EColor eColor = EColor.fromString(productImportCreReqDTO.getColor().toUpperCase());
-        for (EColor e: listColor) {
+        for (EColor e: EColor.values()) {
+            assert eColor != null;
             if (eColor.getValue().equals(e.getValue())){
-                ProductImport productImport = new ProductImport();
-                productImport.setColor(eColor);
+                ProductImport c = new ProductImport();
+                c.setColor(eColor);
                 break ;
             }else {
                 throw new DataInputException("Not found color ");
             }
         }
 
-        EnumSet<ESize> allSize = EnumSet.allOf(ESize.class);
-        List<ESize> listSize = new ArrayList<>( allSize.size());
-        for (ESize s : allSize) {
-            listSize.add( s);
-        }
-        ESize size = ESize.fromString(productImportCreReqDTO.getSize().toUpperCase());
-        for (ESize e: listSize) {
-            if (size.getValue().equals(e.getValue())){
-                ProductImport productImport = new ProductImport();
-                productImport.setSize(size);
-                break ;
-            }else {
-                throw new DataInputException("Not found size ");
-            }
-        }
 
-        EnumSet<EProductStatus> all = EnumSet.allOf(EProductStatus.class);
-        List<EProductStatus> listProductStatus = new ArrayList<>( all.size());
-        for (EProductStatus s : all) {
-            listProductStatus.add( s);
-        }
+        ESize size = ESize.parseESize(productImportCreReqDTO.getSize().toUpperCase());
+        ESize eSize = ESize.parseESize(ESize.value());
+
+
+
+
         EProductStatus productStatus = EProductStatus.fromString(productImportCreReqDTO.getProductStatus().toUpperCase());
-        for (EProductStatus e: listProductStatus) {
-            if (productStatus.getValue().equals(e.getValue())){
-                ProductImport productImport = new ProductImport();
-                productImport.setProductStatus(productStatus);
+        for (EProductStatus ep: EProductStatus.values()) {
+            assert productStatus != null;
+            if (productStatus.getValue().equals(ep.getValue())){
+                ProductImport p = new ProductImport();
+                p.setProductStatus(productStatus);
                 break ;
             }else {
                 throw new DataInputException("Not found productStatus ");
@@ -97,13 +82,15 @@ public class ProductImportAPI {
 
         Optional<Product> productDTOOptional = productService.findById(productImportCreReqDTO.getProductDTO().getId());
 
-        if (!productDTOOptional.isPresent()) {
+        if (productDTOOptional.isEmpty()) {
             throw new ResourceNotFoundException("Not found this product");
         }
 
         if (bindingResult.hasFieldErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
+
+
 
         ProductImportCreResDTO productImportCreResDTO = productImportService.create(productDTOOptional.get().toProductDTO(),productImportCreReqDTO);
 

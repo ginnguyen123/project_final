@@ -40,7 +40,7 @@ public class ProductImport extends BaseEntity {
     private EProductStatus productStatus;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id" ,nullable = false)
     private Product product;
 
 

@@ -22,7 +22,7 @@ import org.springframework.validation.Validator;
 @NoArgsConstructor
 @Setter
 @Getter
-@Accessors(chain = true)
+
 public class ProductImportCreReqDTO implements Validator {
 
     private Long id;
@@ -41,14 +41,14 @@ public class ProductImportCreReqDTO implements Validator {
 
     private String productStatus;
 
-    private ProductDTO productDTO;//productCrReqDTO
+    private ProductDTO productDTO;
 
     public ProductImport toProductImport(){
         return new ProductImport()
                 .setId(id)
                 .setSize(ESize.valueOf(size))
                 .setColor(EColor.valueOf(color))
-                .setCode(code)
+                .setCode(code) // bị đá ra
                 .setQuantity(Long.valueOf(quantity))
                 .setProductStatus(EProductStatus.valueOf(productStatus))
                 .setProduct(productDTO.toProduct())

@@ -33,4 +33,13 @@ public enum EProductStatus {
         }
         return productStatus;
     }
+
+    public static EProductStatus getEProductStatus(String value){
+        for (EProductStatus status: EProductStatus.values()){
+            if (status.getValue().equalsIgnoreCase(value)){
+                return status;
+            }
+        }
+        return null;
+    }
 }

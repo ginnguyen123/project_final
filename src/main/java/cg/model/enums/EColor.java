@@ -43,4 +43,13 @@ public enum EColor {
         return eColor;
     }
 
+    public static EColor getEColor(String value){
+        for (EColor ecolor: EColor.values()){
+            if (ecolor.getValue().equalsIgnoreCase(value)){
+                return ecolor;
+            }
+        }
+        return null;
+    }
+
 }
