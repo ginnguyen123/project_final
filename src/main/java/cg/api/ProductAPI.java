@@ -121,7 +121,7 @@ public class ProductAPI {
         }
         catch (IOException e){
             e.printStackTrace();
-            throw new DataInputException("Upload hình ảnh thất bại");
+            throw new DataInputException("Upload fail");
         }
 
         Product product = productCreReqDTO.toProduct();

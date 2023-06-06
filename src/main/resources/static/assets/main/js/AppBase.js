@@ -2,9 +2,9 @@ class AppBase{
     static DOMAIN_SERVER = location.origin;
     static API_SERVER = this.DOMAIN_SERVER + '/api';
     static API_PRODUCT = this.API_SERVER + '/products';
-
+    static API_BRAND = this.API_SERVER + '/brands';
+    static API_CATEGORY = this.API_SERVER + '/categories';
     static SERVER_CLOUDINARY = "https://res.cloudinary.com";
-
     static CLOUDINARY_NAME = "/djkadtjxi";
     static CLOUDINARY_URL = this.SERVER_CLOUDINARY + this.CLOUDINARY_NAME + '/image/upload';
     static SCALE_IMAGE_W_80_H_80_Q_100 = 'c_limit,w_80,h_80,q_100';
@@ -108,7 +108,42 @@ class AppBase{
     }
 
     static renderProduct(item){
-    //     do something
+        let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/${item.media.fileFolder}/${item.media.fileName}`
+        return `<tr id="tr_${item.id}">
+                    <td>
+                      <input type="checkbox" id="delete_${item.id}">
+                    </td>
+                    <td>${item.code}</td>
+                    <td>
+                        <img src="${image_thumbnail}"/>
+                    </td>
+                    <td>${item.title}</td>
+                    <td>${item.price}</td>
+                    <td>${item.category.name}</td>
+                    <td>
+                        <button class="btn btn-delete btn-sm delete" type="button" title="Xóa">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        
+                        <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" >
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>`
+    }
+
+    static renderBrand(item){
+        return `<option value="${item.id}">${item.name}</option>`
+    }
+
+    static renderCategory(item){
+        if (item.categoryParentId == item.id)
+            return `<option value="${item.id}">${item.name}</option>`;
+    }
+
+    static renderCategoryParent(item){
+        if (item.categoryParentId != item.id)
+            return `<option value="${item.id}">${item.name}</option>`;
     }
 
     static renderCustomer(item){

@@ -5,9 +5,12 @@
       <div class="modal-content">
         <div class="modal-body">
           <div class="row">
-            <div class="form-group  col-md-12">
+            <div class="form-group col-md-12">
               <span class="thong-tin-thanh-toan">
                 <h5>Thêm mới danh mục </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <i class="fas fa-times"></i>
+                </button>
               </span>
             </div>
             <div class="form-group col-md-12">
@@ -32,10 +35,10 @@
               </ul>
             </div>
           </div>
-          <br>
-          <a class="btn btn-cancel" data-dismiss="modal" >Hủy bỏ</a>
-          <button class="btn btn-save" type="button">Lưu lại</button>
-          <br>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-cancel" data-dismiss="modal">Hủy bỏ</button>
+            <button type="button" id="btnSaveCreateCategory" class="btn btn-save">Lưu lại</button>
+          </div>
         </div>
       </div>
     </div>

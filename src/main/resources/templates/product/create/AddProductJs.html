@@ -1,10 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="AddProductJs">
+  <script type="text/javascript" src="/assets/jQuery/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="/assets/iziToast-v1.4.0/iziToast-1.4.0.js"></script>
+  <script src="https://code.jquery.com/jquery-latest.js"/>
+
+  <script type="text/javascript" src="/assets/main/js/AppBase.js"></script>
+  <script>
+    const page = {
+      urls:{
+        getAllBrand: AppBase.API_BRAND,
+        getAllCategory: AppBase.API_CATEGORY,
+        getAllCategoryParent: AppBase.API_CATEGORY
+      },
+      elements:{},
+      loadData:{},
+      commands:{},
+      dialogs:{
+        elements:{},
+        loadData:{},
+        commands:{}
+      }
+    }
+
+    page.elements.selectBrand = $('#brand');
+    page.elements.selectCategory = $('#category');
+    page.elements.selectCategoryParent = $('#categoryParent');
+    page.elements.btnChoiceImage = $('.boxChoiceImage');
+    page.dialogs.elements.wrapper = $('.wrapper');
+    page.dialogs.elements.inputFileImage = $('#imageFileProduct');
+    page.dialogs.elements.imagePreview = $('.image-preview');
+    page.dialogs.elements.imagePreviewCanvas = $('.image-preview canvas');
+    page.dialogs.elements.canvas = $("#canvas");
+    page.dialogs.elements.context = page.dialogs.elements.canvas[0].getContext('2d');
+    page.dialogs.elements.imagePreviewCanvas.css("display", "none");
+
+    page.dialogs.elements.btnSaveCreateBrand = $('#btnSaveCreateBrand');
+
+
+    page.loadData.getAllBrand = () =>{
+      $.ajax({
+        type: 'GET',
+        url: page.urls.getAllBrand
+      })
+              .done((data)=>{
+                $.each(data, (i, item)=>{
+                  let str = AppBase.renderBrand(item);
+                  page.elements.selectBrand.append(str);
+                })
+              })
+              .fail((jqXHR)=>{
+                console.log(jqXHR);
+              })
+    }
+
+    page.loadData.getAllCategory = () =>{
+      $.ajax({
+        type: 'GET',
+        url: page.urls.getAllCategory
+      })
+              .done((data)=>{
+                $.each(data, (i,item)=>{
+                  let str = AppBase.renderCategory(item);
+                  page.elements.selectCategory.append(str);
+                })
+              })
+              .fail((jqXHR)=>{
+                console.log(jqXHR);
+              })
+    }
+
+    page.loadData.getAllCategoryParentByCategoryId = (categoryId, elem) =>{
+      $.ajax({
+        type: 'GET',
+        url: page.urls.getAllCategoryParent + '/' + categoryId
+      })
+              .done((data)=>{
+                elem.empty();
+                $.each(data, (i, item)=>{
+                  let str = AppBase.renderCategoryParent(item);
+                  elem.append(str);
+                })
+              .fail((jqXHR)=>{
+                console.log(jqXHR);
+              })
+              })
+    }
+
+    page.commands.handleChangeCategory = (elemCategory, elemCategoryParent) =>{
+      elemCategory.on('change', () =>{
+        let categoryId = +elemCategory.val();
+        if (isNaN(categoryId)){
+          elemCategoryParent.empty();
+          let str = `<option>-- Chọn danh mục con --</option>`;
+          elemCategoryParent.append(str);
+        }
+        else{
+          page.loadData.getAllCategoryParentByCategoryId(categoryId, elemCategoryParent);
+        }
+      })
+    }
+
+    page.dialogs.commands.loadImageToCanvas = (imageFile, fileType, imageUrl) => {
+      page.dialogs.elements.imagePreviewCanvas.css("display", "");
+      page.dialogs.elements.wrapper.addClass("active");
+      // page.dialogs.elements.wrapperContent.css("opacity", 0);
+
+      let imageObj = new Image();
+
+      imageObj.onload = function () {
+        page.dialogs.elements.context.canvas.width = imageObj.width;
+        page.dialogs.elements.context.canvas.height = imageObj.height;
+        page.dialogs.elements.context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height);
+      };
+
+      if (fileType === "BINARY") {
+        imageObj.src = URL.createObjectURL(imageFile);
+      }
+      else {
+        imageObj.src = imageUrl;
+      }
+    }
+
+    page.dialogs.commands.changeImagePreview = (elem) =>  {
+      let imageFile = elem[0].files[0];
+
+      if (imageFile) {
+        let reader = new FileReader();
+
+        reader.readAsDataURL(imageFile);
+
+        reader.onload = function (e) {
+          if (e.target.readyState === FileReader.DONE) {
+            page.dialogs.commands.loadImageToCanvas(imageFile, "BINARY", null);
+          }
+        }
+      }
+      else {
+        page.dialogs.elements.clearImagePreview();
+      }
+    }
+
+    page.dialogs.commands.clearImagePreview = () => {
+      page.dialogs.elements.inputFileImage.val("");
+      page.dialogs.elements.imagePreviewCanvas.css("display", "none");
+      page.dialogs.elements.wrapper.removeClass("active");
+      // page.dialogs.elements.wrapperContent.css("opacity", 1);
+
+    }
+
+    page.commands.loadData = () =>{
+      page.loadData.getAllBrand();
+
+      page.loadData.getAllCategory();
+
+
+    }
+
+    page.initializeControlEvent = () =>{
+      page.commands.handleChangeCategory(page.elements.selectCategory, page.elements.selectCategoryParent);
+
+      page.elements.btnChoiceImage.on('click', ()=>{
+        page.dialogs.elements.inputFileImage.trigger('click');
+      })
+
+      page.dialogs.elements.inputFileImage.on('change', ()=>{
+        page.dialogs.commands.changeImagePreview(page.dialogs.elements.inputFileImage);
+      })
+
+    }
+
+    $(()=>{
+      page.commands.loadData();
+
+      page.initializeControlEvent();
+    })
+
+  </script>
+
+</th:block>

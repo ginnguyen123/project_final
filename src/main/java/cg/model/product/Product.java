@@ -63,7 +63,7 @@ public class Product extends BaseEntity {
                 .setCode(code)
                 .setPrice(price)
                 .setDescription(description)
-                .setUrl(productAvatar.getFileUrl())
+                .setMedia(productAvatar.toMediaDTO())
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
 
