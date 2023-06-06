@@ -27,7 +27,7 @@ public class ProductDTO {
 
     private String description;
 
-    private MediaDTO productAvatar;
+    private MediaDTO url;
 
     private BrandDTO brand;
 
@@ -42,7 +42,7 @@ public class ProductDTO {
                 .setPrice(price)
                 .setDescription(description)
                 .setBrand(brand.toBrand())
-                .setProductAvatar(productAvatar.toMedia())
+                .setProductAvatar(url.toMedia())
                 .setCategory(category.toCategory());
 
     }

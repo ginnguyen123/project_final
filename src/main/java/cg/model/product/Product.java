@@ -53,6 +53,8 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
+    @OneToMany(mappedBy = "product")
+    private List<ProductImport> productImports;
 
     public ProductDTO toProductDTO(){
         return new ProductDTO()
@@ -61,14 +63,13 @@ public class Product extends BaseEntity {
                 .setCode(code)
                 .setPrice(price)
                 .setDescription(description)
-                .setProductAvatar(productAvatar.toMediaDTO())
+                .setUrl(productAvatar.getFileUrl())
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
 
     }
 
     public ProductCreResDTO toProductCreResDTO(){
-
         return new ProductCreResDTO()
                 .setId(id)
                 .setTitle(title)
@@ -80,3 +81,4 @@ public class Product extends BaseEntity {
                 .setCategory(category.toCategoryDTO());
     }
 }
+
