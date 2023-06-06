@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface IProductService extends IGeneralService<Product,Long> {
     List<Product> saveAll(List<Product> products);
+
+    List<Product> findAllByDeletedFalse();
 }

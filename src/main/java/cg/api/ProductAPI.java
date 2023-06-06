@@ -25,9 +25,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -57,6 +59,13 @@ public class ProductAPI {
         List<Product> products = productService.findAll();
         List<ProductDTO> productDTOS = products.stream().map(item -> item.toProductDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(productDTOS,HttpStatus.OK);
+    }
+
+    @GetMapping("/get")
+    private ResponseEntity<?> getAllProductsDeleteFalse() {
+        List<Product> products = productService.findAllByDeletedFalse();
+        List<ProductDTO> productDTOS = products.stream().map(item -> item.toProductDTO()).collect(Collectors.toList());
+        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
     @PostMapping("/create")
@@ -134,6 +143,17 @@ public class ProductAPI {
         ProductCreResDTO productCreResDTO = product.toProductCreResDTO();
 
         return new ResponseEntity<>(productCreResDTO, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{productID}")
+    public ResponseEntity<?> delete(@PathVariable Long productID) {
+        Optional<Product> productOptional = productService.findById(productID);
+        if (!productOptional.isPresent()) {
+            throw new DataInputException("Product is not found");
+        }
+        Product product = productOptional.get();
+        productService.delete(product);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

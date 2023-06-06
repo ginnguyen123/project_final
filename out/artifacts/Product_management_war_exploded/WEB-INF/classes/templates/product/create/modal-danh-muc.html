@@ -1,0 +1,43 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="modal-danh-muc">
+  <div class="modal fade" id="modalAddDanhMuc" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group  col-md-12">
+              <span class="thong-tin-thanh-toan">
+                <h5>Thêm mới danh mục </h5>
+              </span>
+            </div>
+            <div class="form-group col-md-12">
+              <label class="control-label">Nhập tên danh mục mới</label>
+              <input class="form-control" type="text" required="">
+            </div>
+            <div class="form-group col-md-12" >
+              <label class="control-label">Danh mục sản phẩm hiện đang có</label>
+              <ul class="lich-su-danh-muc" style="padding-left: 20px;">
+                <li class="danh-muc">Áo</li>
+                <li class="danh-muc">Quần</li>
+                <li class="danh-muc">Set</li>
+                <li class="danh-muc">Đồ bộ</li>
+                <li class="danh-muc">Áo</li>
+                <li class="danh-muc">Quần</li>
+                <li class="danh-muc">Set</li>
+                <li class="danh-muc">Đồ bộ</li>
+                <li class="danh-muc">Áo</li>
+                <li class="danh-muc">Quần</li>
+                <li class="danh-muc">Set</li>
+                <li class="danh-muc">Đồ bộ</li>
+              </ul>
+            </div>
+          </div>
+          <br>
+          <a class="btn btn-cancel" data-dismiss="modal" >Hủy bỏ</a>
+          <button class="btn btn-save" type="button">Lưu lại</button>
+          <br>
+        </div>
+      </div>
+    </div>
+  </div>
+</th:block>
