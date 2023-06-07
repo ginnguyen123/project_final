@@ -40,9 +40,7 @@ public class ProductCreReqDTO implements Validator {
     private Long brandId;
     private String brandName;
     private Long categoryId;
-
     private MultipartFile avatar;
-
     @Override
     public boolean supports(Class<?> clazz) {
         return ProductCreReqDTO.class.isAssignableFrom(clazz);

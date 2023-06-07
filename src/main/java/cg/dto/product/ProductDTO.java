@@ -2,6 +2,7 @@ package cg.dto.product;
 
 import cg.dto.brand.BrandDTO;
 import cg.dto.category.CategoryDTO;
+import cg.dto.media.MediaDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class ProductDTO {
 
     private String description;
 
-    private String url;
+    private MediaDTO media;
 
     private BrandDTO brand;
 

@@ -25,8 +25,8 @@ public class UploadUtils {
         );
     }
 
-    public Map buildImageDestroyParams(Product product, String publicId) {
-        if (product == null || product.getId() == null)
+    public Map buildImageDestroyParams(Media media, String publicId) {
+        if (media == null || media.getId() == null)
             throw new DataInputException("Không thể destroy hình ảnh của sản phẩm không xác định");
 
         return ObjectUtils.asMap(

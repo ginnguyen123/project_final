@@ -23,4 +23,7 @@ public class MediaDTO {
 
     private String cloudId;
 
+    private Integer width;
+    private Integer height;
+
 }

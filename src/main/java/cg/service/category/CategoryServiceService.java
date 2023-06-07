@@ -29,6 +29,11 @@ public class CategoryServiceService implements ICategoryService {
     }
 
     @Override
+    public List<Category> findAllByCategoryParent_Id(Long categoryParentId) {
+        return categoryRepository.findAllByCategoryParent_Id(categoryParentId);
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return categoryRepository.existsById(id);
     }
