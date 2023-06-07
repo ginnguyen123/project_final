@@ -78,11 +78,10 @@ public class ProductAPI {
         String code = productCreReqDTO.getCode();
         Long brandId = productCreReqDTO.getBrandId();
         Long categoryId = productCreReqDTO.getCategoryId();
-
         if (bindingResult.hasErrors()){
             return appUtils.mapErrorToResponse(bindingResult);
         }
-
+        /* Check brand, catagory */
         if (!brandService.existsBrandById(brandId)){
             throw new DataInputException("The brand does not exist");
         }
@@ -91,7 +90,6 @@ public class ProductAPI {
         if (!categoryService.existsById(categoryId)){
             throw new DataInputException("The category does not exist");
         }
-
         Category category = categoryService.findById(categoryId).get();
 
         if (code.isEmpty() || code == null){
@@ -143,6 +141,11 @@ public class ProductAPI {
         ProductCreResDTO productCreResDTO = product.toProductCreResDTO();
 
         return new ResponseEntity<>(productCreResDTO, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/update/{productId}")
+    public ResponseEntity<?> update(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{productID}")

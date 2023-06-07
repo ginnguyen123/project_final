@@ -1,5 +1,6 @@
 package cg.model.user;
 
+import cg.dto.userDTO.UserDTO;
 import cg.model.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,4 +29,11 @@ public class User extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
+
+    public UserDTO toUserDTO(){
+        return new UserDTO()
+                .setId(id)
+                .setUsername(username)
+                .setPassword(password);
+    }
 }
