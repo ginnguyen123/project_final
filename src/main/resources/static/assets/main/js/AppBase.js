@@ -4,6 +4,8 @@ class AppBase{
     static API_PRODUCT = this.API_SERVER + '/products';
     static API_BRAND = this.API_SERVER + '/brands';
     static API_CATEGORY = this.API_SERVER + '/categories';
+
+    static API_DISCOUNT = this.API_SERVER + '/discounts';
     static SERVER_CLOUDINARY = "https://res.cloudinary.com";
     static CLOUDINARY_NAME = "/djkadtjxi";
     static CLOUDINARY_URL = this.SERVER_CLOUDINARY + this.CLOUDINARY_NAME + '/image/upload';
@@ -31,11 +33,32 @@ class AppBase{
 
         static ERROR_LOADING_PRODUCT = "Loading list of products failed !"
     }
+
+    static AlertMessageVi = class {
+        static SUCCESS_CREATED = "Tạo dữ liệu thành công !";
+        static SUCCESS_UPDATED = "Cập nhật dữ liệu thành công !";
+        static SUCCESS_DEPOSIT = "Giao dịch gửi tiền thành công !";
+        static SUCCESS_WITHDRAW = "Giao dịch rút tiền thành công !";
+        static SUCCESS_TRANSFER = "Giao dịch chuyển khoản thành công !";
+        static SUCCESS_DEACTIVATE = "Hủy kích hoạt khách hàng thành công !";
+
+        static ERROR_400 = "Thao tác không thành công, vui lòng kiểm tra lại dữ liệu.";
+        static ERROR_401 = "Unauthorized - Access Token của bạn hết hạn hoặc không hợp lệ.";
+        static ERROR_403 = "Forbidden - Bạn không được quyền truy cập tài nguyên này.";
+        static ERROR_404 = "Not Found - Tài nguyên này đã bị xóa hoặc không tồn tại";
+        static ERROR_500 = "Internal Server Error - Hệ thống Server đang có vấn đề hoặc không truy cập được.";
+
+        static ERROR_CREATED = 'Thêm khách hàng mới không thành công';
+
+        static ERROR_LOADING_PROVINCE = "Tải danh sách tỉnh - thành phố không thành công !";
+        static ERROR_LOADING_DISTRICT = "Tải danh sách quận - phường - huyện không thành công !";
+        static ERROR_LOADING_WARD = "Tải danh sách phường - xã - thị trấn không thành công !";
+    }
     static IziToast = class {
         static showSuccessAlert(m) {
             iziToast.success({
                 title: 'OK',
-                position: 'bottomLeft',
+                position: 'topRight',
                 timeout: 2500,
                 message: m
             });
@@ -43,7 +66,7 @@ class AppBase{
         static showErrorAlert(m) {
             iziToast.error({
                 title: 'Error',
-                position: 'bottomLeft',
+                position: 'topRight',
                 timeout: 2500,
                 message: m
             });
@@ -133,7 +156,11 @@ class AppBase{
     }
 
     static renderBrand(item){
-        return `<option value="${item.id}">${item.name}</option>`
+        return `<option value="${item.id}">${item.name}</option>`;
+    }
+
+    static renderDiscount(item){
+        return `<option value="${item.id}">${item.name}</option>`;
     }
 
     static renderCategory(item){

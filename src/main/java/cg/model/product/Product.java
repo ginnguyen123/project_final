@@ -49,6 +49,9 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "brand_id", referencedColumnName = "id", nullable = false)
     private Brand brand;
 
+    @Column(name = "discount_amounts", precision = 10, scale = 0)
+    private BigDecimal discountAmount;
+
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;

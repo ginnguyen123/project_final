@@ -25,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.sound.midi.MidiFileFormat;
 import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.List;
@@ -70,11 +71,11 @@ public class ProductAPI {
 
     @PostMapping("/create")
     private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO, BindingResult bindingResult){
-        System.out.println(productCreReqDTO);
+
         new ProductCreReqDTO().validate(productCreReqDTO, bindingResult);
         productCreReqDTO.setId(null);
         MultipartFile avatar = productCreReqDTO.getAvatar();
-        String code = productCreReqDTO.getCode().trim();
+        String code = productCreReqDTO.getCode();
         Long brandId = productCreReqDTO.getBrandId();
         Long categoryId = productCreReqDTO.getCategoryId();
 
@@ -85,7 +86,6 @@ public class ProductAPI {
         if (!brandService.existsBrandById(brandId)){
             throw new DataInputException("The brand does not exist");
         }
-
         Brand brand = brandService.findById(brandId).get();
 
         if (!categoryService.existsById(categoryId)){
