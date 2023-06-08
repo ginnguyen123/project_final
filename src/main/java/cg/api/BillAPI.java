@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class BillAPI {
     }
 
     //Thieu validate o billDTO
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<?> createBill(@Validated @RequestBody BillDTO billDTO,BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
@@ -41,7 +42,7 @@ public class BillAPI {
         Bill newBill = new Bill();
         newBill.setPhone_receiver(billDTO.getPhone_receiver());
         newBill.setName_receiver(billDTO.getName_receiver());
-        newBill.setTotalAmount(billDTO.toBill().getTotalAmount());
+        newBill.setTotalAmount(BigDecimal.valueOf(Long.parseLong(billDTO.getTotal_amount())));
         newBill.setLocationRegion(billDTO.getLocationRegion().toLocationRegion());
         newBill.setCustomer(billDTO.toBill().getCustomer());
 //        Khong set user
@@ -50,5 +51,4 @@ public class BillAPI {
         BillDTO newBillDTO = newBill.ToBillDTO();
         return new ResponseEntity<>(newBillDTO, HttpStatus.OK);
     }
-
 }

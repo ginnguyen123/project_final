@@ -69,7 +69,6 @@ public class Product extends BaseEntity {
                 .setMedia(productAvatar.toMediaDTO())
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
-
     }
 
     public ProductCreResDTO toProductCreResDTO(){
