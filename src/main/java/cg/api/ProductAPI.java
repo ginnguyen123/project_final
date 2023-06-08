@@ -25,9 +25,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -59,6 +61,13 @@ public class ProductAPI {
         return new ResponseEntity<>(productDTOS,HttpStatus.OK);
     }
 
+    @GetMapping("/get")
+    private ResponseEntity<?> getAllProductsDeleteFalse() {
+        List<Product> products = productService.findAllByDeletedFalse();
+        List<ProductDTO> productDTOS = products.stream().map(item -> item.toProductDTO()).collect(Collectors.toList());
+        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
+    }
+
     @PostMapping("/create")
     private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO, BindingResult bindingResult){
         System.out.println(productCreReqDTO);
@@ -68,11 +77,10 @@ public class ProductAPI {
         String code = productCreReqDTO.getCode().trim();
         Long brandId = productCreReqDTO.getBrandId();
         Long categoryId = productCreReqDTO.getCategoryId();
-
         if (bindingResult.hasErrors()){
             return appUtils.mapErrorToResponse(bindingResult);
         }
-
+        /* Check brand, catagory */
         if (!brandService.existsBrandById(brandId)){
             throw new DataInputException("The brand does not exist");
         }
@@ -82,7 +90,6 @@ public class ProductAPI {
         if (!categoryService.existsById(categoryId)){
             throw new DataInputException("The category does not exist");
         }
-
         Category category = categoryService.findById(categoryId).get();
 
         if (code.isEmpty() || code == null){
@@ -121,7 +128,7 @@ public class ProductAPI {
         }
         catch (IOException e){
             e.printStackTrace();
-            throw new DataInputException("Upload hình ảnh thất bại");
+            throw new DataInputException("Upload fail");
         }
 
         Product product = productCreReqDTO.toProduct();
@@ -134,6 +141,22 @@ public class ProductAPI {
         ProductCreResDTO productCreResDTO = product.toProductCreResDTO();
 
         return new ResponseEntity<>(productCreResDTO, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/update/{productId}")
+    public ResponseEntity<?> update(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{productID}")
+    public ResponseEntity<?> delete(@PathVariable Long productID) {
+        Optional<Product> productOptional = productService.findById(productID);
+        if (!productOptional.isPresent()) {
+            throw new DataInputException("Product is not found");
+        }
+        Product product = productOptional.get();
+        productService.delete(product);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

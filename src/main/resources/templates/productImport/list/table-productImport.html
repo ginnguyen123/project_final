@@ -6,7 +6,7 @@
     <th:block th:replace="layout/head :: head"/>
 </head>
 
-<body onload="time()" class="app sidebar-mini rtl">
+<body  class="app sidebar-mini rtl">
 <!-- Navbar-->
 <header class="app-header">
     <!-- Sidebar toggle button-->
@@ -42,46 +42,34 @@
                             <a class="btn btn-add btn-sm" href="/product-import/create" id="add" title="Thêm mới sản phẩm"><i class="fas fa-plus"></i>
                                 Thêm mới sản phẩm</a>
                         </div>
-
+                        <div class="col-sm-2">
+                            <input id="myInput" type="date" placeholder="Search..">
+                        </div>
+                        <div class="col-sm-2">
+                            <input id="myOutput" type="date" placeholder="Search..">
+                        </div>
                         <div class="col-sm-10 d-flex justify-content-end" id="delete">
                             <a class="btn btn btn-secondary btn-delete btn-sm " title="Xóa"><i
                                     class="fas fa-trash-alt"></i> Xóa </a>
                         </div>
                     </div>
-                    <table class="table table-hover table-bordered" id="sampleTable">
+                    <table class="table table-hover table-bordered" id="tbProductImport">
                         <thead>
                         <tr>
                             <th><input type="checkbox" id="all-delete"></th>
-                            <th>Mã sản phẩm</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Ảnh</th>
-                            <th>Số lượng</th>
-                            <th>Tình trạng</th>
+                            <th>Mã </th>
                             <th>Kích cỡ</th>
                             <th>Màu sắc</th>
+                            <th>Giá gốc</th>
+                            <th>Số lượng</th>
+                            <th>Tình trạng</th>
+                            <th>Tên sản phẩm </th>
+                            <th>Ngày nhập </th>
                             <th>Tính năng</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="check1" value="1">
-                            </td>
-                            <td>76392984</td>
-                            <td>Áo chống nắng SunStop UV Master mũ liền nữ </td>
-                            <td><img src="/assets/img-sanpham/theresa.jpg" alt="" width="100px;"></td>
-                            <td>40</td>
-                            <td><span class="badge btn-add btn-sm">Còn hàng</span></td>
-                            <td>XS</td>
-                            <td>Black</td>
 
-                            <td><button class="btn btn-delete btn-sm delete" type="button" title="Xóa"
-                                        onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>
-                            </button>
-                                <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" id="show-emp" data-toggle="modal"
-                                        data-target="#ModalUP"><i class="fas fa-edit"></i></button>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -91,7 +79,7 @@
 </main>
 
 <!-- javascripts for application to work-->
-<script src="productImport.js"></script>
+<th:block th:replace="productImport/list/productImport :: productImport"/>
 <th:block th:replace="layout/script :: script"/>
 </body>
 

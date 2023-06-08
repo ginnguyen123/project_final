@@ -1,5 +1,6 @@
 package cg.dto.productImport;
 
+import cg.dto.product.ProductCreReqDTO;
 import cg.dto.product.ProductDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
@@ -12,6 +13,10 @@ import lombok.Setter;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 
 
 @AllArgsConstructor
@@ -21,7 +26,7 @@ import org.springframework.validation.Validator;
 
 public class ProductImportCreReqDTO implements Validator {
 
-//    private Long id;
+    private Long id;
 
     private String size;
 
@@ -31,23 +36,28 @@ public class ProductImportCreReqDTO implements Validator {
 
     private String code;
 
+    private String price;
+
+    private String date_added;
 
     private String quantity;
 
 
     private String productStatus;
 
-    private ProductDTO productDTO;
+    private ProductDTO product;
 
     public ProductImport toProductImport(){
         return new ProductImport()
-//                .setId(id)
+                .setId(id)
                 .setSize(ESize.valueOf(size))
                 .setColor(EColor.valueOf(color))
-                .setCode(code) // bị đá ra
+                .setCode(code)
+                .setPrice(BigDecimal.valueOf(Long.parseLong(price)))
+                .setDate_added(LocalDate.parse((date_added)))
                 .setQuantity(Long.valueOf(quantity))
                 .setProductStatus(EProductStatus.valueOf(productStatus))
-                .setProduct(productDTO.toProduct())
+                .setProduct(product.toProduct())
                 ;
     }
 
@@ -66,7 +76,7 @@ public class ProductImportCreReqDTO implements Validator {
         String code = productImportCreReqDTO.getCode();
         String quantity = productImportCreReqDTO.getQuantity();
         String productStatus = productImportCreReqDTO.getProductStatus();
-//        ProductCreReqDTO productCreReqDTO = productImportCreReqDTO.getProductCre();
+//        ProductDTO productCreReqDTO = productImportCreReqDTO.getProduct();
 
         if (size.isEmpty()){
             errors.reject("size.null" , "Product size must not be null");
@@ -99,7 +109,7 @@ public class ProductImportCreReqDTO implements Validator {
         }
 
 //        if (productCreReqDTO.getId() != null) {
-//            errors.rejectValue("productId", "productId.null", "Product's id must not be null");
+//            errors.rejectValue("id", "id.null", "Product's id must not be null");
 //        }
 
 
@@ -107,17 +117,5 @@ public class ProductImportCreReqDTO implements Validator {
 
 
     }
-//
-//    public ProductImport toProductImport() {
-//        return new ProductImport()
-////                .setId(id)
-//                .setSize(size)
-//                .setColor(color)
-//                .setQuantity(quantity)
-//                .setProductStatus(productStatus)
-////                .setProduct(product)
-//                ;
-//
-//
-//    }
+
 }

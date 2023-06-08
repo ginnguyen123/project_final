@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class ProductImportDTO {
     private String size;
     private String color;
     private String code;
+    private LocalDate date_added;
+    private BigDecimal price;
     private Long quantity;
 
     private String productStatus;
@@ -40,7 +44,9 @@ public class ProductImportDTO {
                 .setSize(ESize.valueOf(size))
                 .setColor(EColor.valueOf(color))
                 .setCode(code)
+                .setPrice(price)
                 .setQuantity(quantity)
+                .setDate_added(date_added)
                 .setProductStatus(EProductStatus.valueOf(productStatus))
                 .setProduct(product.toProduct())
                 ;

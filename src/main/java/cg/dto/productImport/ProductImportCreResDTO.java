@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -29,16 +32,17 @@ public class ProductImportCreResDTO {
 
     private String color;
 
+    private BigDecimal price;
 
     private String code;
 
-
+    private LocalDate date_added;
     private Long quantity;
 
 
     private String productStatus;
 
-    private ProductDTO productDTO;
+    private ProductDTO product;
 
     public ProductImportCreResDTO(Product product, ProductImport productImport) {
     }
@@ -50,9 +54,11 @@ public class ProductImportCreResDTO {
                 .setSize(ESize.getESize(size))
                 .setColor(EColor.getEColor(color))
                 .setCode(code)
+                .setPrice(price)
                 .setQuantity(Long.valueOf(quantity))
+                .setDate_added(date_added)
                 .setProductStatus(EProductStatus.getEProductStatus(productStatus))
-                .setProduct(productDTO.toProduct());
+                .setProduct(product.toProduct());
 
     }
 

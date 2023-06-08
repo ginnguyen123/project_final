@@ -13,10 +13,18 @@ import cg.model.product.ProductImport;
 import cg.repository.ProductImportRepository;
 import cg.repository.ProductRepository;
 import cg.service.products.IProductService;
+import cg.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +40,9 @@ public class ProductImportService implements IProductImportService {
 
     @Autowired
     private IProductService productService;
+
+    @Autowired
+    private AppUtils appUtils;
 
 
     @Override
@@ -70,50 +81,40 @@ public class ProductImportService implements IProductImportService {
 
     @Override
     public ProductImportCreResDTO create(ProductImportCreReqDTO productImportCreReqDTO) {
-        Long productId = productImportCreReqDTO.getProductDTO().getId();
+        Long productId = productImportCreReqDTO.getProduct().getId();
         Product product = findProductById(productId);
-
-        List<ProductImport> productImports = productImportRepository.findAllByProductId(productId);
 
         ProductImport productImport = new ProductImport();
 
         EColor color = EColor.getEColor(productImportCreReqDTO.getColor());
         EProductStatus status = EProductStatus.getEProductStatus(productImportCreReqDTO.getProductStatus());
         ESize size = ESize.getESize(productImportCreReqDTO.getSize().toUpperCase());
+        BigDecimal price =BigDecimal.valueOf(Long.parseLong(productImportCreReqDTO.getPrice()));
+
+        LocalDate date_added = LocalDate.parse(appUtils.convertLocalDateToString(LocalDate.parse(productImportCreReqDTO.getDate_added())));
+        productImport.setDate_added(date_added);
+
         String code = productImportCreReqDTO.getCode();
-        Long quantity = Long.valueOf(productImportCreReqDTO.getQuantity());
 
-        Long quantityOld = productImport.getQuantity();
-        
-        if (size == ESize.getESize(String.valueOf(productImport.getSize())) && color == EColor.getEColor(String.valueOf(productImport.getColor()))){
-            productImport.setQuantity(quantityOld + quantity);
-
-        }else {
-            productImport.setQuantity(Long.valueOf(productImportCreReqDTO.getQuantity()));
-        }
         productImport.setColor(color);
-        productImport.setProductStatus(status);
         productImport.setSize(size);
-        productImport.setCode(code);
+
+        if (code.isEmpty() || code == null){
+            code = "";
+            String[] create_at = productImportCreReqDTO.getDate_added().split("-"); //[2000,09,09]
+            String sizeCodes = productImportCreReqDTO.getSize();
+
+            code = code +sizeCodes + create_at[2] + create_at[1]  ;
+
+            productImport.setCode(code);
+        }
+        productImport.setPrice(price);
+        productImport.setQuantity(Long.valueOf(productImportCreReqDTO.getQuantity()));
+        productImport.setProductStatus(status);
         productImport.setProduct(product);
 
         return save(productImport).toProductImportCreResDTO();
 
-        //
-
-//        ProductImport productImport = productImportCreReqDTO.toProductImport();
-//
-//
-//        productImport.setProduct(product);
-//
-//       productImportRepository.save(productImport);
-//       ProductDTO productDTO = product.toProductDTO();
-//
-//       ProductImportCreResDTO productImportCreResDTO = new ProductImportCreResDTO();
-//       productImportCreResDTO.setProductDTO(productDTO);
-//
-//
-//        return productImportCreResDTO;
 
     }
 

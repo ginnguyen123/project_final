@@ -43,6 +43,9 @@ public class Media extends BaseEntity {
     @Column(name = "cloud_id")
     private String cloudId;
 
+    private Integer width;
+    private Integer height;
+
     @ManyToOne
     @JoinColumn(name = "product_import_id", referencedColumnName = "id")
     private ProductImport productImport;
@@ -54,6 +57,8 @@ public class Media extends BaseEntity {
                 .setFileFolder(fileFolder)
                 .setFileUrl(fileUrl)
                 .setFileType(fileType)
-                .setCloudId(cloudId);
+                .setCloudId(cloudId)
+                .setHeight(height)
+                .setWidth(width);
     }
 }

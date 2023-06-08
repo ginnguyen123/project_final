@@ -49,6 +49,11 @@ public class ProductService implements IProductService{
     }
 
     @Override
+    public List<Product> findAllByDeletedFalse() {
+        return productRepository.findAllByDeletedFalse();
+    }
+
+    @Override
     public Product save(Product product) {
         Brand brand = product.getBrand();
         Category category = product.getCategory();

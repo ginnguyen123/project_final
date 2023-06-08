@@ -3,9 +3,11 @@ package cg.dto.product;
 import cg.dto.brand.BrandDTO;
 import cg.dto.category.CategoryDTO;
 import cg.dto.media.MediaDTO;
+
 import cg.dto.productImport.ProductImportDTO;
 import cg.model.product.Product;
 import cg.model.product.ProductImport;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +29,9 @@ public class ProductDTO {
 
     private String description;
 
-    private MediaDTO url;
+
+    private MediaDTO media;
+
 
     private BrandDTO brand;
 
@@ -42,7 +46,7 @@ public class ProductDTO {
                 .setPrice(price)
                 .setDescription(description)
                 .setBrand(brand.toBrand())
-                .setProductAvatar(url.toMedia())
+                .setProductAvatar(media.toMedia())
                 .setCategory(category.toCategory());
 
     }

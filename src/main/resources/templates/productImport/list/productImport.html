@@ -1,0 +1,70 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="productImport">
+    <script src="../../../static/assets/jQuery/jquery-3.6.0.min.js"></script>
+        <script src="../../../static/assets/main/js/AppBase.js"></script>
+
+
+<script>
+    const page = {
+        urls:{
+            getAllProductImport : AppBase.API_PRODUCT_IMPORT
+        },
+        elements:{},
+        loadData:{},
+        commands:{},
+        dialogs:{
+            elements:{},
+            loadData:{},
+            commands:{}
+        }
+    }
+
+        page.elements.tbodyTableImport = $('#tbProductImport tbody');
+
+    page.loadData.getAllProductImport = () =>{
+        $.ajax({
+            type: 'GET',
+            url: page.urls.getAllProductImport
+        })
+            .done((data)=>{
+                $.each(data, (i, item)=>{
+                    let str = AppBase.renderProductImport(item);
+                    page.elements.tbodyTableImport.prepend(str);
+                })
+            })
+                    .fail((jqXHR) => {
+                        console.log(jqXHR);
+                    })
+
+    }
+
+    function formDate(date) {
+        let arr = date.split("-")
+        date = arr[2] + "-" + arr[1] + "-" + arr[0]
+        return date;
+    }
+    function formMonth(month){
+        let arr = month.split("-")
+        month =  arr[1] + "-" + arr[0]
+        return month;
+    }
+
+
+
+
+
+    page.initializeControlEvent = function(){
+
+    };
+
+    page.commands.loadData = () =>{
+        page.loadData.getAllProductImport();
+    };
+    $(()=>{
+        page.commands.loadData();
+
+        page.initializeControlEvent();
+    })
+</script>
+
+</th:block>

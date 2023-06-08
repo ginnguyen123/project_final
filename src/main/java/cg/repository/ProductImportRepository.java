@@ -11,4 +11,6 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
 
     List<ProductImport> findAllByProductId(Long productId);
 
+
+
 }

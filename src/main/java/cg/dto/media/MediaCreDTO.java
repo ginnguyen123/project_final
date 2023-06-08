@@ -21,4 +21,6 @@ public class MediaCreDTO {
 
     private String cloudId;
 
+    private Integer width;
+    private Integer height;
 }

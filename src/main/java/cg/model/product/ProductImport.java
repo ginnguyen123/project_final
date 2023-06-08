@@ -12,6 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,8 +38,14 @@ public class ProductImport extends BaseEntity {
     @Column(nullable = false)
     private String code;
 
+    @Column(precision = 9, scale = 0, nullable = false)
+    private BigDecimal price;
+
     @Column(nullable = false)
     private Long quantity;
+
+    @Column(nullable = false)
+    private LocalDate date_added;
 
     @Column(nullable = false)
     private EProductStatus productStatus;
@@ -52,6 +61,7 @@ public class ProductImport extends BaseEntity {
                 .setSize(size.getValue())
                 .setColor(color.getValue())
                 .setCode(code)
+                .setPrice(price)
                 .setQuantity(quantity)
                 .setProductStatus(productStatus.getValue())
                 .setProduct(product.toProductDTO())
@@ -64,9 +74,11 @@ public class ProductImport extends BaseEntity {
                 .setCode(code)
                 .setColor(color.getValue())
                 .setSize(size.getValue())
+                .setPrice(price)
                 .setQuantity(quantity)
                 .setProductStatus(productStatus.getValue())
-                .setProductDTO(product.toProductDTO());
+                .setProduct(product.toProductDTO())
+                .setDate_added(date_added);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cg.model.customer;
 
+import cg.dto.customerDTO.CustomerDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.ESex;
 import cg.model.location_region.LocationRegion;
@@ -11,6 +12,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Setter
@@ -42,4 +44,15 @@ public class Customer extends BaseEntity {
     @OneToMany
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private List<LocationRegion> locationRegions;
+
+    public CustomerDTO toCustomerDTO() {
+        return new CustomerDTO()
+                .setId(id)
+                .setFullname(fullName)
+                .setEmail(email)
+                .setDateOfBirth(dateOfBirth)
+                .setSex(sex)
+                .setPhone(phone)
+                .setLocationRegionDTOS(locationRegions.stream().map(item -> item.toLocationRegionDTO()).collect(Collectors.toList()));
+    }
 }

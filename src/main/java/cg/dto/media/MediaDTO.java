@@ -24,6 +24,10 @@ public class MediaDTO {
 
     private String cloudId;
 
+    private Integer width;
+
+    private Integer height;
+
     public Media toMedia(){
         return new Media()
                 .setId(id)
@@ -34,5 +38,6 @@ public class MediaDTO {
                 .setCloudId(cloudId)
                 ;
     }
+
 
 }

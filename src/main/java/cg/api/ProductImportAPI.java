@@ -73,7 +73,14 @@ public class ProductImportAPI {
         return new ResponseEntity<>(productImportCreResDTOS, HttpStatus.OK);
     }
 
-    @DeleteMapping()
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ProductImportCreReqDTO productImportCreReqDTO) {
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         ProductImport productImport = productImportService.findById(id).orElseThrow(
                                         () -> new ResourceNotFoundException("Not found this product to delete"));
