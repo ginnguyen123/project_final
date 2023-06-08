@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,8 @@ import java.util.Map;
 
 @Component
 public class AppUtils {
+
+    private static final String DATE_PATTERN_YYYY_MM_DD = "yyyy-MM-dd";
 
     public ResponseEntity<?> mapErrorToResponse(BindingResult result) {
         List<FieldError> fieldErrors = result.getFieldErrors();
@@ -36,6 +40,16 @@ public class AppUtils {
         }
 
         return userName;
+    }
+
+    public static LocalDate convertStringToLocalDate(String str) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN_YYYY_MM_DD);
+        return LocalDate.parse(str, formatter);
+    }
+
+    public String convertLocalDateToString(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN_YYYY_MM_DD);
+        return formatter.format(date);
     }
 
 }

@@ -6,7 +6,7 @@ import cg.dto.product.ProductDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
-import cg.model.discount.Discount;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -72,7 +72,6 @@ public class Product extends BaseEntity {
     }
 
     public ProductCreResDTO toProductCreResDTO(){
-
         return new ProductCreResDTO()
                 .setId(id)
                 .setTitle(title)
@@ -84,3 +83,4 @@ public class Product extends BaseEntity {
                 .setCategory(category.toCategoryDTO());
     }
 }
+

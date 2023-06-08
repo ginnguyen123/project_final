@@ -1,55 +1,66 @@
 package cg.dto.productImport;
 
-import cg.dto.media.MediaDTO;
+import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
+import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductImportDTO {
+@Getter
+@Setter
+public class ProductImportCreResDTO {
+
     private Long id;
+
+
     private String size;
+
+
     private String color;
-    private String code;
-    private LocalDate date_added;
+
     private BigDecimal price;
+
+    private String code;
+
+    private LocalDate date_added;
     private Long quantity;
+
 
     private String productStatus;
 
-    //dto giao tiep vs nhau thong qua dto, khong dung entity o day
-    //private Product product;
     private ProductDTO product;
 
-    private List<MediaDTO> mediaDTOList;
+    public ProductImportCreResDTO(Product product, ProductImport productImport) {
+    }
 
 
-    public ProductImport toProductImport() {
+    public ProductImport toProductImport(){
         return new ProductImport()
                 .setId(id)
-                .setSize(ESize.valueOf(size))
-                .setColor(EColor.valueOf(color))
+                .setSize(ESize.getESize(size))
+                .setColor(EColor.getEColor(color))
                 .setCode(code)
                 .setPrice(price)
-                .setQuantity(quantity)
+                .setQuantity(Long.valueOf(quantity))
                 .setDate_added(date_added)
-                .setProductStatus(EProductStatus.valueOf(productStatus))
-                .setProduct(product.toProduct())
-                ;
+                .setProductStatus(EProductStatus.getEProductStatus(productStatus))
+                .setProduct(product.toProduct());
+
     }
+
 
 }
