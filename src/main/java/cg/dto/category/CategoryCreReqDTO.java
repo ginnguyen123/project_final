@@ -17,7 +17,6 @@ public class CategoryCreReqDTO {
     private Long id;
     @Length(min = 2, message = "Minimum length 2 characters")
     private String name;
-
     private Long categoryParentId;
     private String categoryParentName;
 }

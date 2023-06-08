@@ -1,8 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="AddProductJs">
-  <script type="text/javascript" src="/assets/jQuery/jquery-3.6.0.min.js"></script>
-  <script type="text/javascript" src="/assets/iziToast-v1.4.0/iziToast-1.4.0.js"></script>
-  <script type="text/javascript" src="/assets/main/js/AppBase.js"></script>
 
   <script>
     const page = {
@@ -39,6 +36,7 @@
     page.dialogs.elements.btnClearImagePreview = $('.clear-image-preview');
 
     //input product
+    page.dialogs.elements.frmCreateProduct = $('#frmCreateProduct');
     page.dialogs.elements.productTitle = $('#productTitle');
     page.dialogs.elements.productPrice = $('#productPrice');
     page.dialogs.elements.productDiscount = $('#discount');
@@ -46,11 +44,16 @@
     page.dialogs.elements.productCategoryParent = $('#categoryParent');
     page.dialogs.elements.productBrand = $('#brand');
     page.dialogs.elements.productImage = $('#imageFileProduct');
+    page.dialogs.elements.productDescription = $('#productDescription');
 
     // btn save
     page.dialogs.elements.btnSaveCreateBrand = $('#btnSaveCreateBrand');
     page.dialogs.elements.btnSaveCreateProduct = $('#btnSaveProductCreate');
 
+
+    page.loadData.showEditor = () =>{
+      page.dialogs.elements.productDescription.cleditor();
+    }
 
     page.loadData.getAllBrand = () =>{
       $.ajax({
@@ -121,7 +124,7 @@
     page.commands.handleChangeCategory = (elemCategory, elemCategoryParent) =>{
       elemCategory.on('change', () =>{
         let categoryId = +elemCategory.val();
-        if (isNaN(categoryId)){
+        if (isNaN(categoryId) || categoryId == -1){
           elemCategoryParent.empty();
           let str = `<option>-- Chọn danh mục con --</option>`;
           elemCategoryParent.append(str);
@@ -132,10 +135,14 @@
       })
     }
 
+    $.validator.addMethod("handleSelectValidate", function(value, element, arg){
+      return arg != value;
+    }, "");
+
+
     page.dialogs.commands.doCreate = () =>{
       let title = page.dialogs.elements.productTitle.val();
       let price = page.dialogs.elements.productPrice.val();
-      let description = page.dialogs.elements.productDiscount.val();
       let discountId = page.dialogs.elements.productDiscount.val();
       let discountName = page.dialogs.elements.productDiscount.find("option:selected").text();
       let categoryId = page.dialogs.elements.productCategory.val();
@@ -145,6 +152,7 @@
       let brandId =  page.dialogs.elements.productBrand.val();
       let brandName = page.dialogs.elements.productBrand.find("option:selected").text();
       let avatar = page.dialogs.elements.productImage[0].files[0];
+      let description = page.dialogs.elements.productDescription.val();
 
       if (isNaN(brandId) || isNaN(categoryParentId) || avatar == undefined){
         return AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_400);
@@ -182,6 +190,7 @@
       })
               .done((data)=>{
                 console.log(data);
+                page.dialogs.elements.frmCreateProduct[0].reset();
                 AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
               })
               .catch((jqXHR)=>{
@@ -243,12 +252,56 @@
 
     }
 
+    page.dialogs.elements.frmCreateProduct.validate({
+      rules: {
+        productTitle:{
+          required: true,
+          minlength: 3,
+          maxlength: 200
+        },
+        productPrice:{
+          required: true,
+          minlength: 0,
+          maxlength: 9
+        },
+        category:{
+          handleSelectValidate: "-1"
+        },
+        brand: {
+          handleSelectValidate: "-1"
+        }
+      },
+      messages: {
+        productTitle:{
+          required: 'Tên sản phẩm không được bỏ trống.',
+          minlength: 'Số kí tự tối thiểu là 3 kí tự.',
+          maxlength: 'Số kí tự tối đa là 3 kí tự.'
+        },
+        productPrice:{
+          required: 'Giá sản phẩm không được bỏ trống.',
+          minlength: 'Giá sản phẩm không được bỏ trống.',
+          maxlength: 'Số tiền tối đa không lớn hơn 1.000.000.000'
+        },
+        category:{
+          handleSelectValidate: 'Cần chọn danh mục sản phẩm!'
+        },
+        brand: {
+          handleSelectValidate: 'Cần chọn tên thương hiệu!'
+        }
+      },
+      submitHandler: function (){
+        page.dialogs.commands.doCreate();
+      }
+    })
+
     page.commands.loadData = () =>{
       page.loadData.getAllBrand();
 
       page.loadData.getAllCategory();
 
       page.loadData.getAllDiscount();
+
+      page.loadData.showEditor();
 
     }
 
@@ -268,9 +321,8 @@
       })
 
       page.dialogs.elements.btnSaveCreateProduct.on('click', ()=>{
-        page.dialogs.commands.doCreate();
+        page.dialogs.elements.frmCreateProduct.trigger('submit');
       })
-
 
     }
 

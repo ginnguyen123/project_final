@@ -4,7 +4,6 @@ class AppBase{
     static API_PRODUCT = this.API_SERVER + '/products';
     static API_BRAND = this.API_SERVER + '/brands';
     static API_CATEGORY = this.API_SERVER + '/categories';
-
     static API_DISCOUNT = this.API_SERVER + '/discounts';
     static SERVER_CLOUDINARY = "https://res.cloudinary.com";
     static CLOUDINARY_NAME = "/djkadtjxi";

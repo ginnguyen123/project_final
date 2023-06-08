@@ -1,8 +1,5 @@
 package cg.api;
 
-
-import cg.dto.brand.BrandDTO;
-import cg.dto.category.CategoryDTO;
 import cg.dto.product.ProductCreReqDTO;
 import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
@@ -25,8 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.sound.midi.MidiFileFormat;
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -82,9 +77,11 @@ public class ProductAPI {
             return appUtils.mapErrorToResponse(bindingResult);
         }
         /* Check brand, catagory */
+
         if (!brandService.existsBrandById(brandId)){
             throw new DataInputException("The brand does not exist");
         }
+
         Brand brand = brandService.findById(brandId).get();
 
         if (!categoryService.existsById(categoryId)){
@@ -106,7 +103,6 @@ public class ProductAPI {
             code = code + numCode.toString();
             productCreReqDTO.setCode(code);
         }
-
 
         if (avatar == null){
             throw new DataInputException("The avatar is required");
