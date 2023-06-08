@@ -2,15 +2,17 @@
 <th:block th:fragment="AddProductJs">
   <script type="text/javascript" src="/assets/jQuery/jquery-3.6.0.min.js"></script>
   <script type="text/javascript" src="/assets/iziToast-v1.4.0/iziToast-1.4.0.js"></script>
-  <script src="https://code.jquery.com/jquery-latest.js"/>
-
   <script type="text/javascript" src="/assets/main/js/AppBase.js"></script>
+
   <script>
     const page = {
       urls:{
         getAllBrand: AppBase.API_BRAND,
         getAllCategory: AppBase.API_CATEGORY,
-        getAllCategoryParent: AppBase.API_CATEGORY
+        getAllCategoryParent: AppBase.API_CATEGORY,
+        getAllDiscount: AppBase.API_DISCOUNT,
+        getAllProducts: AppBase.API_PRODUCT,
+        createProduct: AppBase.API_PRODUCT + '/create'
       },
       elements:{},
       loadData:{},
@@ -25,6 +27,7 @@
     page.elements.selectBrand = $('#brand');
     page.elements.selectCategory = $('#category');
     page.elements.selectCategoryParent = $('#categoryParent');
+    page.elements.selectDiscount = $('#discount');
     page.elements.btnChoiceImage = $('.boxChoiceImage');
     page.dialogs.elements.wrapper = $('.wrapper');
     page.dialogs.elements.inputFileImage = $('#imageFileProduct');
@@ -33,8 +36,20 @@
     page.dialogs.elements.canvas = $("#canvas");
     page.dialogs.elements.context = page.dialogs.elements.canvas[0].getContext('2d');
     page.dialogs.elements.imagePreviewCanvas.css("display", "none");
+    page.dialogs.elements.btnClearImagePreview = $('.clear-image-preview');
 
+    //input product
+    page.dialogs.elements.productTitle = $('#productTitle');
+    page.dialogs.elements.productPrice = $('#productPrice');
+    page.dialogs.elements.productDiscount = $('#discount');
+    page.dialogs.elements.productCategory = $('#category');
+    page.dialogs.elements.productCategoryParent = $('#categoryParent');
+    page.dialogs.elements.productBrand = $('#brand');
+    page.dialogs.elements.productImage = $('#imageFileProduct');
+
+    // btn save
     page.dialogs.elements.btnSaveCreateBrand = $('#btnSaveCreateBrand');
+    page.dialogs.elements.btnSaveCreateProduct = $('#btnSaveProductCreate');
 
 
     page.loadData.getAllBrand = () =>{
@@ -46,6 +61,23 @@
                 $.each(data, (i, item)=>{
                   let str = AppBase.renderBrand(item);
                   page.elements.selectBrand.append(str);
+                })
+              })
+              .fail((jqXHR)=>{
+                console.log(jqXHR);
+              })
+    }
+
+    page.loadData.getAllDiscount = () =>{
+      $.ajax({
+        type: 'GET',
+        url: page.urls.getAllDiscount
+      })
+              .done((data)=>{
+                $.each(data, (i, item)=>{
+                  console.log(data);
+                  let str = AppBase.renderDiscount(item);
+                  page.elements.selectDiscount.append(str);
                 })
               })
               .fail((jqXHR)=>{
@@ -98,6 +130,69 @@
           page.loadData.getAllCategoryParentByCategoryId(categoryId, elemCategoryParent);
         }
       })
+    }
+
+    page.dialogs.commands.doCreate = () =>{
+      let title = page.dialogs.elements.productTitle.val();
+      let price = page.dialogs.elements.productPrice.val();
+      let description = page.dialogs.elements.productDiscount.val();
+      let discountId = page.dialogs.elements.productDiscount.val();
+      let discountName = page.dialogs.elements.productDiscount.find("option:selected").text();
+      let categoryId = page.dialogs.elements.productCategory.val();
+      let categoryName = page.dialogs.elements.productCategory.find("option:selected").text();
+      let categoryParentId = page.dialogs.elements.productCategoryParent.val();
+      let categoryParentName = page.dialogs.elements.productCategoryParent.find("option:selected").text();
+      let brandId =  page.dialogs.elements.productBrand.val();
+      let brandName = page.dialogs.elements.productBrand.find("option:selected").text();
+      let avatar = page.dialogs.elements.productImage[0].files[0];
+
+      if (isNaN(brandId) || isNaN(categoryParentId) || avatar == undefined){
+        return AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_400);
+      }
+
+      if (isNaN(categoryId)){
+        categoryId = null;
+      }
+
+      if(!isNaN(discountId)){
+        discountId = null;
+      }
+
+      let formData = new FormData();
+      formData.append("title", title);
+      formData.append("price", price)
+      formData.append("description", description);
+      formData.append("brandId", brandId)
+      formData.append("brandName", brandName);
+      formData.append("categoryId", categoryId);
+      formData.append("categoryName", categoryName);
+      formData.append("categoryParentId", categoryParentId);
+      formData.append("categoryParentName", categoryParentName);
+      formData.append("discountId", discountId);
+      formData.append("discountName", discountName);
+      formData.append("avatar", avatar);
+
+      $.ajax({
+        type: 'POST',
+        contentType: false,
+        cache: false,
+        processData: false,
+        url: page.urls.createProduct,
+        data: formData
+      })
+              .done((data)=>{
+                console.log(data);
+                AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
+              })
+              .catch((jqXHR)=>{
+                console.log(jqXHR);
+                if(jqXHR.status == 500){
+                  AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_500);
+                }
+                if (jqXHR.status == 400){
+                  AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_400);
+                }
+              })
     }
 
     page.dialogs.commands.loadImageToCanvas = (imageFile, fileType, imageUrl) => {
@@ -153,6 +248,7 @@
 
       page.loadData.getAllCategory();
 
+      page.loadData.getAllDiscount();
 
     }
 
@@ -166,6 +262,15 @@
       page.dialogs.elements.inputFileImage.on('change', ()=>{
         page.dialogs.commands.changeImagePreview(page.dialogs.elements.inputFileImage);
       })
+
+      page.dialogs.elements.btnClearImagePreview.on('click', ()=>{
+        page.dialogs.commands.clearImagePreview();
+      })
+
+      page.dialogs.elements.btnSaveCreateProduct.on('click', ()=>{
+        page.dialogs.commands.doCreate();
+      })
+
 
     }
 

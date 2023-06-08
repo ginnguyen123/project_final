@@ -1,6 +1,7 @@
 package cg.model.cart;
 
 import cg.model.BaseEntity;
+import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,8 +37,8 @@ public class CartDetail extends BaseEntity {
     private BigDecimal totalAmount;
 
     @ManyToOne
-    @JoinColumn(name = "product_detail_id", referencedColumnName = "id", nullable = false)
-    private ProductImport productDetail;
+    @JoinColumn(name = "product_import_id", referencedColumnName = "id", nullable = false)
+    private ProductImport productImport;
 
     @ManyToOne
     @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
