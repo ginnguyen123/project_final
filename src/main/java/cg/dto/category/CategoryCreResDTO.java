@@ -1,5 +1,6 @@
 package cg.dto.category;
 
+import cg.model.enums.ECategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,6 @@ public class CategoryCreResDTO {
     private Long categoryParentId;
 
     private String categoryParentName;
+
+    private ECategory status;
 }

@@ -23,14 +23,17 @@ public class CategoryAPI {
     @Autowired
     private ICategoryService categoryService;
 
-    @GetMapping
-    public ResponseEntity<?> getAll(){
-        List<Category> categoryList = categoryService.findAll();
+//    @GetMapping
+//    public ResponseEntity<?> getAll(){
+//        List<Category> categoryList = categoryService.findAll();
+//        List<CategoryDTO> categoryDTOS = categoryList.stream().map(item-> item.toCategoryDTO()).collect(Collectors.toList());
+//        return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
+//    }
 
-        List<CategoryDTO> categoryDTOS = categoryList.stream().map(item-> item.toCategoryDTO()).collect(Collectors.toList());
-
-        return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
-    }
+//    @GetMapping()
+//    public ResponseEntity<?> getAllCategoryShowing() {
+//        List<Category> categoryList = categoryService.
+//    }
 
     @GetMapping("/{categoryParentId}")
     public ResponseEntity<?> getAllCategoryParentById(@PathVariable Long categoryParentId){
@@ -43,11 +46,9 @@ public class CategoryAPI {
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody CategoryCreReqDTO categoryCreReqDTO){
         Optional<Category> categoryOptional = categoryService.findById(categoryCreReqDTO.getCategoryParentId());
-
         if (!categoryOptional.isPresent()){
             throw new DataInputException("Category is not exist!");
         }
-
         Category newCategory = new Category();
 
         if (categoryCreReqDTO.getCategoryParentId() == null){
