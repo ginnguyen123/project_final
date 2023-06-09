@@ -81,14 +81,14 @@ class AppBase{
             timer: 1500
         })
     }
-
-    static showErrorAlert(t) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Warning',
-            text: t,
-        })
-    }
+    //
+    // static showErrorAlert(t) {
+    //     Swal.fire({
+    //         icon: 'error',
+    //         title: 'Warning',
+    //         text: t,
+    //     })
+    // }
 
     static formatNumber() {
         $(".num-space").number(true, 0, ',', ' ');

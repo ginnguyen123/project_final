@@ -8,4 +8,17 @@
     <script type="text/javascript" src="/assets/font-awesome-6.4.0/js/all.min.js"></script>
     <script type="text/javascript" src="/assets/iziToast-v1.4.0/iziToast-1.4.0.js"></script>
     <script type="text/javascript" src="/assets/jQuery/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function formDate(date) {
+            let arr = date.split("-")
+            date = arr[2] + "-" + arr[1] + "-" + arr[0]
+            return date;
+        }
+        function formMonth(month){
+            let arr = month.split("-")
+            month =  arr[1] + "-" + arr[0]
+            return month;
+        }
+    </script>
 </th:block>

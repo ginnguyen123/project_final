@@ -58,13 +58,13 @@ public class ProductImport extends BaseEntity {
     public ProductImportDTO toProductImportDTO(){
         return new ProductImportDTO()
                 .setId(id)
-                .setSize(size.getValue())
-                .setColor(color.getValue())
+                .setSize(size)
+                .setColor(color)
                 .setCode(code)
                 .setPrice(price)
                 .setQuantity(quantity)
-                .setProductStatus(productStatus.getValue())
-                .setProduct(product.toProductDTO())
+                .setProductStatus(productStatus)
+                .setProductId(product.toProductDTO().getId())
                 ;
     }
 

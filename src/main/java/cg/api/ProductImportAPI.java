@@ -63,7 +63,15 @@ public class ProductImportAPI {
 
         return new ResponseEntity<>(productImportCreResDTO, HttpStatus.CREATED);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProductImportById(@PathVariable Long id) {
+        ProductImportDTO productImportDTO = productImportService
+                .getProductImportDTOByIdDeletedIsFalse(id)
+                .orElseThrow(
+                        ()-> new ResourceNotFoundException("Not found this product"));
 
+        return new ResponseEntity<>(productImportDTO, HttpStatus.OK);
+    }
     @GetMapping()
     public ResponseEntity<?> getAllProductImport(){
         List<ProductImport> productImportList = productImportService.findAll();

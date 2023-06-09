@@ -15487,11 +15487,9 @@ be a descendant of the grid when it is being dragged.
   border:1px solid rgb(0, 28, 64) !important ;
 }
  #clock{
-
     font-weight: 600;
     color: rgb(0, 0, 0);
     font-size: 13px;
-
   }
   .man--hinh{
     background-color: white;
@@ -15505,13 +15503,28 @@ be a descendant of the grid when it is being dragged.
     text-align: left;
     border-radius: .357rem;
   }
-  #myInput{
+#myInput{
     width: 100%;
     padding: 5px;
     border: 1px solid #dadada;
     border-radius: .357rem;
     background: #f5f5f5;
   }
+#search-input{
+  width: 250px;
+  padding: 5px;
+  border: 1px solid #dadada;
+  /*border-radius: .357rem;*/
+  background: #f5f5f5;
+}
+#form1{
+  width: 249px;
+}
+
+#search{
+  left: 224px;
+  height: 100%;
+}
 #myOutput{
   width: 100%;
   padding: 5px;
