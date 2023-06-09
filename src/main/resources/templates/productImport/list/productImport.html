@@ -40,20 +40,39 @@
 
     }
 
-    function addEventDeleteClick(){
-        $(".delete").on('click' , function (){
-            let id = $(this).data('id');
-            page.loadData.findProductById(id).then((data)=>{
-                currentId= data.id;
-                AppBase.showDeleteCartItemConfirmDialog()
-            }).then((result)=>{
-                if (result.isConfirmed){
 
-                }
+    function addEventDeleteClick() {
+        $(".delete").on('click', function () {
+            let productId = $(this).data('id');
 
+            page.loadData.findProductById(productId).then((data) => {
+                currentId = data.id;
+              AppBase.showDeleteCartItemConfirmDialog()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            headers: {
+                                'accept': 'application/json',
+                                'content-type': 'application/json'
+                            },
+                            type: "DELETE",
+                            url: page.urls.getAllProductImport + "/" + currentId
+                        })
+                            .done(() => {
+                                $("#tr_" + currentId).remove();
+                                AppBase.showSuccessAlert("Success Delete");
+                            })
+                            .fail((error) => {
+                                AppBase.errorAlert(error);
+                            })
+
+                    }
+                })
             })
-        })
+
     }
+
+
 
     page.loadData.findProductById = (id) => {
         return $.ajax({
