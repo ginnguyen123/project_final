@@ -64,7 +64,7 @@ public class ProductImport extends BaseEntity {
                 .setPrice(price)
                 .setQuantity(quantity)
                 .setProductStatus(productStatus)
-                .setProductId(product.toProductDTO().getId())
+                .setProduct(product.toProductDTO())
                 ;
     }
 

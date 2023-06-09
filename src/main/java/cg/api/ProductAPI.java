@@ -1,8 +1,5 @@
 package cg.api;
 
-
-import cg.dto.brand.BrandDTO;
-import cg.dto.category.CategoryDTO;
 import cg.dto.product.ProductCreReqDTO;
 import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
@@ -25,7 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -70,17 +66,18 @@ public class ProductAPI {
 
     @PostMapping("/create")
     private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO, BindingResult bindingResult){
-        System.out.println(productCreReqDTO);
+
         new ProductCreReqDTO().validate(productCreReqDTO, bindingResult);
         productCreReqDTO.setId(null);
         MultipartFile avatar = productCreReqDTO.getAvatar();
-        String code = productCreReqDTO.getCode().trim();
+        String code = productCreReqDTO.getCode();
         Long brandId = productCreReqDTO.getBrandId();
         Long categoryId = productCreReqDTO.getCategoryId();
         if (bindingResult.hasErrors()){
             return appUtils.mapErrorToResponse(bindingResult);
         }
         /* Check brand, catagory */
+
         if (!brandService.existsBrandById(brandId)){
             throw new DataInputException("The brand does not exist");
         }
@@ -106,7 +103,6 @@ public class ProductAPI {
             code = code + numCode.toString();
             productCreReqDTO.setCode(code);
         }
-
 
         if (avatar == null){
             throw new DataInputException("The avatar is required");

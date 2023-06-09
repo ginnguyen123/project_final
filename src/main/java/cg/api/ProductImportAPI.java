@@ -50,8 +50,7 @@ public class ProductImportAPI {
             BindingResult bindingResult
     ) {
 
-        //validate vai bua chuyen qua service sau
-        //ko viet nghiep vu o tang RestController
+
         new ProductImportCreReqDTO().validate(productImportCreReqDTO, bindingResult);
 
         if (bindingResult.hasFieldErrors()) {

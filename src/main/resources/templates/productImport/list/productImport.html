@@ -33,6 +33,8 @@
                     let str = AppBase.renderProductImport(item);
                     page.elements.tbodyTableImport.prepend(str);
                 })
+
+                addEventDeleteClick();
             })
                     .fail((jqXHR) => {
                         console.log(jqXHR);
@@ -44,11 +46,9 @@
     function addEventDeleteClick() {
         $(".delete").on('click', function () {
             let productId = $(this).data('id');
-
             page.loadData.findProductById(productId).then((data) => {
                 currentId = data.id;
-              AppBase.showDeleteCartItemConfirmDialog()
-                }).then((result) => {
+              AppBase.showDeleteCartItemConfirmDialog().then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
                             headers: {
@@ -60,13 +60,14 @@
                         })
                             .done(() => {
                                 $("#tr_" + currentId).remove();
-                                AppBase.showSuccessAlert("Success Delete");
+                                AppBase.IziToast.showSuccessAlert("Success Delete");
                             })
                             .fail((error) => {
-                                AppBase.errorAlert(error);
+                                AppBase.IziToast.showErrorAlert(error);
                             })
 
                     }
+                })
                 })
             })
 
@@ -76,23 +77,16 @@
 
     page.loadData.findProductById = (id) => {
         return $.ajax({
-            type: "GET",
-            url: page.urls.getAllProductImport + "/" + id,
+            type: 'GET',
+            url: page.urls.getAllProductImport + '/' + id
         })
             .done((data) => {
+                console.log(data)
             })
-            .fail((jqXHR) => {
-                let errors = jqXHR.responseJSON;
-                if (errors) {
-                    let str = "";
-                    $.each(errors, (k, v) => {
-                        str += `${v}`
-                    })
-                    AppBase.showErrorAlert(str);
-                }
+            .fail(() => {
+
             })
     }
-
 
 
 

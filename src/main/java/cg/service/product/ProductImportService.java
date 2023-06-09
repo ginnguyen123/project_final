@@ -63,7 +63,7 @@ public class ProductImportService implements IProductImportService {
 
     @Override
     public Optional<ProductImportDTO> getProductImportDTOByIdDeletedIsFalse(Long id) {
-        return Optional.empty();
+        return productImportRepository.getProductImportDTOByIdDeletedIsFalse(id);
     }
 
     @Override
