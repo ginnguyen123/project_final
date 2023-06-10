@@ -1,6 +1,6 @@
 package cg.dto.category;
 
-import cg.model.enums.ECategory;
+import cg.model.enums.ECategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +21,6 @@ public class CategoryCreReqDTO {
     private String name;
     private Long categoryParentId;
     private String categoryParentName;
-    private ECategory status;
+    private ECategoryStatus status;
     private MultipartFile categoryAvatar;
 }

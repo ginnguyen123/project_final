@@ -1,10 +1,9 @@
 package cg.model.category;
 
-import cg.dto.category.CategoryCreReqDTO;
 import cg.dto.category.CategoryCreResDTO;
 import cg.dto.category.CategoryDTO;
 import cg.model.BaseEntity;
-import cg.model.enums.ECategory;
+import cg.model.enums.ECategoryStatus;
 import cg.model.media.Media;
 import cg.model.product.Product;
 import lombok.AllArgsConstructor;
@@ -33,7 +32,7 @@ public class Category extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private ECategory status;
+    private ECategoryStatus status;
 
     @ManyToOne
     @JoinColumn(name = "category_parent_id")
@@ -50,9 +49,8 @@ public class Category extends BaseEntity {
         return new CategoryCreResDTO()
                 .setId(id)
                 .setName(name)
-                .setCategoryParentId(categoryParent.id)
-                .setStatus(status)
-                .setCategoryParentName(categoryParent.name);
+                .setCategoryParent(categoryParent.toCategoryDTO())
+                .setStatus(status);
     }
 
     public CategoryDTO toCategoryDTO(){
