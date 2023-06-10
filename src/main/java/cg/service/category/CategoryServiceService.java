@@ -1,6 +1,7 @@
 package cg.service.category;
 
 import cg.model.category.Category;
+import cg.model.enums.ECategoryStatus;
 import cg.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,11 @@ public class CategoryServiceService implements ICategoryService {
     @Override
     public List<Category> findAllByCategoryParent_Id(Long categoryParentId) {
         return categoryRepository.findAllByCategoryParent_Id(categoryParentId);
+    }
+
+    @Override
+    public List<Category> findAllCategoryByStatus(ECategoryStatus status) {
+        return categoryRepository.findAllCategoryByStatus(status);
     }
 
     @Override

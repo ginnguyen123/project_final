@@ -7,6 +7,8 @@ import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import cg.service.IGeneralService;
 
+import java.util.List;
+
 public interface IProductImportService extends IGeneralService<ProductImport, Long> {
 
     ProductImportCreResDTO create(ProductImportCreReqDTO productImportCreReqDTO);

@@ -25,4 +25,14 @@ public class ProductCreResDTO {
     private String urlAvatar;
     private BrandDTO brand;
     private CategoryDTO category;
+
+    public ProductCreResDTO(Long id, String title, BigDecimal price, String description) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+//        this.urlAvatar = urlAvatar;
+        this.description = description;
+    }
+
+
 }

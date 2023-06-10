@@ -5,13 +5,16 @@ import cg.dto.category.CategoryCreResDTO;
 import cg.dto.category.CategoryDTO;
 import cg.exception.DataInputException;
 import cg.model.category.Category;
+import cg.model.enums.ECategoryStatus;
 import cg.service.category.ICategoryService;
+import cg.service.products.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,17 +26,42 @@ public class CategoryAPI {
     @Autowired
     private ICategoryService categoryService;
 
-//    @GetMapping
-//    public ResponseEntity<?> getAll(){
-//        List<Category> categoryList = categoryService.findAll();
-//        List<CategoryDTO> categoryDTOS = categoryList.stream().map(item-> item.toCategoryDTO()).collect(Collectors.toList());
-//        return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
-//    }
+    @Autowired
+    private IProductService productService;
 
-//    @GetMapping()
-//    public ResponseEntity<?> getAllCategoryShowing() {
-//        List<Category> categoryList = categoryService.
-//    }
+    @GetMapping("/get")
+    public ResponseEntity<?> getAllCategories(){
+        List<Category> categoryList = categoryService.findAll();
+        List<CategoryCreResDTO> categoryCreResDTOList = new ArrayList<>();
+        for (Category item: categoryList) {
+            Optional<Category> categoryOptional = categoryService.findById(item.getId());
+            if (!categoryOptional.isPresent()) {
+                throw new DataInputException("Category Parent is not found");
+            }
+            Category category = categoryOptional.get();
+            categoryCreResDTOList.add(category.toCategoryCreResDTO());
+        }
+        return new ResponseEntity<>(categoryCreResDTOList,HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/status={status}")
+    public ResponseEntity<?> getAllCategoriesByStatus(@PathVariable String status) {
+        List<Category> categoryList = categoryService.findAllCategoryByStatus(ECategoryStatus.valueOf(status.toUpperCase()));
+        List<CategoryCreResDTO> categoryCreResDTOS = new ArrayList<>();
+        for (Category item: categoryList) {
+            Optional<Category> categoryOptional = categoryService.findById(item.getId());
+            if (!categoryOptional.isPresent()) {
+                throw new DataInputException("Category Parent is not found");
+            }
+            Category category = categoryOptional.get();
+            categoryCreResDTOS.add(category.toCategoryCreResDTO());
+        }
+        return new ResponseEntity<>(categoryCreResDTOS, HttpStatus.OK);
+    }
+
+
 
     @GetMapping("/{categoryParentId}")
     public ResponseEntity<?> getAllCategoryParentById(@PathVariable Long categoryParentId){

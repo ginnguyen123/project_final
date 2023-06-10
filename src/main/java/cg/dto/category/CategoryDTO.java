@@ -3,8 +3,7 @@ package cg.dto.category;
 
 import cg.dto.media.MediaDTO;
 import cg.model.category.Category;
-import cg.model.enums.ECategory;
-import cg.model.media.Media;
+import cg.model.enums.ECategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +25,7 @@ public class CategoryDTO {
 
     private String categoryParentName;
 
-    private ECategory status;
+    private ECategoryStatus status;
 
     private MediaDTO categoryAvatar;
 
@@ -37,5 +36,7 @@ public class CategoryDTO {
                 .setStatus(status)
                 ;
     }
+
+
 
 }

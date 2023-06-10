@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,13 @@ public class ProductAPI {
         List<Product> products = productService.findAllByDeletedFalse();
         List<ProductDTO> productDTOS = products.stream().map(item -> item.toProductDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/category={idCategory}")
+    private ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
+        List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);
+        List<ProductCreResDTO> productCreResDTOS = products.stream().map(item -> item.toProductCreResDTO()).collect(Collectors.toList());
+        return new ResponseEntity<>(productCreResDTOS, HttpStatus.OK);
     }
 
     @PostMapping("/create")
