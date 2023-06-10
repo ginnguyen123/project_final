@@ -82,24 +82,30 @@
         margin-top: -2px;
     }
 
-    .image-preview{
-        max-width: 250px
+    ::after, ::before {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    .clear-image-preview{
-        position: absolute;
-        font-size: 20px;
-        left: 19%;
-        top: 6%;
-        color: #14142B;
-        cursor: pointer;
-        display: none;
+    .card{
+        padding: 15px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.15);
+        border-radius: 5px;
+        overflow: hidden;
     }
 
-    .image-preview:hover > .clear-image-preview{
-        display: block;
+    .card .top{
+        display: flex;
+        justify-content: space-between;
+        justify-items: center;
+        width: 100%;
     }
 
+    .card .top p{
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
 
 
 
@@ -199,29 +205,25 @@
 
                         <div class="form-group col-md-12 float-left">
                             <label class="control-label">Ảnh sản phẩm</label>
-                            <div class="wrapper active">
-                                <input type="file" id="imageFileProduct" name="imageFileProduct" accept="image/jpeg, image/png" hidden/>
-                                <div class="image-preview">
-                                    <div class="clear-image-preview">
-                                        <i class="fas fa-times"></i>
+                            <div class="card">
+                                <div class="top">
+                                    <p>Drag & drop image uploading</p>
+                                    <button type="button" class="Choicefile boxChoiceImage">
+                                        <i class="fas fa-cloud-upload-alt me-2"></i>Chọn ảnh
+                                    </button>
+                                </div>
+                                <span class="inner">Drag & drop image here or <span class="select">Brows</span>
+                                </span>
+                                <input name="imageFileProduct" id="imageFileProduct" type="file" hidden multiple/>
+                                <div class="container">
+                                    <div class="image">
+                                        <img src="" alt="image">
+                                        <span>&times;</span>
                                     </div>
-                                    <canvas id="canvas" style="display: none; max-width: 95%"></canvas>
                                 </div>
-                                <div class="content">
-                                    <!--                                <div class="text">-->
-                                    <!--                                    No file chosen, yet!-->
-                                    <!--                                </div>-->
-<!--                                    <div class="text">-->
-<!--                                        Max file size = 20MB-->
-<!--                                    </div>-->
-                                </div>
-                            </div>
-                            <div>
-                                <a href="javascript:" class="Choicefile boxChoiceImage"><i class="fas fa-cloud-upload-alt"></i> Chọn
-                                    ảnh</a>
-                                <p style="clear:both"></p>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="control-label">Mô tả sản phẩm</label>
                             <textarea class="form-control" name="mota" id="productDescription"></textarea>
