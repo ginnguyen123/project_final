@@ -31,14 +31,36 @@
 
 
 
+    page.loadData.getAllSize = () => {
+      $.ajax({
+        type: "GET",
+        url: page.urls.getAllProductImport
+      })
+              .done((data) => {
+                let size = data.valueOf();
+
+               $(".size ").append(size);
+
+                // page.dialogs.elements.categoryIdCre.empty();
+                // page.dialogs.elements.categoryIdUp.empty();
+                $.each(data, (i, item) => {
+                  let str = `<option value="${item.id}">${item.size}</option>`
+                  page.dialogs.elements.categoryIdCre.append(str);
+                  // page.dialogs.elements.categoryIdUp.append(str);
+                })
+              })
+              .fail((error) => {
+                console.log(error);
+              })
+    }
 
 
     page.initializeControlEvent = function(){
-
+      // trigersubmit=> create
     };
 
     page.commands.loadData = () =>{
-
+      page.loadData.getAllSize()
     };
     $(()=>{
       page.commands.loadData();

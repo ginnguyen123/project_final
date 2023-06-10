@@ -23,10 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -67,6 +64,16 @@ public class ProductImportService implements IProductImportService {
     }
 
     @Override
+    public List<ESize> getFindAllEnumSize() {
+        for (ESize esize: ESize.values()) {
+            if (esize.getValue() != null) {
+                return Collections.singletonList(esize);
+            }
+        } return null  ;
+
+    }
+
+    @Override
     public ProductImport save(ProductImport productImport) {
         return productImportRepository.save(productImport);
     }
@@ -93,7 +100,7 @@ public class ProductImportService implements IProductImportService {
 
         EColor color = EColor.getEColor(productImportCreReqDTO.getColor());
         EProductStatus status = EProductStatus.getEProductStatus(productImportCreReqDTO.getProductStatus());
-        ESize size = ESize.getESize(productImportCreReqDTO.getSize().toUpperCase());
+        ESize size = ESize.getESize(productImportCreReqDTO.getSize());
         BigDecimal price =BigDecimal.valueOf(Long.parseLong(productImportCreReqDTO.getPrice()));
 
         LocalDate date_added = LocalDate.parse(appUtils.convertLocalDateToString(LocalDate.parse(productImportCreReqDTO.getDate_added())));

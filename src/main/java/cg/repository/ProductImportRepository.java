@@ -1,6 +1,7 @@
 package cg.repository;
 
 import cg.dto.productImport.ProductImportDTO;
+import cg.model.enums.ESize;
 import cg.model.product.ProductImport;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -31,6 +32,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
                     "AND pi.id = :id "
             )
     Optional<ProductImportDTO> getProductImportDTOByIdDeletedIsFalse(Long id);
+
 
 
 }

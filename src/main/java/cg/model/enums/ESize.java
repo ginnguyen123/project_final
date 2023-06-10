@@ -25,6 +25,9 @@ public enum ESize {
         return value;
     }
 
+    public static Stream<ESize> stream() {
+        return Stream.of(ESize.values());
+    }
 
     private static final Map<String, ESize> NAME_MAP = Stream.of(values())
             .collect(Collectors.toMap(ESize::toString, Function.identity()));
