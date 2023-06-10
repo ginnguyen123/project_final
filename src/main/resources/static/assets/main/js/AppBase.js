@@ -112,6 +112,7 @@ class AppBase{
         })
     }
 
+
  static formDate(date) {
     let arr = date.split("-")
     date = arr[2] + "-" + arr[1] + "-" + arr[0]

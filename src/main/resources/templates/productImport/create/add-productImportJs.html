@@ -3,4 +3,47 @@
   <script src="../../../static/assets/jQuery/jquery-3.6.0.min.js"></script>
   <script src="../../../static/assets/main/js/AppBase.js"></script>
 
+  <script>
+    const page = {
+      urls:{
+        getAllProductImport : AppBase.API_PRODUCT_IMPORT
+      },
+      elements:{},
+      loadData:{},
+      commands:{},
+      dialogs:{
+        elements:{},
+        loadData:{},
+        commands:{}
+      }
+    }
+
+
+
+    page.elements.tbodyTableImport = $('#tbProductImport tbody');
+
+
+  // get enum size , color , status
+    // status : create mặc định quantity >0 : còn hàng
+    // select danh sách sản phẩm
+    // quantity : lưu dc giá trị trên thanh
+    // validate
+
+
+
+
+
+    page.initializeControlEvent = function(){
+
+    };
+
+    page.commands.loadData = () =>{
+
+    };
+    $(()=>{
+      page.commands.loadData();
+
+      page.initializeControlEvent();
+    })
+  </script>
 </th:block>
