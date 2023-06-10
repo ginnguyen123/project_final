@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="AddProductJs">
-
+  <script type="text/javascript" src="/assets/lightslider/js/lightslider.js"></script>
   <script>
     const page = {
       urls:{
@@ -25,15 +25,9 @@
     page.elements.selectCategory = $('#category');
     page.elements.selectCategoryParent = $('#categoryParent');
     page.elements.selectDiscount = $('#discount');
+    // elem image
     page.elements.btnChoiceImage = $('.boxChoiceImage');
-    page.dialogs.elements.wrapper = $('.wrapper');
     page.dialogs.elements.inputFileImage = $('#imageFileProduct');
-    page.dialogs.elements.imagePreview = $('.image-preview');
-    page.dialogs.elements.imagePreviewCanvas = $('.image-preview canvas');
-    page.dialogs.elements.canvas = $("#canvas");
-    page.dialogs.elements.context = page.dialogs.elements.canvas[0].getContext('2d');
-    page.dialogs.elements.imagePreviewCanvas.css("display", "none");
-    page.dialogs.elements.btnClearImagePreview = $('.clear-image-preview');
 
     //input product
     page.dialogs.elements.frmCreateProduct = $('#frmCreateProduct');
@@ -139,7 +133,6 @@
       return arg != value;
     }, "");
 
-
     page.dialogs.commands.doCreate = () =>{
       let title = page.dialogs.elements.productTitle.val();
       let price = page.dialogs.elements.productPrice.val();
@@ -204,54 +197,6 @@
               })
     }
 
-    page.dialogs.commands.loadImageToCanvas = (imageFile, fileType, imageUrl) => {
-      page.dialogs.elements.imagePreviewCanvas.css("display", "");
-      page.dialogs.elements.wrapper.addClass("active");
-      // page.dialogs.elements.wrapperContent.css("opacity", 0);
-
-      let imageObj = new Image();
-
-      imageObj.onload = function () {
-        page.dialogs.elements.context.canvas.width = imageObj.width;
-        page.dialogs.elements.context.canvas.height = imageObj.height;
-        page.dialogs.elements.context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height);
-      };
-
-      if (fileType === "BINARY") {
-        imageObj.src = URL.createObjectURL(imageFile);
-      }
-      else {
-        imageObj.src = imageUrl;
-      }
-    }
-
-    page.dialogs.commands.changeImagePreview = (elem) =>  {
-      let imageFile = elem[0].files[0];
-
-      if (imageFile) {
-        let reader = new FileReader();
-
-        reader.readAsDataURL(imageFile);
-
-        reader.onload = function (e) {
-          if (e.target.readyState === FileReader.DONE) {
-            page.dialogs.commands.loadImageToCanvas(imageFile, "BINARY", null);
-          }
-        }
-      }
-      else {
-        page.dialogs.elements.clearImagePreview();
-      }
-    }
-
-    page.dialogs.commands.clearImagePreview = () => {
-      page.dialogs.elements.inputFileImage.val("");
-      page.dialogs.elements.imagePreviewCanvas.css("display", "none");
-      page.dialogs.elements.wrapper.removeClass("active");
-      // page.dialogs.elements.wrapperContent.css("opacity", 1);
-
-    }
-
     page.dialogs.elements.frmCreateProduct.validate({
       rules: {
         productTitle:{
@@ -312,13 +257,6 @@
         page.dialogs.elements.inputFileImage.trigger('click');
       })
 
-      page.dialogs.elements.inputFileImage.on('change', ()=>{
-        page.dialogs.commands.changeImagePreview(page.dialogs.elements.inputFileImage);
-      })
-
-      page.dialogs.elements.btnClearImagePreview.on('click', ()=>{
-        page.dialogs.commands.clearImagePreview();
-      })
 
       page.dialogs.elements.btnSaveCreateProduct.on('click', ()=>{
         page.dialogs.elements.frmCreateProduct.trigger('submit');
