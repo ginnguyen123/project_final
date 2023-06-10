@@ -1,15 +1,12 @@
 package cg.model.enums;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-public enum ECategory {
-    HOME("showing"),
-    NO_HOME("notShowing");
+public enum ECategoryStatus {
+    SUMMER("summer"),
+    WINTER("winter");
 
     private String value;
 
-    ECategory(String value) {
+    ECategoryStatus(String value) {
         this.value = value;
     }
 

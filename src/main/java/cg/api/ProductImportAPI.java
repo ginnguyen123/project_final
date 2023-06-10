@@ -95,11 +95,7 @@ public class ProductImportAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/size")
-    public ResponseEntity<?> getAllSize() {
-        List<ESize> eSizes = productImportService.getFindAllEnumSize();
-        return new ResponseEntity<>(eSizes, HttpStatus.OK);
-    }
+
 
 
 

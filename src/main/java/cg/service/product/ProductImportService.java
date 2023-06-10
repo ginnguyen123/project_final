@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -63,15 +61,7 @@ public class ProductImportService implements IProductImportService {
         return productImportRepository.getProductImportDTOByIdDeletedIsFalse(id);
     }
 
-    @Override
-    public List<ESize> getFindAllEnumSize() {
-        for (ESize esize: ESize.values()) {
-            if (esize.getValue() != null) {
-                return Collections.singletonList(esize);
-            }
-        } return null  ;
 
-    }
 
     @Override
     public ProductImport save(ProductImport productImport) {
@@ -136,6 +126,7 @@ public class ProductImportService implements IProductImportService {
         productImportRepository.save(productImport);
         return new ProductImportCreResDTO(product ,productImport);
     }
+
 
     private Product findProductById(Long id){
         return productService.findById(id).orElseThrow(
