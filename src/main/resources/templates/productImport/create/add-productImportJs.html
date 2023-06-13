@@ -1,12 +1,12 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="add-productImportJs">
-  <script src="../../../static/assets/jQuery/jquery-3.6.0.min.js"></script>
+<!--  <script src="../../../static/assets/jQuery/jquery-3.6.0.min.js"></script>-->
   <script src="../../../static/assets/main/js/AppBase.js"></script>
 
   <script>
     const page = {
       urls:{
-        getAllProductImport : AppBase.API_PRODUCT_IMPORT
+        createProductImport : AppBase.API_PRODUCT_IMPORT
       },
       elements:{},
       loadData:{},
@@ -17,55 +17,115 @@
         commands:{}
       }
     }
+    let productImport = new ProductImport();
+
+    page.dialogs.elements.priceCre = $('#priceCre');
+    page.dialogs.elements.selectProduct = $('#select-product');
+    page.dialogs.elements.dateAdded = $('#myInput-add');
+    page.dialogs.elements.colorCre = $('#select-color');
+    page.dialogs.elements.sizeCre = $('#sizeCre');
+    page.dialogs.elements.myRange = $('#myRange');
+
+    page.dialogs.elements.formCreateImport = $('#formCreateProduct');
+    page.elements.btnCreImport = $('#btnCreProductImport');
 
 
-
-    page.elements.tbodyTableImport = $('#tbProductImport tbody');
-
-
-  // get enum size , color , status
-    // status : create mặc định quantity >0 : còn hàng
-    // select danh sách sản phẩm
-    // quantity : lưu dc giá trị trên thanh
-    // validate
+    page.dialogs.commands.doCreateImport = () => {
 
 
+      let size = page.dialogs.elements.sizeCre.find(':selected').val().trim();
+      let color = page.dialogs.elements.colorCre.find(':selected').val().trim();
+      let date_added = page.dialogs.elements.dateAdded.val().trim();
+      let price = page.dialogs.elements.priceCre.val().trim();
+      let quantity = page.dialogs.elements.myRange.val().trim();
+      let productId = page.dialogs.elements.selectProduct.find(':selected').val().trim();
 
-    page.loadData.getAllSize = () => {
+      let formData = new FormData();
+
+      formData.append("size", size);
+      formData.append("color", color);
+      formData.append("price",price );
+      formData.append("date_added", date_added);
+      formData.append("quantity", quantity);
+      formData.append("productId", productId);
+
       $.ajax({
-        type: "GET",
-        url: page.urls.getAllProductImport
+        type: "POST",
+        url: page.urls.createProductImport,
+        processData: false,
+        contentType: false,
+        data: formData
       })
-              .done((data) => {
-                let size = data.valueOf();
-
-               $(".size ").append(size);
-
-                // page.dialogs.elements.categoryIdCre.empty();
-                // page.dialogs.elements.categoryIdUp.empty();
-                $.each(data, (i, item) => {
-                  let str = `<option value="${item.id}">${item.size}</option>`
-                  page.dialogs.elements.categoryIdCre.append(str);
-                  // page.dialogs.elements.categoryIdUp.append(str);
-                })
+          .done((data) => {
+            console.log(data);
+            productImport = data;
+            // page.loadData.searchByProductName(undefined,category, direction);
+            AppBase.showSuccessAlert("Successful productImport");
+            page.dialogs.elements.formCreateImport[0].reset();
+          })
+          .fail((jqXHR) => {
+            if (jqXHR.status === 404) {
+              AppBase.showErrorAlert("Not found this product");
+            } else {
+              let errors = jqXHR.responseJSON;
+              let str = '';
+              $.each(errors, (k, v) => {
+                str += `<li for="${k}Cre">${v}</li>`;
+                $("#" + k + "Cre").addClass("error");
               })
-              .fail((error) => {
-                console.log(error);
-              })
+            }
+          })
     }
 
+    page.dialogs.elements.formCreateImport.validate({
+      rules: {
+        priceCre: {
+          required: true,
+          min: 100,
+          max: 999999999,
+          number: true
+        },
+        quantityCre: {
+          required: true,
+          min: 1,
+          max: 1000,
+          number: true
+        }
+      },
+      messages: {
+        priceCre: {
+          required: "Vui lòng nhập giá.",
+          min: "Giá sản phẩm tối thiểu là 100.000 VNĐ.",
+          max: "Giá sản phẩm tối đa là 999.999.999 VNĐ.",
+          number: "Giá sản phẩm phải là số."
+        },
+        quantityCre: {
+          required: "Vui lòng nhập Số lượng.",
+          min: "Số lượng sản phẩm tối thiểu là 1 .",
+          max: "Số lượng sản phẩm tối đa là 1000.",
+          number: "Số lượng sản phẩm phải là số."
+        }
+      },
+      submitHandler: function () {
+        page.dialogs.commands.doCreateImport();
+      }
+    })
 
-    page.initializeControlEvent = function(){
+    page.initializeControlEvent = () =>{
       // trigersubmit=> create
+
+      page.elements.btnCreImport.on('click', () => {
+        page.dialogs.elements.formCreateImport.trigger("submit");
+      })
     };
 
     page.commands.loadData = () =>{
-      page.loadData.getAllSize()
+
     };
     $(()=>{
       page.commands.loadData();
-
       page.initializeControlEvent();
     })
+
   </script>
 </th:block>

@@ -2,6 +2,7 @@ package cg.model.product;
 
 import cg.dto.productImport.ProductImportCreResDTO;
 import cg.dto.productImport.ProductImportDTO;
+import cg.dto.productImport.ProductImportUpResDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
@@ -92,5 +93,18 @@ public class ProductImport extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(size, color, code, productStatus);
+    }
+
+    public ProductImportUpResDTO toProductImportUpResDTO() {
+        return new ProductImportUpResDTO()
+                .setId(id)
+                .setCode(code)
+                .setColor(color.getValue())
+                .setSize(size.getValue())
+                .setPrice(price)
+                .setQuantity(quantity)
+                .setProductStatus(productStatus.getValue())
+                .setProduct(product.toProductDTO())
+                .setDate_added(date_added);
     }
 }

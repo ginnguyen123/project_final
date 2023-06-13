@@ -1,9 +1,7 @@
 package cg.service.product;
 
 import cg.dto.product.ProductDTO;
-import cg.dto.productImport.ProductImportCreReqDTO;
-import cg.dto.productImport.ProductImportCreResDTO;
-import cg.dto.productImport.ProductImportDTO;
+import cg.dto.productImport.*;
 import cg.model.enums.ESize;
 import cg.model.product.Product;
 import cg.model.product.ProductImport;
@@ -17,7 +15,7 @@ public interface IProductImportService extends IGeneralService<ProductImport, Lo
 
     ProductImportCreResDTO create(ProductImportCreReqDTO productImportCreReqDTO);
 
-    ProductImportCreResDTO update(Product product,ProductImport productImport);
+    ProductImportUpResDTO update(ProductImportUpReqDTO productImportUpReqDTO);
 
 
 
