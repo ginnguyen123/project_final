@@ -20,23 +20,21 @@ public class CategoryCreResDTO {
 
     private String name;
 
-    private CategoryDTO categoryParent;
-
-    private List<CategoryDTO> categoryDTOS;
+    private List<CategoryChildDTO> categoryChilds;
 
     private ECategoryStatus status;
 
-    public CategoryCreResDTO(Long id, String name, ECategoryStatus status,CategoryDTO categoryParent) {
-        this.id = id;
-        this.name = name;
-        this.status = status;
-        this.categoryParent = categoryParent;
-    }
+//    public CategoryCreResDTO(Long id, String name, ECategoryStatus status,CategoryDTO categoryParent) {
+//        this.id = id;
+//        this.name = name;
+//        this.status = status;
+//        this.categoryChilds = categoryParent;
+//    }
 
-    public CategoryCreResDTO(Long id, String name, ECategoryStatus status, List<CategoryDTO> categoryDTOS) {
+    public CategoryCreResDTO(Long id, String name, ECategoryStatus status, List<CategoryChildDTO> categoryDTOS) {
         this.id = id;
         this.name = name;
         this.status = status;
-        this.categoryDTOS = categoryDTOS;
+        this.categoryChilds = categoryDTOS;
     }
 }
