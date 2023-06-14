@@ -55,14 +55,35 @@ public class Category extends BaseEntity {
                 .setStatus(status);
     }
 
+    public CategoryChildDTO toCategoryChild(){
+        if (categoryParent != null){
+            return new CategoryChildDTO()
+                    .setId(id)
+                    .setName(name)
+                    .setStatus(status)
+                    .setAvatar(categoryAvatar.toMediaDTO());
+        }
+        return null;
+    }
+
     public CategoryDTO toCategoryDTO(){
-        return new CategoryDTO()
-                .setId(id)
-                .setName(name)
-                .setStatus(status)
-                .setCategoryParentId(categoryParent.id)
-                .setCategoryParentName(categoryParent.name)
-                .setCategoryAvatar(categoryAvatar.toMediaDTO());
+        if (categoryParent == null){
+            return new CategoryDTO()
+                    .setId(id)
+                    .setName(name)
+                    .setStatus(status)
+                    .setAvatar(categoryAvatar.toMediaDTO())
+                    .setCategoryChild(null);
+        }
+        else {
+            CategoryChildDTO categoryChild = new CategoryChildDTO(id, name, categoryAvatar.toMediaDTO() ,status);
+            return new CategoryDTO()
+                    .setId(categoryParent.getId())
+                    .setName(categoryParent.getName())
+                    .setStatus(categoryParent.getStatus())
+                    .setAvatar(categoryParent.getCategoryAvatar().toMediaDTO())
+                    .setCategoryChild(categoryChild);
+        }
     }
 
     public CategoryCreateRespDTO toCategoryCreateRespDTO(){

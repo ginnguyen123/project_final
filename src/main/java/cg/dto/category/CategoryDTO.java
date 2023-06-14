@@ -21,20 +21,18 @@ public class CategoryDTO {
 
     private String name;
 
-    private Long categoryParentId;
-
-    private String categoryParentName;
-
     private ECategoryStatus status;
 
-    private MediaDTO categoryAvatar;
+    private MediaDTO avatar;
+
+    private CategoryChildDTO categoryChild;
 
     public Category toCategory(){
         return new Category()
                 .setId(id)
                 .setName(name)
                 .setStatus(status)
-                .setCategoryAvatar(categoryAvatar.toMedia())
+                .setCategoryAvatar(avatar.toMedia())
                 ;
     }
 

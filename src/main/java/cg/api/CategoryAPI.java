@@ -54,7 +54,7 @@ public class CategoryAPI {
             categoryCreResDTO.setId(entry.getKey().getId());
             categoryCreResDTO.setName(entry.getKey().getName());
             categoryCreResDTO.setStatus(entry.getKey().getStatus());
-            categoryCreResDTO.setCategoryDTOS(entry.getValue().stream().map(item -> item.toCategoryDTO()).collect(Collectors.toList()));
+            categoryCreResDTO.setCategoryChilds(entry.getValue().stream().map(item -> item.toCategoryChild()).collect(Collectors.toList()));
             categoryCreResDTOList.add(categoryCreResDTO);
         }
         return new ResponseEntity<>(categoryCreResDTOList,HttpStatus.OK);
