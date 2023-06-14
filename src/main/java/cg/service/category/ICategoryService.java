@@ -10,7 +10,11 @@ import java.util.List;
 public interface ICategoryService extends IGeneralService<Category,Long> {
     boolean existsById(Long id);
 
+    List<Category> findCategoriesByCategoryParentNotNull();
+
     List<Category> findAllByCategoryParent_Id(Long categoryParentId);
 
     List<Category> findAllCategoryByStatus(ECategoryStatus status);
+
+    List<Category> findCategoriesByCategoryParent_Id(Long id);
 }

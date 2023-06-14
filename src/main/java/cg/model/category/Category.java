@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 
@@ -49,7 +50,6 @@ public class Category extends BaseEntity {
         return new CategoryCreResDTO()
                 .setId(id)
                 .setName(name)
-                .setCategoryParent(categoryParent.toCategoryDTO())
                 .setStatus(status);
     }
 
