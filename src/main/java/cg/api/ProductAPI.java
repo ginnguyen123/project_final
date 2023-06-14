@@ -21,6 +21,7 @@ import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,6 +76,24 @@ public class ProductAPI {
         return new ResponseEntity<>(productCreResDTOS, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    private ResponseEntity<?> findProductById(@PathVariable Long id){
+        if (id == null){
+            throw new DataInputException("Product does not exist");
+        }
+        Optional<Product> productOptional = productService.findById(id);
+
+        if (!productOptional.isPresent()){
+            throw new DataInputException("Product does not exist");
+        }
+
+        Product product = productOptional.get();
+
+        ProductDTO productDTO = product.toProductDTO();
+
+        return new ResponseEntity<>(productDTO,HttpStatus.OK);
+    }
+
     @PostMapping("/create")
     private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO,
                                      @RequestParam("medias") List<MultipartFile> medias){
@@ -82,7 +101,7 @@ public class ProductAPI {
         productCreReqDTO.setId(null);
         String code = productCreReqDTO.getCode();
         Long brandId = productCreReqDTO.getBrandId();
-        Long categoryId = productCreReqDTO.getCategoryId();
+        Long categoryParentId = productCreReqDTO.getCategoryParentId();
 
         if (!brandService.existsBrandById(brandId)){
             throw new DataInputException("The brand does not exist");
@@ -90,10 +109,10 @@ public class ProductAPI {
 
         Brand brand = brandService.findById(brandId).get();
 
-        if (!categoryService.existsById(categoryId)){
+        if (!categoryService.existsById(categoryParentId)){
             throw new DataInputException("The category does not exist");
         }
-        Category category = categoryService.findById(categoryId).get();
+        Category category = categoryService.findById(categoryParentId).get();
 
         if (code.isEmpty() || code == null){
             code = "";
@@ -114,7 +133,7 @@ public class ProductAPI {
         for (MultipartFile file : medias){
             System.out.println(file.getContentType());
             if (!file.getContentType().equals("image/jpeg") && !file.getContentType().equals("image/png")){
-                throw new DataInputException("Only image files with .png and .jpeg");
+                throw new DataInputException("Only image files with .png or .jpeg");
             }
         }
 
@@ -159,7 +178,7 @@ public class ProductAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{field}")
+    @GetMapping("/sort/{field}")
     private ResponseEntity<?> getProductsWithSort(@PathVariable String field){
         List<Product> products = productService.findProductWithSorting(field);
         List<ProductDTO> productDTOS = products.stream().map(i -> i.toProductDTO()).collect(Collectors.toList());
