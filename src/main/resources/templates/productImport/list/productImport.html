@@ -1,0 +1,110 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="productImport">
+    <script src="../../../static/assets/jQuery/jquery-3.6.0.min.js"></script>
+    <script src="../../../static/assets/main/js/AppBase.js"></script>
+
+
+<script>
+    const page = {
+        urls:{
+            getAllProductImport : AppBase.API_PRODUCT_IMPORT
+        },
+        elements:{},
+        loadData:{},
+        commands:{},
+        dialogs:{
+            elements:{},
+            loadData:{},
+            commands:{}
+        }
+    }
+
+    let currentId;
+
+        page.elements.tbodyTableImport = $('#tbProductImport tbody');
+
+    page.loadData.getAllProductImport = () =>{
+        $.ajax({
+            type: 'GET',
+            url: page.urls.getAllProductImport
+        })
+            .done((data)=>{
+                $.each(data, (i, item)=>{
+                    let str = AppBase.renderProductImport(item);
+                    page.elements.tbodyTableImport.prepend(str);
+                })
+
+                addEventDeleteClick();
+            })
+                    .fail((jqXHR) => {
+                        console.log(jqXHR);
+                    })
+
+    }
+
+
+    function addEventDeleteClick() {
+        $(".delete").on('click', function () {
+            let productId = $(this).data('id');
+            page.loadData.findProductById(productId).then((data) => {
+                currentId = data.id;
+              AppBase.showDeleteCartItemConfirmDialog().then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            headers: {
+                                'accept': 'application/json',
+                                'content-type': 'application/json'
+                            },
+                            type: "DELETE",
+                            url: page.urls.getAllProductImport + "/" + currentId
+                        })
+                            .done(() => {
+                                $("#tr_" + currentId).remove();
+                                AppBase.IziToast.showSuccessAlert("Success Delete");
+                            })
+                            .fail((error) => {
+                                AppBase.IziToast.showErrorAlert(error);
+                            })
+
+                    }
+                })
+                })
+            })
+
+    }
+
+
+
+    page.loadData.findProductById = (id) => {
+        return $.ajax({
+            type: 'GET',
+            url: page.urls.getAllProductImport + '/' + id
+        })
+            .done((data) => {
+                console.log(data)
+            })
+            .fail(() => {
+
+            })
+    }
+
+
+
+
+
+
+    page.initializeControlEvent = function(){
+
+    };
+
+    page.commands.loadData = () =>{
+        page.loadData.getAllProductImport();
+    };
+    $(()=>{
+        page.commands.loadData();
+
+        page.initializeControlEvent();
+    })
+</script>
+
+</th:block>

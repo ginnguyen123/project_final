@@ -1,0 +1,319 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="AddProductJs">
+  <script type="text/javascript" src="/assets/lightslider/js/lightslider.js"></script>
+  <script>
+    const page = {
+      urls:{
+        getAllBrand: AppBase.API_BRAND,
+        getAllCategory: AppBase.API_CATEGORY + '/get',
+        getAllCategoryParent: AppBase.API_CATEGORY,
+        getAllDiscount: AppBase.API_DISCOUNT,
+        getAllProducts: AppBase.API_PRODUCT,
+        createProduct: AppBase.API_PRODUCT + '/create'
+      },
+      elements:{},
+      loadData:{},
+      commands:{},
+      dialogs:{
+        elements:{},
+        loadData:{},
+        commands:{}
+      }
+    }
+
+    page.elements.selectBrand = $('#brand');
+    page.elements.selectCategory = $('#category');
+    page.elements.selectCategoryParent = $('#categoryParent');
+    page.elements.selectDiscount = $('#discount');
+    // elem image
+    page.elements.btnChoiceImage = $('.boxChoiceImage');
+    page.dialogs.elements.inputFileImage = $('#imageFileProduct');
+
+    //input product
+    page.dialogs.elements.frmCreateProduct = $('#frmCreateProduct');
+    page.dialogs.elements.productTitle = $('#productTitle');
+    page.dialogs.elements.productPrice = $('#productPrice');
+    page.dialogs.elements.productDiscount = $('#discount');
+    page.dialogs.elements.productCategory = $('#category');
+    page.dialogs.elements.productCategoryParent = $('#categoryParent');
+    page.dialogs.elements.productBrand = $('#brand');
+    page.dialogs.elements.productImage = $('#imageFileProduct');
+    page.dialogs.elements.productDescription = $('#productDescription');
+    // input image
+    let files = [];
+    let currentIndex = 0;
+
+    page.dialogs.elements.productImageFiles = page.dialogs.elements.productImage[0].files;
+    page.dialogs.elements.container = $('.container-image');
+
+    // btn save
+    page.dialogs.elements.btnSaveCreateBrand = $('#btnSaveCreateBrand');
+    page.dialogs.elements.btnSaveCreateProduct = $('#btnSaveProductCreate');
+
+    page.loadData.showEditor = () =>{
+      page.dialogs.elements.productDescription.cleditor();
+    }
+
+    page.dialogs.commands.showImage = (list) =>{
+      let images = '';
+      list.forEach((e) => {
+          images += `<div class="image ms-2 me-2" id="images_${currentIndex}">
+                          <img src="${URL.createObjectURL(e)}" alt="image">
+                          <span onclick=delImage(${currentIndex})>&times;</span>
+                      </div>`;
+        ++currentIndex;
+      })
+      $('.container-image').prepend(images);
+    }
+
+    page.commands.handleChangeImage = () =>{
+      page.dialogs.elements.productImage.on('change', ()=>{
+        let file = page.dialogs.elements.productImage[0].files;
+        let showImages = [];
+            for (let i = 0; i < file.length; i++){
+              if (files.every(e => e.name != file[i].name)){
+                files.push(file[i]);
+                showImages.push(file[i]);
+              }
+            }
+        page.dialogs.elements.productImage.val("");
+        page.dialogs.commands.showImage(showImages);
+      })
+    }
+
+    page.loadData.getAllBrand = () =>{
+      $.ajax({
+        type: 'GET',
+        url: page.urls.getAllBrand
+      })
+              .done((data)=>{
+                $.each(data, (i, item)=>{
+                  let str = AppBase.renderBrand(item);
+                  page.elements.selectBrand.append(str);
+                })
+              })
+              .fail((jqXHR)=>{
+                console.log(jqXHR);
+              })
+    }
+
+    page.loadData.getAllDiscount = () =>{
+      $.ajax({
+        type: 'GET',
+        url: page.urls.getAllDiscount
+      })
+              .done((data)=>{
+                $.each(data, (i, item)=>{
+                  console.log(data);
+                  let str = AppBase.renderDiscount(item);
+                  page.elements.selectDiscount.append(str);
+                })
+              })
+              .fail((jqXHR)=>{
+                console.log(jqXHR);
+              })
+    }
+
+    page.loadData.getAllCategory = () =>{
+      $.ajax({
+        type: 'GET',
+        url: page.urls.getAllCategory
+      })
+              .done((data)=>{
+                $.each(data, (i,item)=>{
+                  let str = AppBase.renderCategory(item);
+                  page.elements.selectCategory.append(str);
+                })
+              })
+              .fail((jqXHR)=>{
+                console.log(jqXHR);
+              })
+    }
+
+    page.loadData.getAllCategoryParentByCategoryId = (categoryId, elem) =>{
+      $.ajax({
+        type: 'GET',
+        url: page.urls.getAllCategoryParent + '/' + categoryId
+      })
+              .done((data)=>{
+                elem.empty();
+                $.each(data, (i, item)=>{
+                  let str = AppBase.renderCategoryParent(item);
+                  elem.append(str);
+                })
+              .fail((jqXHR)=>{
+                console.log(jqXHR);
+              })
+              })
+    }
+
+    page.commands.handleChangeCategory = (elemCategory, elemCategoryParent) =>{
+      elemCategory.on('change', () =>{
+        let categoryId = +elemCategory.val();
+        if (isNaN(categoryId) || categoryId == -1){
+          elemCategoryParent.empty();
+          let str = `<option>-- Chọn danh mục con --</option>`;
+          elemCategoryParent.append(str);
+        }
+        else{
+          page.loadData.getAllCategoryParentByCategoryId(categoryId, elemCategoryParent);
+        }
+      })
+    }
+
+    $.validator.addMethod("handleSelectValidate", function(value, element, arg){
+      return arg != value;
+    }, "");
+
+    page.dialogs.commands.doCreate = () =>{
+      let title = page.dialogs.elements.productTitle.val();
+      let price = page.dialogs.elements.productPrice.val();
+      let discountId = page.dialogs.elements.productDiscount.val();
+      let discountName = page.dialogs.elements.productDiscount.find("option:selected").text();
+      let categoryId = page.dialogs.elements.productCategory.val();
+      let categoryName = page.dialogs.elements.productCategory.find("option:selected").text();
+      let categoryParentId = page.dialogs.elements.productCategoryParent.val();
+      let categoryParentName = page.dialogs.elements.productCategoryParent.find("option:selected").text();
+      let brandId =  page.dialogs.elements.productBrand.val();
+      let brandName = page.dialogs.elements.productBrand.find("option:selected").text();
+      let avatar = page.dialogs.elements.productImage[0].files[0];
+      let description = page.dialogs.elements.productDescription.val();
+
+      if (isNaN(brandId) || isNaN(categoryParentId) || avatar == undefined){
+        return AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_400);
+      }
+
+      if (isNaN(categoryId)){
+        categoryId = null;
+      }
+
+      if(!isNaN(discountId)){
+        discountId = null;
+      }
+
+      let formData = new FormData();
+      formData.append("title", title);
+      formData.append("price", price)
+      formData.append("description", description);
+      formData.append("brandId", brandId)
+      formData.append("brandName", brandName);
+      formData.append("categoryId", categoryId);
+      formData.append("categoryName", categoryName);
+      formData.append("categoryParentId", categoryParentId);
+      formData.append("categoryParentName", categoryParentName);
+      formData.append("discountId", discountId);
+      formData.append("discountName", discountName);
+      formData.append("avatar", avatar);
+
+      $.ajax({
+        type: 'POST',
+        contentType: false,
+        cache: false,
+        processData: false,
+        url: page.urls.createProduct,
+        data: formData
+      })
+              .done((data)=>{
+                console.log(data);
+                page.dialogs.elements.frmCreateProduct[0].reset();
+                AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
+              })
+              .catch((jqXHR)=>{
+                console.log(jqXHR);
+                if(jqXHR.status == 500){
+                  AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_500);
+                }
+                if (jqXHR.status == 400){
+                  AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_400);
+                }
+              })
+    }
+
+    page.dialogs.elements.frmCreateProduct.validate({
+      rules: {
+        productTitle:{
+          required: true,
+          minlength: 3,
+          maxlength: 200
+        },
+        productPrice:{
+          required: true,
+          minlength: 0,
+          maxlength: 9
+        },
+        category:{
+          handleSelectValidate: "-1"
+        },
+        brand: {
+          handleSelectValidate: "-1"
+        }
+      },
+      messages: {
+        productTitle:{
+          required: 'Tên sản phẩm không được bỏ trống.',
+          minlength: 'Số kí tự tối thiểu là 3 kí tự.',
+          maxlength: 'Số kí tự tối đa là 3 kí tự.'
+        },
+        productPrice:{
+          required: 'Giá sản phẩm không được bỏ trống.',
+          minlength: 'Giá sản phẩm không được bỏ trống.',
+          maxlength: 'Số tiền tối đa không lớn hơn 1.000.000.000'
+        },
+        category:{
+          handleSelectValidate: 'Cần chọn danh mục sản phẩm!'
+        },
+        brand: {
+          handleSelectValidate: 'Cần chọn tên thương hiệu!'
+        }
+      },
+      submitHandler: function (){
+        page.dialogs.commands.doCreate();
+      }
+    })
+
+    page.commands.loadData = () =>{
+      page.loadData.getAllBrand();
+
+      page.loadData.getAllCategory();
+
+      page.loadData.getAllDiscount();
+
+      page.loadData.showEditor();
+    }
+
+    const delImage = (index)=>{
+      let str = `#images_${index}`;
+      $(str).remove();
+      for (let i = 0; i < files.length;i++){
+        if (index == i)
+          files.splice(files[i],1);
+      }
+      $('.container-image').empty();
+      currentIndex = 0;
+      page.dialogs.commands.showImage(files);
+    }
+
+    page.initializeControlEvent = () =>{
+      page.commands.handleChangeCategory(page.elements.selectCategory, page.elements.selectCategoryParent);
+
+      page.commands.handleChangeImage();
+
+      page.elements.btnChoiceImage.on('click', ()=>{
+        page.dialogs.elements.productImage.val("");
+        page.dialogs.elements.inputFileImage.trigger('click');
+      })
+
+      page.dialogs.elements.btnSaveCreateProduct.on('click', ()=>{
+        page.dialogs.elements.frmCreateProduct.trigger('submit');
+      })
+    }
+
+    $(()=>{
+      page.commands.loadData();
+
+      page.initializeControlEvent();
+    })
+
+  </script>
+
+</th:block>

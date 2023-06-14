@@ -1,7 +1,9 @@
 package cg.dto.category;
 
 
+import cg.dto.media.MediaDTO;
 import cg.model.category.Category;
+import cg.model.enums.ECategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,14 +21,21 @@ public class CategoryDTO {
 
     private String name;
 
-    private Long categoryParentId;
+    private ECategoryStatus status;
 
-    private String categoryParentName;
+    private MediaDTO avatar;
+
+    private CategoryChildDTO categoryChild;
 
     public Category toCategory(){
         return new Category()
                 .setId(id)
-                .setName(name);
+                .setName(name)
+                .setStatus(status)
+                .setCategoryAvatar(avatar.toMedia())
+                ;
     }
+
+
 
 }

@@ -1,5 +1,6 @@
 package cg.dto.media;
 
+import cg.model.media.Media;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,23 @@ public class MediaDTO {
     private String fileType;
 
     private String cloudId;
+
+    private Integer width;
+
+    private Integer height;
+
+    public Media toMedia(){
+        return new Media()
+                .setId(id)
+                .setFileName(fileName)
+                .setFileFolder(fileFolder)
+                .setFileUrl(fileUrl)
+                .setFileType(fileType)
+                .setCloudId(cloudId)
+                .setHeight(height)
+                .setWidth(width)
+                ;
+    }
+
 
 }

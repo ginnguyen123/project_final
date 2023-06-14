@@ -1,5 +1,6 @@
 package cg.service.products;
 
+import cg.dto.product.ProductCreResDTO;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
@@ -7,9 +8,11 @@ import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +49,26 @@ public class ProductService implements IProductService{
     @Override
     public List<Product> saveAll(List<Product> products) {
         return productRepository.saveAll(products);
+    }
+
+//    @Override
+//    public List<ProductCreResDTO> findProductsByCategoryWithLimit(Long idCategory) {
+//        return productRepository.findProductsByCategoryWithLimit(idCategory);
+//    }
+
+    @Override
+    public List<Product> findProductsByCategoryWithLimit(Long idCategory) {
+        return productRepository.findProductsByCategoryWithLimit(idCategory);
+    }
+
+    @Override
+    public List<Product> findAllByDeletedFalse() {
+        return productRepository.findAllByDeletedFalse();
+    }
+
+    @Override
+    public List<Product> findProductWithSorting(String field) {
+        return productRepository.findAll(Sort.by(Sort.Direction.ASC,field));
     }
 
     @Override

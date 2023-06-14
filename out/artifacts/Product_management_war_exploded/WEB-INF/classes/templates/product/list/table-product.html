@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <title>Danh sách sản phẩm</title>
+  <th:block th:replace="layout/head :: head"/>
+</head>
+
+<body onload="time()" class="app sidebar-mini rtl">
+<!-- Navbar-->
+<header class="app-header">
+  <!-- Sidebar toggle button-->
+  <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+  <!-- Navbar Right Menu-->
+  <ul class="app-nav">
+<!--    <div class="menu-bar">-->
+<!--      <span></span>-->
+<!--    </div>-->
+
+    <!-- User Menu-->
+<!--    <li><a class="app-nav__item" href="/templates/index.html"><i class='bx bx-log-out bx-rotate-180'></i> </a>-->
+
+<!--    </li>-->
+  </ul>
+</header>
+<!-- Sidebar menu-->
+<th:block th:replace="layout/left-side-bar :: left-side-bar"/>
+
+<main class="app-content">
+  <div class="app-title">
+    <ul class="app-breadcrumb breadcrumb side">
+      <li class="breadcrumb-item active"><a><b>Danh sách sản phẩm</b></a></li>
+    </ul>
+    <div id="clock"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tile">
+        <div class="tile-body">
+          <div class="row element-button">
+            <div class="col-sm-2">
+              <a class="btn btn-add btn-sm" href="/products/create" id="add" title="Thêm mới sản phẩm"><i class="fas fa-plus"></i>
+                Thêm mới sản phẩm</a>
+            </div>
+
+            <div class="col-sm-10 d-flex justify-content-end">
+              <a class="btn btn btn-secondary btn-delete btn-sm" id="delete" title="Xóa"><i
+                      class="fas fa-trash-alt"></i> Xóa </a>
+            </div>
+          </div>
+          <table class="table table-hover table-bordered" id="tbProduct">
+            <thead>
+            <tr>
+              <th><input type="checkbox" id="all-delete"></th>
+              <th>Mã sản phẩm</th>
+              <th>Ảnh</th>
+              <th>Tên sản phẩm</th>
+              <th>Giá tiền</th>
+              <th>Danh mục</th>
+              <th>Tính năng</th>
+            </tr>
+            </thead>
+            <tbody>
+<!--            <tr>-->
+<!--              <td>-->
+<!--                <input type="checkbox" name="check1" value="1">-->
+<!--              </td>-->
+<!--              <td>76392984</td>-->
+<!--              <td><img src="/assets/img-sanpham/theresa.jpg" alt="" width="100px;"></td>-->
+<!--              <td>Áo chống nắng SunStop UV Master mũ liền nữ K2/F9UVJ056K</td>-->
+<!--              <td>40</td>-->
+<!--              <td>400.000 đ</td>-->
+<!--              <td>Áo</td>-->
+<!--              <td><button class="btn btn-delete btn-sm delete" type="button" title="Xóa"-->
+<!--                          onclick="myFunction(this)"><i class="fas fa-trash-alt"></i>-->
+<!--              </button>-->
+<!--                <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" id="show-emp" data-toggle="modal"-->
+<!--                        data-target="#ModalUP"><i class="fas fa-edit"></i></button>-->
+<!--              </td>-->
+<!--            </tr>-->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- javascripts for application to work-->
+<th:block th:replace="layout/script :: script"/>
+<th:block th:replace="product/list/productJs :: productJs"/>
+</body>
+
+</html>

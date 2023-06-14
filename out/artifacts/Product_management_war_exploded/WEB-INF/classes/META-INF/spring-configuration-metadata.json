@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "application.uploader",
+      "type": "cg.uploader.CloudinaryConfig",
+      "sourceType": "cg.uploader.CloudinaryConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "application.uploader.api-key",
+      "type": "java.lang.String",
+      "sourceType": "cg.uploader.CloudinaryConfig"
+    },
+    {
+      "name": "application.uploader.api-secret",
+      "type": "java.lang.String",
+      "sourceType": "cg.uploader.CloudinaryConfig"
+    },
+    {
+      "name": "application.uploader.cloud-name",
+      "type": "java.lang.String",
+      "sourceType": "cg.uploader.CloudinaryConfig"
+    }
+  ],
+  "hints": []
+}

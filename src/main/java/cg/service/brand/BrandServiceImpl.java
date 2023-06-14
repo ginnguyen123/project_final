@@ -37,6 +37,12 @@ public class BrandServiceImpl implements IBrandService{
     }
 
     @Override
+    public List<Brand> findAllByDeletedFalse() {
+        return brandRepository.findAllByDeletedFalse();
+    }
+
+
+    @Override
     public Brand save(Brand brand) {
         return brandRepository.save(brand);
     }

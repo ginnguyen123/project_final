@@ -72,7 +72,12 @@ public class UploadMediaServiceImpl implements IUploadMediaService{
         return cloudinary.uploader().destroy(publicId, options);
     }
 
-    public MediaDTO uploadImageAndSaveImage(MultipartFile file, Media media){
+    @Override
+    public List<Media> saveAll(List<Media> medias) {
+        return mediaRepository.saveAll(medias);
+    }
+
+    public Media uploadImageAndSaveImage(MultipartFile file, Media media){
         try {
             Map uploadResult = uploadImage(file, uploadUtils.buildImageUploadParams(media));
             String fileUrl = (String) uploadResult.get("secure_url");
@@ -82,10 +87,33 @@ public class UploadMediaServiceImpl implements IUploadMediaService{
             media.setFileFolder(uploadUtils.IMAGE_UPLOAD_FOLDER);
             media.setCloudId(media.getFileFolder() + "/" + media.getId());
             mediaRepository.save(media);
-            return media.toMediaDTO();
+            return media;
         } catch (IOException e) {
             e.printStackTrace();
             throw new DataInputException("Upload hình ảnh thất bại");
         }
+    }
+
+    public List<Media> uploadAllImageAndSaveAllImage(List<MultipartFile> files, List<Media> medias){
+        for (MultipartFile file : files){
+            Media media = new Media();
+            media.setProductImport(null);
+            save(media);
+            try{
+                Map uploadResult = uploadImage(file, uploadUtils.buildImageUploadParams(media));
+                String fileUrl = (String) uploadResult.get("secure_url");
+                String fileFormat = (String) uploadResult.get("format");
+                media.setFileName(media.getId() + "." + fileFormat);
+                media.setFileUrl(fileUrl);
+                media.setFileFolder(uploadUtils.IMAGE_UPLOAD_FOLDER);
+                media.setCloudId(media.getFileFolder() + "/" + media.getId());
+                medias.add(media);
+            }
+            catch (IOException e){
+                e.printStackTrace();
+                throw new DataInputException("Upload fail");
+            }
+        }
+        return saveAll(medias);
     }
 }

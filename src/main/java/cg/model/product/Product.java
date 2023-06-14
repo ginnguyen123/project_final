@@ -6,7 +6,7 @@ import cg.dto.product.ProductDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
-import cg.model.discount.Discount;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +17,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -45,6 +46,10 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "product_avatar_id", referencedColumnName = "id", nullable = false)
     private Media productAvatar;
 
+    @OneToMany
+    @JoinColumn(name = "product_media_id", referencedColumnName = "id")
+    private List<Media> productAvatarList;
+
     @ManyToOne
     @JoinColumn(name = "brand_id", referencedColumnName = "id", nullable = false)
     private Brand brand;
@@ -63,22 +68,23 @@ public class Product extends BaseEntity {
                 .setCode(code)
                 .setPrice(price)
                 .setDescription(description)
-                .setUrl(productAvatar.getFileUrl())
+                .setAvatar(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
-
     }
 
     public ProductCreResDTO toProductCreResDTO(){
-
         return new ProductCreResDTO()
                 .setId(id)
                 .setTitle(title)
                 .setCode(code)
                 .setPrice(price)
                 .setDescription(description)
-                .setUrlAvatar(productAvatar.getFileUrl())
+                .setAvarta(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i -> i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
     }
 }
+

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: admin01
+Build-Jdk: 11.0.19
+Implementation-Title: Product-management
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com
+Main-Class: ${start-class}
+

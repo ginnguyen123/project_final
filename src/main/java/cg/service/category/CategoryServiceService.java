@@ -1,6 +1,7 @@
 package cg.service.category;
 
 import cg.model.category.Category;
+import cg.model.enums.ECategoryStatus;
 import cg.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,34 @@ public class CategoryServiceService implements ICategoryService {
     }
 
     @Override
+    public Optional<Category> findByName(String name) {
+        return categoryRepository.findByName(name);
+    }
+
+    @Override
+    public List<Category> findAllByCategoryParent_Id(Long categoryParentId) {
+        return categoryRepository.findAllByCategoryParent_Id(categoryParentId);
+    }
+
+    @Override
+    public List<Category> findAllCategoryByStatus(ECategoryStatus status) {
+        return categoryRepository.findAllCategoryByStatus(status);
+    }
+
+    @Override
+    public List<Category> findCategoriesByCategoryParent_Id(Long id) {
+        return categoryRepository.findCategoriesByCategoryParent_Id(id);
+    }
+
+
+    @Override
     public boolean existsById(Long id) {
         return categoryRepository.existsById(id);
+    }
+
+    @Override
+    public List<Category> findCategoriesByCategoryParentNotNull() {
+        return categoryRepository.findCategoriesByCategoryParentNotNull();
     }
 
     @Override
@@ -49,4 +76,6 @@ public class CategoryServiceService implements ICategoryService {
         Category category = categoryRepository.findById(id).get();
         delete(category);
     }
+
+
 }

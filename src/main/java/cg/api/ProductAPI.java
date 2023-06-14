@@ -1,18 +1,19 @@
 package cg.api;
 
-
-import cg.dto.brand.BrandDTO;
-import cg.dto.category.CategoryDTO;
+import cg.dto.media.MediaDTO;
 import cg.dto.product.ProductCreReqDTO;
 import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
+import cg.model.discount.Discount;
 import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
+import cg.service.discount.DiscountServiceImpl;
+import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
 import cg.service.products.IProductService;
 import cg.utils.AppUtils;
@@ -20,14 +21,12 @@ import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -47,6 +46,9 @@ public class ProductAPI {
     private ICategoryService categoryService;
 
     @Autowired
+    private IDiscountService discountService;
+
+    @Autowired
     private UploadUtils uploadUtils;
 
     @Autowired
@@ -59,19 +61,28 @@ public class ProductAPI {
         return new ResponseEntity<>(productDTOS,HttpStatus.OK);
     }
 
+    @GetMapping("/delete-list")
+    private ResponseEntity<?> getAllProductsDeleteFalse() {
+        List<Product> products = productService.findAllByDeletedFalse();
+        List<ProductDTO> productDTOS = products.stream().map(item -> item.toProductDTO()).collect(Collectors.toList());
+        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/category={idCategory}")
+    private ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
+        List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);
+        List<ProductCreResDTO> productCreResDTOS = products.stream().map(item -> item.toProductCreResDTO()).collect(Collectors.toList());
+        return new ResponseEntity<>(productCreResDTOS, HttpStatus.OK);
+    }
+
     @PostMapping("/create")
-    private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO, BindingResult bindingResult){
-        System.out.println(productCreReqDTO);
-        new ProductCreReqDTO().validate(productCreReqDTO, bindingResult);
+    private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO,
+                                     @RequestParam("medias") List<MultipartFile> medias){
+
         productCreReqDTO.setId(null);
-        MultipartFile avatar = productCreReqDTO.getAvatar();
-        String code = productCreReqDTO.getCode().trim();
+        String code = productCreReqDTO.getCode();
         Long brandId = productCreReqDTO.getBrandId();
         Long categoryId = productCreReqDTO.getCategoryId();
-
-        if (bindingResult.hasErrors()){
-            return appUtils.mapErrorToResponse(bindingResult);
-        }
 
         if (!brandService.existsBrandById(brandId)){
             throw new DataInputException("The brand does not exist");
@@ -82,7 +93,6 @@ public class ProductAPI {
         if (!categoryService.existsById(categoryId)){
             throw new DataInputException("The category does not exist");
         }
-
         Category category = categoryService.findById(categoryId).get();
 
         if (code.isEmpty() || code == null){
@@ -93,47 +103,68 @@ public class ProductAPI {
             for (var i = 0; i < brandCodes.length - 1; i++){
                 code = code + brandCodes[i];
             }
-//            for (var i = 0; i < categoryCodes.length - 1; i++){
-//                code = code + categoryCodes[i];
-//            }
             code = code + numCode.toString();
             productCreReqDTO.setCode(code);
         }
 
-
-        if (avatar == null){
-            throw new DataInputException("The avatar is required");
+        if (medias.size() == 0){
+            throw new DataInputException("Require at least 1 picture");
         }
 
-        Media media = new Media();
-        media.setProductImport(null);
-        uploadMediaService.save(media);
+        for (MultipartFile file : medias){
+            System.out.println(file.getContentType());
+            if (!file.getContentType().equals("image/jpeg") && !file.getContentType().equals("image/png")){
+                throw new DataInputException("Only image files with .png and .jpeg");
+            }
+        }
 
-        try{
-            Map uploadResult = uploadMediaService.uploadImage(avatar, uploadUtils.buildImageUploadParams(media));
-            String fileUrl = (String) uploadResult.get("secure_url");
-            String fileFormat = (String) uploadResult.get("format");
-            media.setFileName(media.getId() + "." + fileFormat);
-            media.setFileUrl(fileUrl);
-            media.setFileFolder(uploadUtils.IMAGE_UPLOAD_FOLDER);
-            media.setCloudId(media.getFileFolder() + "/" + media.getId());
-            uploadMediaService.save(media);
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            throw new DataInputException("Upload hình ảnh thất bại");
-        }
+        List<Media> list = new ArrayList<>();
+
+        list = uploadMediaService.uploadAllImageAndSaveAllImage(medias, list);
 
         Product product = productCreReqDTO.toProduct();
         product.setCategory(category);
         product.setBrand(brand);
-        product.setProductAvatar(media);
+        product.setProductAvatarList(list);
+        product.setProductAvatar(list.get(0));
+
+        if (discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).isPresent()){
+            Discount discount = discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).get();
+            List<Product> products = discount.getProducts();
+            products.add(product);
+            discount.setProducts(products);
+            discountService.save(discount);
+        }
 
         productService.save(product);
 
         ProductCreResDTO productCreResDTO = product.toProductCreResDTO();
 
         return new ResponseEntity<>(productCreResDTO, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/update/{productId}")
+    public ResponseEntity<?> update(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{productID}")
+    public ResponseEntity<?> delete(@PathVariable Long productID) {
+        Optional<Product> productOptional = productService.findById(productID);
+        if (!productOptional.isPresent()) {
+            throw new DataInputException("Product is not found");
+        }
+        Product product = productOptional.get();
+        productService.delete(product);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{field}")
+    private ResponseEntity<?> getProductsWithSort(@PathVariable String field){
+        List<Product> products = productService.findProductWithSorting(field);
+        List<ProductDTO> productDTOS = products.stream().map(i -> i.toProductDTO()).collect(Collectors.toList());
+
+        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
 }

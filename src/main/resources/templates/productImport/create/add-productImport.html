@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <title>Thêm sản phẩm vào kho | Quản trị Admin</title>
+  <!-- Main CSS-->
+  <th:block th:replace="layout/head :: head"/>
+
+</head>
+
+<body class="app sidebar-mini rtl">
+<style>
+  .Choicefile {
+    display: block;
+    background: #14142B;
+    border: 1px solid #fff;
+    color: #fff;
+    width: 150px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 5px 0px;
+    border-radius: 5px;
+    font-weight: 500;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .Choicefile:hover {
+    text-decoration: none;
+    color: white;
+  }
+
+  #uploadfile,
+  .removeimg {
+    display: none;
+  }
+
+  #thumbbox {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .removeimg {
+    height: 25px;
+    position: absolute;
+    background-repeat: no-repeat;
+    top: 5px;
+    left: 5px;
+    background-size: 25px;
+    width: 25px;
+    /* border: 3px solid red; */
+    border-radius: 50%;
+
+  }
+
+  .removeimg::before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    content: '';
+    border: 1px solid red;
+    background: red;
+    text-align: center;
+    display: block;
+    margin-top: 11px;
+    transform: rotate(45deg);
+  }
+
+  .removeimg::after {
+    /* color: #FFF; */
+    /* background-color: #DC403B; */
+    content: '';
+    background: red;
+    border: 1px solid red;
+    text-align: center;
+    display: block;
+    transform: rotate(-45deg);
+    margin-top: -2px;
+  }
+
+  .error{
+    color: red;
+    margin: 15px 15px 8px 46px;
+  }
+
+
+
+</style>
+<!-- Navbar-->
+<header class="app-header">
+  <!-- Sidebar toggle button-->
+  <a class="app-sidebar__toggle" href="#" data-toggle="sidebar"
+     aria-label="Hide Sidebar"></a>
+  <!-- Navbar Right Menu-->
+  <ul class="app-nav">
+
+  </ul>
+</header>
+<!-- Sidebar menu-->
+<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+
+<th:block th:replace="layout/left-side-bar :: left-side-bar"/>
+
+<main class="app-content">
+  <div class="app-title">
+    <ul class="app-breadcrumb breadcrumb">
+      <li class="breadcrumb-item">Danh sách sản phẩm</li>
+      <li class="breadcrumb-item">Thêm sản phẩm</li>
+    </ul>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tile">
+        <h3 class="tile-title">Tạo mới sản phẩm</h3>
+        <div class="tile-body">
+          <form class="formCreateProduct" id="formCreateProduct">
+            <div class="row lg-12">
+            <div class="form-group col-md-3">
+              <label class="control-label add">Tên sản phẩm</label>
+              <select class="form-control-add select-search" id="select-product" name="nameCre">
+                <option value="-1" selected disabled>--Chọn tên sản phẩm --</option>
+                <th:block th:each="item: ${product}">
+                  <option th:text="${item.title}" th:value="${item.id}">
+
+                  </option>
+                </th:block>
+              </select>
+            </div>
+              <div class="form-group col-md-3" >
+                <label class="control-label add">Giá gốc </label>
+                <input class="form-control-add" type="text" placeholder=""  id="priceCre" name="priceCre">
+              </div>
+              <div class="col-sm-3">
+                <label class="control-label add">Ngày nhập</label>
+                <input id="myInput-add" type="date" placeholder="Search.." name="dateCre">
+              </div>
+
+              </div>
+            <div class="row lg-12 ">
+              <div class="col-md-3">
+                <label  class="control-label add">Màu sắc</label>
+                <select class="form-control-add select-search" id="select-color" name="colorCre">
+                  <option value="-1" selected disabled>--Chọn màu sắc--</option>
+                  <th:block th:each="item: ${color}">
+                    <option th:text="${item.getValue}" th:value="${item.value}">
+
+                    </option>
+                  </th:block>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="control-label add">Kích cỡ</label>
+                <select class="form-control-add select-search" id="sizeCre" name="sizeCre">
+                  <option value="-1" selected="selected" disabled>--Chọn kích cỡ--</option>
+                  <th:block th:each="item: ${size}">
+                    <option th:text="${item.getValue}" th:value="${item.value}">
+
+                    </option>
+                  </th:block>
+                </select>
+              </div>
+              <div class="form-group  col-md-3 slidecontainer">
+                <label class="control-label add">Số lượng :</label>
+                <span id="demo"></span>
+                <input type="range" min="0" max="1000" value="0" class="slider" id="myRange" name="quantityCre">
+
+              </div>
+
+            </div>
+          </form>
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-save btn-luu-lai " id="btnCreProductImport" type="button">Lưu lại</button>
+            <a class="btn btn-cancel " href="/product-import">Hủy bỏ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</main>
+
+<th:block th:replace="layout/script :: script"/>
+<th:block th:replace="productImport/create/add-productImportJs :: add-productImportJs"/>
+
+
+</body>
+
+
+<script>
+  var slider = document.getElementById("myRange");
+  var output = document.getElementById("demo");
+  // Hiển thị giá trị thanh trượt mặc định
+  output.innerHTML = slider.value;
+  //Cập nhật giá trị thanh trượt hiện tại (mỗi khi bạn kéo tay cầm thanh trượt)
+  slider.oninput = function()
+  {
+    output.innerHTML = this.value;
+  }
+</script>
+</html>
