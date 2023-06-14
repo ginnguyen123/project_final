@@ -13,7 +13,10 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Category> findAll();
+    List<Category> findCategoriesByCategoryParentNotNull();
+
+    List<Category> findCategoriesByCategoryParent_Id(Long id);
+
 
     //Cach viet native SQL
 //    @Query(value = "SELECT * FROM category c WHERE c.status= :status",nativeQuery = true)
