@@ -2,6 +2,7 @@ package cg.dto.product;
 
 import cg.dto.brand.BrandDTO;
 import cg.dto.category.CategoryDTO;
+import cg.dto.media.MediaDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Setter
 @Getter
@@ -22,10 +24,10 @@ public class ProductCreResDTO {
     private String code;
     private BigDecimal price;
     private String description;
-    private String urlAvatar;
     private BrandDTO brand;
     private CategoryDTO category;
-
+    private MediaDTO avarta;
+    private List<MediaDTO> medias;
     public ProductCreResDTO(Long id, String title, BigDecimal price, String description) {
         this.id = id;
         this.title = title;

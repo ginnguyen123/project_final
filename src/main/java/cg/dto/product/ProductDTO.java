@@ -15,6 +15,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -29,14 +30,13 @@ public class ProductDTO {
 
     private String description;
 
+    private MediaDTO avatar;
 
-    private MediaDTO media;
-
+    private List<MediaDTO> medias;
 
     private BrandDTO brand;
 
     private CategoryDTO category;
-
 
     public Product toProduct(){
         return new Product()
@@ -46,7 +46,8 @@ public class ProductDTO {
                 .setPrice(price)
                 .setDescription(description)
                 .setBrand(brand.toBrand())
-                .setProductAvatar(media.toMedia())
+                .setProductAvatar(avatar.toMedia())
+                .setProductAvatarList(medias.stream().map(item -> item.toMedia()).collect(Collectors.toList()))
                 .setCategory(category.toCategory());
 
     }

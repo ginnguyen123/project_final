@@ -17,6 +17,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -53,7 +54,6 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "brand_id", referencedColumnName = "id", nullable = false)
     private Brand brand;
 
-
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
@@ -68,7 +68,8 @@ public class Product extends BaseEntity {
                 .setCode(code)
                 .setPrice(price)
                 .setDescription(description)
-                .setMedia(productAvatar.toMediaDTO())
+                .setAvatar(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
     }
@@ -80,7 +81,8 @@ public class Product extends BaseEntity {
                 .setCode(code)
                 .setPrice(price)
                 .setDescription(description)
-                .setUrlAvatar(productAvatar.getFileUrl())
+                .setAvarta(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i -> i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
     }

@@ -27,10 +27,8 @@ public class Discount extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
     @Column(nullable = false)
     private Long discount;
-
     @OneToMany
     @JoinColumn(name = "discount_id", referencedColumnName = "id")
     private List<Product> products;

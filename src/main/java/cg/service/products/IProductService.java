@@ -14,4 +14,5 @@ public interface IProductService extends IGeneralService<Product,Long> {
 
     List<Product> findProductsByCategoryWithLimit( Long idCategory);
     List<Product> findAllByDeletedFalse();
+    List<Product> findProductWithSorting(String field);
 }

@@ -21,6 +21,6 @@ public class CategoryCreReqDTO {
     private String name;
     private Long categoryParentId;
     private String categoryParentName;
-    private ECategoryStatus status;
+    private String status;
     private MultipartFile categoryAvatar;
 }

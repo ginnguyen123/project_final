@@ -21,6 +21,8 @@ public class CategoryDTO {
 
     private String name;
 
+//    private CategoryDTO categoryParent;
+
     private Long categoryParentId;
 
     private String categoryParentName;
@@ -34,6 +36,7 @@ public class CategoryDTO {
                 .setId(id)
                 .setName(name)
                 .setStatus(status)
+                .setCategoryAvatar(categoryAvatar.toMedia())
                 ;
     }
 

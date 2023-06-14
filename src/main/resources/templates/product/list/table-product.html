@@ -7,6 +7,25 @@
 </head>
 
 <body onload="time()" class="app sidebar-mini rtl">
+<style>
+
+  .btn-sort{
+    display: flex;
+    flex-direction: column;
+  }
+  .up-down-sort{
+    display: flex;
+    align-items: center;
+    max-height: 10px;
+    margin-right: 8px;
+  }
+
+  .up-down-sort:hover{
+    color: darkgray;
+    cursor: pointer;
+  }
+
+</style>
 <!-- Navbar-->
 <header class="app-header">
   <!-- Sidebar toggle button-->
@@ -38,24 +57,89 @@
       <div class="tile">
         <div class="tile-body">
           <div class="row element-button">
-            <div class="col-sm-2">
-              <a class="btn btn-add btn-sm" href="/products/create" id="add" title="Thêm mới sản phẩm"><i class="fas fa-plus"></i>
-                Thêm mới sản phẩm</a>
+
+              <div class="col-sm-2 d-flex align-items-center">
+                <a class="btn btn-add btn-sm" href="/products/create" id="add" title="Thêm mới sản phẩm"><i class="fas fa-plus"></i>
+                  Thêm mới sản phẩm</a>
+              </div>
+
+            <div class="d-flex justify-content-end col-sm-10">
+              <div class="input-group justify-content-end" style="padding: 3px 0px;">
+                <input type="text" class="form-control-sm" placeholder="Search...">
+                <button class="btn btn-primary btn-sm" style="margin-bottom: 0"  type="button">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+
+              <div class="ms-2 me-2 d-flex align-items-center">
+                <a class="btn btn-secondary btn-sm" style="margin-bottom: 0;padding: 5.5px 9px;" id="delete" title="Xóa"><i
+                        class="fas fa-trash-alt"></i> Xóa </a>
+              </div>
             </div>
 
-            <div class="col-sm-10 d-flex justify-content-end">
-              <a class="btn btn btn-secondary btn-delete btn-sm" id="delete" title="Xóa"><i
-                      class="fas fa-trash-alt"></i> Xóa </a>
-            </div>
           </div>
+
+        </div>
+
           <table class="table table-hover table-bordered" id="tbProduct">
             <thead>
             <tr>
-              <th><input type="checkbox" id="all-delete"></th>
-              <th>Mã sản phẩm</th>
+              <th><input type="checkbox" id="all-delete"/></th>
+              <th>
+                <div class="d-flex">
+                  <div class="btn-sort">
+                    <div class="up-down-sort">
+                      <a class="up-button">
+                        <i class="fa-solid fa-caret-up"></i>
+                      </a>
+                    </div>
+
+                    <div class="up-down-sort">
+                      <a class="down-button">
+                        <i class="fa-solid fa-caret-down"></i>
+                      </a>
+                    </div>
+                  </div>
+                  <span>Mã sản phẩm</span>
+                </div>
+              </th>
               <th>Ảnh</th>
-              <th>Tên sản phẩm</th>
-              <th>Giá tiền</th>
+              <th>
+                <div class="d-flex">
+                  <div class="btn-sort">
+                    <div class="up-down-sort">
+                      <a class="up-button">
+                        <i class="fa-solid fa-caret-up"></i>
+                      </a>
+                    </div>
+
+                    <div class="up-down-sort">
+                      <a class="down-button">
+                        <i class="fa-solid fa-caret-down"></i>
+                      </a>
+                    </div>
+                  </div>
+                  <span>Tên sản phẩm</span>
+                </div>
+              </th>
+              <th>
+                <div class="d-flex">
+                  <div class="btn-sort">
+                    <div class="up-down-sort">
+                      <a class="up-button">
+                        <i class="fa-solid fa-caret-up"></i>
+                      </a>
+                    </div>
+
+                    <div class="up-down-sort">
+                      <a class="down-button">
+                        <i class="fa-solid fa-caret-down"></i>
+                      </a>
+                    </div>
+                  </div>
+                  <span>Giá tiền</span>
+                </div>
+              </th>
               <th>Danh mục</th>
               <th>Tính năng</th>
             </tr>

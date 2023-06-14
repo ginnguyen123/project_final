@@ -30,6 +30,11 @@ public class CategoryServiceService implements ICategoryService {
     }
 
     @Override
+    public Optional<Category> findByName(String name) {
+        return categoryRepository.findByName(name);
+    }
+
+    @Override
     public List<Category> findAllByCategoryParent_Id(Long categoryParentId) {
         return categoryRepository.findAllByCategoryParent_Id(categoryParentId);
     }

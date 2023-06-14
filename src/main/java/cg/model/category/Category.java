@@ -59,6 +59,7 @@ public class Category extends BaseEntity {
                 .setName(name)
                 .setStatus(status)
                 .setCategoryParentId(categoryParent.id)
-                .setCategoryParentName(categoryParent.name);
+                .setCategoryParentName(categoryParent.name)
+                .setCategoryAvatar(categoryAvatar.toMediaDTO());
     }
 }

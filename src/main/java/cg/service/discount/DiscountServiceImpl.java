@@ -42,6 +42,11 @@ public class DiscountServiceImpl implements IDiscountService{
     }
 
     @Override
+    public Optional<Discount> findDiscountByIdAndDeletedIsFalse(Long id) {
+        return discountRepository.findDiscountByIdAndDeletedIsFalse(id);
+    }
+
+    @Override
     public Discount save(Discount discount) {
         List<Product> products = discount.getProducts();
         productRepository.saveAll(products);

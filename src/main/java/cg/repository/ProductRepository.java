@@ -18,7 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByDeletedFalse();
 
-
     //Khi nao thi dung JPQL va native sql
 //    @Query(value = "SELECT NEW cg.dto.product.ProductCreResDTO(p.id," +
 //            "p.title," +

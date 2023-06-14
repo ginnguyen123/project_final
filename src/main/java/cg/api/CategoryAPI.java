@@ -6,7 +6,10 @@ import cg.dto.category.CategoryDTO;
 import cg.exception.DataInputException;
 import cg.model.category.Category;
 import cg.model.enums.ECategoryStatus;
+import cg.model.media.Media;
+import cg.repository.MediaRepository;
 import cg.service.category.ICategoryService;
+import cg.service.media.IUploadMediaService;
 import cg.service.products.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,12 @@ public class CategoryAPI {
 
     @Autowired
     private IProductService productService;
+
+    @Autowired
+    private IUploadMediaService uploadMediaService;
+
+    @Autowired
+    private MediaRepository mediaRepository;
 
     @GetMapping("/get")
     public ResponseEntity<?> getAllCategories(){
@@ -66,34 +75,61 @@ public class CategoryAPI {
     @GetMapping("/{categoryParentId}")
     public ResponseEntity<?> getAllCategoryParentById(@PathVariable Long categoryParentId){
         List<Category> categories = categoryService.findAllByCategoryParent_Id(categoryParentId);
+
         List<CategoryDTO> categoryDTOS = categories.stream().map(item -> item.toCategoryDTO()).collect(Collectors.toList());
 
         return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody CategoryCreReqDTO categoryCreReqDTO){
-        Optional<Category> categoryOptional = categoryService.findById(categoryCreReqDTO.getCategoryParentId());
-        if (!categoryOptional.isPresent()){
-            throw new DataInputException("Category is not exist!");
-        }
+    public ResponseEntity<?> create(CategoryCreReqDTO categoryCreReqDTO){
         Category newCategory = new Category();
+        newCategory.setId(null);
 
-        if (categoryCreReqDTO.getCategoryParentId() == null){
-            newCategory.getCategoryParent().setId(categoryCreReqDTO.getId());
-            newCategory.getCategoryParent().setName(categoryCreReqDTO.getName());
+        if (categoryCreReqDTO.getName().isEmpty() || categoryCreReqDTO.getName() == null){
+            throw new DataInputException("The name's required!");
+        }
+        newCategory.setName(categoryCreReqDTO.getName());
+
+        if (categoryCreReqDTO.getCategoryAvatar() == null){
+            throw new DataInputException("The category's image required!");
+        }
+        Media media = new Media();
+        mediaRepository.save(media);
+        media = uploadMediaService.uploadImageAndSaveImage(categoryCreReqDTO.getCategoryAvatar(), media);
+        newCategory.setCategoryAvatar(media);
+
+        if (categoryCreReqDTO.getCategoryParentId() == null && categoryCreReqDTO.getCategoryParentName() == null){
+            Category categoryParent = new Category();
+            newCategory.setCategoryParent(categoryParent);
+        }else {
+            Optional<Category> categoryId = categoryService.findById(categoryCreReqDTO.getCategoryParentId());
+            if (!categoryId.isPresent()){
+                Optional<Category> categoryName = categoryService.findByName(categoryCreReqDTO.getName());
+                if (!categoryName.isPresent()){
+                    Category categoryParent = new Category();
+                    newCategory.setCategoryParent(categoryParent);
+                }else {
+                    Category category = categoryName.get();
+                    newCategory.setCategoryParent(category);
+                }
+            }else {
+                Category category = categoryId.get();
+                newCategory.setCategoryParent(category);
+            }
         }
 
-        Category categoryDb = categoryOptional.get();
-
-
-        newCategory.setId(null);
-        newCategory.setName(categoryCreReqDTO.getCategoryParentName());
-        newCategory.setCategoryParent(categoryDb);
+        String status = categoryCreReqDTO.getStatus();
+        if (ECategoryStatus.getECategoryStatus(status) == null){
+            newCategory.setStatus(null);
+        }else {
+            ECategoryStatus eCategoryStatus = ECategoryStatus.getECategoryStatus(status);
+            newCategory.setStatus(eCategoryStatus);
+        }
 
         Category categoryRes = categoryService.save(newCategory);
 
-        CategoryCreResDTO categoryCreResDTO = categoryRes.toCategoryCreResDTO();
+        CategoryDTO categoryCreResDTO = categoryRes.toCategoryDTO();
 
         return new ResponseEntity<>(categoryCreResDTO, HttpStatus.CREATED);
     }

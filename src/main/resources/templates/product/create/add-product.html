@@ -89,7 +89,9 @@
     }
 
     .card{
+        width: 98%;
         padding: 15px;
+        margin-left: 10px;
         box-shadow: 0 0 5px rgba(0,0,0,0.15);
         border-radius: 5px;
         overflow: hidden;
@@ -105,7 +107,114 @@
     .card .top p{
         font-size: 0.9rem;
         font-weight: 600;
+        color: #878a9a;
     }
+
+    .card .top span{
+        outline: 0;
+        border: 0;
+        -webkit-appearance: none;
+        background: #5256ad;
+        color: #fff;
+        border-radius: 4px;
+        transition: 0.3s;
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0,0,0, 0.15);
+        font-size: 0.8rem;
+        padding: 8px 13px;
+    }
+
+    .card .top span:hover{
+        opacity: 0.8;
+    }
+
+    .card .top span:active{
+        transform: translateY(5px);
+    }
+
+    #frm-image{
+        width: 96%;
+        height: 160px;
+        margin-left: 25px;
+        border-radius: 5px;
+        border:  2px dashed #d5d5e1;
+        color: #c8c9dd;
+        font-size: 0.9rem;
+        font-weight: 500;
+        position: relative;
+        background: #dfe3f259;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+    }
+
+    .inner{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #frm-image .select{
+        color: #5256ad;
+        margin-left: 7px;
+        cursor: pointer;
+    }
+
+    .dragover{
+        border-style: solid;
+        font-size: 2rem;
+        color: #c8c9dd;
+        font-weight: 600;
+        background: rgba(0,0,0,0.34);
+    }
+
+    .container-image{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        position: relative;
+        height: auto;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .container-image .image{
+        height: 85px;
+        width: 85px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0,0,0, 0.15);
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 7px;
+        margin-right: 7px;
+    }
+
+    .container-image .image:nth-child(4n){
+        margin-right: 0;
+    }
+
+    .container-image .image img{
+        height: 100%;
+        width: 100%;
+    }
+
+    .container-image .image span{
+        position: absolute;
+        top: -4px;
+        right: 5px;
+        cursor: pointer;
+        font-size: 22px;
+        color: #fff;
+    }
+
+    .container-image .image span:hover{
+        opacity: 0.8;
+    }
+
 
 
 
@@ -203,22 +312,21 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-md-12 float-left">
-                            <label class="control-label">Ảnh sản phẩm</label>
+                        <div class="form-group col-md-12 float-left" >
+<!--                            <label class="control-label">Ảnh sản phẩm</label>-->
                             <div class="card">
                                 <div class="top">
                                     <p>Drag & drop image uploading</p>
-                                    <button type="button" class="Choicefile boxChoiceImage">
+                                    <span class="boxChoiceImage">
                                         <i class="fas fa-cloud-upload-alt me-2"></i>Chọn ảnh
-                                    </button>
+                                    </span>
                                 </div>
-                                <span class="inner">Drag & drop image here or <span class="select">Brows</span>
-                                </span>
-                                <input name="imageFileProduct" id="imageFileProduct" type="file" hidden multiple/>
-                                <div class="container">
-                                    <div class="image">
-                                        <img src="" alt="image">
-                                        <span>&times;</span>
+                                <div id="frm-image">
+<!--                                    <span class="inner">Drag & drop image here or <span class="select">Brows</span>-->
+<!--                                    </span>-->
+                                    <input name="imageFileProduct" id="imageFileProduct" type="file" hidden multiple/>
+                                    <div class="container-image">
+
                                     </div>
                                 </div>
                             </div>
@@ -252,9 +360,11 @@
 
 <script>
 
+
     $('#addNhaCungCap').on('click', () => {
         $('#modalNhaCungCap').modal('show');
     })
+
     $('.btn-cancel').on('click', () => {
         $('#modalNhaCungCap').modal('hide');
     })
@@ -262,6 +372,7 @@
     $('#addDanhMuc').on('click', () => {
         $('#modalAddDanhMuc').modal('show');
     })
+
     $('.btn-cancel').on('click', () => {
         $('#modalAddDanhMuc').modal('hide');
     })
