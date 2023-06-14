@@ -84,7 +84,8 @@ public class ProductAPI {
         Optional<Product> productOptional = productService.findById(id);
 
         if (!productOptional.isPresent()){
-            throw new DataInputException("Product does not exist");
+            ProductDTO productDTO = new ProductDTO();
+            return new ResponseEntity<>(productDTO, HttpStatus.OK);
         }
 
         Product product = productOptional.get();
