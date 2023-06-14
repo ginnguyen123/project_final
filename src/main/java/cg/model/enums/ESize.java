@@ -2,8 +2,7 @@ package cg.model.enums;
 
 import cg.exception.DataInputException;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,6 +24,9 @@ public enum ESize {
         return value;
     }
 
+    public static Stream<ESize> stream() {
+        return Stream.of(ESize.values());
+    }
 
     private static final Map<String, ESize> NAME_MAP = Stream.of(values())
             .collect(Collectors.toMap(ESize::toString, Function.identity()));
@@ -45,6 +47,14 @@ public enum ESize {
         }
         return null;
     }
+    public static List<ESize> getEnumValues(){
+        return new ArrayList<>(Arrays.asList(values()));
+    }
+
+
+
+
+
 
 
 }

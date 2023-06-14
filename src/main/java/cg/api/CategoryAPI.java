@@ -70,6 +70,25 @@ public class CategoryAPI {
         return new ResponseEntity<>(categoryCreResDTOS, HttpStatus.OK);
     }
 
+    @PostMapping("/{idParent}")
+    public ResponseEntity<?> getAllCategoriesByStatus(@PathVariable Long idParent){
+        Optional<Category> categoryOptional = categoryService.findById(idParent);
+        if (!categoryOptional.isPresent()){
+            throw new DataInputException("khong ton tai");
+        }
+
+        String name = categoryOptional.get().getName();
+        List<String> aolist = new ArrayList<>();
+        if (idParent == 1){
+
+        }
+
+        else {
+
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
     @GetMapping("/{categoryParentId}")

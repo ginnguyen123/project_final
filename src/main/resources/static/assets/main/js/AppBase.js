@@ -84,7 +84,7 @@ class AppBase{
         })
     }
     static showDeleteCartItemConfirmDialog() {
-        return Swal.fire({
+         return  Swal.fire({
             icon: 'warning',
             text: 'Bạn muốn xóa sản phẩm này ?',
             showCancelButton: true,
@@ -111,6 +111,19 @@ class AppBase{
             text: t,
         })
     }
+
+
+ static formDate(date) {
+    let arr = date.split("-")
+    date = arr[2] + "-" + arr[1] + "-" + arr[0]
+    return date;
+}
+ static formMonth(month){
+    let arr = month.split("-")
+    month =  arr[1] + "-" + arr[0]
+    return month;
+}
+
 
     static formatNumber() {
         $(".num-space").number(true, 0, ',', ' ');
@@ -178,6 +191,7 @@ class AppBase{
     }
 
     static renderProductImport(item){
+        let str = this.formDate(item.date_added);
         return` <tr id="tr_${item.id}">
                             <td>
                                 <input type="checkbox" id="delete_${item.id}">
@@ -195,12 +209,12 @@ class AppBase{
                             <td><span class="badge btn-add btn-sm">${item.productStatus}</span></td>
                             
                             <td>${item.product.title}</td>
-                            <td>${formDate(item.date_added)}</td>
+                            <td>${str}</td>
                             <td>
-                                 <button class="btn btn-delete btn-sm delete" type="button" title="Xóa">
+                                 <button class="btn btn-delete btn-sm delete" type="button" title="Xóa" data-id="${item.id}">
                                         <i class="fa fa-trash-alt"></i>
                                  </button>
-                                 <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" >
+                                 <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" data-id="${item.id}" >
                                          <i class="fa fa-edit"></i>
                                  </button>
                             </td>

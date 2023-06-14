@@ -10,8 +10,7 @@ import java.util.stream.Stream;
 
 public enum EProductStatus {
     STOCKING ("Stocking"),
-    OUT_STOCK ("Out-stock"),
-    ENTERING ("Entering");
+    OUT_STOCK ("Out-stock");
 
     private final String value;
 

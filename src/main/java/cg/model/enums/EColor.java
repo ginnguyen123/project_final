@@ -1,9 +1,11 @@
 package cg.model.enums;
 
 import cg.exception.DataInputException;
-import org.springframework.stereotype.Component;
 
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -50,6 +52,11 @@ public enum EColor {
             }
         }
         return null;
+    }
+
+
+    public static List<EColor> getEnumValues(){
+        return new ArrayList<>(Arrays.asList(values()));
     }
 
 }
