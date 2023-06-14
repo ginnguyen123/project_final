@@ -19,6 +19,8 @@
         }
     }
 
+    let currentId;
+
         page.elements.tbodyTableImport = $('#tbProductImport tbody');
 
     page.loadData.getAllProductImport = () =>{
@@ -31,6 +33,8 @@
                     let str = AppBase.renderProductImport(item);
                     page.elements.tbodyTableImport.prepend(str);
                 })
+
+                addEventDeleteClick();
             })
                     .fail((jqXHR) => {
                         console.log(jqXHR);
@@ -38,16 +42,52 @@
 
     }
 
-    function formDate(date) {
-        let arr = date.split("-")
-        date = arr[2] + "-" + arr[1] + "-" + arr[0]
-        return date;
+
+    function addEventDeleteClick() {
+        $(".delete").on('click', function () {
+            let productId = $(this).data('id');
+            page.loadData.findProductById(productId).then((data) => {
+                currentId = data.id;
+              AppBase.showDeleteCartItemConfirmDialog().then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            headers: {
+                                'accept': 'application/json',
+                                'content-type': 'application/json'
+                            },
+                            type: "DELETE",
+                            url: page.urls.getAllProductImport + "/" + currentId
+                        })
+                            .done(() => {
+                                $("#tr_" + currentId).remove();
+                                AppBase.IziToast.showSuccessAlert("Success Delete");
+                            })
+                            .fail((error) => {
+                                AppBase.IziToast.showErrorAlert(error);
+                            })
+
+                    }
+                })
+                })
+            })
+
     }
-    function formMonth(month){
-        let arr = month.split("-")
-        month =  arr[1] + "-" + arr[0]
-        return month;
+
+
+
+    page.loadData.findProductById = (id) => {
+        return $.ajax({
+            type: 'GET',
+            url: page.urls.getAllProductImport + '/' + id
+        })
+            .done((data) => {
+                console.log(data)
+            })
+            .fail(() => {
+
+            })
     }
+
 
 
 

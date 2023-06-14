@@ -104,6 +104,12 @@
             <artifactId>javax.interceptor-api</artifactId>
             <version>1.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <!--for hibernate >= 5.2-->
+            <version>2.16.2</version>
+        </dependency>
     </dependencies>
 
     <build>

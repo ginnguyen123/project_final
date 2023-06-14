@@ -1,9 +1,7 @@
 package cg.api;
 
 import cg.dto.product.ProductDTO;
-import cg.dto.productImport.ProductImportCreReqDTO;
-import cg.dto.productImport.ProductImportCreResDTO;
-import cg.dto.productImport.ProductImportDTO;
+import cg.dto.productImport.*;
 
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
@@ -22,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -46,12 +45,11 @@ public class ProductImportAPI {
 
     @PostMapping
     public ResponseEntity<?> createNewProductImport(
-            @RequestBody @Validated ProductImportCreReqDTO productImportCreReqDTO,
+            @Validated ProductImportCreReqDTO productImportCreReqDTO,
             BindingResult bindingResult
     ) {
 
-        //validate vai bua chuyen qua service sau
-        //ko viet nghiep vu o tang RestController
+
         new ProductImportCreReqDTO().validate(productImportCreReqDTO, bindingResult);
 
         if (bindingResult.hasFieldErrors()) {
@@ -63,7 +61,15 @@ public class ProductImportAPI {
 
         return new ResponseEntity<>(productImportCreResDTO, HttpStatus.CREATED);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProductImportById(@PathVariable Long id) {
+        ProductImportDTO productImportDTO = productImportService
+                .getProductImportDTOByIdDeletedIsFalse(id)
+                .orElseThrow(
+                        ()-> new ResourceNotFoundException("Not found this product"));
 
+        return new ResponseEntity<>(productImportDTO, HttpStatus.OK);
+    }
     @GetMapping()
     public ResponseEntity<?> getAllProductImport(){
         List<ProductImport> productImportList = productImportService.findAll();
@@ -74,10 +80,16 @@ public class ProductImportAPI {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ProductImportCreReqDTO productImportCreReqDTO) {
+    public ResponseEntity<?> update(@PathVariable Long id,@RequestBody @Validated ProductImportUpReqDTO productImportUpReqDTO, BindingResult bindingResult ) throws IOException {
+        new ProductImportUpReqDTO().validate(productImportUpReqDTO,bindingResult);
 
+            productImportUpReqDTO.setId(id);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (bindingResult.hasFieldErrors()) {
+            return appUtils.mapErrorToResponse(bindingResult);
+        }
+            ProductImportUpResDTO productImportUpResDTO = productImportService.update(productImportUpReqDTO);
+        return new ResponseEntity<>(productImportUpResDTO,HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -87,6 +99,18 @@ public class ProductImportAPI {
         productImportService.delete(productImport);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+
+    @GetMapping("/size")
+    public ResponseEntity<?> getAllSize() {
+        List<ESize> size = ESize.getEnumValues();
+        return new ResponseEntity<>(size, HttpStatus.OK);
+    }
+
+
+
+
 
 
 

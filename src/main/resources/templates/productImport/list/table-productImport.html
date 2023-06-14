@@ -29,7 +29,7 @@
 <main class="app-content">
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb side">
-            <li class="breadcrumb-item active"><a href="#"><b>Danh sách sản phẩm</b></a></li>
+            <li class="breadcrumb-item active"><a href="/products"><b>Danh sách sản phẩm</b></a></li>
         </ul>
         <div id="clock"></div>
     </div>
@@ -38,20 +38,45 @@
             <div class="tile">
                 <div class="tile-body">
                     <div class="row element-button">
-                        <div class="col-sm-2">
-                            <a class="btn btn-add btn-sm" href="/product-import/create" id="add" title="Thêm mới sản phẩm"><i class="fas fa-plus"></i>
-                                Thêm mới sản phẩm</a>
+                        <div class="row">
+                        <div class="col-sm-12 d-flex justify-content-end">
+                            <div class="col-sm-10 d-flex justify-content-end">
+                                <a class="btn btn-add btn-sm" href="/product-import/create" id="add" title="Thêm mới sản phẩm"><i class="fas fa-plus"></i>
+                                    Thêm mới sản phẩm</a>
+                            </div>
+                           <div>
+                               <a class="btn btn btn-secondary btn-delete btn-sm " id="delete" title="Xóa"><i
+                                       class="fas fa-trash-alt"></i> Xóa </a>
+                           </div>
                         </div>
-                        <div class="col-sm-2">
-                            <input id="myInput" type="date" placeholder="Search..">
-                        </div>
-                        <div class="col-sm-2">
-                            <input id="myOutput" type="date" placeholder="Search..">
-                        </div>
-                        <div class="col-sm-10 d-flex justify-content-end" id="delete">
-                            <a class="btn btn btn-secondary btn-delete btn-sm " title="Xóa"><i
-                                    class="fas fa-trash-alt"></i> Xóa </a>
-                        </div>
+                                <div class=" row">
+                                    <div class="col-sm-4 d-flex">
+                                        <div class="col-sm-2">
+                                            <span>Từ ngày</span>
+                                            <input id="myInput" type="date" placeholder="Search..">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <span>Đến ngày</span>
+                                            <input id="myOutput" type="date" placeholder="Search..">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+
+                                    </div>
+                                    <div class="col-sm-4 position-relative">
+                                        <div class="col-sm-12 d-flex position-absolute input-group " style="bottom: 0px;margin-left: 69px">
+                                            <div class="form-outline position-relative">
+                                                <input type="search" id="form1" class="form-control" />
+                                            </div>
+                                            <button type="button" class="btn btn-primary position-absolute" id="search">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                     </div>
                     <table class="table table-hover table-bordered" id="tbProductImport">
                         <thead>

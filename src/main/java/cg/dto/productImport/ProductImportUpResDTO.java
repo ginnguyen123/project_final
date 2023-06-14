@@ -1,10 +1,6 @@
 package cg.dto.productImport;
 
-import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
-import cg.model.enums.EColor;
-import cg.model.enums.EProductStatus;
-import cg.model.enums.ESize;
 import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import lombok.AllArgsConstructor;
@@ -12,17 +8,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProductImportCreResDTO {
+public class ProductImportUpResDTO {
 
     private Long id;
 
@@ -44,7 +38,9 @@ public class ProductImportCreResDTO {
 
     private ProductDTO product;
 
-    public ProductImportCreResDTO(Product product, ProductImport productImport) {
+
+
+    public ProductImportUpResDTO(Product product, ProductImport productImport) {
         this.id = productImport.getId();
         this.size = String.valueOf(productImport.getSize());
         this.color = String.valueOf(productImport.getColor());
@@ -52,25 +48,7 @@ public class ProductImportCreResDTO {
         this.code = productImport.getCode();
         this.date_added = LocalDate.parse(productImport.getCode());
         this.quantity = productImport.getQuantity();
-        this.productStatus = String.valueOf(productImport.getProductStatus());
         this.product = product.toProductDTO();
 
     }
-
-
-    public ProductImport toProductImport(){
-        return new ProductImport()
-                .setId(id)
-                .setSize(ESize.getESize(size))
-                .setColor(EColor.getEColor(color))
-                .setCode(code)
-                .setPrice(price)
-                .setQuantity(Long.valueOf(quantity))
-                .setDate_added(date_added)
-                .setProductStatus(EProductStatus.getEProductStatus(productStatus))
-                .setProduct(product.toProduct());
-
-    }
-
-
 }

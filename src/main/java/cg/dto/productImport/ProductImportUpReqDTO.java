@@ -1,6 +1,5 @@
 package cg.dto.productImport;
 
-import cg.dto.product.ProductCreReqDTO;
 import cg.dto.product.ProductDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
@@ -15,19 +14,17 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Optional;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
+public class ProductImportUpReqDTO implements Validator {
 
-public class ProductImportCreReqDTO implements Validator {
-
-
+    private Long id;
     private String size;
 
 
@@ -46,6 +43,7 @@ public class ProductImportCreReqDTO implements Validator {
     public ProductImport toProductImport(Product product){
 
         return new ProductImport()
+                .setId(id)
                 .setSize(ESize.valueOf(size))
                 .setColor(EColor.valueOf(color))
                 .setPrice(BigDecimal.valueOf(Long.parseLong(price)))
@@ -55,32 +53,29 @@ public class ProductImportCreReqDTO implements Validator {
                 ;
     }
 
-
     @Override
     public boolean supports(Class<?> clazz) {
-        return ProductImportCreReqDTO.class.isAssignableFrom(clazz);
+        return ProductImportUpReqDTO.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        ProductImportCreReqDTO productImportCreReqDTO = (ProductImportCreReqDTO) target;
+        ProductImportUpReqDTO productImportUpReqDTO = (ProductImportUpReqDTO) target;
 
+        String size = productImportUpReqDTO.getSize();
+        String color = productImportUpReqDTO.getColor();
+        String price = productImportUpReqDTO.getPrice();
+        String quantity = productImportUpReqDTO.getQuantity();
 
-        String color = productImportCreReqDTO.getColor();
-        String price = productImportCreReqDTO.getPrice();
-        String quantity = productImportCreReqDTO.getQuantity();
-        String date_added = productImportCreReqDTO.getDate_added();
-        String size = productImportCreReqDTO.getSize();
-        String product = productImportCreReqDTO.getProductId();
+        String product = productImportUpReqDTO.getProductId();
 
-
+        if (size.isEmpty()) {
+            errors.reject("size.null", "Product size must not be null");
+        }
         if (color.isEmpty()) {
             errors.reject("color.null", "Product color must not be null");
         }
 
-        if (date_added.isEmpty()) {
-            errors.reject("date.null", "Product date must not be null");
-        }
         if (price != null && price.length() > 0) {
             if (!price.matches("(^$|[0-9]*$)")) {
                 errors.rejectValue("price", "price.number", "Price must be a number");
@@ -108,20 +103,18 @@ public class ProductImportCreReqDTO implements Validator {
             } else {
                 errors.rejectValue("quantity", "quantity.null", "Quantity must not be null");
             }
-            if (size.isEmpty()) {
-                errors.reject("size.null", "Product size must not be null");
+
+            if (product != null && product.length() > 0) {
+                if (!product.matches("(^$|[0-9]*$)")) {
+                    errors.rejectValue("productId", "productId.number", "Product's id must be a number");
+                }
+            } else {
+                errors.rejectValue("id", "id.null", "Product's id must not be null");
             }
 
-        if (product != null && product.length() >0) {
-            if (!product.matches("(^$|[0-9]*$)")) {
-                errors.rejectValue("productId", "productId.number", "Product's id must be a number");
-            }
-        }else {
-            errors.rejectValue("id", "id.null", "Product's id must not be null");
+
         }
 
 
-        }
     }
-
 }

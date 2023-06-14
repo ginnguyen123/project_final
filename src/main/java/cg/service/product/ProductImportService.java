@@ -1,9 +1,8 @@
 package cg.service.product;
 
 import cg.dto.product.ProductDTO;
-import cg.dto.productImport.ProductImportCreReqDTO;
-import cg.dto.productImport.ProductImportCreResDTO;
-import cg.dto.productImport.ProductImportDTO;
+import cg.dto.productImport.*;
+import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
@@ -19,14 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
+
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -62,6 +56,13 @@ public class ProductImportService implements IProductImportService {
     }
 
     @Override
+    public Optional<ProductImportDTO> getProductImportDTOByIdDeletedIsFalse(Long id) {
+        return productImportRepository.getProductImportDTOByIdDeletedIsFalse(id);
+    }
+
+
+
+    @Override
     public ProductImport save(ProductImport productImport) {
         return productImportRepository.save(productImport);
     }
@@ -81,33 +82,33 @@ public class ProductImportService implements IProductImportService {
 
     @Override
     public ProductImportCreResDTO create(ProductImportCreReqDTO productImportCreReqDTO) {
-        Long productId = productImportCreReqDTO.getProduct().getId();
+        Long productId = Long.valueOf(productImportCreReqDTO.getProductId());
         Product product = findProductById(productId);
 
         ProductImport productImport = new ProductImport();
 
         EColor color = EColor.getEColor(productImportCreReqDTO.getColor());
-        EProductStatus status = EProductStatus.getEProductStatus(productImportCreReqDTO.getProductStatus());
-        ESize size = ESize.getESize(productImportCreReqDTO.getSize().toUpperCase());
+        EProductStatus status = EProductStatus.STOCKING;
+        ESize size = ESize.getESize(productImportCreReqDTO.getSize());
         BigDecimal price =BigDecimal.valueOf(Long.parseLong(productImportCreReqDTO.getPrice()));
 
         LocalDate date_added = LocalDate.parse(appUtils.convertLocalDateToString(LocalDate.parse(productImportCreReqDTO.getDate_added())));
         productImport.setDate_added(date_added);
 
-        String code = productImportCreReqDTO.getCode();
 
-        productImport.setColor(color);
-        productImport.setSize(size);
-
-        if (code.isEmpty() || code == null){
+        String code =null;
+        if (code == null){
             code = "";
             String[] create_at = productImportCreReqDTO.getDate_added().split("-"); //[2000,09,09]
             String sizeCodes = productImportCreReqDTO.getSize();
 
             code = code +sizeCodes + create_at[2] + create_at[1]  ;
 
-            productImport.setCode(code);
+
         }
+        productImport.setColor(color);
+        productImport.setSize(size);
+        productImport.setCode(code);
         productImport.setPrice(price);
         productImport.setQuantity(Long.valueOf(productImportCreReqDTO.getQuantity()));
         productImport.setProductStatus(status);
@@ -119,12 +120,41 @@ public class ProductImportService implements IProductImportService {
     }
 
     @Override
-    public ProductImportCreResDTO update(Product product ,ProductImport productImport) {
-        productRepository.save(product);
-        productImportRepository.save(productImport);
-        return new ProductImportCreResDTO(product ,productImport);
-    }
+    public ProductImportUpResDTO update(ProductImportUpReqDTO productImportUpReqDTO) {
+        Optional<ProductImport>importOptional = productImportRepository.findById(productImportUpReqDTO.getId());
+        if (!importOptional.isPresent()){
+            throw new ResourceNotFoundException("Not found ProductImport ");
+        }
+        ProductImport productImport = importOptional.get();
 
+        Long idProduct = Long.valueOf(productImportUpReqDTO.getProductId());
+
+        if (idProduct == null){
+            throw new DataInputException("No have product");
+        }
+
+        Product product = productRepository.findById(idProduct).get();
+
+        EColor color = EColor.getEColor(productImportUpReqDTO.getColor());
+
+        ESize size = ESize.getESize(productImportUpReqDTO.getSize());
+        BigDecimal price =BigDecimal.valueOf(Long.parseLong(productImportUpReqDTO.getPrice()));
+        LocalDate date_added = LocalDate.parse(appUtils.convertLocalDateToString(LocalDate.parse(productImportUpReqDTO.getDate_added())));
+
+        productImport.setDate_added(date_added);
+        productImport.setCode(productImport.getCode());
+        productImport.setPrice(price);
+        productImport.setQuantity(Long.valueOf(productImportUpReqDTO.getQuantity()));
+        if (productImport.getQuantity()<0){
+            productImport.setProductStatus(EProductStatus.OUT_STOCK);
+        }else {
+            productImport.setProductStatus(EProductStatus.STOCKING);
+        }
+        productImport.setProduct(product);
+        productImport.setColor(color);
+        productImport.setSize(size);
+        return save(productImport).toProductImportUpResDTO();
+    }
 
     private Product findProductById(Long id){
         return productService.findById(id).orElseThrow(
