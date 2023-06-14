@@ -46,7 +46,7 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "product_avatar_id", referencedColumnName = "id", nullable = false)
     private Media productAvatar;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_media_id", referencedColumnName = "id")
     private List<Media> productAvatarList;
 
