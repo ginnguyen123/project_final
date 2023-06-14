@@ -11,9 +11,12 @@ import java.util.Optional;
 public interface ICategoryService extends IGeneralService<Category,Long> {
     boolean existsById(Long id);
 
+    List<Category> findCategoriesByCategoryParentNotNull();
+
     List<Category> findAllByCategoryParent_Id(Long categoryParentId);
 
     List<Category> findAllCategoryByStatus(ECategoryStatus status);
 
     Optional<Category> findByName(String name);
+    List<Category> findCategoriesByCategoryParent_Id(Long id);
 }

@@ -1,8 +1,8 @@
 package cg.model.enums;
 
 public enum ECategoryStatus {
-    SUMMER("summer"),
-    WINTER("winter");
+    SUMMER("Summer"),
+    WINTER("Winter");
 
     private String value;
 

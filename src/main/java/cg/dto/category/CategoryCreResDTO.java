@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -20,10 +22,21 @@ public class CategoryCreResDTO {
 
     private CategoryDTO categoryParent;
 
-
-//    private Long categoryParentId;
-//
-//    private String categoryParentName;
+    private List<CategoryDTO> categoryDTOS;
 
     private ECategoryStatus status;
+
+    public CategoryCreResDTO(Long id, String name, ECategoryStatus status,CategoryDTO categoryParent) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.categoryParent = categoryParent;
+    }
+
+    public CategoryCreResDTO(Long id, String name, ECategoryStatus status, List<CategoryDTO> categoryDTOS) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.categoryDTOS = categoryDTOS;
+    }
 }

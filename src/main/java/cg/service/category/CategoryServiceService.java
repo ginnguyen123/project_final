@@ -45,8 +45,19 @@ public class CategoryServiceService implements ICategoryService {
     }
 
     @Override
+    public List<Category> findCategoriesByCategoryParent_Id(Long id) {
+        return categoryRepository.findCategoriesByCategoryParent_Id(id);
+    }
+
+
+    @Override
     public boolean existsById(Long id) {
         return categoryRepository.existsById(id);
+    }
+
+    @Override
+    public List<Category> findCategoriesByCategoryParentNotNull() {
+        return categoryRepository.findCategoriesByCategoryParentNotNull();
     }
 
     @Override
@@ -65,4 +76,6 @@ public class CategoryServiceService implements ICategoryService {
         Category category = categoryRepository.findById(id).get();
         delete(category);
     }
+
+
 }

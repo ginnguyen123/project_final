@@ -21,8 +21,6 @@ public class CategoryDTO {
 
     private String name;
 
-//    private CategoryDTO categoryParent;
-
     private Long categoryParentId;
 
     private String categoryParentName;
