@@ -5,6 +5,7 @@ import cg.model.enums.ECategoryStatus;
 import cg.service.IGeneralService;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ICategoryService extends IGeneralService<Category,Long> {
@@ -16,5 +17,6 @@ public interface ICategoryService extends IGeneralService<Category,Long> {
 
     List<Category> findAllCategoryByStatus(ECategoryStatus status);
 
+    Optional<Category> findByName(String name);
     List<Category> findCategoriesByCategoryParent_Id(Long id);
 }

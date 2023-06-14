@@ -8,6 +8,7 @@ import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +64,11 @@ public class ProductService implements IProductService{
     @Override
     public List<Product> findAllByDeletedFalse() {
         return productRepository.findAllByDeletedFalse();
+    }
+
+    @Override
+    public List<Product> findProductWithSorting(String field) {
+        return productRepository.findAll(Sort.by(Sort.Direction.ASC,field));
     }
 
     @Override

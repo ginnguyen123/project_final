@@ -36,6 +36,8 @@ public class MediaDTO {
                 .setFileUrl(fileUrl)
                 .setFileType(fileType)
                 .setCloudId(cloudId)
+                .setHeight(height)
+                .setWidth(width)
                 ;
     }
 

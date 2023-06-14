@@ -1,6 +1,8 @@
 package cg.model.category;
 
+import cg.dto.category.CategoryChildDTO;
 import cg.dto.category.CategoryCreResDTO;
+import cg.dto.category.CategoryCreateRespDTO;
 import cg.dto.category.CategoryDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.ECategoryStatus;
@@ -59,6 +61,27 @@ public class Category extends BaseEntity {
                 .setName(name)
                 .setStatus(status)
                 .setCategoryParentId(categoryParent.id)
-                .setCategoryParentName(categoryParent.name);
+                .setCategoryParentName(categoryParent.name)
+                .setCategoryAvatar(categoryAvatar.toMediaDTO());
+    }
+
+    public CategoryCreateRespDTO toCategoryCreateRespDTO(){
+        if (categoryParent == null){
+            return new CategoryCreateRespDTO()
+                    .setId(id)
+                    .setName(name)
+                    .setStatus(status)
+                    .setAvatar(categoryAvatar.toMediaDTO())
+                    .setCategoryChild(null);
+        }
+        else {
+            CategoryChildDTO categoryChild = new CategoryChildDTO(id, name, categoryAvatar.toMediaDTO() ,status);
+            return new CategoryCreateRespDTO()
+                    .setId(categoryParent.getId())
+                    .setName(categoryParent.getName())
+                    .setStatus(categoryParent.getStatus())
+                    .setAvatar(categoryParent.getCategoryAvatar().toMediaDTO())
+                    .setCategoryChild(categoryChild);
+        }
     }
 }

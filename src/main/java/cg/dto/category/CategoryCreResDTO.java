@@ -24,11 +24,6 @@ public class CategoryCreResDTO {
 
     private List<CategoryDTO> categoryDTOS;
 
-
-//    private Long categoryParentId;
-//
-//    private String categoryParentName;
-
     private ECategoryStatus status;
 
     public CategoryCreResDTO(Long id, String name, ECategoryStatus status,CategoryDTO categoryParent) {

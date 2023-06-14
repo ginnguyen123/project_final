@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
@@ -26,9 +27,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT c FROM Category c where c.status = :status")
     List<Category> findAllCategoryByStatus(@Param("status") ECategoryStatus status);
 
-
     @Override
     boolean existsById(Long id);
 
     List<Category> findAllByCategoryParent_Id(Long id);
+
+    Optional<Category> findByName(String name);
 }

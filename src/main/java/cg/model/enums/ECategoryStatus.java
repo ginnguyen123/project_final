@@ -1,8 +1,8 @@
 package cg.model.enums;
 
 public enum ECategoryStatus {
-    SUMMER("summer"),
-    WINTER("winter");
+    SUMMER("Summer"),
+    WINTER("Winter");
 
     private String value;
 
@@ -18,6 +18,12 @@ public enum ECategoryStatus {
         this.value = value;
     }
 
-
-
+    public static ECategoryStatus getECategoryStatus(String value){
+        for (ECategoryStatus eCategoryStatus : ECategoryStatus.values()){
+            if (eCategoryStatus.getValue().equalsIgnoreCase(value)){
+                return eCategoryStatus;
+            }
+        }
+        return null;
+    }
 }

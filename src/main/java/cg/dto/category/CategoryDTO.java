@@ -34,6 +34,7 @@ public class CategoryDTO {
                 .setId(id)
                 .setName(name)
                 .setStatus(status)
+                .setCategoryAvatar(categoryAvatar.toMedia())
                 ;
     }
 

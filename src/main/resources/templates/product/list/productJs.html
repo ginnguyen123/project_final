@@ -27,6 +27,7 @@
         url: page.urls.getAllProducts
       })
       .done((data=>{
+        console.log(data);
         $.each(data, (i, item)=>{
           let str = AppBase.renderProduct(item);
           page.elements.tbodyTable.prepend(str);
