@@ -18,7 +18,9 @@ import cg.service.media.IUploadMediaService;
 import cg.service.products.IProductService;
 import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
@@ -179,12 +181,22 @@ public class ProductAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/sort/{field}")
+    @PostMapping("/sort/{field}")
     private ResponseEntity<?> getProductsWithSort(@PathVariable String field){
         List<Product> products = productService.findProductWithSorting(field);
         List<ProductDTO> productDTOS = products.stream().map(i -> i.toProductDTO()).collect(Collectors.toList());
 
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
+
+    @PostMapping("/pagination/{offset}/{pageSize}")
+    private ResponseEntity<?> getProductsWithSort(@PathVariable Integer offset,@PathVariable Integer pageSize){
+        Page<Product> productPage = productService.findProductWithPagination(offset, pageSize);
+//        Page<ProductDTO> productDTOPage = productPage.stream().
+//                map(i->i.toProductDTO()).collect(Co);
+        return new ResponseEntity<>(productPage,HttpStatus.OK);
+    }
+
+
 
 }

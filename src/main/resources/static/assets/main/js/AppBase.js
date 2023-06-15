@@ -11,6 +11,7 @@ class AppBase{
     static CLOUDINARY_URL = this.SERVER_CLOUDINARY + this.CLOUDINARY_NAME + '/image/upload';
     static SCALE_IMAGE_W_80_H_80_Q_100 = 'c_limit,w_80,h_80,q_100';
     static SCALE_IMAGE_W_80_H_80_Q_85 = 'c_limit,w_80,h_80,q_85';
+
     static AlertMessageEn = class {
         static SUCCESS_CREATED = "Successful data generation !";
         static SUCCESS_UPDATED = "Data update successful !";
@@ -144,7 +145,7 @@ class AppBase{
     }
 
     static renderProduct(item){
-        let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/${item.media.fileFolder}/${item.media.fileName}`
+        let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/${item.avatar.fileFolder}/${item.avatar.fileName}`
         return `<tr id="tr_${item.id}">
                     <td>
                       <input type="checkbox" id="delete_${item.id}">
@@ -157,11 +158,11 @@ class AppBase{
                     <td>${item.price}</td>
                     <td>${item.category.name}</td>
                     <td>
-                        <button class="btn btn-delete btn-sm delete" type="button" title="Xóa">
+                        <button class="btn btn-delete btn-sm delete" id="${item.id}" type="button" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                         
-                        <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" >
+                        <button class="btn btn-edit btn-sm edit" id="${item.id}" type="button" title="Sửa" >
                             <i class="fas fa-edit"></i>
                         </button>
                     </td>
