@@ -6,7 +6,8 @@
   <th:block th:replace="layout/head :: head"/>
 </head>
 
-<body onload="time()" class="app sidebar-mini rtl">
+<body>
+<!--onload="time()" class="app sidebar-mini rtl"-->
 <style>
 
   .btn-sort{
@@ -148,15 +149,44 @@
 
             </tbody>
           </table>
+
+          <nav aria-label="Page navigation example d-flex">
+            <div class="d-flex justify-content-end">
+              <span>Size:</span>
+              <div class="ms-2 me-3">
+                <select class="form-select form-select-sm">
+                  <option>10</option>
+                  <option>20</option>
+                  <option>50</option>
+                  <option>100</option>
+                </select>
+              </div>
+              <div>
+                <ul class="pagination">
+                  <li class="page-item">
+                    <a class="page-link"aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  <li class="page-item"><a class="page-link">1</a></li>
+                  <li class="page-item"><a class="page-link">2</a></li>
+                  <li class="page-item"><a class="page-link">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
         </div>
       </div>
     </div>
   </div>
+  <th:block th:replace="product/list/modal-edit-product :: modal-edit-product"/>
 </main>
-
-<!-- javascripts for application to work-->
-<th:block th:replace="layout/script :: script"/>
-<th:block th:replace="product/list/productJs :: productJs"/>
+  <th:block th:replace="layout/script :: script"/>
+  <th:block th:replace="product/list/list-productJS.html :: list-productJS"/>
 </body>
-
 </html>

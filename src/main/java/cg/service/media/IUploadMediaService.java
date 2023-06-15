@@ -1,6 +1,7 @@
 package cg.service.media;
 
 import cg.model.media.Media;
+import cg.model.product.Product;
 import cg.service.IGeneralService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,8 @@ public interface IUploadMediaService extends IGeneralService<Media, String> {
     List<Media> saveAll(List<Media> medias);
 
     List<Media> uploadAllImageAndSaveAllImage(List<MultipartFile> files, List<Media> medias);
+
+    List<Media> updateAllImage(List<MultipartFile> filesUpdate, Product product);
 
     Media uploadImageAndSaveImage(MultipartFile file, Media media);
 

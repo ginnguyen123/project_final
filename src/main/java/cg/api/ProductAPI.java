@@ -1,9 +1,7 @@
 package cg.api;
 
 import cg.dto.media.MediaDTO;
-import cg.dto.product.ProductCreReqDTO;
-import cg.dto.product.ProductCreResDTO;
-import cg.dto.product.ProductDTO;
+import cg.dto.product.*;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
@@ -15,12 +13,14 @@ import cg.service.category.ICategoryService;
 import cg.service.discount.DiscountServiceImpl;
 import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
+import cg.service.media.UploadMediaServiceImpl;
 import cg.service.products.IProductService;
 import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
 import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
@@ -166,8 +166,30 @@ public class ProductAPI {
     }
 
     @PatchMapping("/update/{productId}")
-    public ResponseEntity<?> update(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> update(@PathVariable Long productId, ProductUpdaReqDTO productUpdaReqDTO,
+                                    @RequestParam("medias") List<MultipartFile> medias,
+                                    @RequestParam("avatar") MultipartFile avatar) {
+        if (productId == null){
+            throw new DataInputException("Invalid id");
+        }
+
+        Optional<Product> productOptional = productService.findById(productId);
+
+        if (!productOptional.isPresent()){
+            throw new DataInputException("Product isn't exist");
+        }
+
+        if (avatar == null){
+            throw new DataInputException("Avatar required!");
+        }
+        medias.add(avatar);
+//        avatar nằm vị trí cuối
+        Product product = productOptional.get();
+
+        List<Media> mediasUpdate = uploadMediaService.updateAllImage(medias,product);
+
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @DeleteMapping("/{productID}")
@@ -185,18 +207,13 @@ public class ProductAPI {
     private ResponseEntity<?> getProductsWithSort(@PathVariable String field){
         List<Product> products = productService.findProductWithSorting(field);
         List<ProductDTO> productDTOS = products.stream().map(i -> i.toProductDTO()).collect(Collectors.toList());
-
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
-    @PostMapping("/pagination/{offset}/{pageSize}")
-    private ResponseEntity<?> getProductsWithSort(@PathVariable Integer offset,@PathVariable Integer pageSize){
-        Page<Product> productPage = productService.findProductWithPagination(offset, pageSize);
-//        Page<ProductDTO> productDTOPage = productPage.stream().
-//                map(i->i.toProductDTO()).collect(Co);
-        return new ResponseEntity<>(productPage,HttpStatus.OK);
+    @PostMapping("/pagination")
+    private ResponseEntity<?> getProductsWithSort(@RequestParam(required = false, defaultValue = "") String search, Pageable pageable){
+        search = "%" + search + "%";
+        return new ResponseEntity<>(productService.findProductWithPaginationAndSortAndSearch(search, pageable),HttpStatus.OK);
     }
-
-
 
 }

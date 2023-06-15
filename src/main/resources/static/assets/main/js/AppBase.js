@@ -169,6 +169,31 @@ class AppBase{
                 </tr>`
     }
 
+    static renderProductWithNameImage(item){
+        let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/tokyo_life_product_images/${item.imageName}`;
+        return `<tr id="tr_${item.id}">
+                    <td>
+                      <input type="checkbox" id="delete_${item.id}">
+                    </td>
+                    <td>${item.code}</td>
+                    <td>
+                        <img src="${image_thumbnail}"/>
+                    </td>
+                    <td>${item.title}</td>
+                    <td>${item.price}</td>
+                    <td>${item.categoryName}</td>
+                    <td>
+                        <button class="btn btn-delete btn-sm delete" id="${item.id}" type="button" title="Xóa">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        
+                        <button class="btn btn-edit btn-sm edit" id="${item.id}" type="button" title="Sửa" >
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>`
+    }
+
     static renderBrand(item){
         return `<option value="${item.id}">${item.name}</option>`;
     }

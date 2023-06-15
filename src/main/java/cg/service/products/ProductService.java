@@ -1,6 +1,6 @@
 package cg.service.products;
 
-import cg.dto.product.ProductCreResDTO;
+import cg.dto.product.*;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,7 @@ public class ProductService implements IProductService{
         return productRepository.findAll();
     }
 
+
     @Override
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
@@ -53,10 +55,6 @@ public class ProductService implements IProductService{
         return productRepository.saveAll(products);
     }
 
-//    @Override
-//    public List<ProductCreResDTO> findProductsByCategoryWithLimit(Long idCategory) {
-//        return productRepository.findProductsByCategoryWithLimit(idCategory);
-//    }
 
     @Override
     public List<Product> findProductsByCategoryWithLimit(Long idCategory) {
@@ -73,11 +71,17 @@ public class ProductService implements IProductService{
         return productRepository.findAll(Sort.by(Sort.Direction.DESC,field));
     }
 
+
     @Override
-    public Page<Product> findProductWithPagination(int offset, int pageSize) {
-        Page<Product> productPage = productRepository.findAll(PageRequest.of(offset, pageSize));
-        return productPage;
+    public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
+        return productRepository.findAllWithSearch(search, pageable);
     }
+
+//    @Override
+//    public Page<Product> findProductWithPagination(int offset, int pageSize) {
+//        Page<Product> productPage = productRepository.findAll(PageRequest.of(offset, pageSize));
+//        return productPage;
+//    }
 
     @Override
     public Product save(Product product) {
@@ -103,5 +107,10 @@ public class ProductService implements IProductService{
         Product product = findById(id).get();
         product.setDeleted(true);
         save(product);
+    }
+
+    @Override
+    public ProductUpdaResDTO update(ProductUpdaReqDTO productUpdaReqDTO, List<Media> medias) {
+        return null;
     }
 }
