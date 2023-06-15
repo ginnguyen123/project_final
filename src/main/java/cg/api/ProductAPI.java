@@ -72,7 +72,7 @@ public class ProductAPI {
     @GetMapping("/category={idCategory}")
     private ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
         List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);
-        List<ProductCreResDTO> productCreResDTOS = products.stream().map(item -> item.toProductCreResDTO()).collect(Collectors.toList());
+        List<ProductCreResDTO> productCreResDTOS = products.stream().map(item -> item.toProductCreResDTOByCategory()).collect(Collectors.toList());
         return new ResponseEntity<>(productCreResDTOS, HttpStatus.OK);
     }
 
