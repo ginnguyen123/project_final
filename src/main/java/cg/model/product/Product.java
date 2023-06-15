@@ -86,5 +86,14 @@ public class Product extends BaseEntity {
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
     }
+
+    public ProductCreResDTO toProductCreResDTOByCategory() {
+        return new ProductCreResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setPrice(price)
+                .setDescription(description)
+                .setAvarta(productAvatar.toMediaDTO());
+    }
 }
 

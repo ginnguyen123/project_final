@@ -32,7 +32,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 //            "GROUP BY p.id LIMIT 2",nativeQuery = true)
 //    List<ProductCreResDTO> findProductsByCategoryWithLimit( @Param("idCategory") Long idCategory);
 
-    @Query(value = "SELECT * FROM products p INNER JOIN product_import pi ON p.id=pi.product_id WHERE p.category_id= :idCategory AND pi.quantity>0 GROUP BY p.id LIMIT 2",nativeQuery = true)
+    @Query(value = "SELECT p.id, p.created_at, p.created_by, p.deleted, p.update_at, p.update_by," +
+            " p.code, p.description, p.prices, p.title, p.brand_id, p.category_id,p.product_avatar_id, p.product_avatar_id\n" +
+            " ,p.discount_id, p.discount_amounts FROM products p INNER JOIN product_import pi " +
+            "ON p.id=pi.product_id WHERE p.category_id= :idCategory AND pi.quantity>0 group by p.id  LIMIT 10",nativeQuery = true)
     List<Product> findProductsByCategoryWithLimit( @Param("idCategory") Long idCategory);
 
 //    @Query(value = "SELECT NEW cg.dto.product.ProductCreResDTO(p.id,p.title,p.price,p.description,p.productAvatar.fileUrl) FROM Product p INNER JOIN ProductImport pi ON p.id=pi.product.id WHERE p.category.id= :idCategory AND p.deleted=false AND pi.quantity >0 GROUP BY p.id", nativeQuery = true)
