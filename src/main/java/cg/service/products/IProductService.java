@@ -1,12 +1,17 @@
 package cg.service.products;
 
-import cg.dto.product.ProductCreResDTO;
+import cg.dto.product.*;
+import cg.dto.productImport.ProductImportUpReqDTO;
+import cg.dto.productImport.ProductImportUpResDTO;
+import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.service.IGeneralService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 public interface IProductService extends IGeneralService<Product,Long> {
     List<Product> saveAll(List<Product> products);
@@ -16,5 +21,8 @@ public interface IProductService extends IGeneralService<Product,Long> {
     List<Product> findProductsByCategoryWithLimit( Long idCategory);
     List<Product> findAllByDeletedFalse();
     List<Product> findProductWithSorting(String field);
-    Page<Product> findProductWithPagination(int offset, int pageSize);
+
+    ProductUpdaResDTO update(ProductUpdaReqDTO productUpdaReqDTO, List<Media> medias);
+
+    Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable);
 }

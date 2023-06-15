@@ -3,6 +3,7 @@ package cg.service.media;
 import cg.dto.media.MediaDTO;
 import cg.exception.DataInputException;
 import cg.model.media.Media;
+import cg.model.product.Product;
 import cg.repository.MediaRepository;
 import cg.utils.UploadUtils;
 import com.cloudinary.Cloudinary;
@@ -97,7 +98,6 @@ public class UploadMediaServiceImpl implements IUploadMediaService{
     public List<Media> uploadAllImageAndSaveAllImage(List<MultipartFile> files, List<Media> medias){
         for (MultipartFile file : files){
             Media media = new Media();
-            media.setProductImport(null);
             save(media);
             try{
                 Map uploadResult = uploadImage(file, uploadUtils.buildImageUploadParams(media));
@@ -115,5 +115,19 @@ public class UploadMediaServiceImpl implements IUploadMediaService{
             }
         }
         return saveAll(medias);
+    }
+
+    @Override
+    public List<Media> updateAllImage(List<MultipartFile> filesUpdate, Product product) {
+        for (Media media : product.getProductAvatarList()){
+            try {
+                destroyImage(media.getCloudId(),uploadUtils.buildImageDestroyParams(media, media.getCloudId()));
+            }catch (IOException e){
+                e.printStackTrace();
+                throw new DataInputException("Destroy image fail!");
+            }
+        }
+
+        return null;
     }
 }

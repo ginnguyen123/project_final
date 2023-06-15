@@ -39,19 +39,12 @@ public class ProductCreReqDTO implements Validator {
     private Long brandId;
     private String brandName;
     private Long categoryId;
-
     private String categoryName;
-
     private Long categoryParentId;
-
     private String categoryParentName;
-
     private Long discountId;
-
     private String discountName;
 
-//    @NotNull(message = "The media is required")
-//    private List<MultipartFile> medias;
     @Override
     public boolean supports(Class<?> clazz) {
         return ProductCreReqDTO.class.isAssignableFrom(clazz);
