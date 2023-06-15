@@ -26,17 +26,15 @@
         type: 'GET',
         url: page.urls.getAllProducts
       })
-      .done((data=>{
-        console.log(data);
+      .done((data) => {
         $.each(data, (i, item)=>{
-          let str = AppBase.renderProduct(item);
-          page.elements.tbodyTable.prepend(str);
-        })
-
-        .fail((jqXHR)=>{
-          console.log(jqXHR);
-        })
-      }))
+        let str = AppBase.renderProduct(item);
+        page.elements.tbodyTable.prepend(str);
+          })
+      })
+      .fail((jqXHR)=>{
+        console.log(jqXHR);
+      })
     }
 
     page.commands.loadData = () =>{
