@@ -11,7 +11,6 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class ProductUpdaReqDTO {
     private Long id;
-
     @NotEmpty(message = "The title is required")
     @NotNull(message = "The title is required")
     private String title;

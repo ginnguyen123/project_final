@@ -36,10 +36,13 @@ public class ProductCreReqDTO implements Validator {
     @Pattern(regexp = "^[0-9]*$", message = "The price is number")
     private String price;
     private String description;
+
+    @NotNull(message = "The brand is required")
     private Long brandId;
     private String brandName;
     private Long categoryId;
     private String categoryName;
+    @NotNull(message = "The category is required")
     private Long categoryParentId;
     private String categoryParentName;
     private Long discountId;

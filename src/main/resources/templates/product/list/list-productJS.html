@@ -3,7 +3,7 @@
     <script>
         let currentIdProduct;
 
-        const page = {
+        let page = {
             urls:{
                 getAllProducts: AppBase.API_PRODUCT,
                 findProductById: AppBase.API_PRODUCT,
@@ -18,7 +18,7 @@
             }
         }
         // btn event
-        page.elements.btnEdit = $('.edit');
+        page.elements.btnEdit = $('.btn-edit');
         page.elements.btnDelete = $('.delete');
         // modal
         page.dialogs.elements.modalEdit = $('#modalEditProduct');
@@ -28,7 +28,6 @@
         page.elements.tbodyTable = $('#tbProduct tbody');
 
         page.loadData.findProductById = function (id){
-            console.log("findProductById");
             return $.ajax({
                 type: 'GET',
                 url: page.urls.findProductById + '/' + id
@@ -48,16 +47,12 @@
 
         page.dialogs.commands.evenDelete = function (){
             page.elements.btnDelete.on('click', function (){
-                // let id = $(this).data('id');
-                // console.log(id);
-                // page.loadData.findProductById(id).then((data)=>{
-                //     console.log(data);
-                // })
+
             })
         }
 
         page.dialogs.commands.eventEdit = function (){
-            page.elements.btnEdit.on('click', function (){
+            $('.btn-edit').on('click', function (){
                 page.dialogs.elements.modalEdit.modal('show');
             })
         }

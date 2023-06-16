@@ -10,20 +10,15 @@ import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
-import cg.service.discount.DiscountServiceImpl;
 import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
-import cg.service.media.UploadMediaServiceImpl;
 import cg.service.products.IProductService;
 import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
-import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -99,7 +94,8 @@ public class ProductAPI {
 
     @PostMapping("/create")
     private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO,
-                                     @RequestParam("medias") List<MultipartFile> medias){
+                                     @RequestParam("medias") List<MultipartFile> medias,
+                                     @RequestParam("avatar") MultipartFile fileAvatar){
 
         productCreReqDTO.setId(null);
         String code = productCreReqDTO.getCode();
@@ -129,26 +125,39 @@ public class ProductAPI {
             productCreReqDTO.setCode(code);
         }
 
-        if (medias.size() == 0){
-            throw new DataInputException("Require at least 1 picture");
+        if (fileAvatar == null){
+            throw new DataInputException("The avatar is require");
         }
 
-        for (MultipartFile file : medias){
-            System.out.println(file.getContentType());
-            if (!file.getContentType().equals("image/jpeg") && !file.getContentType().equals("image/png")){
-                throw new DataInputException("Only image files with .png or .jpeg");
-            }
+        if (!fileAvatar.getContentType().equals("image/jpeg") && !fileAvatar.getContentType().equals("image/png")){
+            throw new DataInputException("Only image files with .png or .jpeg");
         }
+
+        Media avatarMedia = new Media();
+        avatarMedia = uploadMediaService.save(avatarMedia);
+        avatarMedia = uploadMediaService.uploadImageAndSaveImage(fileAvatar, avatarMedia);
 
         List<Media> list = new ArrayList<>();
+        if (medias.size() != 1 && medias.size() != 0){
+            for (MultipartFile file : medias){
+                if (file.getContentType() == null){
+                    continue;
+                }
+                else {
+                    if (!file.getContentType().equals("image/jpeg") && !file.getContentType().equals("image/png")){
+                        throw new DataInputException("Only image files with .png or .jpeg");
+                    }
+                }
+            }
+            list = uploadMediaService.uploadAllImageAndSaveAllImage(medias, list);
+        }
 
-        list = uploadMediaService.uploadAllImageAndSaveAllImage(medias, list);
-
+        System.out.print(list.toString());
         Product product = productCreReqDTO.toProduct();
         product.setCategory(category);
         product.setBrand(brand);
         product.setProductAvatarList(list);
-        product.setProductAvatar(list.get(0));
+        product.setProductAvatar(avatarMedia);
 
         if (discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).isPresent()){
             Discount discount = discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).get();
@@ -172,6 +181,13 @@ public class ProductAPI {
         if (productId == null){
             throw new DataInputException("Invalid id");
         }
+        if (productUpdaReqDTO.getBrandId() == null){
+            throw new DataInputException("Brand is void");
+        }
+
+        if (productUpdaReqDTO.getCategoryParentId() == null){
+            throw new DataInputException("Category parent is void");
+        }
 
         Optional<Product> productOptional = productService.findById(productId);
 
@@ -179,17 +195,52 @@ public class ProductAPI {
             throw new DataInputException("Product isn't exist");
         }
 
+        Optional<Brand> brandOptional = brandService.findById(productUpdaReqDTO.getBrandId());
+
+        if (!brandOptional.isPresent()){
+            throw new DataInputException("Brand isn't exist");
+        }
+
+        Optional<Category> categoryParentOptional = categoryService.findById(productUpdaReqDTO.getCategoryParentId());
+        if (!categoryParentOptional.isPresent()){
+            throw new DataInputException("Category isn't exist");
+        }
+
+        Category categoryParent = categoryParentOptional.get();
+        productUpdaReqDTO.setCategoryParentId(categoryParent.getId());
+        productUpdaReqDTO.setCategoryParentName(categoryParent.getName());
+
+        if (productUpdaReqDTO.getCategoryId() == null){
+            productUpdaReqDTO.setCategoryId(null);
+            productUpdaReqDTO.setCategoryName(null);
+        }else {
+            Optional<Category> categoryChildrenOptional = categoryService.findById(productUpdaReqDTO.getCategoryId());
+            if (!categoryChildrenOptional.isPresent()){
+                productUpdaReqDTO.setCategoryId(null);
+                productUpdaReqDTO.setCategoryName(null);
+            }else {
+                Category categoryChildren = categoryChildrenOptional.get();
+                productUpdaReqDTO.setCategoryId(categoryChildren.getId());
+                productUpdaReqDTO.setCategoryName(categoryChildren.getName());
+            }
+        }
+        Product product = productOptional.get();
+
         if (avatar == null){
             throw new DataInputException("Avatar required!");
         }
-        medias.add(avatar);
-//        avatar nằm vị trí cuối
-        Product product = productOptional.get();
+
+//        Media avatarUpdate = uploadMediaService.uploadImage(avatar,);
+
+
 
         List<Media> mediasUpdate = uploadMediaService.updateAllImage(medias,product);
-
-
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        productUpdaReqDTO.setId(product.getId());
+        ProductUpdaResDTO productUpdaRes = productService.update(productUpdaReqDTO);
+        productUpdaRes.setMedias(mediasUpdate.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()));
+        MediaDTO avartaDTO = mediasUpdate.get(mediasUpdate.size() -1).toMediaDTO();
+        productUpdaRes.setAvatar(avartaDTO.getFileName());
+        return new ResponseEntity<>(productUpdaRes, HttpStatus.OK);
     }
 
     @DeleteMapping("/{productID}")
