@@ -38,9 +38,7 @@ class AppBase{
     static AlertMessageVi = class {
         static SUCCESS_CREATED = "Tạo dữ liệu thành công !";
         static SUCCESS_UPDATED = "Cập nhật dữ liệu thành công !";
-        static SUCCESS_DEPOSIT = "Giao dịch gửi tiền thành công !";
-        static SUCCESS_WITHDRAW = "Giao dịch rút tiền thành công !";
-        static SUCCESS_TRANSFER = "Giao dịch chuyển khoản thành công !";
+        static SUCCESS_DELETED = "Xóa dữ liệu thành công !";
         static SUCCESS_DEACTIVATE = "Hủy kích hoạt khách hàng thành công !";
 
         static ERROR_400 = "Thao tác không thành công, vui lòng kiểm tra lại dữ liệu.";
@@ -49,7 +47,9 @@ class AppBase{
         static ERROR_404 = "Not Found - Tài nguyên này đã bị xóa hoặc không tồn tại";
         static ERROR_500 = "Internal Server Error - Hệ thống Server đang có vấn đề hoặc không truy cập được.";
 
-        static ERROR_CREATED = 'Thêm khách hàng mới không thành công';
+        static ERROR_CREATED = 'Thêm mới không thành công';
+        static ERROR_UPDATED = "Cập nhật không dữ liệu thành công !";
+        static ERROR_DELETED = 'Xóa không thành công';
 
         static ERROR_LOADING_PROVINCE = "Tải danh sách tỉnh - thành phố không thành công !";
         static ERROR_LOADING_DISTRICT = "Tải danh sách quận - phường - huyện không thành công !";
@@ -115,6 +115,7 @@ class AppBase{
 
 
  static formDate(date) {
+        if(!date) return "";
     let arr = date.split("-")
     date = arr[2] + "-" + arr[1] + "-" + arr[0]
     return date;
@@ -216,8 +217,24 @@ class AppBase{
         //     do something
     }
 
+
+
+
     static renderProductImport(item){
         let str = this.formDate(item.date_added);
+
+        let strBtn;
+
+        item.quantity > 0 ?
+            strBtn = `<span  class="badge btn-add btn-sm">
+                        Stocking
+                       </span>` :item.productStatus == "STOCKING" ?
+                strBtn = `<span class="badge btn-del btn-sm">
+                        Out-stock
+                       </span>`: item.productStatus == "OUT_STOCK"
+
+
+
         return` <tr id="tr_${item.id}">
                             <td>
                                 <input type="checkbox" id="delete_${item.id}">
@@ -232,7 +249,7 @@ class AppBase{
                        
                             <td>${item.quantity}</td>
                             
-                            <td><span class="badge btn-add btn-sm">${item.productStatus}</span></td>
+                            <td>${strBtn}</td>
                             
                             <td>${item.product.title}</td>
                             <td>${str}</td>
