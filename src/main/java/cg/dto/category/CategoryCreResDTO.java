@@ -25,7 +25,7 @@ public class CategoryCreResDTO {
 
     private ECategoryStatus status;
 
-    private MediaDTO mediaDTO;
+    private String avatar;
 
 //    public CategoryCreResDTO(Long id, String name, ECategoryStatus status,CategoryDTO categoryParent) {
 //        this.id = id;

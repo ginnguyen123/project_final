@@ -52,7 +52,7 @@ public class Category extends BaseEntity {
         return new CategoryCreResDTO()
                 .setId(id)
                 .setName(name)
-                .setMediaDTO(categoryAvatar.toMediaDTO())
+                .setAvatar(categoryAvatar.getFileUrl())
                 .setStatus(status);
     }
 
