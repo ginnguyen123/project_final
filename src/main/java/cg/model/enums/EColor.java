@@ -13,16 +13,16 @@ import java.util.stream.Stream;
 
 
 public enum EColor {
-    BLACK("Black"),
-    WHITE("White"),
-    RED("Red"),
-    GRAY("Gray"),
-    PURPLE("Purple"),
-    GREEN("Green"),
-    BLUE("Blue"),
-    YELLOW("Yellow"),
+    BLACK("BLACK"),
+    WHITE("WHITE"),
+    RED("RED"),
+    GRAY("GRAY"),
+    PURPLE("PURPLE"),
+    GREEN("GREEN"),
+    BLUE("BLUE"),
+    YELLOW("YELLOW"),
 
-    VIOLET("Violet");
+    VIOLET("VIOLET");
 
     private final String value;
 

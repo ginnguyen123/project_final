@@ -1,7 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="add-productImportJs">
-<!--  <script src="../../../static/assets/jQuery/jquery-3.6.0.min.js"></script>-->
-  <script src="../../../static/assets/main/js/AppBase.js"></script>
+
 
   <script>
     const page = {
@@ -24,7 +23,7 @@
     page.dialogs.elements.dateAdded = $('#myInput-add');
     page.dialogs.elements.colorCre = $('#select-color');
     page.dialogs.elements.sizeCre = $('#sizeCre');
-    page.dialogs.elements.myRange = $('#myRange');
+    page.dialogs.elements.myRange = $('#myRangeCre');
 
     page.dialogs.elements.formCreateImport = $('#formCreateProduct');
     page.elements.btnCreImport = $('#btnCreProductImport');
@@ -59,13 +58,12 @@
           .done((data) => {
             console.log(data);
             productImport = data;
-            // page.loadData.searchByProductName(undefined,category, direction);
-            AppBase.showSuccessAlert("Successful productImport");
+            AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
             page.dialogs.elements.formCreateImport[0].reset();
           })
           .fail((jqXHR) => {
             if (jqXHR.status === 404) {
-              AppBase.showErrorAlert("Not found this product");
+              AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_CREATED);
             } else {
               let errors = jqXHR.responseJSON;
               let str = '';
@@ -112,7 +110,6 @@
     })
 
     page.initializeControlEvent = () =>{
-      // trigersubmit=> create
 
       page.elements.btnCreImport.on('click', () => {
         page.dialogs.elements.formCreateImport.trigger("submit");
