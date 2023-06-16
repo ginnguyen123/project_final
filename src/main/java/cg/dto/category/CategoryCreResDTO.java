@@ -1,11 +1,14 @@
 package cg.dto.category;
 
+import cg.dto.media.MediaDTO;
 import cg.model.enums.ECategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,12 +21,23 @@ public class CategoryCreResDTO {
 
     private String name;
 
-    private CategoryDTO categoryParent;
-
-
-//    private Long categoryParentId;
-//
-//    private String categoryParentName;
+    private List<CategoryChildDTO> categoryChilds;
 
     private ECategoryStatus status;
+
+    private MediaDTO mediaDTO;
+
+//    public CategoryCreResDTO(Long id, String name, ECategoryStatus status,CategoryDTO categoryParent) {
+//        this.id = id;
+//        this.name = name;
+//        this.status = status;
+//        this.categoryChilds = categoryParent;
+//    }
+
+    public CategoryCreResDTO(Long id, String name, ECategoryStatus status, List<CategoryChildDTO> categoryDTOS) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.categoryChilds = categoryDTOS;
+    }
 }

@@ -46,10 +46,6 @@ public class Media extends BaseEntity {
     private Integer width;
     private Integer height;
 
-    @ManyToOne
-    @JoinColumn(name = "product_import_id", referencedColumnName = "id")
-    private ProductImport productImport;
-
     public MediaDTO toMediaDTO(){
         return new MediaDTO()
                 .setId(id)

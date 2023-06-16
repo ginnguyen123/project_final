@@ -18,19 +18,13 @@ public interface IProductImportService extends IGeneralService<ProductImport, Lo
 
     ProductImportUpResDTO update(ProductImportUpReqDTO productImportUpReqDTO);
 
+
     List<ProductImportDTO> findAllByDeletedIsFalse( );
 //    Page<ProductImportDTO> findAllByDeletedIsFalse(Pageable pageable);
-    Boolean existById(Long id);
 
+    Boolean existById(Long id);
     Optional<ProductImportDTO> getProductImportDTOByIdDeletedIsFalse(Long id);
 
     Page<ProductImportDTO> pageableByKeywordAndDate(ProductImportRequest inputQuery, Pageable pageable);
 
-//    Page<ProductImportDTO> findAllPagesByKeySearchAndDeletedIsFalse(String keySearch, Pageable pageable);
-
-
-//    List<ProductImport> getProductByDeletedIsFalseAndProductNameLike(String key);
-
-
-//    Page<ProductImportDTO> findProductByProductName(Product product, Pageable pageable);
 }

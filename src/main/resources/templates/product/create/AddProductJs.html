@@ -5,7 +5,7 @@
     const page = {
       urls:{
         getAllBrand: AppBase.API_BRAND,
-        getAllCategory: AppBase.API_CATEGORY,
+        getAllCategory: AppBase.API_CATEGORY + '/get',
         getAllCategoryParent: AppBase.API_CATEGORY,
         getAllDiscount: AppBase.API_DISCOUNT,
         getAllProducts: AppBase.API_PRODUCT,
@@ -39,14 +39,46 @@
     page.dialogs.elements.productBrand = $('#brand');
     page.dialogs.elements.productImage = $('#imageFileProduct');
     page.dialogs.elements.productDescription = $('#productDescription');
+    // input image
+    let files = [];
+    let currentIndex = 0;
+
+    page.dialogs.elements.productImageFiles = page.dialogs.elements.productImage[0].files;
+    page.dialogs.elements.container = $('.container-image');
 
     // btn save
     page.dialogs.elements.btnSaveCreateBrand = $('#btnSaveCreateBrand');
     page.dialogs.elements.btnSaveCreateProduct = $('#btnSaveProductCreate');
 
-
     page.loadData.showEditor = () =>{
       page.dialogs.elements.productDescription.cleditor();
+    }
+
+    page.dialogs.commands.showImage = (list) =>{
+      let images = '';
+      list.forEach((e) => {
+          images += `<div class="image ms-2 me-2" id="images_${currentIndex}">
+                          <img src="${URL.createObjectURL(e)}" alt="image">
+                          <span onclick=delImage(${currentIndex})>&times;</span>
+                      </div>`;
+        ++currentIndex;
+      })
+      $('.container-image').prepend(images);
+    }
+
+    page.commands.handleChangeImage = () =>{
+      page.dialogs.elements.productImage.on('change', ()=>{
+        let file = page.dialogs.elements.productImage[0].files;
+        let showImages = [];
+            for (let i = 0; i < file.length; i++){
+              if (files.every(e => e.name != file[i].name)){
+                files.push(file[i]);
+                showImages.push(file[i]);
+              }
+            }
+        page.dialogs.elements.productImage.val("");
+        page.dialogs.commands.showImage(showImages);
+      })
     }
 
     page.loadData.getAllBrand = () =>{
@@ -247,21 +279,49 @@
       page.loadData.getAllDiscount();
 
       page.loadData.showEditor();
+    }
 
+    const delImage = (index)=>{
+      let str = `#images_${index}`;
+      $(str).remove();
+      for (let i = 0; i < files.length;i++){
+        if (index == i)
+          files.splice(files[i],1);
+      }
+      $('.container-image').empty();
+      currentIndex = 0;
+      page.dialogs.commands.showImage(files);
     }
 
     page.initializeControlEvent = () =>{
-      page.commands.handleChangeCategory(page.elements.selectCategory, page.elements.selectCategoryParent);
-
-      page.elements.btnChoiceImage.on('click', ()=>{
-        page.dialogs.elements.inputFileImage.trigger('click');
+      $('#addNhaCungCap').on('click', () => {
+        $('#modalNhaCungCap').modal('show');
       })
 
+      $('.btn-cancel').on('click', () => {
+        $('#modalNhaCungCap').modal('hide');
+      })
+
+      $('#addDanhMuc').on('click', () => {
+        $('#modalAddDanhMuc').modal('show');
+      })
+
+      $('.btn-cancel').on('click', () => {
+        $('#modalAddDanhMuc').modal('hide');
+      })
+
+      page.commands.handleChangeCategory(page.elements.selectCategory, page.elements.selectCategoryParent);
+
+      page.commands.handleChangeImage();
+
+      page.elements.btnChoiceImage.on('click', ()=>{
+        page.dialogs.elements.productImage.val("");
+        page.dialogs.elements.inputFileImage.trigger('click');
+      })
 
       page.dialogs.elements.btnSaveCreateProduct.on('click', ()=>{
         page.dialogs.elements.frmCreateProduct.trigger('submit');
       })
-
     }
 
     $(()=>{

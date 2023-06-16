@@ -1,7 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="productImport">
 
-
 <script>
     const page = {
         urls:{
@@ -213,8 +212,6 @@
 
     }
 
-
-
     page.loadData.findProductById = (id) => {
         return $.ajax({
             type: 'GET',
@@ -247,10 +244,6 @@
     page.elements.btnUpImport = $('#btnUpProductImport');
 
     page.dialogs.elements.modalUpdate = $('#ModalUP');
-
-
-
-
 
     page.dialogs.commands.doUpdateImport = () => {
         let size = page.dialogs.elements.sizeUp.find(':selected').val().trim();
@@ -382,6 +375,7 @@
             page.dialogs.commands.doUpdateImport();
         }
     })
+
 
 
     page.initializeControlEvent = function(){

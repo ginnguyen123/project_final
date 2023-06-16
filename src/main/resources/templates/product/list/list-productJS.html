@@ -1,0 +1,104 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="list-productJS">
+    <script>
+        let currentIdProduct;
+
+        const page = {
+            urls:{
+                getAllProducts: AppBase.API_PRODUCT,
+                findProductById: AppBase.API_PRODUCT,
+            },
+            elements:{},
+            loadData:{},
+            commands:{},
+            dialogs:{
+                elements:{},
+                loadData:{},
+                commands:{}
+            }
+        }
+        // btn event
+        page.elements.btnEdit = $('.edit');
+        page.elements.btnDelete = $('.delete');
+        // modal
+        page.dialogs.elements.modalEdit = $('#modalEditProduct');
+        // input edit
+        page.dialogs.elements.frmEditProduct = $('#frmEditProduct');
+
+        page.elements.tbodyTable = $('#tbProduct tbody');
+
+        page.loadData.findProductById = function (id){
+            console.log("findProductById");
+            return $.ajax({
+                type: 'GET',
+                url: page.urls.findProductById + '/' + id
+            })
+                .done((data) => {
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+
+        page.commands.offAllEvent = ()=>{
+            page.elements.btnEdit.off();
+            page.elements.btnDelete.off();
+        }
+
+        page.dialogs.commands.evenDelete = function (){
+            page.elements.btnDelete.on('click', function (){
+                // let id = $(this).data('id');
+                // console.log(id);
+                // page.loadData.findProductById(id).then((data)=>{
+                //     console.log(data);
+                // })
+            })
+        }
+
+        page.dialogs.commands.eventEdit = function (){
+            page.elements.btnEdit.on('click', function (){
+                page.dialogs.elements.modalEdit.modal('show');
+            })
+        }
+
+        page.loadData.getAllProducts = () =>{
+            $.ajax({
+                type: 'GET',
+                url: page.urls.getAllProducts
+            })
+                .done((data) => {
+                    $.each(data, (i, item)=>{
+                        let str = AppBase.renderProduct(item);
+                        page.elements.tbodyTable.prepend(str);
+                    })
+
+                    page.commands.offAllEvent();
+
+                    page.dialogs.commands.eventEdit();
+
+                    page.dialogs.commands.evenDelete();
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+        }
+
+        page.commands.loadData = () =>{
+            page.loadData.getAllProducts();
+        }
+
+
+        page.initializeControlEvent = () =>{
+
+
+        }
+
+        $(()=>{
+            page.commands.loadData();
+
+            page.initializeControlEvent();
+        })
+    </script>
+</th:block>

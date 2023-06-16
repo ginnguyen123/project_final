@@ -17,6 +17,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -45,14 +46,13 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "product_avatar_id", referencedColumnName = "id", nullable = false)
     private Media productAvatar;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_media_id", referencedColumnName = "id")
     private List<Media> productAvatarList;
 
     @ManyToOne
     @JoinColumn(name = "brand_id", referencedColumnName = "id", nullable = false)
     private Brand brand;
-
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
@@ -68,7 +68,8 @@ public class Product extends BaseEntity {
                 .setCode(code)
                 .setPrice(price)
                 .setDescription(description)
-                .setMedia(productAvatar.toMediaDTO())
+                .setAvatar(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
     }
@@ -80,9 +81,19 @@ public class Product extends BaseEntity {
                 .setCode(code)
                 .setPrice(price)
                 .setDescription(description)
-                .setUrlAvatar(productAvatar.getFileUrl())
+                .setAvarta(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i -> i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
+    }
+
+    public ProductCreResDTO toProductCreResDTOByCategory() {
+        return new ProductCreResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setPrice(price)
+                .setDescription(description)
+                .setAvarta(productAvatar.toMediaDTO());
     }
 }
 
