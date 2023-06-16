@@ -151,7 +151,7 @@
               </div>
               <div class="col-md-3">
                 <label class="control-label add">Kích cỡ</label>
-                <select class="form-control-add select-search" id="sizeCre" name="sizeCre">
+                <select class="select-search form-control-add" style="width: 100%" id="sizeCre" name="sizeCre">
                   <option value="-1" selected="selected" disabled>--Chọn kích cỡ--</option>
                   <th:block th:each="item: ${size}">
                     <option th:text="${item.getValue}" th:value="${item.value}">
@@ -161,9 +161,8 @@
                 </select>
               </div>
               <div class="form-group  col-md-3 slidecontainer">
-                <label class="control-label add">Số lượng :</label>
-                <span id="demo"></span>
-                <input type="range" min="0" max="1000" value="0" class="slider" id="myRange" name="quantityCre">
+                <label class="control-label add">Số lượng </label>
+                <input type="text" value="0" class="form-control-add" id="myRangeCre" name="quantityCre">
 
               </div>
 
@@ -182,7 +181,6 @@
 
 
 </main>
-
 <th:block th:replace="layout/script :: script"/>
 <th:block th:replace="productImport/create/add-productImportJs :: add-productImportJs"/>
 
@@ -191,8 +189,9 @@
 
 
 <script>
-  var slider = document.getElementById("myRange");
-  var output = document.getElementById("demo");
+
+  let slider = document.getElementById("myRange");
+  let output = document.getElementById("demo");
   // Hiển thị giá trị thanh trượt mặc định
   output.innerHTML = slider.value;
   //Cập nhật giá trị thanh trượt hiện tại (mỗi khi bạn kéo tay cầm thanh trượt)

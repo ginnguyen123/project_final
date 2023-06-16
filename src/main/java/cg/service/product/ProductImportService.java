@@ -13,7 +13,10 @@ import cg.repository.ProductImportRepository;
 import cg.repository.ProductRepository;
 import cg.service.products.IProductService;
 import cg.utils.AppUtils;
+import cg.utils.ProductImportRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,7 @@ import java.math.BigDecimal;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -60,6 +64,13 @@ public class ProductImportService implements IProductImportService {
         return productImportRepository.getProductImportDTOByIdDeletedIsFalse(id);
     }
 
+    @Override
+    public Page<ProductImportDTO> pageableByKeywordAndDate(ProductImportRequest request, Pageable pageable) {
+        if(request.getKeyword() !=null){
+            request.setKeyword("%"+request.getKeyword()+"%");
+        }
+        return productImportRepository.pageableByKeywordAndDate(request, pageable);
+    }
 
 
     @Override
@@ -155,6 +166,12 @@ public class ProductImportService implements IProductImportService {
         productImport.setSize(size);
         return save(productImport).toProductImportUpResDTO();
     }
+
+    @Override
+    public List<ProductImportDTO> findAllByDeletedIsFalse() {
+        return productImportRepository.findAllByDeletedIsFalse();
+    }
+
 
     private Product findProductById(Long id){
         return productService.findById(id).orElseThrow(

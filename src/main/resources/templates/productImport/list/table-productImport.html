@@ -6,7 +6,7 @@
     <th:block th:replace="layout/head :: head"/>
 </head>
 
-<body  class="app sidebar-mini rtl">
+<body class="app sidebar-mini rtl">
 <!-- Navbar-->
 <header class="app-header">
     <!-- Sidebar toggle button-->
@@ -39,57 +39,100 @@
                 <div class="tile-body">
                     <div class="row element-button">
                         <div class="row">
-                        <div class="col-sm-12 d-flex justify-content-end">
-                            <div class="col-sm-10 d-flex justify-content-end">
-                                <a class="btn btn-add btn-sm" href="/product-import/create" id="add" title="Thêm mới sản phẩm"><i class="fas fa-plus"></i>
-                                    Thêm mới sản phẩm</a>
+                            <div class="col-sm-12 d-flex justify-content-end">
+                                <div class="col-sm-10 d-flex justify-content-end">
+                                    <a class="btn btn-add btn-sm" href="/product-import/create" id="add"
+                                       title="Thêm mới sản phẩm"><i class="fas fa-plus"></i>
+                                        Thêm mới sản phẩm</a>
+                                </div>
+                                <div>
+                                    <a class="btn btn btn-secondary btn-delete btn-sm " id="delete" title="Xóa"><i
+                                            class="fas fa-trash-alt"></i> Xóa </a>
+                                </div>
                             </div>
-                           <div>
-                               <a class="btn btn btn-secondary btn-delete btn-sm " id="delete" title="Xóa"><i
-                                       class="fas fa-trash-alt"></i> Xóa </a>
-                           </div>
-                        </div>
-                                <div class=" row">
-                                    <div class="col-sm-4 d-flex">
-                                        <div class="col-sm-2">
-                                            <span>Từ ngày</span>
-                                            <input id="myInput" type="date" placeholder="Search..">
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <span>Đến ngày</span>
-                                            <input id="myOutput" type="date" placeholder="Search..">
-                                        </div>
+                            <div class=" row" id="formSearch">
+                                <div class="col-sm-4 d-flex">
+                                    <div class="col-sm-2">
+                                        <span>Từ ngày</span>
+                                        <input id="myInput" type="date" placeholder="Search.." class="search">
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-2">
+                                        <span>Đến ngày</span>
+                                        <input id="myOutput" type="date" placeholder="Search.." class="search">
+                                    </div>
 
-                                    </div>
-                                    <div class="col-sm-4 position-relative">
-                                        <div class="col-sm-12 d-flex position-absolute input-group " style="bottom: 0px;margin-left: 69px">
-                                            <div class="form-outline position-relative">
-                                                <input type="search" id="form1" class="form-control" />
+                                </div>
+                                <div class="col-sm-4">
+                                    <!--                                        <div data-role="rangeslider">-->
+                                    <!--                                            <label for="range-1a">Rangeslider:</label>-->
+                                    <!--                                            <input type="range" name="range-1a" id="range-1a" min="0" max="100" value="40" data-popup-enabled="true" data-show-value="true">-->
+                                    <!--                                            <label for="range-1b">Rangeslider:</label>-->
+                                    <!--                                            <input type="range" name="range-1b" id="range-1b" min="0" max="100" value="80" data-popup-enabled="true" data-show-value="true">-->
+                                    <!--                                        </div>-->
+                                    <div slider id="slider-distance">
+                                        <div>
+                                            <div inverse-left style="width:70%;"></div>
+                                            <div inverse-right style="width:70%;"></div>
+                                            <div range style="left:0%;right:0%;"></div>
+                                            <span thumb style="left:0%;"></span>
+                                            <span thumb style="left:100%;"></span>
+                                            <div sign style="left:0%;">
+                                                <span id="value">0</span>
                                             </div>
-                                            <button type="button" class="btn btn-primary position-absolute" id="search">
-                                                <i class="fas fa-search"></i>
-                                            </button>
+                                            <div sign style="left:100%;">
+                                                <span id="value">100</span>
+                                            </div>
                                         </div>
+                                        <input class="search" id="myRangeMin" type="range" value="0" max="1000" min="0" step="1" oninput="
+                                        this.value=Math.min(this.value,this.parentNode.childNodes[5].value-1);
+                                        let value = (this.value/parseInt(this.max))*100;
+                                        console.log('value1:'+value)
+                                        let children = this.parentNode.childNodes[1].childNodes;
+                                            children[1].style.width=value+'%';
+                                            children[5].style.left=value+'%';
+                                            children[7].style.left=value+'%';children[11].style.left=value+'%';
+                                            children[11].childNodes[1].innerHTML=this.value;"/>
+
+                                        <input class="search" id="myRangeMax" type="range" value="100" max="1000" min="0" step="1" oninput="
+                                        this.value=Math.max(this.value,this.parentNode.childNodes[3].value-(-1));
+                                        let value = (this.value/parseInt(this.max))*100
+                                         console.log('value2:'+value)
+                                        let children = this.parentNode.childNodes[1].childNodes;
+                                            children[3].style.width=(100-value)+'%';
+                                            children[5].style.right=(100-value)+'%';
+                                            children[9].style.left=value+'%';children[13].style.left=value+'%';
+                                            children[13].childNodes[1].innerHTML=this.value;"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 position-relative">
+                                    <div class="col-sm-12 d-flex position-absolute input-group "
+                                         style="bottom: 9px;margin-left: 69px">
+                                        <div class="form-outline position-relative">
+                                            <input type="search" id="keyword" class="form-control search"/>
+                                        </div>
+                                        <button type="button" class="btn btn-primary position-absolute" id="btnSearch">
+                                            <i class="fas fa-search"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-
-
+                        </div>
                     </div>
                     <table class="table table-hover table-bordered" id="tbProductImport">
                         <thead>
                         <tr>
                             <th><input type="checkbox" id="all-delete"></th>
-                            <th>Mã </th>
+                            <th>Mã</th>
                             <th>Kích cỡ</th>
                             <th>Màu sắc</th>
-                            <th>Giá gốc</th>
+                            <th id="price" data-toggle="tooltip" title="Sort price high to low"
+                                class="align-self-center border-0">Price <i class="fas fa-caret-up"></i><i
+                                    class="fas fa-caret-down"></i>
+                            </th>
                             <th>Số lượng</th>
                             <th>Tình trạng</th>
-                            <th>Tên sản phẩm </th>
-                            <th>Ngày nhập </th>
+                            <th>Tên sản phẩm</th>
+                            <th>Ngày nhập</th>
                             <th>Tính năng</th>
                         </tr>
                         </thead>
@@ -98,14 +141,21 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="py-2 d-flex align-items-center justify-content-end " id="body-foot">
+                    <nav aria-label="Page navigation example" style="display: flex; justify-content: end">
+                        <ul class="pagination justify-content-between" id="paginationUl">
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
+    <th:block th:replace="productImport/update/modalUpdate-productImport :: modalUpdate-productImport"/>
 </main>
 
 <!-- javascripts for application to work-->
-<th:block th:replace="productImport/list/productImport :: productImport"/>
 <th:block th:replace="layout/script :: script"/>
-</body>
+<th:block th:replace="productImport/list/productImport :: productImport"/>
 
+</body>
 </html>
