@@ -2,7 +2,7 @@
 <th:block th:fragment="AddProductJs">
   <script type="text/javascript" src="/assets/lightslider/js/lightslider.js"></script>
   <script>
-    const page = {
+    let page = {
       urls:{
         getAllBrand: AppBase.API_BRAND,
         getAllCategory: AppBase.API_CATEGORY + '/get',

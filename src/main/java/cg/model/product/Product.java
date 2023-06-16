@@ -3,6 +3,7 @@ package cg.model.product;
 
 import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
+import cg.dto.product.ProductUpdaResDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
@@ -81,7 +82,7 @@ public class Product extends BaseEntity {
                 .setCode(code)
                 .setPrice(price)
                 .setDescription(description)
-                .setAvarta(productAvatar.toMediaDTO())
+                .setAvatar(productAvatar.toMediaDTO())
                 .setMedias(productAvatarList.stream().map(i -> i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
@@ -93,7 +94,21 @@ public class Product extends BaseEntity {
                 .setTitle(title)
                 .setPrice(price)
                 .setDescription(description)
-                .setAvarta(productAvatar.toMediaDTO());
+                .setAvatar(productAvatar.toMediaDTO());
+    }
+
+    public ProductUpdaResDTO toProductUpdaResDTO(){
+        String strPrice = String.valueOf(price.longValue());
+        return new ProductUpdaResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setDescription(description)
+                .setPrice(strPrice)
+                .setAvatar(productAvatar.getFileName())
+                .setBrand(brand.toBrandDTO())
+                .setCategory(category.toCategoryDTO())
+                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()));
     }
 }
 

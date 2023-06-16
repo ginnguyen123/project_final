@@ -20,7 +20,7 @@ public interface IProductService extends IGeneralService<Product,Long> {
     List<Product> findAllByDeletedFalse();
     List<Product> findProductWithSorting(String field);
 
-    ProductUpdaResDTO update(ProductUpdaReqDTO productUpdaReqDTO, List<Media> medias);
+    ProductUpdaResDTO update(ProductUpdaReqDTO productUpdaReqDTO);
 
     Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable);
 
