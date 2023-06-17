@@ -26,19 +26,10 @@ public class Cart extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "total_amounts", precision = 10, scale = 0, nullable = false)
+    private BigDecimal totalAmount;
+
     @OneToOne
-    @JoinColumn(name = "bill_id", referencedColumnName = "id", nullable = false)
-    private Bill bill;
-
-    @ManyToOne
-    @JoinColumn(name = "group_by_product",referencedColumnName = "id" , nullable = false)
-    private Product product;
-
-    @Column(nullable = false)
-    private ECartStatus status;
-
-
-
-
-
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
 }
