@@ -1,5 +1,18 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="modalUpdate-productImport">
+
+    <style>
+        .select2-selection__rendered {
+            line-height: 45px !important;
+        }
+        .select2-container .select2-selection--single {
+            height: 45px !important;
+            background: #f5f5f5;
+        }
+        .select2-selection__arrow {
+            height: 45px !important;
+        }
+    </style>
     <div class="modal fade" id="ModalUP" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -46,7 +59,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="control-label add">Kích cỡ</label>
-                                <select class="form-control-add select-search" id="sizeUp" name="sizeUp">
+                                <select class="select-search form-control-add" style="width: 100%" id="sizeUp" name="sizeUp">
                                     <option value="-1" selected="selected" disabled>--Chọn kích cỡ--</option>
                                     <th:block th:each="s: ${size}">
                                         <option th:text="${s.getValue}" th:value="${s.value}">
