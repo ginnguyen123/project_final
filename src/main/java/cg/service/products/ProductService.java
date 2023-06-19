@@ -69,6 +69,7 @@ public class ProductService implements IProductService{
         return productRepository.findAllByDeletedFalse();
     }
 
+
     @Override
     public List<Product> findProductWithSorting(String field) {
         return productRepository.findAll(Sort.by(Sort.Direction.DESC,field));
@@ -80,11 +81,6 @@ public class ProductService implements IProductService{
         return productRepository.findAllWithSearch(search, pageable);
     }
 
-//    @Override
-//    public Page<Product> findProductWithPagination(int offset, int pageSize) {
-//        Page<Product> productPage = productRepository.findAll(PageRequest.of(offset, pageSize));
-//        return productPage;
-//    }
 
     @Override
     public Product save(Product product) {

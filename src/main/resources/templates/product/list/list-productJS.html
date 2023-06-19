@@ -53,7 +53,11 @@
 
         page.dialogs.commands.eventEdit = function (){
             $('.btn-edit').on('click', function (){
-                page.dialogs.elements.modalEdit.modal('show');
+                let id = $(this).data('id');
+                page.loadData.findProductById(id).then((data)=>{
+                    currentIdProduct = id;
+                    location.href = "products/update/" + id;
+                })
             })
         }
 

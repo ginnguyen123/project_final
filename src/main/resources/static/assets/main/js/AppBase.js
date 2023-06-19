@@ -159,11 +159,11 @@ class AppBase{
                     <td>${item.price}</td>
                     <td>${item.category.name}</td>
                     <td>
-                        <button class="btn btn-delete btn-sm delete" id="${item.id}" type="button" title="Xóa">
+                        <button class="btn btn-delete btn-sm delete" id="${item.id}" data-id = "${item.id}" type="button" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                         
-                        <button class="btn btn-edit btn-sm edit" id="${item.id}" type="button" title="Sửa" >
+                        <button class="btn btn-edit btn-sm edit" id="${item.id}" data-id = "${item.id}" type="button" title="Sửa" >
                             <i class="fas fa-edit"></i>
                         </button>
                     </td>
@@ -284,16 +284,30 @@ class Category{
     }
 }
 
+class Avatar{
+    constructor(id, fileName, fileFolder, fileUrl, fileType, cloudId, width, height){
+        this.id = id;
+        this.fileName = fileName;
+        this.fileFolder = fileFolder;
+        this.fileUrl = fileUrl;
+        this.fileType = fileType;
+        this.cloudId = cloudId;
+        this.width = width;
+        this.height = height;
+    }
+}
+
 class Product{
-    constructor(id, title, code, price, description, url, brand, category){
+    constructor(id, title, code, price, description, avatar, medias, brand, category){
         this.id = id;
         this.title = title;
         this.code = code;
         this.price = price;
         this.description= description;
-        this.url = url;
+        this.url = avatar;
         this.brand = brand;
         this.category = category;
+        this.medias = medias;
     }
 }
 class ProductImport{
