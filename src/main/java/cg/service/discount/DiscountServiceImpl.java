@@ -47,6 +47,11 @@ public class DiscountServiceImpl implements IDiscountService{
     }
 
     @Override
+    public Optional<Discount> findDiscountByProducts(Product product) {
+        return discountRepository.findDiscountByProducts(product);
+    }
+
+    @Override
     public Discount save(Discount discount) {
         List<Product> products = discount.getProducts();
         productRepository.saveAll(products);

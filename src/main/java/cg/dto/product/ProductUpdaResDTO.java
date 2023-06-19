@@ -2,6 +2,7 @@ package cg.dto.product;
 
 import cg.dto.brand.BrandDTO;
 import cg.dto.category.CategoryDTO;
+import cg.dto.discount.DiscountDTO;
 import cg.dto.media.MediaDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +20,9 @@ public class ProductUpdaResDTO {
     private String code;
     private String price;
     private String description;
-    private String avatar;
+    private MediaDTO avatar;
     private List<MediaDTO> medias;
     private BrandDTO brand;
     private CategoryDTO category;
+    private DiscountDTO discount;
 }

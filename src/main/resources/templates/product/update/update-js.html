@@ -1,10 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="update-product-js">
+    <script>
+        let page = {
+            urls:{
+                getAllBrand: AppBase.API_BRAND,
+                getAllCategory: AppBase.API_CATEGORY + '/get',
+                getAllCategoryParent: AppBase.API_CATEGORY,
+                getAllDiscount: AppBase.API_DISCOUNT,
+                getAllProducts: AppBase.API_PRODUCT,
+                createProduct: AppBase.API_PRODUCT + '/create',
+                getProduct: AppBase.API_PRODUCT + '/products'
+            },
+            elements:{},
+            loadData:{},
+            commands:{},
+            dialogs:{
+                elements:{},
+                loadData:{},
+                commands:{}
+            }
+        }
+
+        page.dialogs.elements.productDescription = $('#productDescriptionUp');
+
+        page.loadData.showEditor = () =>{
+            page.dialogs.elements.productDescription.cleditor();
+        }
+
+        page.loadData.getProduct = () =>{
+            console.log(product)
+        }
+
+
+        page.commands.loadData = ()=>{
+            page.loadData.showEditor();
+
+            page.loadData.getProduct();
+        }
+
+        page.initializeControlEvent = ()=>{
+
+        }
+
+        $(()=>{
+            page.commands.loadData();
+
+            page.initializeControlEvent();
+        })
+
+
+    </script>
+
+</th:block>
