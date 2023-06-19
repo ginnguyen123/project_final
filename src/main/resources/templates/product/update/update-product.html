@@ -244,7 +244,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="tile">
-                <h3 class="tile-title">Tạo mới sản phẩm</h3>
+                <h3 class="tile-title">Cập nhật thông tin sản phẩm</h3>
                 <div class="tile-body">
                     <div class="row element-button">
                         <div class="col-sm-2">
@@ -271,19 +271,19 @@
                             </a>
                         </div>
                     </div>
-                    <form class="row" id="frmCreateProduct">
+                    <form class="row" id="frmUpdateProduct" th:object="${product}">
                         <div class="form-group col-md-12">
                             <div class="col-md-4 float-left">
                                 <label class="control-label">Tên sản phẩm</label>
-                                <input class="form-control" name="productTitle" id="productTitle" type="text">
+                                <input class="form-control" th:field="*{title}" name="productTitle" id="productTitleUp" type="text">
                             </div>
                             <div class="col-md-4 float-left">
                                 <label class="control-label">Giá bán</label>
-                                <input class="form-control" id="productPrice" name="productPrice" type="number" min="0">
+                                <input class="form-control" id="productPriceUp" th:field="*{price}" name="productPrice" type="number" min="0">
                             </div>
                             <div class="col-md-4 float-left">
                                 <label class="control-label">Discount</label>
-                                <select class="form-control" id="discount" name="discount">
+                                <select class="form-control" id="discountUpdate" name="discount">
                                     <option value="">-- Chọn discount --</option>
                                 </select>
                             </div>
@@ -291,29 +291,29 @@
 
                         <div class="form-group col-md-12">
                             <div class="col-md-4 float-left">
-                                <label for="category" class="control-label">Danh mục</label>
-                                <select class="form-control" id="category" name="category">
+                                <label for="categoryUp" class="control-label">Danh mục</label>
+                                <select class="form-control" id="categoryUp" th:field="*{category}" name="category">
                                     <option value="-1">-- Chọn danh mục --</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4 float-left">
-                                <label for="categoryParent" class="control-label">Danh mục con</label>
-                                <select class="form-control" id="categoryParent" name="categoryParent">
+                                <label for="categoryParentUp" class="control-label">Danh mục con</label>
+                                <select class="form-control" id="categoryParentUp" name="categoryParent">
                                     <option value="">-- Chọn danh mục con--</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4 float-left">
-                                <label for="brand" class="control-label">Nhà cung cấp</label>
-                                <select class="form-control" id="brand" name="brand">
+                                <label for="brandUp" class="control-label">Nhà cung cấp</label>
+                                <select class="form-control" id="brandUp" name="brand">
                                     <option value="-1">-- Chọn nhà cung cấp --</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group col-md-12 float-left" >
-<!--                            <label class="control-label">Ảnh sản phẩm</label>-->
+                            <!--                            <label class="control-label">Ảnh sản phẩm</label>-->
                             <div class="card">
                                 <div class="top">
                                     <p>Drag & drop image uploading</p>
@@ -322,8 +322,8 @@
                                     </span>
                                 </div>
                                 <div id="frm-image">
-<!--                                    <span class="inner">Drag & drop image here or <span class="select">Brows</span>-->
-<!--                                    </span>-->
+                                    <!--                                    <span class="inner">Drag & drop image here or <span class="select">Brows</span>-->
+                                    <!--                                    </span>-->
                                     <input name="imageFileProduct" id="imageFileProduct" type="file" hidden multiple/>
                                     <div class="container-image">
 
@@ -334,12 +334,11 @@
 
                         <div class="form-group">
                             <label class="control-label">Mô tả sản phẩm</label>
-                            <textarea class="form-control" name="mota" id="productDescription"></textarea>
-                            <!--                            <script>CKEDITOR.replace('mota');</script>-->
+                            <textarea class="form-control" name="mota"id="productDescriptionUp"></textarea>
                         </div>
                     </form>
                     <div>
-                        <button class="btn btn-save btn-luu-lai" id="btnSaveProductCreate" type="button">Lưu lại</button>
+                        <button class="btn btn-save btn-luu-lai" id="btnSaveProductUpdate" type="button">Lưu lại</button>
                         <a class="btn btn-cancel " href="/products">Hủy bỏ</a>
                     </div>
                 </div>
@@ -356,7 +355,7 @@
 </main>
 
 <th:block th:replace="layout/script :: script"/>
-<th:block th:replace="product/create/AddProductJs :: AddProductJs"/>
+<th:block th:replace="product/update/update-js :: update-product-js"/>
 
 </body>
 

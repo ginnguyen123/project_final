@@ -2,7 +2,7 @@
 <th:block th:fragment="AddProductJs">
   <script type="text/javascript" src="/assets/lightslider/js/lightslider.js"></script>
   <script>
-    const page = {
+    let page = {
       urls:{
         getAllBrand: AppBase.API_BRAND,
         getAllCategory: AppBase.API_CATEGORY + '/get',
@@ -295,6 +295,24 @@
     }
 
     page.initializeControlEvent = () =>{
+
+
+      $('#addNhaCungCap').on('click', () => {
+        $('#modalNhaCungCap').modal('show');
+      })
+
+      $('.btn-cancel').on('click', () => {
+        $('#modalNhaCungCap').modal('hide');
+      })
+
+      $('#addDanhMuc').on('click', () => {
+        $('#modalAddDanhMuc').modal('show');
+      })
+
+      $('.btn-cancel').on('click', () => {
+        $('#modalAddDanhMuc').modal('hide');
+      })
+
       page.commands.handleChangeCategory(page.elements.selectCategory, page.elements.selectCategoryParent);
 
       page.commands.handleChangeImage();

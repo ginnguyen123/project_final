@@ -11,6 +11,7 @@ class AppBase{
     static CLOUDINARY_URL = this.SERVER_CLOUDINARY + this.CLOUDINARY_NAME + '/image/upload';
     static SCALE_IMAGE_W_80_H_80_Q_100 = 'c_limit,w_80,h_80,q_100';
     static SCALE_IMAGE_W_80_H_80_Q_85 = 'c_limit,w_80,h_80,q_85';
+
     static AlertMessageEn = class {
         static SUCCESS_CREATED = "Successful data generation !";
         static SUCCESS_UPDATED = "Data update successful !";
@@ -37,9 +38,7 @@ class AppBase{
     static AlertMessageVi = class {
         static SUCCESS_CREATED = "Tạo dữ liệu thành công !";
         static SUCCESS_UPDATED = "Cập nhật dữ liệu thành công !";
-        static SUCCESS_DEPOSIT = "Giao dịch gửi tiền thành công !";
-        static SUCCESS_WITHDRAW = "Giao dịch rút tiền thành công !";
-        static SUCCESS_TRANSFER = "Giao dịch chuyển khoản thành công !";
+        static SUCCESS_DELETED = "Xóa dữ liệu thành công !";
         static SUCCESS_DEACTIVATE = "Hủy kích hoạt khách hàng thành công !";
 
         static ERROR_400 = "Thao tác không thành công, vui lòng kiểm tra lại dữ liệu.";
@@ -48,7 +47,9 @@ class AppBase{
         static ERROR_404 = "Not Found - Tài nguyên này đã bị xóa hoặc không tồn tại";
         static ERROR_500 = "Internal Server Error - Hệ thống Server đang có vấn đề hoặc không truy cập được.";
 
-        static ERROR_CREATED = 'Thêm khách hàng mới không thành công';
+        static ERROR_CREATED = 'Thêm mới không thành công';
+        static ERROR_UPDATED = "Cập nhật không dữ liệu thành công !";
+        static ERROR_DELETED = 'Xóa không thành công';
 
         static ERROR_LOADING_PROVINCE = "Tải danh sách tỉnh - thành phố không thành công !";
         static ERROR_LOADING_DISTRICT = "Tải danh sách quận - phường - huyện không thành công !";
@@ -114,6 +115,7 @@ class AppBase{
 
 
  static formDate(date) {
+        if(!date) return "";
     let arr = date.split("-")
     date = arr[2] + "-" + arr[1] + "-" + arr[0]
     return date;
@@ -144,7 +146,7 @@ class AppBase{
     }
 
     static renderProduct(item){
-        let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/${item.media.fileFolder}/${item.media.fileName}`
+        let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/${item.avatar.fileFolder}/${item.avatar.fileName}`
         return `<tr id="tr_${item.id}">
                     <td>
                       <input type="checkbox" id="delete_${item.id}">
@@ -157,11 +159,36 @@ class AppBase{
                     <td>${item.price}</td>
                     <td>${item.category.name}</td>
                     <td>
-                        <button class="btn btn-delete btn-sm delete" type="button" title="Xóa">
+                        <button class="btn btn-delete btn-sm delete" id="${item.id}" data-id = "${item.id}" type="button" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                         
-                        <button class="btn btn-edit btn-sm edit" type="button" title="Sửa" >
+                        <button class="btn btn-edit btn-sm edit" id="${item.id}" data-id = "${item.id}" type="button" title="Sửa" >
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>`
+    }
+
+    static renderProductWithNameImage(item){
+        let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/tokyo_life_product_images/${item.imageName}`;
+        return `<tr id="tr_${item.id}">
+                    <td>
+                      <input type="checkbox" id="delete_${item.id}">
+                    </td>
+                    <td>${item.code}</td>
+                    <td>
+                        <img src="${image_thumbnail}"/>
+                    </td>
+                    <td>${item.title}</td>
+                    <td>${item.price}</td>
+                    <td>${item.categoryName}</td>
+                    <td>
+                        <button class="btn btn-delete btn-sm delete" id="${item.id}" type="button" title="Xóa">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        
+                        <button class="btn btn-edit btn-sm edit" id="${item.id}" type="button" title="Sửa" >
                             <i class="fas fa-edit"></i>
                         </button>
                     </td>
@@ -190,8 +217,24 @@ class AppBase{
         //     do something
     }
 
+
+
+
     static renderProductImport(item){
         let str = this.formDate(item.date_added);
+
+        let strBtn;
+
+        item.quantity > 0 ?
+            strBtn = `<span  class="badge btn-add btn-sm">
+                        Stocking
+                       </span>` :item.productStatus == "STOCKING" ?
+                strBtn = `<span class="badge btn-del btn-sm">
+                        Out-stock
+                       </span>`: item.productStatus == "OUT_STOCK"
+
+
+
         return` <tr id="tr_${item.id}">
                             <td>
                                 <input type="checkbox" id="delete_${item.id}">
@@ -206,7 +249,7 @@ class AppBase{
                        
                             <td>${item.quantity}</td>
                             
-                            <td><span class="badge btn-add btn-sm">${item.productStatus}</span></td>
+                            <td>${strBtn}</td>
                             
                             <td>${item.product.title}</td>
                             <td>${str}</td>
@@ -241,16 +284,30 @@ class Category{
     }
 }
 
+class Avatar{
+    constructor(id, fileName, fileFolder, fileUrl, fileType, cloudId, width, height){
+        this.id = id;
+        this.fileName = fileName;
+        this.fileFolder = fileFolder;
+        this.fileUrl = fileUrl;
+        this.fileType = fileType;
+        this.cloudId = cloudId;
+        this.width = width;
+        this.height = height;
+    }
+}
+
 class Product{
-    constructor(id, title, code, price, description, url, brand, category){
+    constructor(id, title, code, price, description, avatar, medias, brand, category){
         this.id = id;
         this.title = title;
         this.code = code;
         this.price = price;
         this.description= description;
-        this.url = url;
+        this.url = avatar;
         this.brand = brand;
         this.category = category;
+        this.medias = medias;
     }
 }
 class ProductImport{

@@ -1,6 +1,7 @@
 package cg.service.media;
 
 import cg.model.media.Media;
+import cg.model.product.Product;
 import cg.service.IGeneralService;
 import org.springframework.web.multipart.MultipartFile;
 

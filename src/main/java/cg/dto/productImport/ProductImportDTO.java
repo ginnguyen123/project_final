@@ -45,6 +45,9 @@ public class ProductImportDTO {
         this.product = product.toProductDTO();
     }
 
+
+
+
     public ProductImport toProductImport(Product product) {
         return new ProductImport()
                 .setId(id)

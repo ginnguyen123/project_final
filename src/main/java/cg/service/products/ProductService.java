@@ -1,6 +1,7 @@
 package cg.service.products;
 
-import cg.dto.product.ProductCreResDTO;
+import cg.dto.product.*;
+import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
@@ -8,13 +9,18 @@ import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.print.Pageable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -41,6 +47,7 @@ public class ProductService implements IProductService{
         return productRepository.findAll();
     }
 
+
     @Override
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
@@ -51,10 +58,6 @@ public class ProductService implements IProductService{
         return productRepository.saveAll(products);
     }
 
-//    @Override
-//    public List<ProductCreResDTO> findProductsByCategoryWithLimit(Long idCategory) {
-//        return productRepository.findProductsByCategoryWithLimit(idCategory);
-//    }
 
     @Override
     public List<Product> findProductsByCategoryWithLimit(Long idCategory) {
@@ -66,10 +69,18 @@ public class ProductService implements IProductService{
         return productRepository.findAllByDeletedFalse();
     }
 
+
     @Override
     public List<Product> findProductWithSorting(String field) {
-        return productRepository.findAll(Sort.by(Sort.Direction.ASC,field));
+        return productRepository.findAll(Sort.by(Sort.Direction.DESC,field));
     }
+
+
+    @Override
+    public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
+        return productRepository.findAllWithSearch(search, pageable);
+    }
+
 
     @Override
     public Product save(Product product) {
@@ -95,5 +106,51 @@ public class ProductService implements IProductService{
         Product product = findById(id).get();
         product.setDeleted(true);
         save(product);
+    }
+
+    @Override
+    public ProductUpdaResDTO update(ProductUpdaReqDTO productUpdaReqDTO) {
+        Optional<Product> productOp = findById(productUpdaReqDTO.getId());
+        if (!productOp.isPresent()){
+            throw new DataInputException("Product not exist");
+        }
+        Product product = productOp.get();
+
+        Optional<Brand> brandOptional = brandRepository.findById(productUpdaReqDTO.getId());
+        if (!brandOptional.isPresent()){
+            throw new DataInputException("Brand not exist!");
+        }
+        Brand brand = brandOptional.get();
+        product.setBrand(brand);
+
+        Discount discount = null;
+
+        Optional<Discount> discountOptional =  discountRepository.findById(productUpdaReqDTO.getDiscountId());
+        if (discountOptional.isPresent()){
+            discount = discountOptional.get();
+        }
+
+        Optional<Category> categoryChildOp = categoryRepository.findById(productUpdaReqDTO.getCategoryId());
+        if (!categoryChildOp.isPresent()){
+            Category category = categoryRepository.findById(productUpdaReqDTO.getCategoryParentId()).get();
+            product.setCategory(category);
+        }else {
+            Category categoryChild = categoryChildOp.get();
+            product.setCategory(categoryChild);
+        }
+        product.setTitle(productUpdaReqDTO.getTitle());
+        product.setPrice(BigDecimal.valueOf(Long.parseLong(productUpdaReqDTO.getPrice())));
+        product.setDescription(productUpdaReqDTO.getDescription());
+        save(product);
+
+        if (discount != null){
+            List<Product> productList = discount.getProducts();
+            productList = productList.stream().filter(i -> i.getId() != product.getId()).collect(Collectors.toList());
+            productList.add(product);
+            discount.setProducts(productList);
+            discountRepository.save(discount);
+        }
+
+        return product.toProductUpdaResDTO();
     }
 }

@@ -3,7 +3,9 @@ package cg.service.media;
 import cg.dto.media.MediaDTO;
 import cg.exception.DataInputException;
 import cg.model.media.Media;
+import cg.model.product.Product;
 import cg.repository.MediaRepository;
+import cg.repository.ProductRepository;
 import cg.utils.UploadUtils;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class UploadMediaServiceImpl implements IUploadMediaService{
 
     @Autowired
     private MediaRepository mediaRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private UploadUtils uploadUtils;
@@ -97,7 +102,6 @@ public class UploadMediaServiceImpl implements IUploadMediaService{
     public List<Media> uploadAllImageAndSaveAllImage(List<MultipartFile> files, List<Media> medias){
         for (MultipartFile file : files){
             Media media = new Media();
-            media.setProductImport(null);
             save(media);
             try{
                 Map uploadResult = uploadImage(file, uploadUtils.buildImageUploadParams(media));
@@ -116,4 +120,5 @@ public class UploadMediaServiceImpl implements IUploadMediaService{
         }
         return saveAll(medias);
     }
+
 }

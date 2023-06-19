@@ -13,4 +13,6 @@ public interface IDiscountService extends IGeneralService<Discount,Long> {
     List<Discount> getAllByDeletedIsTrue();
 
     Optional<Discount> findDiscountByIdAndDeletedIsFalse(Long id);
+
+    Optional<Discount> findDiscountByProducts(Product product);
 }

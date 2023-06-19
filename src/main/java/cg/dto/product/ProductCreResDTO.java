@@ -26,13 +26,13 @@ public class ProductCreResDTO {
     private String description;
     private BrandDTO brand;
     private CategoryDTO category;
-    private MediaDTO avarta;
+    private MediaDTO avatar;
     private List<MediaDTO> medias;
-    public ProductCreResDTO(Long id, String title, BigDecimal price, String description) {
+    public ProductCreResDTO(Long id, String title, BigDecimal price, String description, MediaDTO avarta) {
         this.id = id;
         this.title = title;
         this.price = price;
-//        this.urlAvatar = urlAvatar;
+        this.avatar = avarta;
         this.description = description;
     }
 

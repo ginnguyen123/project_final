@@ -1,13 +1,14 @@
 package cg.service.product;
 
-import cg.dto.product.ProductDTO;
 import cg.dto.productImport.*;
-import cg.model.enums.ESize;
-import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import cg.service.IGeneralService;
+import cg.utils.ProductImportRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -18,10 +19,12 @@ public interface IProductImportService extends IGeneralService<ProductImport, Lo
     ProductImportUpResDTO update(ProductImportUpReqDTO productImportUpReqDTO);
 
 
+    List<ProductImportDTO> findAllByDeletedIsFalse( );
+//    Page<ProductImportDTO> findAllByDeletedIsFalse(Pageable pageable);
 
     Boolean existById(Long id);
-
     Optional<ProductImportDTO> getProductImportDTOByIdDeletedIsFalse(Long id);
 
+    Page<ProductImportDTO> pageableByKeywordAndDate(ProductImportRequest inputQuery, Pageable pageable);
 
 }

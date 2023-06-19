@@ -1,13 +1,12 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="productImport">
-    <script src="../../../static/assets/jQuery/jquery-3.6.0.min.js"></script>
-    <script src="../../../static/assets/main/js/AppBase.js"></script>
-
 
 <script>
     const page = {
         urls:{
-            getAllProductImport : AppBase.API_PRODUCT_IMPORT
+            getAllProductImport : AppBase.API_PRODUCT_IMPORT,
+            updateProductImport : AppBase.API_PRODUCT_IMPORT,
+            getAllProductImportPageSearch : AppBase.API_PRODUCT_IMPORT + '/search'
         },
         elements:{},
         loadData:{},
@@ -18,29 +17,169 @@
             commands:{}
         }
     }
-
+    let currentPageNumber = 0;
     let currentId;
+    let productImport = new ProductImport();
+    let product;
+    let fromDate;
+    let toDate;
+    let keyword;
+    let price;
+    let quantityMin;
+    let quantityMax;
 
-        page.elements.tbodyTableImport = $('#tbProductImport tbody');
+
+    page.elements.tbodyTableImport = $('#tbProductImport tbody');
+    page.elements.formSearch = $('#formSearch');
+    page.elements.btnSearch = $('#bthSearch');
+    page.elements.dateInput = $("#myInput");
+    page.elements.dateOutput = $("#myOutput");
+    page.elements.keyword = $("#keyword")
+    page.elements.myRangeMin = $("#myRangeMin")
+    page.elements.myRangeMax = $("#myRangeMax")
 
     page.loadData.getAllProductImport = () =>{
+        fromDate =  page.elements.dateInput.val();
+        toDate = page.elements.dateOutput.val();
+        keyword = page.elements.keyword.val();
+        quantityMin = page.elements.myRangeMin.val();
+        quantityMax = page.elements.myRangeMax.val();
+        let obj = {
+            currentPageNumber: currentPageNumber,
+            keyword:keyword,
+            fromDate: fromDate,
+            toDate:toDate,
+            quantityMin : quantityMin,
+            quantityMax : quantityMax
+        }
+        console.log('obj'+obj)
+
         $.ajax({
-            type: 'GET',
-            url: page.urls.getAllProductImport
+            type: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'content-type': 'application/json'
+            },
+            url: page.urls.getAllProductImport + `/search?size=5&sort=id,desc&page=${obj.currentPageNumber}&keyword=${obj.keyword}`,
+            data: JSON.stringify(obj)
+            // search?size=2&sort=id,desc
         })
+
             .done((data)=>{
-                $.each(data, (i, item)=>{
+                console.log(data)
+                page.elements.tbodyTableImport.empty();
+                listProductImport = data.content;
+
+
+                currentPageNumber = data.pageable.pageNumber
+
+                totalPages = data.totalPages;
+
+                totalElements = data.totalElements;
+
+                console.log(totalElements)
+
+                $.each(listProductImport, (i, item)=>{
                     let str = AppBase.renderProductImport(item);
                     page.elements.tbodyTableImport.prepend(str);
                 })
+                let strPage = page.commands.renderPagination(currentPageNumber, totalElements, totalPages );
+                $('#body-foot').empty().append(strPage);
 
-                addEventDeleteClick();
+
+                addAllEvent();
             })
                     .fail((jqXHR) => {
                         console.log(jqXHR);
                     })
 
     }
+
+    page.commands.addEventChangePage = () => {
+        $('.page-link').on('click', function () {
+            let pageNumber = $(this).data('page');
+            fromDate =  page.elements.dateInput.val();
+           toDate = page.elements.dateOutput.val();
+            keyword = page.elements.keyword.val();
+            quantityMin = page.elements.myRangeMin.val();
+            quantityMax = page.elements.myRangeMax.val();
+            currentPageNumber= pageNumber;
+
+            page.loadData.getAllProductImport();
+        })
+    }
+
+    page.elements.formSearch.on('change' ,'.search', () => {
+        fromDate =  page.elements.dateInput.val();
+        toDate = page.elements.dateOutput.val();
+        keyword = page.elements.keyword.val();
+        quantityMin = page.elements.myRangeMin.val();
+        quantityMax = page.elements.myRangeMax.val();
+        currentPageNumber= 0;
+        page.loadData.getAllProductImport();
+    })
+
+    page.commands.renderPagination = (currentPageNumber, totalElements, totalPages) => {
+        let str = `
+                            <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-start">
+                                <div class="dataTables_info" id="sampleTable_info" role="status" aria-live="polite">
+                                    [ 1 -- 20 ] của [ ${totalElements} ] sản phẩm
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-7 pagination-foot">
+                                <div class="dataTables_paginate paging_simple_numbers" id="sampleTable_paginate">
+                                    <ul class="pagination">
+                `;
+
+
+        if (currentPageNumber != 0) {
+            str += `
+                            <li class="paginate_button page-item previous " id="sampleTable_previous" data-page="${currentPageNumber-1}">
+                                <a class="page-link" data-page="${currentPageNumber-1}">Lùi</a>
+                            </li>
+                            `;
+        } else {
+            str += `
+                            <li class="paginate_button page-item previous disabled" id="sampleTable_previous">
+                                <a class="page-link">Lùi</a>
+                            </li>
+                            `;
+        }
+
+        for(let i = 1; i <= totalPages ; i++ ) {
+            if ((i - 1 ) === currentPageNumber) {
+                str += `
+                            <li class="paginate_button page-item active">
+                                <a id="pageActive" class="page-link" data-page="${i-1}">${i}</a>
+                            </li>
+                        `;
+            }
+            else {
+                str += `
+                            <li class="paginate_button page-item">
+                                <a id="pageActive" class="page-link" data-page="${i-1}">${i}</a>
+                            </li>
+                        `;
+            }
+        }
+        if(currentPageNumber != (totalPages - 1)){
+            str += `
+                            <li class="paginate_button page-item next" id="sampleTable_next" >
+                                <a class="page-link" data-page="${currentPageNumber+1}">Tiếp</a>
+                            </li>
+                        `;
+        } else {
+            str += `
+                            <li class="paginate_button page-item next disabled" id="sampleTable_next">
+                                <a class="page-link">Tiếp</a>
+                            </li>
+                        `;
+        }
+
+        return str;
+    }
+
+
 
 
     function addEventDeleteClick() {
@@ -60,10 +199,10 @@
                         })
                             .done(() => {
                                 $("#tr_" + currentId).remove();
-                                AppBase.IziToast.showSuccessAlert("Success Delete");
+                                AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_DELETED);
                             })
                             .fail((error) => {
-                                AppBase.IziToast.showErrorAlert(error);
+                                AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_DELETED);
                             })
 
                     }
@@ -72,8 +211,6 @@
             })
 
     }
-
-
 
     page.loadData.findProductById = (id) => {
         return $.ajax({
@@ -88,21 +225,181 @@
             })
     }
 
+    page.dialogs.elements.selectProduct = $('#select-productUp');
+
+    page.dialogs.elements.priceUp = $('#priceUp');
+
+    page.dialogs.elements.dateAdded = $('.dateUp');
+
+    page.dialogs.elements.colorUp = $('#select-colorUp');
+
+    page.dialogs.elements.sizeUp = $('#sizeUp');
+
+    page.dialogs.elements.quantityUp = $('#myRangeUp');
+
+    page.dialogs.elements.demoUp = $('#demoUp');
+
+    page.dialogs.elements.formUpdateImport = $('#formUpdateProduct');
+
+    page.elements.btnUpImport = $('#btnUpProductImport');
+
+    page.dialogs.elements.modalUpdate = $('#ModalUP');
+
+    page.dialogs.commands.doUpdateImport = () => {
+        let size = page.dialogs.elements.sizeUp.find(':selected').val().trim();
+        let color = page.dialogs.elements.colorUp.find(':selected').val().trim();
+        let date_added = page.dialogs.elements.dateAdded.val().trim();
+        let price = page.dialogs.elements.priceUp.val().trim();
+        let quantity = page.dialogs.elements.quantityUp.val().trim();
+        let productId = page.dialogs.elements.selectProduct.find(':selected').val().trim();
 
 
+        let formData = new FormData();
+
+        formData.append("size", size);
+        formData.append("color", color);
+        formData.append("price",price );
+        formData.append("date_added", date_added);
+        formData.append("quantity", quantity);
+        formData.append("productId", productId);
+
+
+        $.ajax({
+            type: "PATCH",
+            contentType: false,
+            cache: false,
+            processData: false,
+            url: page.urls.updateProductImport + "/" + currentId,
+            data: formData
+        })
+            .done((data) => {
+                let str = AppBase.renderProductImport(data);
+                $("#tr_" + currentId).replaceWith(str);
+
+                AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
+
+                addAllEvent();
+
+                page.dialogs.elements.modalUpdate.modal("hide");
+            })
+            .fail((jqXHR) => {
+                let errors = jqXHR.responseJSON;
+                let str = '';
+                $.each(errors, (k, v) => {
+                    str += `<li for="${k}Up">${v}</li>`;
+                    $("#" + k + "Up").addClass("error");
+                })
+                $('#ModalUP .modal-alert-danger').append(str);
+                $('#ModalUP .modal-alert-danger').removeClass('hide').addClass('show');
+
+                AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_UPDATED);
+            })
+
+    }
+
+    function addEventEditClick() {
+        $(".edit").on('click', function () {
+            let productImportId = $(this).data('id');
+            page.loadData.findProductById(productImportId).then((productImport) => {
+                currentId = productImport.id;
+
+
+                page.dialogs.elements.priceUp.val(productImport.price);
+                page.dialogs.elements.quantityUp.val(productImport.quantity);
+                page.dialogs.elements.sizeUp.val(productImport.size);
+                page.dialogs.elements.colorUp.val(productImport.color);
+                page.dialogs.elements.selectProduct.val(productImport.product.id);
+                page.dialogs.elements.dateAdded.val(productImport.date_added);
+
+                page.dialogs.elements.demoUp.text(productImport.quantity);
+
+
+
+                page.dialogs.elements.modalUpdate.modal("show");
+            })
+                .catch((error) => {
+                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_404);
+                });
+        })
+    }
+    function convertName(name){
+        let name123 = name.toLowerCase();
+        console.log(name123)
+        let arr = name123.split('');
+        let a = arr[0].toUpperCase();
+        console.log(arr)
+        for (let i = 1; i< arr.length; i++){
+            console.log(arr[i])
+            a += arr[i];
+        }
+        return a;
+    }
+
+    function addAllEvent(){
+        addEventEditClick();
+        addEventDeleteClick();
+        page.commands.addEventChangePage();
+    }
+
+
+    page.dialogs.elements.formUpdateImport.validate({
+        rules: {
+            priceUp: {
+                required: true,
+                min: 100,
+                max: 999999999,
+                number: true
+            },
+            quantityUp: {
+                required: true,
+                min: 1,
+                max: 1000,
+                number: true
+            }
+        },
+        messages: {
+            priceUp: {
+                required: "Vui lòng nhập giá.",
+                min: "Giá sản phẩm tối thiểu là 100.000 VNĐ.",
+                max: "Giá sản phẩm tối đa là 999.999.999 VNĐ.",
+                number: "Giá sản phẩm phải là số."
+            },
+            quantityUp: {
+                required: "Vui lòng nhập Số lượng.",
+                min: "Số lượng sản phẩm tối thiểu là 1 .",
+                max: "Số lượng sản phẩm tối đa là 1000.",
+                number: "Số lượng sản phẩm phải là số."
+            }
+        },
+        submitHandler: function () {
+            page.dialogs.commands.doUpdateImport();
+        }
+    })
 
 
 
     page.initializeControlEvent = function(){
 
-    };
+        page.elements.btnUpImport.on('click', () => {
+            page.dialogs.elements.formUpdateImport.trigger("submit");
+        })
+
+
+        // page.elements.btnSearch.on("click", function () {
+        //     page.elements.formSearch.trigger("submit");
+        //
+        // })
+
+
+    }
 
     page.commands.loadData = () =>{
         page.loadData.getAllProductImport();
+
+
     };
     $(()=>{
         page.commands.loadData();
-
         page.initializeControlEvent();
     })
 </script>

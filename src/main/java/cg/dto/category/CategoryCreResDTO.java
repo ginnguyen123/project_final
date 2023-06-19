@@ -1,5 +1,6 @@
 package cg.dto.category;
 
+import cg.dto.media.MediaDTO;
 import cg.model.enums.ECategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,8 @@ public class CategoryCreResDTO {
     private List<CategoryChildDTO> categoryChilds;
 
     private ECategoryStatus status;
+
+    private String avatar;
 
 //    public CategoryCreResDTO(Long id, String name, ECategoryStatus status,CategoryDTO categoryParent) {
 //        this.id = id;
