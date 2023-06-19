@@ -13,6 +13,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -48,6 +49,9 @@ public class Bill extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = true)
     private Customer customer;
+
+    @OneToMany(mappedBy = "bill")
+    private List<BillDetail> billDetails;
 
 
     public BillDTO ToBillDTO() {
