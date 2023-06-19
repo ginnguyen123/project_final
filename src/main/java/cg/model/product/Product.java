@@ -3,6 +3,7 @@ package cg.model.product;
 
 import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
+import cg.dto.product.ProductResDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @Table(name = "products")
 @Accessors(chain = true)
 public class Product extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -61,6 +63,7 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product")
     private List<ProductImport> productImports;
 
+
     public ProductDTO toProductDTO(){
         return new ProductDTO()
                 .setId(id)
@@ -94,6 +97,20 @@ public class Product extends BaseEntity {
                 .setPrice(price)
                 .setDescription(description)
                 .setAvarta(productAvatar.toMediaDTO());
+    }
+
+    public ProductResDTO toProductResDTO() {
+        return new ProductResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setPrice(price)
+                .setDescription(description)
+                .setBrandName(brand.getName())
+                .setCategoryName(category.getName())
+                .setImages(productAvatarList.stream().map(item->item.toMediaDTO()).collect(Collectors.toList()))
+//                .setProductImportDTOList(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
+                ;
     }
 }
 

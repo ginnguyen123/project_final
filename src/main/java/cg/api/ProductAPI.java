@@ -86,15 +86,15 @@ public class ProductAPI {
         Optional<Product> productOptional = productService.findById(id);
 
         if (!productOptional.isPresent()){
-            ProductDTO productDTO = new ProductDTO();
-            return new ResponseEntity<>(productDTO, HttpStatus.OK);
+            ProductResDTO productResDTO = new ProductResDTO();
+            return new ResponseEntity<>(productResDTO, HttpStatus.OK);
         }
 
         Product product = productOptional.get();
 
-        ProductDTO productDTO = product.toProductDTO();
+        ProductResDTO productResDTO = product.toProductResDTO();
 
-        return new ResponseEntity<>(productDTO,HttpStatus.OK);
+        return new ResponseEntity<>(productResDTO,HttpStatus.OK);
     }
 
     @PostMapping("/create")

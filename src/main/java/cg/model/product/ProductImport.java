@@ -69,6 +69,15 @@ public class ProductImport extends BaseEntity {
                 ;
     }
 
+    public ProductImportDTO toProductImportDTOWithSizeColor() {
+        return new ProductImportDTO()
+                .setId(id)
+                .setSize(size)
+                .setColor(color)
+                .setQuantity(quantity)
+                .setProductStatus(productStatus);
+    }
+
     public ProductImportCreResDTO toProductImportCreResDTO(){
         return new ProductImportCreResDTO()
                 .setId(id)
