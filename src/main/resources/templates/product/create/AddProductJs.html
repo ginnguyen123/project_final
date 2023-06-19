@@ -120,10 +120,11 @@
         url: page.urls.getAllCategory
       })
               .done((data)=>{
-                $.each(data, (i,item)=>{
-                  let str = AppBase.renderCategory(item);
-                  page.elements.selectCategory.append(str);
-                })
+                console.log(data)
+                // $.each(data, (i,item)=>{
+                //   let str = AppBase.renderCategory(item);
+                //   page.elements.selectCategory.append(str);
+                // })
               })
               .fail((jqXHR)=>{
                 console.log(jqXHR);
