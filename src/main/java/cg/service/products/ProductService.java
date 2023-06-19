@@ -1,6 +1,7 @@
 package cg.service.products;
 
 import cg.dto.product.*;
+import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
@@ -16,8 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -110,7 +113,48 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public ProductUpdaResDTO update(ProductUpdaReqDTO productUpdaReqDTO, List<Media> medias) {
-        return null;
+    public ProductUpdaResDTO update(ProductUpdaReqDTO productUpdaReqDTO) {
+        Optional<Product> productOp = findById(productUpdaReqDTO.getId());
+        if (!productOp.isPresent()){
+            throw new DataInputException("Product not exist");
+        }
+        Product product = productOp.get();
+
+        Optional<Brand> brandOptional = brandRepository.findById(productUpdaReqDTO.getId());
+        if (!brandOptional.isPresent()){
+            throw new DataInputException("Brand not exist!");
+        }
+        Brand brand = brandOptional.get();
+        product.setBrand(brand);
+
+        Discount discount = null;
+
+        Optional<Discount> discountOptional =  discountRepository.findById(productUpdaReqDTO.getDiscountId());
+        if (discountOptional.isPresent()){
+            discount = discountOptional.get();
+        }
+
+        Optional<Category> categoryChildOp = categoryRepository.findById(productUpdaReqDTO.getCategoryId());
+        if (!categoryChildOp.isPresent()){
+            Category category = categoryRepository.findById(productUpdaReqDTO.getCategoryParentId()).get();
+            product.setCategory(category);
+        }else {
+            Category categoryChild = categoryChildOp.get();
+            product.setCategory(categoryChild);
+        }
+        product.setTitle(productUpdaReqDTO.getTitle());
+        product.setPrice(BigDecimal.valueOf(Long.parseLong(productUpdaReqDTO.getPrice())));
+        product.setDescription(productUpdaReqDTO.getDescription());
+        save(product);
+
+        if (discount != null){
+            List<Product> productList = discount.getProducts();
+            productList = productList.stream().filter(i -> i.getId() != product.getId()).collect(Collectors.toList());
+            productList.add(product);
+            discount.setProducts(productList);
+            discountRepository.save(discount);
+        }
+
+        return product.toProductUpdaResDTO();
     }
 }

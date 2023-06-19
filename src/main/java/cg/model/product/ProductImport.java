@@ -63,6 +63,7 @@ public class ProductImport extends BaseEntity {
                 .setColor(color)
                 .setCode(code)
                 .setPrice(price)
+                .setDate_added(date_added)
                 .setQuantity(quantity)
                 .setProductStatus(productStatus)
                 .setProduct(product.toProductDTO())

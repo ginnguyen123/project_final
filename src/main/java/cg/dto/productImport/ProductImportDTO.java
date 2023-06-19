@@ -45,6 +45,8 @@ public class ProductImportDTO {
         this.product = product.toProductDTO();
     }
 
+
+
     public ProductImportDTO(Long id, ESize size, EColor color, Long quantity, EProductStatus productStatus) {
         this.id = id;
         this.size = size;

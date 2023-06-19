@@ -21,18 +21,31 @@ public class ProductImportController {
     private IProductService productService;
 
     @GetMapping({"", "/"})
-    public String showList(){
+    public String showList(Model model){
+        List<EColor> eColors = EColor.getEnumValues();
+        List<ESize> eSizes = ESize.getEnumValues();
+        List<Product> products = productService.findAllByDeletedFalse();
+        model.addAttribute("color", eColors);
+        model.addAttribute("size", eSizes);
+        model.addAttribute("product", products);
         return "productImport/list/table-productImport";
+
+
     }
 
     @GetMapping("/create")
     public String showAddProduct(Model model){
         List<ESize> eSizes = ESize.getEnumValues();
         List<EColor> eColors = EColor.getEnumValues();
-        List<Product> products = productService.findAll();
+        List<Product> products = productService.findAllByDeletedFalse();
         model.addAttribute("size", eSizes);
         model.addAttribute("color", eColors);
         model.addAttribute("product", products);
         return "productImport/create/add-productImport";
     }
+
+//    @GetMapping("/update")
+//    public String showUpdateProduct(Model model){
+//
+//    }
 }
