@@ -121,33 +121,4 @@ public class UploadMediaServiceImpl implements IUploadMediaService{
         return saveAll(medias);
     }
 
-    @Override
-    public List<Media> updateAllImage(List<MultipartFile> filesUpdate, Product product) {
-        for (Media media : product.getProductAvatarList()){
-            try {
-                destroyImage(media.getCloudId(),uploadUtils.buildImageDestroyParams(media, media.getCloudId()));
-                mediaRepository.delete(media);
-            }catch (IOException e){
-                e.printStackTrace();
-                throw new DataInputException("Destroy images list fail!");
-            }
-        }
-        product.setProductAvatarList(null);
-
-        List<Media> newMedias = uploadAllImageAndSaveAllImage(filesUpdate, product.getProductAvatarList());
-
-        product.setProductAvatarList(newMedias);
-        try {
-            destroyImage(product.getProductAvatar().getCloudId(), uploadUtils.buildImageDestroyParams(product.getProductAvatar(), product.getProductAvatar().getCloudId()));
-            mediaRepository.delete(product.getProductAvatar());
-        }catch (IOException e){
-            e.printStackTrace();
-            throw new DataInputException("Destroy image avatar fail!");
-        }
-        product.setProductAvatar(newMedias.get(newMedias.size() - 1));
-        mediaRepository.saveAll(newMedias);
-        productRepository.save(product);
-
-        return newMedias;
-    }
 }
