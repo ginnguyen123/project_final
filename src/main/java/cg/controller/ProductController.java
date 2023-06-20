@@ -1,6 +1,7 @@
 package cg.controller;
 
 
+import cg.dto.product.ProductDTO;
 import cg.model.discount.Discount;
 import cg.model.product.Product;
 import cg.service.category.ICategoryService;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -42,25 +45,15 @@ public class ProductController {
     @GetMapping("/update/{id}")
     public String showUpdateProduct(@PathVariable Long id, Model model){
         Optional<Product> productOp = productService.findById(id);
+        Map obj = new HashMap<>();
 
         if (!productOp.isPresent()){
             return "errors/pages-404";
         }
         Product product = productOp.get();
-        Long idProduct = product.getId();
-
-        Optional<Discount> discountOptional = discountService.findDiscountByProducts(product);
-        if (discountOptional.isPresent()){
-            Discount discount = discountOptional.get();
-            Long idDiscount = discount.getId();
-        }
-        // Serialize the object
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        ObjectOutputStream
-
-
+        ProductDTO productDTO = product.toProductDTO();
+        obj.put("product", productDTO);
+        model.addAttribute("data", obj);
         return "product/update/update-product";
     }
-
-
 }

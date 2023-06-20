@@ -22,4 +22,6 @@ public class DiscountDTO {
     @Length(min = 0, max = 3)
     @Pattern(regexp = "[0-9]*")
     private Long discount;
+
+
 }

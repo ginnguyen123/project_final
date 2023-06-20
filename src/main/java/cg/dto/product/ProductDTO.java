@@ -2,6 +2,7 @@ package cg.dto.product;
 
 import cg.dto.brand.BrandDTO;
 import cg.dto.category.CategoryDTO;
+import cg.dto.discount.DiscountDTO;
 import cg.dto.media.MediaDTO;
 
 import cg.dto.productImport.ProductImportDTO;
@@ -37,6 +38,8 @@ public class ProductDTO {
     private BrandDTO brand;
 
     private CategoryDTO category;
+
+    private DiscountDTO discount;
 
     public Product toProduct(){
         return new Product()
