@@ -2,6 +2,7 @@ package cg.model.product;
 
 import cg.dto.productImport.ProductImportCreResDTO;
 import cg.dto.productImport.ProductImportDTO;
+import cg.dto.productImport.ProductImportResDTO;
 import cg.dto.productImport.ProductImportUpResDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.EColor;
@@ -70,13 +71,12 @@ public class ProductImport extends BaseEntity {
                 ;
     }
 
-    public ProductImportDTO toProductImportDTOWithSizeColor() {
-        return new ProductImportDTO()
+    public ProductImportResDTO toProductImportDTOWithSizeColor() {
+        return new ProductImportResDTO()
                 .setId(id)
-                .setSize(size)
-                .setColor(color)
-                .setQuantity(quantity)
-                .setProductStatus(productStatus);
+                .setSize(size.getValue())
+                .setColor(color.getValue())
+                .setProductStatus(productStatus.getValue());
     }
 
     public ProductImportCreResDTO toProductImportCreResDTO(){

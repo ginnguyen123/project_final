@@ -2,6 +2,7 @@ package cg.dto.product;
 
 import cg.dto.media.MediaDTO;
 import cg.dto.productImport.ProductImportDTO;
+import cg.dto.productImport.ProductImportResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class ProductResDTO {
     private String urlImage;
     private String categoryName;
     private List<MediaDTO> images;
-    private List<ProductImportDTO> productImportDTOList;
+    private List<ProductImportResDTO> productImportResDTOS;
 
 
 //    public ProductResDTO(Long id, String title, String code, BigDecimal price, String description, String brandName, String urlImage, String categoryName) {

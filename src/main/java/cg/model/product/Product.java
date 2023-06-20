@@ -109,7 +109,7 @@ public class Product extends BaseEntity {
                 .setBrandName(brand.getName())
                 .setCategoryName(category.getName())
                 .setImages(productAvatarList.stream().map(item->item.toMediaDTO()).collect(Collectors.toList()))
-//                .setProductImportDTOList(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
+                .setProductImportResDTOS(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
                 ;
     }
 

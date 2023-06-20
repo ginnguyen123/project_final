@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,14 +67,15 @@ public class ProductAPI {
     }
 
     @GetMapping("/category={idCategory}")
-    private ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
+    public ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
         List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);
         List<ProductCreResDTO> productCreResDTOS = products.stream().map(item -> item.toProductCreResDTOByCategory()).collect(Collectors.toList());
         return new ResponseEntity<>(productCreResDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<?> findProductById(@PathVariable Long id){
+    @Transactional
+    public ResponseEntity<?> findProductById(@PathVariable Long id){
         if (id == null){
             throw new DataInputException("Product does not exist");
         }
