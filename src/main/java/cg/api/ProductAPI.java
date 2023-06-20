@@ -93,13 +93,15 @@ public class ProductAPI {
 
     @PostMapping("/create")
     private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO,
-                                     @RequestParam("medias") List<MultipartFile> medias,
-                                     @RequestParam("avatar") MultipartFile fileAvatar){
+                                     @RequestParam("avatar") MultipartFile fileAvatar,
+                                     @RequestParam("medias") List<MultipartFile> medias){
 
         productCreReqDTO.setId(null);
         String code = productCreReqDTO.getCode();
         Long brandId = productCreReqDTO.getBrandId();
         Long categoryParentId = productCreReqDTO.getCategoryParentId();
+//        MultipartFile fileAvatar = productCreReqDTO.getFileAvatar();
+//        List<MultipartFile> medias = productCreReqDTO.getMedias();
 
         if (!brandService.existsBrandById(brandId)){
             throw new DataInputException("The brand does not exist");
@@ -112,7 +114,7 @@ public class ProductAPI {
         }
         Category category = categoryService.findById(categoryParentId).get();
 
-        if (code.isEmpty() || code == null){
+        if (code == null){
             code = "";
             Long numCode = System.currentTimeMillis()/1000;
             String[] brandCodes = brand.getName().split("", 3);
