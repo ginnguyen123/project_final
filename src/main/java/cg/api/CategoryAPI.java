@@ -60,6 +60,12 @@ public class CategoryAPI {
         return new ResponseEntity<>(categoryCreResDTOList,HttpStatus.OK);
     }
 
+    @GetMapping("/category-parents")
+    public ResponseEntity<?> getAllCategoryParents(){
+        List<Category> categories = categoryService.findAllByCategoryParentIsNull();
+        List<CategogyParentDTO> categorys = categories.stream().map(i->i.toCategogyParentDTO()).collect(Collectors.toList());
+        return new ResponseEntity<>(categorys, HttpStatus.OK);
+    }
 
     @GetMapping("/status={status}")
     public ResponseEntity<?> getAllCategoriesByStatus(@PathVariable String status) {
@@ -100,9 +106,15 @@ public class CategoryAPI {
     @GetMapping("/{categoryParentId}")
     public ResponseEntity<?> getAllCategoryParentById(@PathVariable Long categoryParentId){
         List<Category> categories = categoryService.findAllByCategoryParent_Id(categoryParentId);
+        List<CategoryChildDTO> categoryDTOS;
 
-        List<CategoryDTO> categoryDTOS = categories.stream().map(item -> item.toCategoryDTO()).collect(Collectors.toList());
+        if (categories.size() == 0){
+            categoryDTOS = null;
+        }
 
+        else {
+            categoryDTOS = categories.stream().map(i->i.toCategoryChild()).collect(Collectors.toList());
+        }
         return new ResponseEntity<>(categoryDTOS, HttpStatus.OK);
     }
 

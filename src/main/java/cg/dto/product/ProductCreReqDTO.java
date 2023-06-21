@@ -48,6 +48,11 @@ public class ProductCreReqDTO implements Validator {
     private Long discountId;
     private String discountName;
 
+//    private List<MultipartFile> medias;
+
+//    @NotNull(message = "The avatar is required")
+//    private  MultipartFile fileAvatar;
+
     @Override
     public boolean supports(Class<?> clazz) {
         return ProductCreReqDTO.class.isAssignableFrom(clazz);

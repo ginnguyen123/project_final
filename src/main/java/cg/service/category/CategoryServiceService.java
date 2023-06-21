@@ -40,6 +40,11 @@ public class CategoryServiceService implements ICategoryService {
     }
 
     @Override
+    public List<Category> findAllByCategoryParentIsNull() {
+        return categoryRepository.findAllByCategoryParentIsNull();
+    }
+
+    @Override
     public List<Category> findAllCategoryByStatus(ECategoryStatus status) {
         return categoryRepository.findAllCategoryByStatus(status);
     }
