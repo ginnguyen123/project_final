@@ -145,6 +145,15 @@ class AppBase{
         $('[data-toggle="tooltip"]').tooltip();
     }
 
+    static image_thumbnail(image){
+        return `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_100}/${image.fileFolder}/${image.fileName}`;
+    }
+
+    static avatar_image_thumbnail(image){
+        return `<img class="m-2" alt="image" src='${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_100}/${image.fileFolder}/${image.fileName}'/>`;
+
+    }
+
     static renderProduct(item){
         let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/${item.avatar.fileFolder}/${item.avatar.fileName}`
         return `<tr id="tr_${item.id}">
@@ -209,9 +218,13 @@ class AppBase{
     }
 
     static renderCategoryParent(item){
-        if (item.categoryParentId != item.id)
-            return `<option value="${item.id}">${item.name}</option>`;
+        return `<option value="${item.id}">${item.name}</option>`;
     }
+
+    static renderCategoryChild(item){
+        return `<option value="${item.id}">${item.name}</option>`;
+    }
+
 
     static renderCustomer(item){
         //     do something

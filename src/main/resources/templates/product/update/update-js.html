@@ -1,14 +1,20 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<th:block th:fragment="update-product-js">
+<th:block th:fragment="update-product-js" th:inline="javascript">
     <script>
+        let idProduct;
+        let avatarObj
+        let mediaObj = [];
+        let imageFiles = [];
         let page = {
             urls:{
                 getAllBrand: AppBase.API_BRAND,
                 getAllCategory: AppBase.API_CATEGORY + '/get',
-                getAllCategoryParent: AppBase.API_CATEGORY,
+                getAllCategoryParent: AppBase.API_CATEGORY + '/category-parents',
+                getAllCategoryChildByCategoryParentId: AppBase.API_CATEGORY,
                 getAllDiscount: AppBase.API_DISCOUNT,
                 getAllProducts: AppBase.API_PRODUCT,
                 createProduct: AppBase.API_PRODUCT + '/create',
+                updateProduct: AppBase.API_PRODUCT + '/update',
                 getProduct: AppBase.API_PRODUCT + '/products'
             },
             elements:{},
@@ -21,16 +27,293 @@
             }
         }
 
-        page.dialogs.elements.productDescription = $('#productDescriptionUp');
+        // frm update
+        page.elements.frmUpdate = $('#frmUpdateProduct');
+        page.elements.productTitle = $('#productTitleUp');
+        page.elements.productPrice = $('#productPriceUp');
+        page.elements.discountUpdate = $('#discountUpdate');
+        page.elements.categoryParent = $('#categoryUp');
+        page.elements.categoryChild = $('#categoryParentUp');
+        page.elements.productDescription = $('#productDescriptionUp body');
+        page.elements.brandUp = $('#brandUp');
+        page.elements.medias = $('.container-image');
+        page.elements.showAvatar = $('#show-avatar');
+        page.dialogs.elements.inputAvatar = $('#in-avatar');
+        page.dialogs.elements.inputImages = $('#imageFileProduct');
+
+        // btn
+        page.elements.btnChangeAvatar = $('#btn-avatar');
+        page.elements.btnChangeImages = $('.boxChoiceImage');
+        page.elements.btnSaveUpdate = $('#btnSaveProductUpdate');
+        page.dialogs.elements.btnDeleteImageObj = $('.delete-image');
+
+        $.validator.addMethod("handleValidate", function(value, element, arg){
+            return arg != value;
+        }, "");
+
+        page.dialogs.commands.showImagesObj = (listObj)=>{
+            if (listObj.length != 0){
+                for (let i=0; i<listObj.length; i++){
+                    let strImage = AppBase.image_thumbnail(listObj[i]);
+                    let str = `<div class="image ms-2 me-2">
+                                    <img src='${strImage}' alt="image">
+                                    <span class="delete-image" data-id= "${i}">&times;</span>
+                                </div>`;
+                    page.elements.medias.append(str);
+                }
+
+                $('.delete-image').off();
+
+                page.dialogs.commands.evenDeleteImageObj();
+
+            }
+        }
+
+        page.dialogs.commands.showImageFiles = (listFiles) =>{
+            let images = '';
+            for (let i = 0; i<listFiles.length; i++){
+                images += `<div class="image ms-2 me-2">
+                                <img src="${URL.createObjectURL(listFiles[i])}" alt="image">
+                                <span class="delete-file" data-id="${i}">&times;</span>
+                            </div>`;
+            }
+
+            page.elements.medias.prepend(images);
+
+            $('.delete-file').off();
+
+            page.dialogs.commands.evenDeleteImageFile();
+        }
 
         page.loadData.showEditor = () =>{
-            page.dialogs.elements.productDescription.cleditor();
+            $('#productDescriptionUp').cleditor();
+        }
+
+        page.loadData.getAllBrand = ()=>{
+            return $.ajax({
+                type: 'GET',
+                url: page.urls.getAllBrand
+            })
+                .done((data)=>{
+                    $.each(data, (i, item)=>{
+                        let str = AppBase.renderBrand(item);
+                        page.elements.brandUp.append(str);
+                    })
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+        }
+
+        page.loadData.getAllCategoryParent = ()=>{
+            return $.ajax({
+                type: 'GET',
+                url: page.urls.getAllCategoryParent
+            })
+                .done((data)=>{
+                    $.each(data, (i, item)=>{
+                        let str = AppBase.renderCategoryParent(item);
+                        page.elements.categoryParent.append(str);
+                    })
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+        }
+
+        page.loadData.getAllDiscount = () =>{
+            return $.ajax({
+                type: 'GET',
+                url: page.urls.getAllDiscount
+            })
+                .done((data)=>{
+                    $.each(data, (i, item)=>{
+                        let str = AppBase.renderDiscount(item);
+                        page.elements.discountUpdate.append(str);
+                    })
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+        }
+
+        page.loadData.getAllCategoryChildByCategogyId = (id, elem) =>{
+            $.ajax({
+                type: 'GET',
+                url: page.urls.getAllCategoryChildByCategoryParentId + '/' + id
+            })
+                .done((data)=> {
+                    elem.empty();
+                    $.each(data, (i, item) => {
+                        let str = AppBase.renderCategoryChild(item);
+                        elem.append(str);
+                    })
+                    elem.prepend('<option>-- Chọn danh mục con--</option>');
+                })
+                        .fail((jqXHR)=>{
+                            console.log(jqXHR);
+                        })
         }
 
         page.loadData.getProduct = () =>{
-            console.log(product)
+            /*<![CDATA[*/
+            let data = /*[[${data}]]*/ 'default';
+            let product = data.product;
+            let discount = data.product.discount;
+            idProduct = +product.id;
+            avatarObj = product.avatar;
+            mediaObj = product.medias;
+            console.log(mediaObj);
+
+            page.elements.productTitle.val(product.title);
+            page.elements.productPrice.val(product.price);
+
+            page.loadData.getAllCategoryParent().then(()=>{
+                page.elements.categoryParent.val(product.category.id);
+                let categoryId = product.category.id;
+                page.loadData.getAllCategoryChildByCategogyId(categoryId,  page.elements.categoryChild);
+            })
+
+            page.loadData.getAllDiscount().then(()=>{
+                if (discount != null){
+                    page.elements.discountUpdate.val(discount.id);
+                }
+            })
+            page.loadData.getAllBrand().then(()=>{
+                page.elements.brandUp.val(product.brand.id);
+            })
+            let strAvatar = AppBase.avatar_image_thumbnail(product.avatar);
+            page.elements.showAvatar.append(strAvatar);
+
+            if (mediaObj.length != 0){
+                page.dialogs.commands.showImagesObj(mediaObj);
+            }
+
+            page.elements.productDescription.val(product.description);
+            /*]]>*/
         }
 
+        page.dialogs.commands.doUpdate = () =>{
+            let id = idProduct;
+            let title = page.elements.productTitle.val();
+            let price = page.elements.productPrice.val();
+            let description = page.elements.productDescription.val();
+        //     brand
+            let brandId = page.elements.brandUp.find('option:selected').val();
+            let brandName = page.elements.brandUp.find('option:selected').text();
+        //     discount
+            let discountId = page.elements.discountUpdate.find('option:selected').val();
+            let discountName = page.elements.discountUpdate.find('option:selected').text();
+        //     category parent
+            let categoryParentId = page.elements.categoryParent.find('option:selected').val();
+            let categoryParentName = page.elements.categoryParent.find('option:selected').text();
+        //     category child
+            let categoryChildId = page.elements.categoryChild.find('option:selected').val();
+            let categoryChildName = page.elements.categoryChild.find('option:selected').text();
+        //     avatar
+            let avatarUpdate = page.dialogs.elements.inputAvatar[0].files[0];
+            let mediaUpdate = page.dialogs.elements.inputImages[0].files;
+
+            if (avatarUpdate == null && avatarObj == null){
+                return AppBase.IziToast.showErrorAlert("Yêu cầu có hình đại diện");
+            }
+
+            let formData = new FormData();
+            formData.append("id", id);
+            formData.append("title", title);
+            formData.append("price", price);
+            formData.append("description", description);
+            formData.append("brandId", brandId);
+            formData.append("brandName", brandName);
+            formData.append("categoryId", categoryChildId);
+            formData.append("categoryName", categoryChildName);
+            formData.append("categoryParentId", categoryParentId);
+            formData.append("categoryParentName", categoryParentName);
+            formData.append("discountId", discountId);
+            formData.append("discountName", discountName);
+            formData.append("discountId", discountId);
+            formData.append("oldAvatar", avatarObj);
+            formData.append("oldMedia", mediaObj);
+            formData.append("updateMedias", mediaUpdate);
+            formData.append("updateAvatar", avatarUpdate);
+
+
+
+        }
+
+        page.commands.handleChangeCategory = (elemCategory, elemCategoryParent) =>{
+            elemCategory.on('change', () =>{
+                let categoryId = +elemCategory.val();
+                if (isNaN(categoryId) || categoryId == -1){
+                    elemCategoryParent.empty();
+                    let str = `<option>-- Chọn danh mục con --</option>`;
+                    elemCategoryParent.append(str);
+                }
+                else{
+                    page.loadData.getAllCategoryChildByCategogyId(categoryId, elemCategoryParent);
+                }
+            })
+        }
+
+        page.commands.handleChangeImage = () =>{
+            page.dialogs.elements.inputImages.on('change', ()=>{
+                let file = page.dialogs.elements.inputImages[0].files;
+                for (let i = 0; i < file.length; i++){
+                    if (imageFiles.every(e => e.name != file[i].name)){
+                        imageFiles.push(file[i]);
+                    }
+                }
+                page.elements.medias.empty();
+                page.dialogs.commands.showImagesObj(mediaObj);
+                page.dialogs.commands.showImageFiles(imageFiles);
+            })
+        }
+
+        page.commands.handleChangeAvatar = () =>{
+            page.dialogs.elements.inputAvatar.on('change', () =>{
+                let file = page.dialogs.elements.inputAvatar[0].files[0];
+                let str = '';
+                if (page.dialogs.elements.inputAvatar.val() != ''){
+                    str += `<div class="image ms-2 me-2">
+                                <img src="${URL.createObjectURL(file)}" alt="image">
+                            </div>`;
+                }
+                page.elements.showAvatar.empty();
+                page.elements.showAvatar.append(str);
+            })
+        }
+
+        page.dialogs.commands.evenDeleteImageObj = () =>{
+            let tem=[];
+            $('.delete-image').on('click', function (){
+                let index = $(this).data("id");
+                for (let i = 0; i<mediaObj.length; i++){
+                    if (index == i){
+                        tem = mediaObj.filter(item => item != mediaObj[index])
+                    }
+                }
+                mediaObj = tem;
+                page.elements.medias.empty();
+                page.dialogs.commands.showImagesObj(mediaObj);
+                page.dialogs.commands.showImageFiles(imageFiles);
+            })
+        }
+
+        page.dialogs.commands.evenDeleteImageFile = () =>{
+            let tem = []
+            $('.delete-file').on('click', function (){
+                let index = $(this).data('id');
+                for (let i = 0; i< imageFiles.length; i++){
+                    if (index == i){
+                        tem = imageFiles.filter(item => item != imageFiles[index])
+                    }
+                }
+                imageFiles = tem;
+                page.elements.medias.empty();
+                page.dialogs.commands.showImagesObj(mediaObj);
+                page.dialogs.commands.showImageFiles(imageFiles);
+            })
+        }
 
         page.commands.loadData = ()=>{
             page.loadData.showEditor();
@@ -38,7 +321,67 @@
             page.loadData.getProduct();
         }
 
+        page.elements.frmUpdate.validate({
+            rules:{
+                productTitle:{
+                    required: true,
+                    minlength: 3,
+                    maxlength: 200
+                },
+                productPrices:{
+                    required: true,
+                    minlength: 0,
+                    maxlength: 9
+                },
+                category:{
+                    handleValidate: "-1"
+                },
+                brand: {
+                    handleValidate: "-1"
+                }
+            },
+            messages:{
+                productTitle:{
+                    required: 'Tên sản phẩm không được bỏ trống.',
+                    minlength: 'Số kí tự tối thiểu là 3 kí tự.',
+                    maxlength: 'Số kí tự tối đa là 3 kí tự.'
+                },
+                productPrices:{
+                    required: 'Giá sản phẩm không được bỏ trống.',
+                    minlength: 'Giá sản phẩm không được bỏ trống.',
+                    maxlength: 'Số tiền tối đa không lớn hơn 1.000.000.000'
+                },
+                category:{
+                    handleValidate: 'Cần chọn danh mục sản phẩm!'
+                },
+                brand: {
+                    handleValidate: 'Cần chọn tên thương hiệu!'
+                }
+
+            },
+            submitHandler: function (){
+                page.dialogs.commands.doUpdate();
+            }
+        })
+
         page.initializeControlEvent = ()=>{
+            page.commands.handleChangeCategory(page.elements.categoryParent, page.elements.categoryChild);
+
+            page.commands.handleChangeImage();
+
+            page.commands.handleChangeAvatar();
+
+            page.elements.btnChangeAvatar.on('click', ()=>{
+                page.dialogs.elements.inputAvatar.trigger('click');
+            })
+
+            page.elements.btnChangeImages.on('click', ()=>{
+                page.dialogs.elements.inputImages.trigger('click');
+            })
+
+            page.elements.btnSaveUpdate.on('click',()=>{
+                page.elements.frmUpdate.trigger('submit');
+            })
 
         }
 

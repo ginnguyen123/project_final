@@ -1,9 +1,6 @@
 package cg.model.category;
 
-import cg.dto.category.CategoryChildDTO;
-import cg.dto.category.CategoryCreResDTO;
-import cg.dto.category.CategoryCreateRespDTO;
-import cg.dto.category.CategoryDTO;
+import cg.dto.category.*;
 import cg.model.BaseEntity;
 import cg.model.enums.ECategoryStatus;
 import cg.model.media.Media;
@@ -42,7 +39,7 @@ public class Category extends BaseEntity {
     private Category categoryParent;
 
     @OneToMany(mappedBy = "category")
-    private Set<Product> products;
+    private List<Product> products;
 
     @OneToOne
     @JoinColumn(name = "category_avatar_id", referencedColumnName = "id", nullable = false)
@@ -105,5 +102,17 @@ public class Category extends BaseEntity {
                     .setAvatar(categoryParent.getCategoryAvatar().toMediaDTO())
                     .setCategoryChild(categoryChild);
         }
+    }
+
+    public CategogyParentDTO toCategogyParentDTO(){
+        if (categoryParent == null){
+            return new CategogyParentDTO()
+                    .setId(id)
+                    .setName(name)
+                    .setAvatar(categoryAvatar.toMediaDTO())
+                    .setStatus(status);
+        }
+        else
+            return null;
     }
 }
