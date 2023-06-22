@@ -66,8 +66,8 @@
 
             <div class="d-flex justify-content-end col-sm-10">
               <div class="input-group justify-content-end" style="padding: 3px 0px;">
-                <input type="text" class="form-control-sm" placeholder="Search...">
-                <button class="btn btn-primary btn-sm" style="margin-bottom: 0"  type="button">
+                <input id="key-search" type="text" class="form-control-sm" placeholder="Search...">
+                <button id="en-search" class="btn btn-primary btn-sm" style="margin-bottom: 0"  type="button">
                   <i class="fa fa-search"></i>
                 </button>
               </div>
@@ -89,13 +89,13 @@
               <th>
                 <div class="d-flex">
                   <div class="btn-sort">
-                    <div class="up-down-sort">
+                    <div id="asc-code" class="up-down-sort">
                       <a class="up-button">
                         <i class="fa-solid fa-caret-up"></i>
                       </a>
                     </div>
 
-                    <div class="up-down-sort">
+                    <div id="desc-code" class="up-down-sort">
                       <a class="down-button">
                         <i class="fa-solid fa-caret-down"></i>
                       </a>
@@ -107,14 +107,14 @@
               <th>Ảnh</th>
               <th>
                 <div class="d-flex">
-                  <div class="btn-sort">
+                  <div id="asc-title" class="btn-sort">
                     <div class="up-down-sort">
                       <a class="up-button">
                         <i class="fa-solid fa-caret-up"></i>
                       </a>
                     </div>
 
-                    <div class="up-down-sort">
+                    <div id="desc-title" class="up-down-sort">
                       <a class="down-button">
                         <i class="fa-solid fa-caret-down"></i>
                       </a>
@@ -125,14 +125,14 @@
               </th>
               <th>
                 <div class="d-flex">
-                  <div class="btn-sort">
+                  <div id="asc-price" class="btn-sort">
                     <div class="up-down-sort">
                       <a class="up-button">
                         <i class="fa-solid fa-caret-up"></i>
                       </a>
                     </div>
 
-                    <div class="up-down-sort">
+                    <div id="desc-price" class="up-down-sort">
                       <a class="down-button">
                         <i class="fa-solid fa-caret-down"></i>
                       </a>
@@ -154,7 +154,7 @@
             <div class="d-flex justify-content-end">
               <span>Size:</span>
               <div class="ms-2 me-3">
-                <select class="form-select form-select-sm">
+                <select id="size-page" class="form-select form-select-sm">
                   <option>10</option>
                   <option>20</option>
                   <option>50</option>
@@ -162,20 +162,20 @@
                 </select>
               </div>
               <div>
-                <ul class="pagination">
-                  <li class="page-item">
-                    <a class="page-link"aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                    </a>
-                  </li>
-                  <li class="page-item"><a class="page-link">1</a></li>
-                  <li class="page-item"><a class="page-link">2</a></li>
-                  <li class="page-item"><a class="page-link">3</a></li>
-                  <li class="page-item">
-                    <a class="page-link" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                    </a>
-                  </li>
+                <ul id="pagination" class="pagination">
+<!--                  <li id="page-back" class="page-item">-->
+<!--                    <a class="page-link"aria-label="Previous">-->
+<!--                      <span aria-hidden="true">&laquo;</span>-->
+<!--                    </a>-->
+<!--                  </li>-->
+<!--                  <li class="page-item"><a class="page-link">1</a></li>-->
+<!--                  <li class="page-item"><a class="page-link">2</a></li>-->
+<!--                  <li class="page-item"><a class="page-link">3</a></li>-->
+<!--                  <li id="page-next" class="page-item">-->
+<!--                    <a class="page-link" aria-label="Next">-->
+<!--                      <span aria-hidden="true">&raquo;</span>-->
+<!--                    </a>-->
+<!--                  </li>-->
                 </ul>
               </div>
             </div>
