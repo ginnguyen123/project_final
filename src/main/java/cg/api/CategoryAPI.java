@@ -70,16 +70,12 @@ public class CategoryAPI {
     @GetMapping("/status={status}")
     public ResponseEntity<?> getAllCategoriesByStatus(@PathVariable String status) {
         List<Category> categoryList = categoryService.findAllCategoryByStatus(ECategoryStatus.valueOf(status.toUpperCase()));
-        List<CategoryCreResDTO> categoryCreResDTOS = new ArrayList<>();
-        for (Category item: categoryList) {
-            Optional<Category> categoryOptional = categoryService.findById(item.getId());
-            if (!categoryOptional.isPresent()) {
-                throw new DataInputException("Category Parent is not found");
-            }
-            Category category = categoryOptional.get();
-            categoryCreResDTOS.add(category.toCategoryCreResDTO());
+        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+
+        if (categoryList.size() != 0){
+            categoryDTOS = categoryList.stream().map(i -> i.toCategoryDTO()).collect(Collectors.toList());
         }
-        return new ResponseEntity<>(categoryCreResDTOS, HttpStatus.OK);
+        return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
     }
 
     @PostMapping("/{idParent}")
