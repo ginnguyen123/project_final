@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="AddProductJs">
-  <script type="text/javascript" src="/assets/lightslider/js/lightslider.js"></script>
+<!--  <script type="text/javascript" src="/assets/lightslider/js/lightslider.js"></script>-->
   <script>
     let page = {
       urls:{
@@ -121,18 +121,11 @@
         url: page.urls.getAllCategoryParent
       })
               .done((data)=>{
-<<<<<<< HEAD
                 console.log(data)
-                // $.each(data, (i,item)=>{
-                //   let str = AppBase.renderCategory(item);
-                //   page.elements.selectCategory.append(str);
-                // })
-=======
-                $.each(data, (i, item)=>{
-                  let str = AppBase.renderCategoryParent(item);
-                  page.dialogs.elements.productCategory.append(str);
+                $.each(data, (i,item)=>{
+                  let str = AppBase.renderCategoryParent(item)
+                  page.elements.selectCategory.append(str);
                 })
->>>>>>> fe9b9f3141b773686671a2c66e952c3ba06dad7d
               })
               .fail((jqXHR)=>{
                 console.log(jqXHR);
@@ -236,7 +229,7 @@
               .done((data)=>{
                 console.log(data);
                 page.dialogs.elements.frmCreateProduct[0].reset();
-
+                $('.container-image').empty();
                 AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
               })
               .catch((jqXHR)=>{
