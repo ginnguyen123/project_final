@@ -22,8 +22,11 @@
         page.elements.btnEdit = $('.btn-edit');
         page.elements.btnDelete = $('.delete');
         page.elements.btnSearch = $('#en-search');
-        page.elements.btnPageBack = $('#page-back');
-        page.elements.btnPageNext = $('#page-next');
+        page.dialogs.elements.btnPageBack = $('#page-back');
+        page.dialogs.elements.btnPageNext = $('#page-next');
+        page.dialogs.elements.frontPage = $('#front-page');
+        page.dialogs.elements.backPage = $('#back-page');
+
         // modal
         page.dialogs.elements.modalEdit = $('#modalEditProduct');
         // input edit
@@ -43,13 +46,12 @@
         let sizePage = page.elements.sizePage.val();
         let fields = '';
         let currentPageNumber = 0;
-        let numPage = 0;
         let keySearch = page.elements.keySearch.val();
         let sortBy = 'asc';
         let totalPages = 0;
 
         page.commands.getAllProductsByPageable = () =>{
-            $.ajax({
+            return $.ajax({
                 type: 'POST',
                 contentType: false,
                 cache: false,
@@ -73,6 +75,53 @@
                     page.elements.ulPagination.empty();
 
                     page.elements.ulPagination.append(pagination);
+
+                    $('#page-back').off();
+
+                    $('#page-next').off();
+
+                    $('#front-page').off();
+
+                    $('#back-page').off();
+
+                    $('#back-page').on('click', function (){
+                        let numberPage = +$('#back-page a').text();
+                        if (isNaN(numberPage)){
+                            return;
+                        }
+                        if (numberPage<=totalPages){
+                            currentPageNumber = numberPage - 1;
+                            page.commands.getAllProductsByPageable();
+                        }
+                    })
+
+                    $('#front-page').on('click', function (){
+                        let numberPage = +$('#front-page a').text();
+                        if (isNaN(numberPage)){
+                            return;
+                        }
+                        else {
+                            currentPageNumber = numberPage -1;
+                            page.loadData.getAllProducts();
+                        }
+                    })
+
+                    $('#page-back').on('click', function (){
+                        if (currentPageNumber != 0){
+                            console.log("currentPageNumber != 0")
+                            currentPageNumber = currentPageNumber - 1;
+                            page.loadData.getAllProducts();
+                        }
+
+                    })
+
+                    $('#page-next').on('click', function (){
+                        if (currentPageNumber<totalPages-1){
+                            console.log("currentPageNumber<totalPages")
+                            currentPageNumber = currentPageNumber + 1;
+                            page.loadData.getAllProducts();
+                        }
+                    })
 
                     page.commands.offAllEvent();
 
@@ -106,14 +155,16 @@
                         </a>
                     </li>`
             // currentPageNumber - 1
-            if (currentPageNumber != 0){
-                str += `<li class="page-item"><a class="page-link">${currentPageNumber - 1}</a></li>`;
+            if (currentPageNumber != 0 && currentPageNumber<totalPages){
+                str += `<li id="front-page" class="page-item"><a class="page-link">${currentPageNumber}</a></li>`;
             }
             // currentPageNumber
-            str += `<li class="page-item"><a class="page-link">${currentPageNumber + 1}</a></li>`;
+            if (currentPageNumber<totalPages)
+                str += `<li class="page-item"><a class="page-link" style="color: red">${currentPageNumber + 1}</a></li>`;
 
-            if (currentPageNumber < totalPages){
-                str += `<li class="page-item"><a class="page-link">${currentPageNumber + 2}</a></li>`;
+            // next page
+            if (currentPageNumber < totalPages-1){
+                str += `<li id="back-page" class="page-item"><a class="page-link">${currentPageNumber + 2}</a></li>`;
             }
 
             // btn next
@@ -142,17 +193,17 @@
             })
         }
 
-        page.commands.eventClickNextPage = () =>{
-            page.elements.btnPageNext.on('click', function (){
-                console.log('btnPageNext');
-            })
-        }
-
-        page.commands.eventClickBackPage = () =>{
-            page.elements.btnPageBack.on('click', function (){
-                console.log('btnPageback');
-            })
-        }
+        // page.commands.eventClickNextPage = () =>{
+        //     page.dialogs.elements.btnPageNext.on('click', function (){
+        //         console.log('btnPageNext');
+        //     })
+        // }
+        //
+        // page.commands.eventClickBackPage = () =>{
+        //     page.dialogs.elements.btnPageBack.on('click', function (){
+        //         console.log('btnPageback');
+        //     })
+        // }
 
         page.commands.eventClickSearch = () =>{
             page.elements.btnSearch.on('click', function (){
@@ -218,7 +269,6 @@
             page.elements.btnDESTitle.off();
             page.elements.btnASCPrice.off();
             page.elements.btnDESPrice.off();
-
         }
 
         page.commands.addAllEvent = () =>{
@@ -233,10 +283,6 @@
             page.commands.eventClickDESCTitle();
 
             page.commands.eventClickASCTitle();
-
-            page.commands.eventClickDESCPrice();
-
-            page.commands.eventClickASCPrice();
 
         }
 
@@ -257,7 +303,7 @@
         }
 
         page.loadData.getAllProducts = () =>{
-            $.ajax({
+            return $.ajax({
                 type: 'POST',
                 url: page.urls.getAllProductPageable + 'search=' + keySearch +
                     '&page=' + currentPageNumber +
@@ -277,6 +323,52 @@
 
                     page.elements.ulPagination.append(pagination);
 
+                    $('#page-back').off();
+
+                    $('#page-next').off();
+
+                    $('#front-page').off();
+
+                    $('#back-page').off();
+
+                    $('#back-page').on('click', function (){
+                        let numberPage = +$('#back-page a').text();
+                        if (isNaN(numberPage)){
+                            return;
+                        }
+                        if (numberPage<=totalPages){
+                            currentPageNumber = numberPage - 1;
+                            page.commands.getAllProductsByPageable();
+                        }
+                    })
+
+                    $('#front-page').on('click', function (){
+
+                        let numberPage = +$('#front-page a').text();
+                        if (isNaN(numberPage)){
+                            return;
+                        }
+                        else {
+                            currentPageNumber = numberPage - 1;
+                            page.commands.getAllProductsByPageable();
+                        }
+                    })
+
+                    $('#page-back').on('click', function (){
+                        if (currentPageNumber != 0){
+                            currentPageNumber = currentPageNumber - 1;
+                            page.commands.getAllProductsByPageable();
+                        }
+
+                    })
+
+                    $('#page-next').on('click', function (){
+                        if (currentPageNumber<totalPages-1){
+                            currentPageNumber = currentPageNumber + 1;
+                            page.commands.getAllProductsByPageable();
+                        }
+                    })
+
                     page.commands.offAllEvent();
 
                     page.commands.addAllEvent();
@@ -288,7 +380,7 @@
         }
 
         page.commands.loadData = () =>{
-            page.loadData.getAllProducts(); //defaulf
+            page.loadData.getAllProducts();//defaulf
         }
 
         page.initializeControlEvent = () =>{

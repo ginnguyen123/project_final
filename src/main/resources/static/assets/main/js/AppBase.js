@@ -193,11 +193,11 @@ class AppBase{
                     <td>${item.price}</td>
                     <td>${item.categoryName}</td>
                     <td>
-                        <button class="btn btn-delete btn-sm delete" id="${item.id}" type="button" title="Xóa">
+                        <button class="btn btn-delete btn-sm delete" data-id="${item.id}" type="button" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                         
-                        <button class="btn btn-edit btn-sm edit" id="${item.id}" type="button" title="Sửa" >
+                        <button class="btn btn-edit btn-sm edit" data-id="${item.id}" type="button" title="Sửa" >
                             <i class="fas fa-edit"></i>
                         </button>
                     </td>
