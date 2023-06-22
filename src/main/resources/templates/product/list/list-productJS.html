@@ -248,6 +248,7 @@
             $('#asc-price').on('click', function (){
                 sortBy = 'asc';
                 fields = 'price';
+                console.log(sortBy);
                 page.commands.getAllProductsByPageable();
             })
         }
@@ -284,6 +285,10 @@
 
             page.commands.eventClickASCTitle();
 
+            page.commands.eventClickASCPrice();
+
+            page.commands.eventClickDESCPrice()
+
         }
 
         page.dialogs.commands.evenDelete = function (){
@@ -312,6 +317,7 @@
             })
                 .done((data) => {
                     totalPages = data.totalPages;
+                    page.elements.tbodyTable.empty();
                     $.each(data.content, (i, item)=>{
                         let str = AppBase.renderProductWithNameImage(item);
                         page.elements.tbodyTable.prepend(str);

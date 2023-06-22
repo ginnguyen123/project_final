@@ -31,7 +31,7 @@ public class Category extends BaseEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private ECategoryStatus status;
 
     @ManyToOne
