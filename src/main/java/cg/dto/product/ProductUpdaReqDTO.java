@@ -34,8 +34,8 @@ public class ProductUpdaReqDTO {
     private String categoryParentName;
     private Long discountId;
     private String discountName;
-    private MediaDTO oldAvatar;
-    private List<MediaDTO> oldMedia;
+//    private MediaDTO oldAvatar;
+//    private List<MediaDTO> oldMedia;
 
     public Product toProduct(){
         return new Product()

@@ -1,5 +1,6 @@
 package cg.api;
 
+import cg.dto.media.MediaDTO;
 import cg.dto.product.*;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
@@ -155,7 +156,6 @@ public class ProductAPI {
             list = uploadMediaService.uploadAllImageAndSaveAllImage(medias, list);
         }
 
-        System.out.print(list.toString());
         Product product = productCreReqDTO.toProduct();
         product.setCategory(category);
         product.setBrand(brand);
@@ -164,10 +164,7 @@ public class ProductAPI {
 
         if (discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).isPresent()){
             Discount discount = discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).get();
-            List<Product> products = discount.getProducts();
-            products.add(product);
-            discount.setProducts(products);
-            discountService.save(discount);
+            product.setDiscount(discount);
         }
 
         productService.save(product);
@@ -178,9 +175,11 @@ public class ProductAPI {
     }
 
     @PatchMapping("/update/{productId}")
-    public ResponseEntity<?> update(@PathVariable Long productId, ProductUpdaReqDTO productUpdaReqDTO,
+    public ResponseEntity<?> update(@PathVariable Long productId, @Validated ProductUpdaReqDTO productUpdaReqDTO,
                                     @RequestParam("updateMedias") List<MultipartFile> updateMedias,
-                                    @RequestParam("updateAvatar") MultipartFile updateAvatar) {
+                                    @RequestParam("updateAvatar") MultipartFile updateAvatar,
+                                    @RequestParam("oldAvatar") MediaDTO oldAvatar,
+                                    @RequestParam("oldMedia") List<MediaDTO> oldMedia) {
 
         if(productId == null){
             throw new DataInputException("Product is void");
@@ -229,7 +228,7 @@ public class ProductAPI {
             throw new DataInputException("Brand isn't exist");
         }
 
-        if (updateAvatar == null && productUpdaReqDTO.getOldAvatar() == null){
+        if (updateAvatar == null && oldAvatar == null){
             throw new DataInputException("Avata is require");
         }
 
@@ -237,15 +236,15 @@ public class ProductAPI {
             if (!updateAvatar.getContentType().equals("image/jpeg") && !updateAvatar.getContentType().equals("image/png")){
                 throw new DataInputException("Only image files with .png or .jpeg");
             }
-            Media avatarMedia = uploadMediaService.uploadImageAndSaveImage(updateAvatar, productUpdaReqDTO.getOldAvatar().toMedia());
+            Media avatarMedia = uploadMediaService.uploadImageAndSaveImage(updateAvatar, oldAvatar.toMedia());
             product.setProductAvatar(avatarMedia);
         }else {
-            Media avatarMedia = productUpdaReqDTO.getOldAvatar().toMedia();
+            Media avatarMedia = oldAvatar.toMedia();
             product.setProductAvatar(avatarMedia);
         }
 
-        if (updateMedias.size() == 0){
-            List<Media> mediaList = productUpdaReqDTO.getOldMedia().stream().map(i ->i.toMedia()).collect(Collectors.toList());
+        if (updateMedias.size() == 0 || updateMedias == null){
+            List<Media> mediaList = oldMedia.stream().map(i ->i.toMedia()).collect(Collectors.toList());
             product.setProductAvatarList(mediaList);
         }else {
             for (MultipartFile file : updateMedias){
@@ -255,8 +254,8 @@ public class ProductAPI {
             }
             List<Media> medias = new ArrayList<>();
             List<Media> mediaList = uploadMediaService.uploadAllImageAndSaveAllImage(updateMedias, medias);
-            if (productUpdaReqDTO.getOldMedia().size() != 0){
-                List<Media> oldMedias = productUpdaReqDTO.getOldMedia().stream().map(i-> i.toMedia()).collect(Collectors.toList());
+            if (oldMedia.size() != 0){
+                List<Media> oldMedias = oldMedia.stream().map(i-> i.toMedia()).collect(Collectors.toList());
                 mediaList.addAll(oldMedias);
             }
             product.setProductAvatarList(mediaList);

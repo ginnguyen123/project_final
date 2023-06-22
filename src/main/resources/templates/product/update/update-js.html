@@ -34,7 +34,7 @@
         page.elements.discountUpdate = $('#discountUpdate');
         page.elements.categoryParent = $('#categoryUp');
         page.elements.categoryChild = $('#categoryParentUp');
-        page.elements.productDescription = $('#productDescriptionUp body');
+        page.elements.productDescription = $('#productDescriptionUp');
         page.elements.brandUp = $('#brandUp');
         page.elements.medias = $('.container-image');
         page.elements.showAvatar = $('#show-avatar');
@@ -163,7 +163,6 @@
             idProduct = +product.id;
             avatarObj = product.avatar;
             mediaObj = product.medias;
-            console.log(mediaObj);
 
             page.elements.productTitle.val(product.title);
             page.elements.productPrice.val(product.price);
@@ -189,11 +188,15 @@
                 page.dialogs.commands.showImagesObj(mediaObj);
             }
 
-            page.elements.productDescription.val(product.description);
+            // hiển thị decreption
+            $('#productDescriptionUp').val(product.description);
+            $('#productDescriptionUp').cleditor();
+
             /*]]>*/
         }
 
-        page.dialogs.commands.doUpdate = () =>{
+        page.dialogs.commands.doUpdate = () =>
+        {
             let id = idProduct;
             let title = page.elements.productTitle.val();
             let price = page.elements.productPrice.val();
@@ -214,7 +217,7 @@
             let avatarUpdate = page.dialogs.elements.inputAvatar[0].files[0];
             let mediaUpdate = page.dialogs.elements.inputImages[0].files;
 
-            if (avatarUpdate == null && avatarObj == null){
+            if (avatarUpdate == undefined && avatarObj == null){
                 return AppBase.IziToast.showErrorAlert("Yêu cầu có hình đại diện");
             }
 
@@ -231,14 +234,40 @@
             formData.append("categoryParentName", categoryParentName);
             formData.append("discountId", discountId);
             formData.append("discountName", discountName);
-            formData.append("discountId", discountId);
             formData.append("oldAvatar", avatarObj);
             formData.append("oldMedia", mediaObj);
-            formData.append("updateMedias", mediaUpdate);
-            formData.append("updateAvatar", avatarUpdate);
+
+            if (avatarUpdate == undefined){
+                formData.append("updateAvatar", null);
+            }
+            else {
+                formData.append("updateAvatar", avatarUpdate);
+            }
+
+            if (mediaUpdate.length != 0){
+                for (let i=0; i<mediaUpdate.length; i++){
+                    formData.append("updateMedias", mediaUpdate[i]);
+                }
+            } else {
+                formData.append("updateMedias", null);
+            }
 
 
-
+            $.ajax({
+                type: 'PATCH',
+                contentType: false,
+                cache: false,
+                processData: false,
+                url: page.urls.updateProduct + '/' + id,
+                data: formData
+            })
+                .done((data)=>{
+                    console.log(data);
+                    AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
+                })
+                .catch((jqXHR)=>{
+                    console.log(jqXHR);
+                })
         }
 
         page.commands.handleChangeCategory = (elemCategory, elemCategoryParent) =>{
@@ -316,7 +345,7 @@
         }
 
         page.commands.loadData = ()=>{
-            page.loadData.showEditor();
+            // page.loadData.showEditor();
 
             page.loadData.getProduct();
         }

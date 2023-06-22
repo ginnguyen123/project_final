@@ -50,7 +50,8 @@
     page.dialogs.elements.btnSaveCreateBrand = $('#btnSaveCreateBrand');
     page.dialogs.elements.btnSaveCreateProduct = $('#btnSaveProductCreate');
 
-    page.loadData.showEditor = () =>{
+    page.loadData.showEditor = function (){
+      page.dialogs.elements.productDescription.val('');
       page.dialogs.elements.productDescription.cleditor();
     }
 
@@ -194,14 +195,13 @@
       let brandId =  page.dialogs.elements.productBrand.val();
       let brandName = page.dialogs.elements.productBrand.find("option:selected").text();
       let avatar = page.dialogs.elements.productImage[0].files[0];
-      let description = page.dialogs.elements.productDescription.val();
       let medias = page.dialogs.elements.productImage[0].files;
-
+      let htmls = page.dialogs.elements.productDescription.val()
 
       let formData = new FormData();
       formData.append("title", title);
       formData.append("price", price)
-      formData.append("description", description);
+      formData.append("description", htmls);
       formData.append("brandId", brandId)
       formData.append("brandName", brandName);
       formData.append("categoryId", categoryId);
@@ -226,9 +226,9 @@
         data: formData
       })
               .done((data)=>{
-                console.log(data);
                 page.dialogs.elements.frmCreateProduct[0].reset();
-
+                // $('#productDescription').cleditor().clear();
+                $('.container-image').empty();
                 AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
               })
               .catch((jqXHR)=>{
@@ -287,7 +287,6 @@
 
       page.loadData.showEditor();
     }
-
 
     page.initializeControlEvent = () =>{
 
