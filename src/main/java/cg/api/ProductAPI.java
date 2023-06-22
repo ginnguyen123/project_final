@@ -23,9 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -70,7 +69,7 @@ public class ProductAPI {
     @GetMapping("/category={idCategory}")
     public ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
         List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);
-        List<ProductCreResDTO> productCreResDTOS = products.stream().map(item -> item.toProductCreResDTOByCategory()).collect(Collectors.toList());
+        List<ProductResDTO> productCreResDTOS = products.stream().map(item -> item.toVisitedAndRelatedProductResDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(productCreResDTOS, HttpStatus.OK);
     }
 
@@ -92,6 +91,33 @@ public class ProductAPI {
         ProductResDTO productResDTO = product.toProductResDTO();
 
         return new ResponseEntity<>(productResDTO,HttpStatus.OK);
+    }
+
+    @GetMapping("/visited")
+    public ResponseEntity<?> getVisitedProducts (@RequestParam("products") String productIds) {
+        String[] arrStrIds = productIds.split("-");
+        Set<String> uniqueStrIds = new HashSet<>();
+        for (String id : arrStrIds) {
+            uniqueStrIds.add(id);
+        }
+
+        List<Long> arrIds = new ArrayList<>();
+        for (String id : uniqueStrIds) {
+            Long productId = Long.parseLong(id);
+            arrIds.add(productId);
+        }
+
+        List<ProductResDTO> productResDTOList = new ArrayList<>();
+
+        for (Long item: arrIds) {
+            Optional<Product> productOptional = productService.findById(item);
+            if (!productOptional.isPresent()){
+                throw new DataInputException("Product isn't exist");
+            }
+            Product currentProduct = productOptional.get();
+            productResDTOList.add(currentProduct.toVisitedAndRelatedProductResDTO());
+        }
+        return new ResponseEntity<>(productResDTOList,HttpStatus.OK);
     }
 
     @PostMapping("/create")

@@ -119,10 +119,22 @@ public class Product extends BaseEntity {
                 .setPrice(price)
                 .setDescription(description)
                 .setBrandName(brand.getName())
+                .setCategoryId(category.getId())
                 .setCategoryName(category.getName())
                 .setImages(productAvatarList.stream().map(item->item.toMediaDTO()).collect(Collectors.toList()))
                 .setProductImportResDTOS(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
                 ;
+    }
+
+    public ProductResDTO toVisitedAndRelatedProductResDTO() {
+        return new ProductResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setPrice(price)
+                .setDescription(description)
+                .setUrlImage(productAvatar.getFileUrl())
+                .setCategoryName(category.getName());
     }
 
     public ProductUpdaResDTO toProductUpdaResDTO(){

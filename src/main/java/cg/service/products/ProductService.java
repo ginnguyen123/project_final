@@ -49,6 +49,7 @@ public class ProductService implements IProductService{
 
 
     @Override
+    @Transactional
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
     }

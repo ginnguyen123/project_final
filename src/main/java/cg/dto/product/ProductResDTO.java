@@ -25,19 +25,19 @@ public class ProductResDTO {
     private String description;
     private String brandName;
     private String urlImage;
+    private Long categoryId;
     private String categoryName;
     private List<MediaDTO> images;
     private List<ProductImportResDTO> productImportResDTOS;
 
 
-//    public ProductResDTO(Long id, String title, String code, BigDecimal price, String description, String brandName, String urlImage, String categoryName) {
-//        this.id = id;
-//        this.title = title;
-//        this.code = code;
-//        this.price = price;
-//        this.description = description;
-//        this.brandName = brandName;
-//        this.urlImage = urlImage;
-//        this.categoryName = categoryName;
-//    }
+    public ProductResDTO(Long id, String title, String code, BigDecimal price, String description, String brandName, String urlImage, String categoryName) {
+        this.id = id;
+        this.title = title;
+        this.code = code;
+        this.price = price;
+        this.description = description;
+        this.urlImage = urlImage;
+        this.categoryName = categoryName;
+    }
 }
