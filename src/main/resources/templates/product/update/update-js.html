@@ -85,6 +85,14 @@
             page.dialogs.commands.evenDeleteImageFile();
         }
 
+        page.dialogs.commands.showLoading = () =>{
+            $('#loading').removeClass('visually-hidden');
+        }
+
+        page.dialogs.commands.hideLoading = () =>{
+            $('#loading').addClass('visually-hidden');
+        }
+
         page.loadData.showEditor = () =>{
             $('#productDescriptionUp').cleditor();
         }
@@ -197,6 +205,7 @@
 
         page.dialogs.commands.doUpdate = () =>
         {
+            page.dialogs.commands.showLoading();
             let id = idProduct;
             let title = page.elements.productTitle.val();
             let price = page.elements.productPrice.val();
@@ -235,23 +244,29 @@
             formData.append("discountId", discountId);
             formData.append("discountName", discountName);
             formData.append("oldAvatar", avatarObj);
-            formData.append("oldMedia", mediaObj);
+
+
+            for(let i = 0; i<mediaObj.length; i++){
+                formData.append("oldMedia", mediaObj[i]);
+            }
+
+            if (mediaObj.length == 0){
+                formData.append("oldMedia", []);
+            }
+
+            for (let i=0; i<mediaUpdate.length; i++){
+                formData.append("updateMedias", mediaUpdate[i]);
+            }
+
+            if (mediaUpdate.length == 0){
+                formData.append("updateMedias", []);
+            }
 
             if (avatarUpdate == undefined){
                 formData.append("updateAvatar", null);
-            }
-            else {
+            }else {
                 formData.append("updateAvatar", avatarUpdate);
             }
-
-            if (mediaUpdate.length != 0){
-                for (let i=0; i<mediaUpdate.length; i++){
-                    formData.append("updateMedias", mediaUpdate[i]);
-                }
-            } else {
-                formData.append("updateMedias", null);
-            }
-
 
             $.ajax({
                 type: 'PATCH',
@@ -267,6 +282,9 @@
                 })
                 .catch((jqXHR)=>{
                     console.log(jqXHR);
+                })
+                .always(()=>{
+                    page.dialogs.commands.hideLoading();
                 })
         }
 

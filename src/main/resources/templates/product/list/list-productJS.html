@@ -177,6 +177,14 @@
             return str;
         }
 
+        page.dialogs.commands.showLoading = () =>{
+            $('#loading').removeClass('visually-hidden');
+        }
+
+        page.dialogs.commands.hideLoading = () =>{
+            $('#loading').addClass('visually-hidden');
+        }
+
         page.dialogs.commands.handleChangePageSize = () =>{
             page.elements.sizePage.on('change', function (){
                 sizePage = page.elements.sizePage.val();

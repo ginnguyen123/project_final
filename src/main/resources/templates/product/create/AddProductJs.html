@@ -71,6 +71,14 @@
       page.dialogs.commands.eventDeleteImage();
     }
 
+    page.dialogs.commands.showLoading = () =>{
+      $('#loading').removeClass('visually-hidden');
+    }
+
+    page.dialogs.commands.hideLoading = () =>{
+      $('#loading').addClass('visually-hidden');
+    }
+
     page.commands.handleChangeImage = () =>{
       page.dialogs.elements.productImage.on('change', ()=>{
         let file = page.dialogs.elements.productImage[0].files;
@@ -185,6 +193,7 @@
     }, "");
 
     page.dialogs.commands.doCreate = () =>{
+      page.dialogs.commands.showLoading();
       let title = page.dialogs.elements.productTitle.val();
       let price = page.dialogs.elements.productPrice.val();
       let discountId = page.dialogs.elements.productDiscount.val();
@@ -227,13 +236,18 @@
         data: formData
       })
               .done((data)=>{
-                page.dialogs.elements.frmCreateProduct[0].reset();
+
                 // $('#productDescription').cleditor().clear();
-                $('.container-image').empty();
                 AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
               })
               .catch((jqXHR)=>{
                 console.log(jqXHR);
+              })
+              .always(()=>{
+                page.dialogs.elements.frmCreateProduct[0].reset();
+                $('.container-image').empty();
+                files = [];
+                page.dialogs.commands.hideLoading();
               })
     }
 
