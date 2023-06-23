@@ -1,6 +1,7 @@
 package cg.model.product;
 
 
+import cg.dto.category.CategoryChildDTO;
 import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
 import cg.dto.product.ProductUpdaResDTO;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import cg.model.media.Media;
 import lombok.experimental.Accessors;
+import org.thymeleaf.spring5.processor.SpringInputFileFieldTagProcessor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -86,6 +88,7 @@ public class Product extends BaseEntity {
         }
         return productDTO;
     }
+
 
     public ProductCreResDTO toProductCreResDTO(){
         return new ProductCreResDTO()

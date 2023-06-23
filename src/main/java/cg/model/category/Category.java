@@ -31,7 +31,6 @@ public class Category extends BaseEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
     private ECategoryStatus status;
 
     @ManyToOne
@@ -54,15 +53,14 @@ public class Category extends BaseEntity {
     }
 
     public CategoryChildDTO toCategoryChild(){
-        if (categoryParent != null){
-            return new CategoryChildDTO()
-                    .setId(id)
-                    .setName(name)
-                    .setStatus(status)
-                    .setAvatar(categoryAvatar.toMediaDTO());
-        }
-        return null;
+        return new CategoryChildDTO()
+                .setId(id)
+                .setName(name)
+                .setStatus(status)
+                .setAvatar(categoryAvatar.toMediaDTO());
+
     }
+
 
     public CategoryDTO toCategoryDTO(){
         if (categoryParent == null){
