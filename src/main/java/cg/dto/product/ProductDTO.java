@@ -1,6 +1,7 @@
 package cg.dto.product;
 
 import cg.dto.brand.BrandDTO;
+import cg.dto.category.CategoryChildDTO;
 import cg.dto.category.CategoryDTO;
 import cg.dto.discount.DiscountDTO;
 import cg.dto.media.MediaDTO;

@@ -235,7 +235,24 @@
         opacity: 0.8;
     }
 
+    .spinner-wrapper{
+        background-color: #000;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0.2;
+    }
 
+    .spinner-border{
+        height: 80px;
+        width: 80px;
+    }
 
 
 </style>
@@ -263,6 +280,14 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            <!--            loading-->
+            <div id="loading" class="spinner-wrapper visually-hidden">
+                <div class="text-center text-primary">
+                    <div class="spinner-border" role="status">
+                        <!--                <span class="visually-hidden">Loading...</span>-->
+                    </div>
+                </div>
+            </div>
             <div class="tile">
                 <h3 class="tile-title">Cập nhật thông tin sản phẩm</h3>
                 <div class="tile-body">

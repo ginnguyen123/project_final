@@ -66,6 +66,7 @@ public class ProductAPI {
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
+
     @GetMapping("/category={idCategory}")
     private ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
         List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);
@@ -92,6 +93,9 @@ public class ProductAPI {
         return new ResponseEntity<>(productDTO,HttpStatus.OK);
     }
 
+//    @DeleteMapping
+//    private ResponseEntity<?> delete(@RequestBody )
+
     @PostMapping("/create")
     private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO,
                                      @RequestParam("avatar") MultipartFile fileAvatar,
@@ -101,8 +105,7 @@ public class ProductAPI {
         String code = productCreReqDTO.getCode();
         Long brandId = productCreReqDTO.getBrandId();
         Long categoryParentId = productCreReqDTO.getCategoryParentId();
-//        MultipartFile fileAvatar = productCreReqDTO.getFileAvatar();
-//        List<MultipartFile> medias = productCreReqDTO.getMedias();
+        Long categoryChildId = productCreReqDTO.getCategoryId();
 
         if (!brandService.existsBrandById(brandId)){
             throw new DataInputException("The brand does not exist");
@@ -110,16 +113,23 @@ public class ProductAPI {
 
         Brand brand = brandService.findById(brandId).get();
 
+        //        check category child
+        Optional<Category> categoryChildOp = categoryService.findById(categoryChildId);
+        Category categoryChild = null;
+        if (categoryChildId != null && categoryChildOp.isPresent()){
+            categoryChild = categoryChildOp.get();
+        }
+
         if (!categoryService.existsById(categoryParentId)){
             throw new DataInputException("The category does not exist");
         }
-        Category category = categoryService.findById(categoryParentId).get();
+        Category categoryParent = categoryService.findById(categoryParentId).get();
 
         if (code == null){
             code = "";
             Long numCode = System.currentTimeMillis()/1000;
             String[] brandCodes = brand.getName().split("", 3);
-            String[] categoryCodes = category.getName().split("",3);
+            String[] categoryCodes = categoryParent.getName().split("",3);
             for (var i = 0; i < brandCodes.length - 1; i++){
                 code = code + brandCodes[i];
             }
@@ -155,7 +165,11 @@ public class ProductAPI {
         }
 
         Product product = productCreReqDTO.toProduct();
-        product.setCategory(category);
+        if (categoryChild != null){
+            product.setCategory(categoryChild);
+        }else {
+            product.setCategory(categoryParent);
+        }
         product.setBrand(brand);
         product.setProductAvatarList(list);
         product.setProductAvatar(avatarMedia);
