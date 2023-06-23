@@ -41,8 +41,7 @@ public class Customer extends BaseEntity {
     @Column(nullable = false)
     private String phone;
 
-    @OneToMany
-    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    @OneToMany(mappedBy = "customer")
     private List<LocationRegion> locationRegions;
 
     public CustomerDTO toCustomerDTO() {
@@ -53,6 +52,7 @@ public class Customer extends BaseEntity {
                 .setDateOfBirth(dateOfBirth)
                 .setSex(sex)
                 .setPhone(phone)
-                .setLocationRegionDTOS(locationRegions.stream().map(item -> item.toLocationRegionDTO()).collect(Collectors.toList()));
+                .setLocationRegionDTOS(locationRegions.stream().map(LocationRegion::toLocationRegionDTO).collect(Collectors.toList()))
+                ;
     }
 }

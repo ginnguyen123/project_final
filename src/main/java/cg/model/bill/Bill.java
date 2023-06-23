@@ -3,6 +3,7 @@ package cg.model.bill;
 import cg.dto.bill.BillDTO;
 import cg.model.BaseEntity;
 import cg.model.customer.Customer;
+import cg.model.enums.ECartStatus;
 import cg.model.location_region.LocationRegion;
 import cg.model.user.User;
 import lombok.AllArgsConstructor;
@@ -50,11 +51,16 @@ public class Bill extends BaseEntity {
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = true)
     private Customer customer;
 
+    @Column(nullable = false)
+    private ECartStatus status;
+
+
     @OneToMany(mappedBy = "bill")
     private List<BillDetail> billDetails;
 
 
-    public BillDTO ToBillDTO() {
+
+    public BillDTO toBillDTO() {
         return new BillDTO()
                 .setId(id)
                 .setPhone_receiver(phone_receiver)
@@ -62,6 +68,9 @@ public class Bill extends BaseEntity {
                 .setLocationRegion(locationRegion.toLocationRegionDTO())
                 .setTotal_amount(totalAmount.toString())
                 .setUserDTO(user.toUserDTO())
+                .setStatus(status.getValue())
                 .setCustomerDTO(customer.toCustomerDTO());
     }
+
+
 }

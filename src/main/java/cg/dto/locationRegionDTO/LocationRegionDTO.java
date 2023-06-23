@@ -1,5 +1,6 @@
 package cg.dto.locationRegionDTO;
 
+import cg.model.bill.Bill;
 import cg.model.location_region.LocationRegion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

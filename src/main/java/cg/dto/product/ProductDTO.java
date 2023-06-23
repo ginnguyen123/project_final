@@ -47,9 +47,11 @@ public class ProductDTO {
                 .setDescription(description)
                 .setBrand(brand.toBrand())
                 .setProductAvatar(avatar.toMedia())
-                .setProductAvatarList(medias.stream().map(item -> item.toMedia()).collect(Collectors.toList()))
+                .setProductAvatarList(medias.stream().map(MediaDTO::toMedia).collect(Collectors.toList()))
                 .setCategory(category.toCategory());
 
     }
+
+
 
 }

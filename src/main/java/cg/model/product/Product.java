@@ -70,10 +70,12 @@ public class Product extends BaseEntity {
                 .setPrice(price)
                 .setDescription(description)
                 .setAvatar(productAvatar.toMediaDTO())
-                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
+                .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
     }
+
+
 
     public ProductCreResDTO toProductCreResDTO(){
         return new ProductCreResDTO()
@@ -83,7 +85,7 @@ public class Product extends BaseEntity {
                 .setPrice(price)
                 .setDescription(description)
                 .setAvatar(productAvatar.toMediaDTO())
-                .setMedias(productAvatarList.stream().map(i -> i.toMediaDTO()).collect(Collectors.toList()))
+                .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
     }
@@ -97,6 +99,12 @@ public class Product extends BaseEntity {
                 .setAvatar(productAvatar.toMediaDTO());
     }
 
+    public Product(Long id, String title, BigDecimal price) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+    }
+
     public ProductUpdaResDTO toProductUpdaResDTO(){
         String strPrice = String.valueOf(price.longValue());
         return new ProductUpdaResDTO()
@@ -105,10 +113,10 @@ public class Product extends BaseEntity {
                 .setCode(code)
                 .setDescription(description)
                 .setPrice(strPrice)
-                .setAvatar(productAvatar.getFileName())
+                .setAvatar(productAvatar.toMediaDTO())
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO())
-                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()));
+                .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()));
     }
 }
 

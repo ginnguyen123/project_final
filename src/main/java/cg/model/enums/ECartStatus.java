@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 public enum ECartStatus {
 
-    PROCESSING ("PROCESSING"),
-    PROCESSED ("PROCESSED");
+    PAID ("PAID"),
+    UNPAID ("UNPAID");
 
     private final String value;
 

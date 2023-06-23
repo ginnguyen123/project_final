@@ -22,8 +22,6 @@ public interface IUploadMediaService extends IGeneralService<Media, String> {
 
     List<Media> uploadAllImageAndSaveAllImage(List<MultipartFile> files, List<Media> medias);
 
-    List<Media> updateAllImage(List<MultipartFile> filesUpdate, Product product);
-
     Media uploadImageAndSaveImage(MultipartFile file, Media media);
 
 
