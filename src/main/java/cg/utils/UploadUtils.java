@@ -5,6 +5,7 @@ import cg.model.media.Media;
 import cg.model.product.Product;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -57,5 +58,11 @@ public class UploadUtils {
                 "overwrite", true,
                 "resource_type", "video"
         );
+    }
+
+    public static void validateImage(MultipartFile file){
+        if(!AppConstant.IMAGE_TYPES.contains(file.getContentType())){
+            throw new DataInputException(AppConstant.INVALID_IMAGE_MESSAGE);
+        }
     }
 }

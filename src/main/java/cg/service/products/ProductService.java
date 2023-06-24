@@ -8,6 +8,12 @@ import cg.model.discount.Discount;
 import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
+import cg.service.media.UploadMediaServiceImpl;
+import cg.service.products.request.ProductCreateRequest;
+import cg.utils.AppConstant;
+import cg.utils.AppUtils;
+import cg.utils.UploadUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,6 +48,9 @@ public class ProductService implements IProductService{
 
     @Autowired
     private DiscountRepository discountRepository;
+
+    @Autowired
+    private UploadMediaServiceImpl uploadMediaService;
 
 
     @Override
@@ -152,5 +163,37 @@ public class ProductService implements IProductService{
         }
 
         return product.toProductUpdaResDTO();
+    }
+
+    public void createProduct(ProductCreateRequest request, MultipartFile avatar, List<MultipartFile> files){
+
+        UploadUtils.validateImage(avatar);
+        files.forEach(UploadUtils::validateImage);
+
+        Product product = AppUtils.mapper.map(request, Product.class);
+
+
+        product.setProductAvatarList(uploadMediaService.uploadAllImageAndSaveAllImage(files, new ArrayList<>()));
+        product.setProductAvatar(uploadMediaService.uploadImageAndSaveImage(avatar, mediaRepository.save(new Media())));
+
+        product.setBrand(new Brand().setId(request.getBrandId()));
+        product.setCategory(new Category().setId(request.getCategoryId()));
+
+        if(request.getDiscountId() != null){
+            product.setDiscount(new Discount().setId(request.getDiscountId()));
+        }
+        product.setCode(generateCode(request.getBrandName()));
+        productRepository.save(product);
+    }
+
+    private String generateCode(String brand){
+        StringBuilder code = new StringBuilder();
+        Long numCode = System.currentTimeMillis()/1000;
+        String[] brandCodes = brand.split("", 3);
+        for (var i = 0; i < brandCodes.length - 1; i++){
+            code.append(brandCodes[i]);
+        }
+        code.append(numCode);
+        return code.toString();
     }
 }

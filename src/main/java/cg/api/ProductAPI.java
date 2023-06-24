@@ -13,6 +13,8 @@ import cg.service.category.ICategoryService;
 import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
 import cg.service.products.IProductService;
+import cg.service.products.ProductService;
+import cg.service.products.request.ProductCreateRequest;
 import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,7 +37,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/products")
 public class ProductAPI {
     @Autowired
-    private IProductService productService;
+    private ProductService productService;
 
     @Autowired
     private IUploadMediaService uploadMediaService;
@@ -97,93 +102,11 @@ public class ProductAPI {
 //    private ResponseEntity<?> delete(@RequestBody )
 
     @PostMapping("/create")
-    private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO,
+    private ResponseEntity<?> create(@Validated @Valid ProductCreateRequest request,
                                      @RequestParam("avatar") MultipartFile fileAvatar,
                                      @RequestParam("medias") List<MultipartFile> medias){
-
-        productCreReqDTO.setId(null);
-        String code = productCreReqDTO.getCode();
-        Long brandId = productCreReqDTO.getBrandId();
-        Long categoryParentId = productCreReqDTO.getCategoryParentId();
-        Long categoryChildId = productCreReqDTO.getCategoryId();
-
-        if (!brandService.existsBrandById(brandId)){
-            throw new DataInputException("The brand does not exist");
-        }
-
-        Brand brand = brandService.findById(brandId).get();
-
-        //        check category child
-        Optional<Category> categoryChildOp = categoryService.findById(categoryChildId);
-        Category categoryChild = null;
-        if (categoryChildId != null && categoryChildOp.isPresent()){
-            categoryChild = categoryChildOp.get();
-        }
-
-        if (!categoryService.existsById(categoryParentId)){
-            throw new DataInputException("The category does not exist");
-        }
-        Category categoryParent = categoryService.findById(categoryParentId).get();
-
-        if (code == null){
-            code = "";
-            Long numCode = System.currentTimeMillis()/1000;
-            String[] brandCodes = brand.getName().split("", 3);
-            String[] categoryCodes = categoryParent.getName().split("",3);
-            for (var i = 0; i < brandCodes.length - 1; i++){
-                code = code + brandCodes[i];
-            }
-            code = code + numCode.toString();
-            productCreReqDTO.setCode(code);
-        }
-
-        if (fileAvatar == null){
-            throw new DataInputException("The avatar is require");
-        }
-
-        if (!fileAvatar.getContentType().equals("image/jpeg") && !fileAvatar.getContentType().equals("image/png")){
-            throw new DataInputException("Only image files with .png or .jpeg");
-        }
-
-        Media avatarMedia = new Media();
-        avatarMedia = uploadMediaService.save(avatarMedia);
-        avatarMedia = uploadMediaService.uploadImageAndSaveImage(fileAvatar, avatarMedia);
-
-        List<Media> list = new ArrayList<>();
-        if (medias.size() != 1 && medias.size() != 0){
-            for (MultipartFile file : medias){
-                if (file.getContentType() == null){
-                    continue;
-                }
-                else {
-                    if (!file.getContentType().equals("image/jpeg") && !file.getContentType().equals("image/png")){
-                        throw new DataInputException("Only image files with .png or .jpeg");
-                    }
-                }
-            }
-            list = uploadMediaService.uploadAllImageAndSaveAllImage(medias, list);
-        }
-
-        Product product = productCreReqDTO.toProduct();
-        if (categoryChild != null){
-            product.setCategory(categoryChild);
-        }else {
-            product.setCategory(categoryParent);
-        }
-        product.setBrand(brand);
-        product.setProductAvatarList(list);
-        product.setProductAvatar(avatarMedia);
-
-        if (discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).isPresent()){
-            Discount discount = discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).get();
-            product.setDiscount(discount);
-        }
-
-        productService.save(product);
-
-        ProductCreResDTO productCreResDTO = product.toProductCreResDTO();
-
-        return new ResponseEntity<>(productCreResDTO, HttpStatus.CREATED);
+        productService.createProduct(request, fileAvatar, medias);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/update/{productId}")

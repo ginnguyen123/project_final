@@ -1,5 +1,7 @@
 package cg.utils;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,13 @@ import java.util.Map;
 public class AppUtils {
 
     private static final String DATE_PATTERN_YYYY_MM_DD = "yyyy-MM-dd";
+
+    public static final ModelMapper mapper;
+
+    static {
+        mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+    }
 
     public ResponseEntity<?> mapErrorToResponse(BindingResult result) {
         List<FieldError> fieldErrors = result.getFieldErrors();
@@ -51,5 +60,6 @@ public class AppUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN_YYYY_MM_DD);
         return formatter.format(date);
     }
+
 
 }

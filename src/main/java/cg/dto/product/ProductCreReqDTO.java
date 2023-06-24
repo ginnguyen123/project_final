@@ -13,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -30,7 +31,9 @@ public class ProductCreReqDTO implements Validator {
     @NotEmpty(message = "The title is required")
     @NotNull(message = "The title is required")
     private String title;
+
     private String code;
+
     @NotEmpty(message = "The price is required")
     @NotNull(message = "The price is required")
     @Pattern(regexp = "^[0-9]*$", message = "The price is number")
@@ -39,6 +42,7 @@ public class ProductCreReqDTO implements Validator {
 
     @NotNull(message = "The brand is required")
     private Long brandId;
+
     private String brandName;
     private Long categoryId;
     private String categoryName;

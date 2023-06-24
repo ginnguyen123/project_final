@@ -3,17 +3,19 @@ package cg.service.category;
 import cg.model.category.Category;
 import cg.model.enums.ECategoryStatus;
 import cg.repository.CategoryRepository;
+import cg.service.ExistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
 @Service
 @Transactional
-public class CategoryServiceService implements ICategoryService {
+public class CategoryServiceService implements ICategoryService, ExistService {
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -83,4 +85,13 @@ public class CategoryServiceService implements ICategoryService {
     }
 
 
+    @Override
+    public boolean isValidService(Class<?> clazz) {
+        return Objects.equals(clazz.getName(), Category.class.getName());
+    }
+
+    @Override
+    public boolean exist(Object id) {
+        return categoryRepository.existsById((Long) id);
+    }
 }

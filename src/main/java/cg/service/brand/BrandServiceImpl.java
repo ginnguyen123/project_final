@@ -2,16 +2,19 @@ package cg.service.brand;
 
 import cg.model.brand.Brand;
 import cg.repository.BrandRepository;
+import cg.service.ExistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class BrandServiceImpl implements IBrandService{
+public class BrandServiceImpl implements IBrandService, ExistService {
+
 
     @Autowired
     private BrandRepository brandRepository;
@@ -62,5 +65,15 @@ public class BrandServiceImpl implements IBrandService{
     @Override
     public Boolean existsBrandByName(String name) {
         return brandRepository.existsBrandByName(name);
+    }
+
+    @Override
+    public boolean isValidService(Class<?> clazz) {
+        return Objects.equals(clazz.getName(), Brand.class.getName());
+    }
+
+    @Override
+    public boolean exist(Object id) {
+        return brandRepository.existsById((Long) id);
     }
 }

@@ -4,16 +4,19 @@ import cg.model.discount.Discount;
 import cg.model.product.Product;
 import cg.repository.DiscountRepository;
 import cg.repository.ProductRepository;
+import cg.service.ExistService;
+import cg.service.IGeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class DiscountServiceImpl implements IDiscountService{
+public class DiscountServiceImpl implements IDiscountService, ExistService {
 
     @Autowired
     private DiscountRepository discountRepository;
@@ -68,5 +71,15 @@ public class DiscountServiceImpl implements IDiscountService{
     public void deleteById(Long id) {
         Discount discount = findById(id).get();
         delete(discount);
+    }
+
+    @Override
+    public boolean isValidService(Class<?> clazz) {
+        return Objects.equals(clazz.getName(), Discount.class.getName());
+    }
+
+    @Override
+    public boolean exist(Object id) {
+        return discountRepository.existsById((Long) id);
     }
 }
