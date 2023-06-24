@@ -7,6 +7,7 @@ import cg.dto.productImport.ProductImportCreReqDTO;
 import cg.dto.productImport.ProductImportCreResDTO;
 import cg.model.cart.Cart;
 import cg.service.cart.ICartService;
+import cg.service.cart.response.CartListResponse;
 import cg.utils.AppUtils;
 import cg.utils.CartRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class CartAPI {
 
     @PostMapping("/search")
     public ResponseEntity<?> pageableByKeyword(@RequestBody CartRequest keyword ,Pageable pageable) {
-        Page<CartDTO> carts = cartService.pageableByKeyword(keyword,pageable);
+        Page<CartListResponse> carts = cartService.pageableByKeyword(keyword,pageable);
         return new ResponseEntity<>(carts, HttpStatus.OK);
     }
 

@@ -282,10 +282,10 @@ class AppBase{
         return`   <tr role="row" class="odd">
                     <td width="10" class="sorting_1"><input type="checkbox"name="check1" value="1"></td>
                     <td>${item.id}</td>
-                    <td>${item.customer}</td>
-                    <td>${item.productTitle}</td>
-                    <td>${item.totalAmount}</td>
-                    <td>${item.locationRegion}</td>
+                    <td>${item.customerName}</td>
+                    <td>${item.productsName}</td>
+                    <td>${item.total}</td>
+                    <td>${item.address}</td>
                     <td><span class="btn-add btn-sm">${item.status}</span></td>
                     
                     <td><button class="btn btn-trash btn-sm trash" type="button"

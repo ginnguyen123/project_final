@@ -27,5 +27,5 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "AND cr.deleted = false"
     )
 
-    Page<CartDTO> pageableByKeyword(CartRequest request, Pageable pageable);
+    Page<Cart> pageableByKeyword(CartRequest request, Pageable pageable);
 }

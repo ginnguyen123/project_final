@@ -12,6 +12,7 @@ import cg.model.product.Product;
 import cg.repository.CartFilterRepository;
 import cg.repository.CartRepository;
 import cg.repository.CustomerRepository;
+import cg.service.cart.response.CartListResponse;
 import cg.utils.CartRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -70,13 +71,13 @@ public class CartService implements ICartService {
 
 
     @Override
-    public Page<CartDTO> pageableByKeyword(CartRequest keyword, Pageable pageable) {
+    public Page<CartListResponse> pageableByKeyword(CartRequest keyword, Pageable pageable) {
 
         if(keyword.getKeyword() != null){
             keyword.setKeyword("%"+keyword.getKeyword()+"%");
         }
 
-        return cartRepository.pageableByKeyword(keyword,pageable);
+        return cartRepository.pageableByKeyword(keyword,pageable).map(CartListResponse::new);
     }
 
     @Override
