@@ -31,6 +31,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             ") " +
             "FROM Product p " +
             "WHERE  p.title like :search " +
-            "OR p.code LIKE :search" )
+            "OR p.code LIKE :search " +
+            "OR p.price = :search" )
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
 }

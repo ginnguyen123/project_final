@@ -208,14 +208,31 @@
         right: 5px;
         cursor: pointer;
         font-size: 22px;
-        color: #fff;
+        color: #000000;
     }
 
     .container-image .image span:hover{
         opacity: 0.8;
     }
 
+    .spinner-wrapper{
+        background-color: #000;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0.2;
+    }
 
+    .spinner-border{
+        height: 80px;
+        width: 80px;
+    }
 
 
 </style>
@@ -233,7 +250,6 @@
 <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
 
 <th:block th:replace="layout/left-side-bar :: left-side-bar"/>
-
 <main class="app-content">
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb">
@@ -243,9 +259,19 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            <!--    spinner        -->
+            <div id="loading" class="spinner-wrapper visually-hidden">
+                <div class="text-center text-primary">
+                    <div class="spinner-border" role="status">
+                        <!--                <span class="visually-hidden">Loading...</span>-->
+                    </div>
+                </div>
+            </div>
+
             <div class="tile">
                 <h3 class="tile-title">Tạo mới sản phẩm</h3>
                 <div class="tile-body">
+
                     <div class="row element-button">
                         <div class="col-sm-2">
                             <a class="btn btn-add btn-sm" id="addNhaCungCap">
@@ -313,17 +339,17 @@
                         </div>
 
                         <div class="form-group col-md-12 float-left" >
-<!--                            <label class="control-label">Ảnh sản phẩm</label>-->
+                            <!--                            <label class="control-label">Ảnh sản phẩm</label>-->
                             <div class="card">
-                                <div class="top">
+                                <div class="top mb-3">
                                     <p>Drag & drop image uploading</p>
                                     <span class="boxChoiceImage">
                                         <i class="fas fa-cloud-upload-alt me-2"></i>Chọn ảnh
                                     </span>
                                 </div>
                                 <div id="frm-image">
-<!--                                    <span class="inner">Drag & drop image here or <span class="select">Brows</span>-->
-<!--                                    </span>-->
+                                    <!--                                    <span class="inner">Drag & drop image here or <span class="select">Brows</span>-->
+                                    <!--                                    </span>-->
                                     <input name="imageFileProduct" id="imageFileProduct" type="file" hidden multiple/>
                                     <div class="container-image">
 

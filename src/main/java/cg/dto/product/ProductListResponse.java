@@ -21,6 +21,7 @@ public class ProductListResponse {
     private String categoryName;
 
     public ProductListResponse(Long id, String code, String imageName, String title,BigDecimal price,String categoryName) {
+//        String strPrice = String.valueOf(price.longValue());
         this.id = id;
         this.code = code;
         this.imageName = imageName;

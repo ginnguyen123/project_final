@@ -1,6 +1,7 @@
 package cg.model.product;
 
 
+import cg.dto.category.CategoryChildDTO;
 import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
 import cg.dto.product.ProductUpdaResDTO;
@@ -8,12 +9,14 @@ import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 
+import cg.model.discount.Discount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import cg.model.media.Media;
 import lombok.experimental.Accessors;
+import org.thymeleaf.spring5.processor.SpringInputFileFieldTagProcessor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -41,6 +44,7 @@ public class Product extends BaseEntity {
     @Column(name = "prices", precision = 9, scale = 0, nullable = false)
     private BigDecimal price;
 
+    @Column(columnDefinition="TEXT")
     private String description;
 
     @OneToOne
@@ -59,11 +63,15 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "discount_id", referencedColumnName = "id")
+    private Discount discount;
+
     @OneToMany(mappedBy = "product")
     private List<ProductImport> productImports;
 
     public ProductDTO toProductDTO(){
-        return new ProductDTO()
+        ProductDTO productDTO = new ProductDTO()
                 .setId(id)
                 .setTitle(title)
                 .setCode(code)
@@ -73,9 +81,13 @@ public class Product extends BaseEntity {
                 .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
+        if (discount == null){
+            productDTO.setDiscount(null);
+        }else {
+            productDTO.setDiscount(discount.toDiscountDTO());
+        }
+        return productDTO;
     }
-
-
 
     public ProductCreResDTO toProductCreResDTO(){
         return new ProductCreResDTO()

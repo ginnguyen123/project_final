@@ -6,7 +6,8 @@
       urls:{
         getAllBrand: AppBase.API_BRAND,
         getAllCategory: AppBase.API_CATEGORY + '/get',
-        getAllCategoryParent: AppBase.API_CATEGORY,
+        getAllCategoryParent: AppBase.API_CATEGORY + '/category-parents',
+        getAllCategoryChildByCategoryParentId: AppBase.API_CATEGORY,
         getAllDiscount: AppBase.API_DISCOUNT,
         getAllProducts: AppBase.API_PRODUCT,
         createProduct: AppBase.API_PRODUCT + '/create'
@@ -41,7 +42,6 @@
     page.dialogs.elements.productDescription = $('#productDescription');
     // input image
     let files = [];
-    let currentIndex = 0;
 
     page.dialogs.elements.productImageFiles = page.dialogs.elements.productImage[0].files;
     page.dialogs.elements.container = $('.container-image');
@@ -50,34 +50,45 @@
     page.dialogs.elements.btnSaveCreateBrand = $('#btnSaveCreateBrand');
     page.dialogs.elements.btnSaveCreateProduct = $('#btnSaveProductCreate');
 
-    page.loadData.showEditor = () =>{
+    page.loadData.showEditor = function (){
+      page.dialogs.elements.productDescription.val('');
       page.dialogs.elements.productDescription.cleditor();
     }
 
     page.dialogs.commands.showImage = (list) =>{
       let images = '';
-      list.forEach((e) => {
-          images += `<div class="image ms-2 me-2" id="images_${currentIndex}">
-                          <img src="${URL.createObjectURL(e)}" alt="image">
-                          <span onclick=delImage(${currentIndex})>&times;</span>
+      for (let i = 0; i < list.length; i++){
+        images += `<div class="image ms-2 me-2">
+                          <img src="${URL.createObjectURL(list[i])}" alt="image">
+                          <span class="delete-image" data-id="${i}">&times;</span>
                       </div>`;
-        ++currentIndex;
-      })
+      }
+      $('.container-image').empty();
       $('.container-image').prepend(images);
+
+      $('.delete-image').off();
+
+      page.dialogs.commands.eventDeleteImage();
+    }
+
+    page.dialogs.commands.showLoading = () =>{
+      $('#loading').removeClass('visually-hidden');
+    }
+
+    page.dialogs.commands.hideLoading = () =>{
+      $('#loading').addClass('visually-hidden');
     }
 
     page.commands.handleChangeImage = () =>{
       page.dialogs.elements.productImage.on('change', ()=>{
         let file = page.dialogs.elements.productImage[0].files;
-        let showImages = [];
             for (let i = 0; i < file.length; i++){
               if (files.every(e => e.name != file[i].name)){
                 files.push(file[i]);
-                showImages.push(file[i]);
               }
             }
-        page.dialogs.elements.productImage.val("");
-        page.dialogs.commands.showImage(showImages);
+        $('.container-image').empty();
+        page.dialogs.commands.showImage(files);
       })
     }
 
@@ -104,7 +115,6 @@
       })
               .done((data)=>{
                 $.each(data, (i, item)=>{
-                  console.log(data);
                   let str = AppBase.renderDiscount(item);
                   page.elements.selectDiscount.append(str);
                 })
@@ -114,15 +124,15 @@
               })
     }
 
-    page.loadData.getAllCategory = () =>{
-      $.ajax({
+    page.loadData.getAllCategory = ()=>{
+      return $.ajax({
         type: 'GET',
-        url: page.urls.getAllCategory
+        url: page.urls.getAllCategoryParent
       })
               .done((data)=>{
-                $.each(data, (i,item)=>{
-                  let str = AppBase.renderCategory(item);
-                  page.elements.selectCategory.append(str);
+                $.each(data, (i, item)=>{
+                  let str = AppBase.renderCategoryParent(item);
+                  page.dialogs.elements.productCategory.append(str);
                 })
               })
               .fail((jqXHR)=>{
@@ -133,17 +143,18 @@
     page.loadData.getAllCategoryParentByCategoryId = (categoryId, elem) =>{
       $.ajax({
         type: 'GET',
-        url: page.urls.getAllCategoryParent + '/' + categoryId
+        url: page.urls.getAllCategoryChildByCategoryParentId + '/' + categoryId
       })
-              .done((data)=>{
+              .done((data)=> {
                 elem.empty();
-                $.each(data, (i, item)=>{
-                  let str = AppBase.renderCategoryParent(item);
+                $.each(data, (i, item) => {
+                  let str = AppBase.renderCategoryChild(item);
                   elem.append(str);
                 })
+                elem.prepend('<option>-- Chọn danh mục con--</option>');
+              })
               .fail((jqXHR)=>{
                 console.log(jqXHR);
-              })
               })
     }
 
@@ -161,40 +172,45 @@
       })
     }
 
+    page.dialogs.commands.eventDeleteImage = function (){
+      let tem = [];
+      $('.delete-image').on('click', function (){
+        let index = $(this).data('id');
+        for (let i = 0; i<files.length; i++){
+          if (index == i){
+            tem = files.filter(item => item != files[index])
+          }
+        }
+        files = tem;
+        $('.container-image').empty();
+        page.dialogs.commands.showImage(files);
+      })
+    }
+
     $.validator.addMethod("handleSelectValidate", function(value, element, arg){
       return arg != value;
     }, "");
 
     page.dialogs.commands.doCreate = () =>{
+      page.dialogs.commands.showLoading();
       let title = page.dialogs.elements.productTitle.val();
       let price = page.dialogs.elements.productPrice.val();
       let discountId = page.dialogs.elements.productDiscount.val();
       let discountName = page.dialogs.elements.productDiscount.find("option:selected").text();
-      let categoryId = page.dialogs.elements.productCategory.val();
-      let categoryName = page.dialogs.elements.productCategory.find("option:selected").text();
-      let categoryParentId = page.dialogs.elements.productCategoryParent.val();
-      let categoryParentName = page.dialogs.elements.productCategoryParent.find("option:selected").text();
+      let categoryParentId = $('#category').val();
+      let categoryParentName = $('#category').find("option:selected").text();
+      let categoryId = $('#categoryParent').val();
+      let categoryName = $('#categoryParent').find("option:selected").text();
       let brandId =  page.dialogs.elements.productBrand.val();
       let brandName = page.dialogs.elements.productBrand.find("option:selected").text();
       let avatar = page.dialogs.elements.productImage[0].files[0];
-      let description = page.dialogs.elements.productDescription.val();
-
-      if (isNaN(brandId) || isNaN(categoryParentId) || avatar == undefined){
-        return AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_400);
-      }
-
-      if (isNaN(categoryId)){
-        categoryId = null;
-      }
-
-      if(!isNaN(discountId)){
-        discountId = null;
-      }
+      let medias = page.dialogs.elements.productImage[0].files;
+      let htmls = page.dialogs.elements.productDescription.val()
 
       let formData = new FormData();
       formData.append("title", title);
       formData.append("price", price)
-      formData.append("description", description);
+      formData.append("description", htmls);
       formData.append("brandId", brandId)
       formData.append("brandName", brandName);
       formData.append("categoryId", categoryId);
@@ -205,6 +221,11 @@
       formData.append("discountName", discountName);
       formData.append("avatar", avatar);
 
+      for (let i = 0; i<medias.length; i++){
+        formData.append("medias", medias[i]);
+      }
+
+
       $.ajax({
         type: 'POST',
         contentType: false,
@@ -214,18 +235,18 @@
         data: formData
       })
               .done((data)=>{
-                console.log(data);
-                page.dialogs.elements.frmCreateProduct[0].reset();
+
+                // $('#productDescription').cleditor().clear();
                 AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
               })
               .catch((jqXHR)=>{
                 console.log(jqXHR);
-                if(jqXHR.status == 500){
-                  AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_500);
-                }
-                if (jqXHR.status == 400){
-                  AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_400);
-                }
+              })
+              .always(()=>{
+                page.dialogs.elements.frmCreateProduct[0].reset();
+                $('.container-image').empty();
+                files = [];
+                page.dialogs.commands.hideLoading();
               })
     }
 
@@ -272,25 +293,13 @@
     })
 
     page.commands.loadData = () =>{
-      page.loadData.getAllBrand();
-
       page.loadData.getAllCategory();
+
+      page.loadData.getAllBrand();
 
       page.loadData.getAllDiscount();
 
       page.loadData.showEditor();
-    }
-
-    const delImage = (index)=>{
-      let str = `#images_${index}`;
-      $(str).remove();
-      for (let i = 0; i < files.length;i++){
-        if (index == i)
-          files.splice(files[i],1);
-      }
-      $('.container-image').empty();
-      currentIndex = 0;
-      page.dialogs.commands.showImage(files);
     }
 
     page.initializeControlEvent = () =>{

@@ -9,6 +9,9 @@ import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,10 +20,15 @@ import org.springframework.web.multipart.MultipartFile;
 public class CategoryCreReqDTO {
 
     private Long id;
-//    @Length(min = 2, message = "Minimum length 2 characters")
+    @NotNull(message = "The name is required")
+    @NotEmpty(message = "The name is required")
     private String name;
     private Long categoryParentId;
     private String categoryParentName;
+    @NotNull(message = "The status is required")
+    @NotEmpty(message = "The status is required")
     private ECategoryStatus status;
+
+    @NotNull(message = "The category's avatar is required")
     private MultipartFile categoryAvatar;
 }

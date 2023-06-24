@@ -6,6 +6,7 @@
         let page = {
             urls:{
                 getAllProducts: AppBase.API_PRODUCT,
+                getAllProductPageable: AppBase.API_PRODUCT + "/pagination?",
                 findProductById: AppBase.API_PRODUCT,
             },
             elements:{},
@@ -20,12 +21,117 @@
         // btn event
         page.elements.btnEdit = $('.btn-edit');
         page.elements.btnDelete = $('.delete');
+        page.elements.btnSearch = $('#en-search');
+        page.dialogs.elements.btnPageBack = $('#page-back');
+        page.dialogs.elements.btnPageNext = $('#page-next');
+        page.dialogs.elements.frontPage = $('#front-page');
+        page.dialogs.elements.backPage = $('#back-page');
+
         // modal
         page.dialogs.elements.modalEdit = $('#modalEditProduct');
         // input edit
         page.dialogs.elements.frmEditProduct = $('#frmEditProduct');
 
         page.elements.tbodyTable = $('#tbProduct tbody');
+        page.elements.ulPagination = $('#pagination');
+        page.elements.btnDESCCode = $('#desc-code');
+        page.elements.btnASCCode = $('#asc-code');
+        page.elements.btnASCTitle = $('#asc-title')
+        page.elements.btnDESTitle = $('#desc-title')
+        page.elements.btnASCPrice = $('#asc-price')
+        page.elements.btnDESPrice = $('#desc-price')
+        page.elements.sizePage = $('#size-page');
+        page.elements.keySearch = $('#key-search');
+
+        let sizePage = page.elements.sizePage.val();
+        let fields = '';
+        let currentPageNumber = 0;
+        let keySearch = page.elements.keySearch.val();
+        let sortBy = 'asc';
+        let totalPages = 0;
+
+        page.commands.getAllProductsByPageable = () =>{
+            return $.ajax({
+                type: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                url: page.urls.getAllProductPageable +  'search=' + keySearch +
+                                                        '&page=' + currentPageNumber +
+                                                        '&size=' + sizePage +
+                                                        '&sort=' + fields + ',' + sortBy
+            })
+                .done((data)=>{
+                    let products = data.content;
+                    totalPages = data.totalPages;
+                    page.elements.tbodyTable.empty();
+                    $.each(products, (i, item)=>{
+                        let str = AppBase.renderProductWithNameImage(item);
+                        page.elements.tbodyTable.prepend(str);
+                    })
+
+                    let pagination = page.dialogs.loadData.renderPagination();
+
+                    page.elements.ulPagination.empty();
+
+                    page.elements.ulPagination.append(pagination);
+
+                    $('#page-back').off();
+
+                    $('#page-next').off();
+
+                    $('#front-page').off();
+
+                    $('#back-page').off();
+
+                    $('#back-page').on('click', function (){
+                        let numberPage = +$('#back-page a').text();
+                        if (isNaN(numberPage)){
+                            return;
+                        }
+                        if (numberPage<=totalPages){
+                            currentPageNumber = numberPage - 1;
+                            page.commands.getAllProductsByPageable();
+                        }
+                    })
+
+                    $('#front-page').on('click', function (){
+                        let numberPage = +$('#front-page a').text();
+                        if (isNaN(numberPage)){
+                            return;
+                        }
+                        else {
+                            currentPageNumber = numberPage -1;
+                            page.loadData.getAllProducts();
+                        }
+                    })
+
+                    $('#page-back').on('click', function (){
+                        if (currentPageNumber != 0){
+                            console.log("currentPageNumber != 0")
+                            currentPageNumber = currentPageNumber - 1;
+                            page.loadData.getAllProducts();
+                        }
+
+                    })
+
+                    $('#page-next').on('click', function (){
+                        if (currentPageNumber<totalPages-1){
+                            console.log("currentPageNumber<totalPages")
+                            currentPageNumber = currentPageNumber + 1;
+                            page.loadData.getAllProducts();
+                        }
+                    })
+
+                    page.commands.offAllEvent();
+
+                    page.commands.addAllEvent()
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+        }
 
         page.loadData.findProductById = function (id){
             return $.ajax({
@@ -40,9 +146,157 @@
                 })
         }
 
+        page.dialogs.loadData.renderPagination = function (){
+            let str = '';
+            // btn back
+            str += `<li id="page-back" class="page-item">
+                        <a class="page-link"aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>`
+            // currentPageNumber - 1
+            if (currentPageNumber != 0 && currentPageNumber<totalPages){
+                str += `<li id="front-page" class="page-item"><a class="page-link">${currentPageNumber}</a></li>`;
+            }
+            // currentPageNumber
+            if (currentPageNumber<totalPages)
+                str += `<li class="page-item"><a class="page-link" style="color: red">${currentPageNumber + 1}</a></li>`;
+
+            // next page
+            if (currentPageNumber < totalPages-1){
+                str += `<li id="back-page" class="page-item"><a class="page-link">${currentPageNumber + 2}</a></li>`;
+            }
+
+            // btn next
+            str += `<li id="page-next" class="page-item">
+                        <a class="page-link" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>`
+
+            return str;
+        }
+
+        page.dialogs.commands.showLoading = () =>{
+            $('#loading').removeClass('visually-hidden');
+        }
+
+        page.dialogs.commands.hideLoading = () =>{
+            $('#loading').addClass('visually-hidden');
+        }
+
+        page.dialogs.commands.handleChangePageSize = () =>{
+            page.elements.sizePage.on('change', function (){
+                sizePage = page.elements.sizePage.val();
+                page.commands.getAllProductsByPageable();
+            })
+        }
+
+        page.commands.eventPushEnter = () => {
+            page.elements.keySearch.keypress(function (e){
+                if (e.keyCode == 13){
+                    keySearch = page.elements.keySearch.val();
+                    page.commands.getAllProductsByPageable();
+                }
+            })
+        }
+
+        // page.commands.eventClickNextPage = () =>{
+        //     page.dialogs.elements.btnPageNext.on('click', function (){
+        //         console.log('btnPageNext');
+        //     })
+        // }
+        //
+        // page.commands.eventClickBackPage = () =>{
+        //     page.dialogs.elements.btnPageBack.on('click', function (){
+        //         console.log('btnPageback');
+        //     })
+        // }
+
+        page.commands.eventClickSearch = () =>{
+            page.elements.btnSearch.on('click', function (){
+                keySearch = page.elements.keySearch.val();
+                page.commands.getAllProductsByPageable();
+            })
+        }
+
+        page.commands.eventClickASCCode = () =>{
+            $('#asc-code').on('click', function (){
+                sortBy = 'asc';
+                fields = 'code';
+                page.commands.getAllProductsByPageable();
+            })
+        }
+
+        page.commands.eventClickDESCCode = () =>{
+            $('#desc-code').on('click', function(){
+                sortBy = 'desc';
+                fields = 'code';
+                page.commands.getAllProductsByPageable();
+            })
+        }
+
+        page.commands.eventClickASCTitle = () =>{
+            $('#asc-title').on('click', function (){
+                sortBy = 'asc';
+                fields = 'title';
+                page.commands.getAllProductsByPageable();
+            })
+        }
+
+        page.commands.eventClickDESCTitle = () =>{
+            $('#desc-title').on('click', function (){
+                sortBy = 'desc';
+                fields = 'title';
+                page.commands.getAllProductsByPageable();
+            })
+        }
+
+        page.commands.eventClickASCPrice = () =>{
+            $('#asc-price').on('click', function (){
+                sortBy = 'asc';
+                fields = 'price';
+                console.log(sortBy);
+                page.commands.getAllProductsByPageable();
+            })
+        }
+
+        page.commands.eventClickDESCPrice = () =>{
+            $('#desc-price').on('click', function (){
+                sortBy = 'desc';
+                fields = 'price';
+                page.commands.getAllProductsByPageable();
+            })
+        }
+
         page.commands.offAllEvent = ()=>{
             page.elements.btnEdit.off();
             page.elements.btnDelete.off();
+            page.elements.btnDESCCode.off();
+            page.elements.btnASCCode.off();
+            page.elements.btnASCTitle.off();
+            page.elements.btnDESTitle.off();
+            page.elements.btnASCPrice.off();
+            page.elements.btnDESPrice.off();
+        }
+
+        page.commands.addAllEvent = () =>{
+            page.dialogs.commands.eventEdit();
+
+            page.dialogs.commands.evenDelete();
+
+            page.commands.eventClickASCCode();
+
+            page.commands.eventClickDESCCode();
+
+            page.commands.eventClickDESCTitle();
+
+            page.commands.eventClickASCTitle();
+
+            page.commands.eventClickASCPrice();
+
+            page.commands.eventClickDESCPrice()
+
         }
 
         page.dialogs.commands.evenDelete = function (){
@@ -62,21 +316,76 @@
         }
 
         page.loadData.getAllProducts = () =>{
-            $.ajax({
-                type: 'GET',
-                url: page.urls.getAllProducts
+            return $.ajax({
+                type: 'POST',
+                url: page.urls.getAllProductPageable + 'search=' + keySearch +
+                    '&page=' + currentPageNumber +
+                    '&size=' + sizePage +
+                    '&sort=' + fields + ',' + sortBy
             })
                 .done((data) => {
-                    $.each(data, (i, item)=>{
-                        let str = AppBase.renderProduct(item);
+                    totalPages = data.totalPages;
+                    page.elements.tbodyTable.empty();
+                    $.each(data.content, (i, item)=>{
+                        let str = AppBase.renderProductWithNameImage(item);
                         page.elements.tbodyTable.prepend(str);
+                    })
+
+                    let pagination = page.dialogs.loadData.renderPagination();
+
+                    page.elements.ulPagination.empty();
+
+                    page.elements.ulPagination.append(pagination);
+
+                    $('#page-back').off();
+
+                    $('#page-next').off();
+
+                    $('#front-page').off();
+
+                    $('#back-page').off();
+
+                    $('#back-page').on('click', function (){
+                        let numberPage = +$('#back-page a').text();
+                        if (isNaN(numberPage)){
+                            return;
+                        }
+                        if (numberPage<=totalPages){
+                            currentPageNumber = numberPage - 1;
+                            page.commands.getAllProductsByPageable();
+                        }
+                    })
+
+                    $('#front-page').on('click', function (){
+
+                        let numberPage = +$('#front-page a').text();
+                        if (isNaN(numberPage)){
+                            return;
+                        }
+                        else {
+                            currentPageNumber = numberPage - 1;
+                            page.commands.getAllProductsByPageable();
+                        }
+                    })
+
+                    $('#page-back').on('click', function (){
+                        if (currentPageNumber != 0){
+                            currentPageNumber = currentPageNumber - 1;
+                            page.commands.getAllProductsByPageable();
+                        }
+
+                    })
+
+                    $('#page-next').on('click', function (){
+                        if (currentPageNumber<totalPages-1){
+                            currentPageNumber = currentPageNumber + 1;
+                            page.commands.getAllProductsByPageable();
+                        }
                     })
 
                     page.commands.offAllEvent();
 
-                    page.dialogs.commands.eventEdit();
-
-                    page.dialogs.commands.evenDelete();
+                    page.commands.addAllEvent();
 
                 })
                 .fail((jqXHR)=>{
@@ -85,12 +394,15 @@
         }
 
         page.commands.loadData = () =>{
-            page.loadData.getAllProducts();
+            page.loadData.getAllProducts();//defaulf
         }
 
-
         page.initializeControlEvent = () =>{
+            page.dialogs.commands.handleChangePageSize();
 
+            page.commands.eventPushEnter();
+
+            page.commands.eventClickSearch();
 
         }
 

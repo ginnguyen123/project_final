@@ -29,8 +29,7 @@ public class Discount extends BaseEntity {
     private String name;
     @Column(nullable = false)
     private Long discount;
-    @OneToMany
-    @JoinColumn(name = "discount_id", referencedColumnName = "id")
+    @OneToMany(mappedBy = "discount", fetch = FetchType.EAGER)
     private List<Product> products;
 
     public DiscountDTO toDiscountDTO(){

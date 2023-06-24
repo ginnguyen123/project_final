@@ -9,78 +9,78 @@
 
 <body class="app sidebar-mini rtl">
 <style>
-    .Choicefile {
-        display: block;
-        background: #14142B;
-        border: 1px solid #fff;
-        color: #fff;
-        width: 150px;
-        text-align: center;
-        text-decoration: none;
-        cursor: pointer;
-        padding: 5px 0px;
-        border-radius: 5px;
-        font-weight: 500;
-        align-items: center;
-        justify-content: center;
-    }
+    /*.Choicefile {*/
+    /*    display: block;*/
+    /*    background: #14142B;*/
+    /*    border: 1px solid #fff;*/
+    /*    color: #fff;*/
+    /*    width: 150px;*/
+    /*    text-align: center;*/
+    /*    text-decoration: none;*/
+    /*    cursor: pointer;*/
+    /*    padding: 5px 0px;*/
+    /*    border-radius: 5px;*/
+    /*    font-weight: 500;*/
+    /*    align-items: center;*/
+    /*    justify-content: center;*/
+    /*}*/
 
-    .Choicefile:hover {
-        text-decoration: none;
-        color: white;
-    }
+    /*.Choicefile:hover {*/
+    /*    text-decoration: none;*/
+    /*    color: white;*/
+    /*}*/
 
-    .error{
-        color:red;
-    }
+    /*.error{*/
+    /*    color:red;*/
+    /*}*/
 
-    #uploadfile,
-    .removeimg {
-        display: none;
-    }
+    /*!*#uploadfile,*!*/
+    /*!*.removeimg {*!*/
+    /*!*    display: none;*!*/
+    /*!*}*!*/
 
-    #thumbbox {
-        position: relative;
-        width: 100%;
-        margin-bottom: 20px;
-    }
+    /*#thumbbox {*/
+    /*    position: relative;*/
+    /*    width: 100%;*/
+    /*    margin-bottom: 20px;*/
+    /*}*/
 
-    .removeimg {
-        height: 25px;
-        position: absolute;
-        background-repeat: no-repeat;
-        top: 5px;
-        left: 5px;
-        background-size: 25px;
-        width: 25px;
-        /* border: 3px solid red; */
-        border-radius: 50%;
+    /*.removeimg {*/
+    /*    height: 25px;*/
+    /*    position: absolute;*/
+    /*    background-repeat: no-repeat;*/
+    /*    top: 5px;*/
+    /*    left: 5px;*/
+    /*    background-size: 25px;*/
+    /*    width: 25px;*/
+    /*    !* border: 3px solid red; *!*/
+    /*    border-radius: 50%;*/
 
-    }
+    /*}*/
 
-    .removeimg::before {
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        content: '';
-        border: 1px solid red;
-        background: red;
-        text-align: center;
-        display: block;
-        margin-top: 11px;
-        transform: rotate(45deg);
-    }
+    /*.removeimg::before {*/
+    /*    -webkit-box-sizing: border-box;*/
+    /*    box-sizing: border-box;*/
+    /*    content: '';*/
+    /*    border: 1px solid red;*/
+    /*    background: red;*/
+    /*    text-align: center;*/
+    /*    display: block;*/
+    /*    margin-top: 11px;*/
+    /*    transform: rotate(45deg);*/
+    /*}*/
 
-    .removeimg::after {
-        /* color: #FFF; */
-        /* background-color: #DC403B; */
-        content: '';
-        background: red;
-        border: 1px solid red;
-        text-align: center;
-        display: block;
-        transform: rotate(-45deg);
-        margin-top: -2px;
-    }
+    /*.removeimg::after {*/
+    /*    !* color: #FFF; *!*/
+    /*    !* background-color: #DC403B; *!*/
+    /*    content: '';*/
+    /*    background: red;*/
+    /*    border: 1px solid red;*/
+    /*    text-align: center;*/
+    /*    display: block;*/
+    /*    transform: rotate(-45deg);*/
+    /*    margin-top: -2px;*/
+    /*}*/
 
     ::after, ::before {
         margin: 0;
@@ -132,7 +132,7 @@
         transform: translateY(5px);
     }
 
-    #frm-image{
+    #frm-image, #frm-avatar{
         width: 96%;
         height: 160px;
         margin-left: 25px;
@@ -148,13 +148,16 @@
         align-items: center;
         user-select: none;
     }
-
-    .inner{
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    #frm-avatar{
+        margin: 0 0 0 10px;
     }
+
+    /*.inner{*/
+    /*    position: relative;*/
+    /*    display: flex;*/
+    /*    justify-content: center;*/
+    /*    align-items: center;*/
+    /*}*/
 
     #frm-image .select{
         color: #5256ad;
@@ -162,13 +165,14 @@
         cursor: pointer;
     }
 
-    .dragover{
-        border-style: solid;
-        font-size: 2rem;
-        color: #c8c9dd;
-        font-weight: 600;
-        background: rgba(0,0,0,0.34);
-    }
+
+    /*.dragover{*/
+    /*    border-style: solid;*/
+    /*    font-size: 2rem;*/
+    /*    color: #c8c9dd;*/
+    /*    font-weight: 600;*/
+    /*    background: rgba(0,0,0,0.34);*/
+    /*}*/
 
     .container-image{
         width: 100%;
@@ -193,6 +197,22 @@
         margin-right: 7px;
     }
 
+     .image{
+        height: 85px;
+        width: 85px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0,0,0, 0.15);
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 7px;
+        margin-right: 7px;
+    }
+
+    #show-avatar .image img{
+        height: 100%;
+        width: 100%;
+    }
+
     .container-image .image:nth-child(4n){
         margin-right: 0;
     }
@@ -208,14 +228,31 @@
         right: 5px;
         cursor: pointer;
         font-size: 22px;
-        color: #fff;
+        color: #000000;
     }
 
     .container-image .image span:hover{
         opacity: 0.8;
     }
 
+    .spinner-wrapper{
+        background-color: #000;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0.2;
+    }
 
+    .spinner-border{
+        height: 80px;
+        width: 80px;
+    }
 
 
 </style>
@@ -243,6 +280,14 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            <!--            loading-->
+            <div id="loading" class="spinner-wrapper visually-hidden">
+                <div class="text-center text-primary">
+                    <div class="spinner-border" role="status">
+                        <!--                <span class="visually-hidden">Loading...</span>-->
+                    </div>
+                </div>
+            </div>
             <div class="tile">
                 <h3 class="tile-title">Cập nhật thông tin sản phẩm</h3>
                 <div class="tile-body">
@@ -271,15 +316,15 @@
                             </a>
                         </div>
                     </div>
-                    <form class="row" id="frmUpdateProduct" th:object="${product}">
+                    <form class="row" id="frmUpdateProduct">
                         <div class="form-group col-md-12">
                             <div class="col-md-4 float-left">
                                 <label class="control-label">Tên sản phẩm</label>
-                                <input class="form-control" th:field="*{title}" name="productTitle" id="productTitleUp" type="text">
+                                <input class="form-control"  name="productTitle" id="productTitleUp" type="text">
                             </div>
                             <div class="col-md-4 float-left">
                                 <label class="control-label">Giá bán</label>
-                                <input class="form-control" id="productPriceUp" th:field="*{price}" name="productPrice" type="number" min="0">
+                                <input class="form-control" id="productPriceUp"  name="productPrices" type="number" min="0">
                             </div>
                             <div class="col-md-4 float-left">
                                 <label class="control-label">Discount</label>
@@ -292,7 +337,7 @@
                         <div class="form-group col-md-12">
                             <div class="col-md-4 float-left">
                                 <label for="categoryUp" class="control-label">Danh mục</label>
-                                <select class="form-control" id="categoryUp" th:field="*{category}" name="category">
+                                <select class="form-control" id="categoryUp" name="category">
                                     <option value="-1">-- Chọn danh mục --</option>
                                 </select>
                             </div>
@@ -300,7 +345,7 @@
                             <div class="col-md-4 float-left">
                                 <label for="categoryParentUp" class="control-label">Danh mục con</label>
                                 <select class="form-control" id="categoryParentUp" name="categoryParent">
-                                    <option value="">-- Chọn danh mục con--</option>
+                                    <option value="-1">-- Chọn danh mục con--</option>
                                 </select>
                             </div>
 
@@ -311,16 +356,34 @@
                                 </select>
                             </div>
                         </div>
-
-                        <div class="form-group col-md-12 float-left" >
+                        <div class="form-group col-md-4 float-left" >
                             <!--                            <label class="control-label">Ảnh sản phẩm</label>-->
                             <div class="card">
-                                <div class="top">
+                                <div class="top mb-3">
+                                    <p>Avatar</p>
+                                    <span id="btn-avatar">
+                                        <i class="fas fa-cloud-upload-alt me-2"></i>Chọn avatar
+                                    </span>
+                                </div>
+                                <div id="frm-avatar" style="width: 100%">
+                                    <input id="in-avatar" name="imageFileProduct" type="file" hidden/>
+                                    <div id="show-avatar" style="width: 100%">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-8 float-left" >
+                            <!--                            <label class="control-label">Ảnh sản phẩm</label>-->
+                            <div class="card">
+                                <div class="top mb-3">
                                     <p>Drag & drop image uploading</p>
                                     <span class="boxChoiceImage">
                                         <i class="fas fa-cloud-upload-alt me-2"></i>Chọn ảnh
                                     </span>
                                 </div>
+
                                 <div id="frm-image">
                                     <!--                                    <span class="inner">Drag & drop image here or <span class="select">Brows</span>-->
                                     <!--                                    </span>-->
