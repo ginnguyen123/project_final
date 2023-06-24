@@ -235,14 +235,15 @@
         data: formData
       })
               .done((data)=>{
+                  console.log(data);
 
-                // $('#productDescription').cleditor().clear();
                 AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
               })
               .catch((jqXHR)=>{
                 console.log(jqXHR);
               })
               .always(()=>{
+                page.dialogs.elements.productDescription.cleditor()[0].clear();
                 page.dialogs.elements.frmCreateProduct[0].reset();
                 $('.container-image').empty();
                 files = [];
