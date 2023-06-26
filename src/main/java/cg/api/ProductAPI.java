@@ -1,7 +1,7 @@
 package cg.api;
 
-import cg.dto.media.MediaDTO;
 import cg.dto.product.*;
+import cg.dto.productImport.ProductImportResDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
@@ -12,30 +12,31 @@ import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
 import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
+import cg.service.product.IProductImportService;
 import cg.service.products.IProductService;
+import cg.service.products.ProductService;
 import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/products")
 public class ProductAPI {
-    @Autowired
-    private IProductService productService;
 
-    @Autowired
-    private IUploadMediaService uploadMediaService;
+    private final IProductService productService;
+
+    private final IUploadMediaService uploadMediaService;
 
     @Autowired
     private IBrandService brandService;
@@ -52,6 +53,9 @@ public class ProductAPI {
     @Autowired
     private AppUtils appUtils;
 
+    @Autowired
+    private IProductImportService productImportService;
+
     @GetMapping
     private ResponseEntity<?> getAllProductsDeleteFalse() {
         List<Product> products = productService.findAllByDeletedFalse();
@@ -59,25 +63,57 @@ public class ProductAPI {
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
+    @GetMapping("/category/{idCategory}")
+    public ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
+        List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);
+        List<ProductResDTO> productCreResDTOS = products.stream().map(item -> item.toVisitedAndRelatedProductResDTO()).collect(Collectors.toList());
+        return new ResponseEntity<>(productCreResDTOS, HttpStatus.OK);
+    }
     @GetMapping("/{id}")
-    private ResponseEntity<?> findProductById(@PathVariable Long id){
+    public ResponseEntity<?> findProductById(@PathVariable Long id){
         if (id == null){
             throw new DataInputException("Product does not exist");
         }
         Optional<Product> productOptional = productService.findById(id);
 
         if (!productOptional.isPresent()){
-            ProductDTO productDTO = new ProductDTO();
-            return new ResponseEntity<>(productDTO, HttpStatus.OK);
+            ProductResDTO productResDTO = new ProductResDTO();
+            return new ResponseEntity<>(productResDTO, HttpStatus.OK);
         }
 
         Product product = productOptional.get();
+        List<ProductImportResDTO> productImports = productImportService.findQuantityProductImportBySizeAndColor();
+        ProductResDTO productResDTO = product.toProductResDTO(productImports);
 
-        ProductDTO productDTO = product.toProductDTO();
-
-        return new ResponseEntity<>(productDTO,HttpStatus.OK);
+        return new ResponseEntity<>(productResDTO,HttpStatus.OK);
     }
 
+    @GetMapping("/visited")
+    public ResponseEntity<?> getVisitedProducts (@RequestParam("products") String productIds) {
+        String[] arrStrIds = productIds.split("-");
+        Set<String> uniqueStrIds = new HashSet<>();
+        for (String id : arrStrIds) {
+            uniqueStrIds.add(id);
+        }
+
+        List<Long> arrIds = new ArrayList<>();
+        for (String id : uniqueStrIds) {
+            Long productId = Long.parseLong(id);
+            arrIds.add(productId);
+        }
+
+        List<ProductResDTO> productResDTOList = new ArrayList<>();
+
+        for (Long item: arrIds) {
+            Optional<Product> productOptional = productService.findById(item);
+            if (!productOptional.isPresent()){
+                throw new DataInputException("Product isn't exist");
+            }
+            Product currentProduct = productOptional.get();
+            productResDTOList.add(currentProduct.toVisitedAndRelatedProductResDTO());
+        }
+        return new ResponseEntity<>(productResDTOList,HttpStatus.OK);
+    }
 
     @PostMapping("/create")
     private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO,
@@ -313,18 +349,9 @@ public class ProductAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @PostMapping("/sort/{field}")
-//    private ResponseEntity<?> getProductsWithSort(@PathVariable String field){
-//        List<Product> products = productService.findProductWithSorting(field);
-//        List<ProductDTO> productDTOS = products.stream().map(i -> i.toProductDTO()).collect(Collectors.toList());
-//        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
-//    }
-
     @PostMapping("/pagination")
     private ResponseEntity<?> getProductsWithSort(@RequestParam(required = false, defaultValue = "") String search, Pageable pageable){
         search = "%" + search + "%";
         return new ResponseEntity<>(productService.findProductWithPaginationAndSortAndSearch(search, pageable),HttpStatus.OK);
     }
-
-
 }

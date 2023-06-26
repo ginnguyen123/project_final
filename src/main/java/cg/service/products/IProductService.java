@@ -1,19 +1,12 @@
 package cg.service.products;
 
 import cg.dto.product.*;
-import cg.model.category.Category;
-import cg.model.discount.Discount;
-import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.service.IGeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import java.util.List;
-import java.util.Optional;
-
 
 public interface IProductService extends IGeneralService<Product,Long> {
     List<Product> saveAll(List<Product> products);
@@ -27,4 +20,6 @@ public interface IProductService extends IGeneralService<Product,Long> {
     Product updateWithAvatarAndMedias(ProductUpdaReqDTO productUpdaReqDTO, MultipartFile avatar,List<MultipartFile> medias);
 
     Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable);
+
+    List<Product> findProductsByCategoryWithLimit(Long idCategory);
 }

@@ -47,6 +47,13 @@ public class ProductImportDTO {
 
 
 
+    public ProductImportDTO(Long id, ESize size, EColor color, Long quantity, EProductStatus productStatus) {
+        this.id = id;
+        this.size = size;
+        this.color = color;
+        this.quantity = quantity;
+        this.productStatus = productStatus;
+    }
 
     public ProductImport toProductImport(Product product) {
         return new ProductImport()

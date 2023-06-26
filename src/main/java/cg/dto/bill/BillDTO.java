@@ -4,6 +4,7 @@ import cg.dto.customerDTO.CustomerDTO;
 import cg.dto.locationRegionDTO.LocationRegionDTO;
 import cg.dto.userDTO.UserDTO;
 import cg.model.bill.Bill;
+import cg.model.enums.ECartStatus;
 import cg.model.location_region.LocationRegion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,8 +32,9 @@ public class BillDTO {
 
     private UserDTO userDTO;
     private CustomerDTO customerDTO;
+    private String status;
 
-    public BillDTO(Long id, String phone_receiver, String name_receiver, String total_amount, UserDTO userDTO, LocationRegion locationRegion, CustomerDTO customerDTO) {
+    public BillDTO(Long id, String phone_receiver, String name_receiver, String total_amount, UserDTO userDTO, LocationRegion locationRegion, CustomerDTO customerDTO , ECartStatus status) {
         this.id = id;
         this.phone_receiver = phone_receiver;
         this.name_receiver = name_receiver;
@@ -40,6 +42,7 @@ public class BillDTO {
         this.userDTO = userDTO;
         this.locationRegion = locationRegion.toLocationRegionDTO();
         this.customerDTO = customerDTO;
+        this.status = status.getValue();
     }
 
     public Bill toBill() {
@@ -50,6 +53,7 @@ public class BillDTO {
                 .setTotalAmount(BigDecimal.valueOf(Long.parseLong(total_amount)))
                 .setUser(userDTO.toUser())
                 .setCustomer(customerDTO.toCustomer())
-                .setLocationRegion(locationRegion.toLocationRegion());
+                .setLocationRegion(locationRegion.toLocationRegion())
+                .setStatus(ECartStatus.valueOf(status));
     }
 }

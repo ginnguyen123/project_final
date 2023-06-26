@@ -27,4 +27,6 @@ public interface IProductImportService extends IGeneralService<ProductImport, Lo
 
     Page<ProductImportDTO> pageableByKeywordAndDate(ProductImportRequest inputQuery, Pageable pageable);
 
+    List<ProductImportResDTO> findQuantityProductImportBySizeAndColor();
+
 }

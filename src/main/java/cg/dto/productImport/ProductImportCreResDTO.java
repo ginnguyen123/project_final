@@ -54,7 +54,6 @@ public class ProductImportCreResDTO {
         this.quantity = productImport.getQuantity();
         this.productStatus = String.valueOf(productImport.getProductStatus());
         this.product = product.toProductDTO();
-
     }
 
 

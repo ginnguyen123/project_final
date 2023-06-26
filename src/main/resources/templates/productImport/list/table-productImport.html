@@ -4,6 +4,23 @@
 <head>
     <title>Danh sách sản phẩm</title>
     <th:block th:replace="layout/head :: head"/>
+    <style>
+        .select2-container {
+            z-index: 9999;
+            width: 100% !important;
+        }
+        .select2-selection__rendered {
+            line-height: 45px !important;
+        }
+        .select2-container .select2-selection--single {
+            height: 45px !important;
+            background: #f5f5f5;
+        }
+        .select2-selection__arrow {
+            height: 45px !important;
+        }
+
+    </style>
 </head>
 
 <body class="app sidebar-mini rtl">
@@ -61,8 +78,6 @@
                                         <input id="myOutput" type="date" placeholder="Search.." class="search">
                                     </div>
                                 </div>
-
-
                                 <div class="col-sm-4">
 
                                 </div>
@@ -72,7 +87,7 @@
                                     <div class="col-sm-12 d-flex position-absolute input-group "
                                          style="bottom: 9px;margin-left: 69px">
                                         <div class="form-outline position-relative">
-                                            <input type="search" id="keyword" class="form-control search"/>
+                                            <input type="search" id="keyword" class="form-control search-input search"/>
                                         </div>
                                         <button type="button" class="btn btn-primary position-absolute" id="btnSearch">
                                             <i class="fas fa-search"></i>
