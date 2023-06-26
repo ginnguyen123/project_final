@@ -50,6 +50,11 @@ public class CategoryServiceService implements ICategoryService {
     }
 
     @Override
+    public List<Category> findAllByDeletedIsFalse() {
+        return categoryRepository.findAllByDeletedIsFalse();
+    }
+
+    @Override
     public List<Category> findCategoriesByCategoryParent_Id(Long id) {
         return categoryRepository.findCategoriesByCategoryParent_Id(id);
     }
