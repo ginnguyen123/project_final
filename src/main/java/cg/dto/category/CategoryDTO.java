@@ -25,7 +25,6 @@ public class CategoryDTO {
 
     private MediaDTO avatar;
 
-    private CategoryChildDTO category;
-
+    private CategoryChildDTO categoryChild;
 
 }

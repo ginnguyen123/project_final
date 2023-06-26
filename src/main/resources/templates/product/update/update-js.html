@@ -14,7 +14,8 @@
                 getAllDiscount: AppBase.API_DISCOUNT,
                 getAllProducts: AppBase.API_PRODUCT,
                 createProduct: AppBase.API_PRODUCT + '/create',
-                updateProduct: AppBase.API_PRODUCT + '/update',
+                updateProductNoMulti: AppBase.API_PRODUCT + '/update',
+                updateProductWithAvatar: AppBase.API_PRODUCT + '/update-with-avatar',
                 getProduct: AppBase.API_PRODUCT + '/products'
             },
             elements:{},
@@ -119,9 +120,10 @@
                 url: page.urls.getAllCategoryParent
             })
                 .done((data)=>{
+                    console.log(data);
                     $.each(data, (i, item)=>{
                         let str = AppBase.renderCategoryParent(item);
-                        page.elements.categoryParent.append(str);
+                        $('#categoryUp').append(str);
                     })
                 })
                 .fail((jqXHR)=>{
@@ -171,12 +173,11 @@
             idProduct = +product.id;
             avatarObj = product.avatar;
             mediaObj = product.medias;
-
             page.elements.productTitle.val(product.title);
             page.elements.productPrice.val(product.price);
 
             page.loadData.getAllCategoryParent().then(()=>{
-                page.elements.categoryParent.val(product.category.id);
+                $('#categoryUp').val(product.category.id);
                 let categoryId = product.category.id;
                 page.loadData.getAllCategoryChildByCategogyId(categoryId,  page.elements.categoryChild);
             })
@@ -205,7 +206,7 @@
 
         page.dialogs.commands.doUpdate = () =>
         {
-            // page.dialogs.commands.showLoading();
+             page.dialogs.commands.showLoading();
             let id = idProduct;
             let title = page.elements.productTitle.val();
             let price = page.elements.productPrice.val();
@@ -222,13 +223,8 @@
         //     category child
             let categoryChildId = page.elements.categoryChild.find('option:selected').val();
             let categoryChildName = page.elements.categoryChild.find('option:selected').text();
-        //     avatar
-            let avatarUpdate = page.dialogs.elements.inputAvatar[0].files[0];
-            let mediaUpdate = page.dialogs.elements.inputImages[0].files;
+            let avatarFile = $('#in-avatar')[0].files[0];
 
-            if (avatarUpdate == undefined && avatarObj == null){
-                return AppBase.IziToast.showErrorAlert("Yêu cầu có hình đại diện");
-            }
 
             let formData = new FormData();
             formData.append("id", id);
@@ -243,30 +239,9 @@
             formData.append("categoryParentName", categoryParentName);
             formData.append("discountId", discountId);
             formData.append("discountName", discountName);
-            formData.append("oldAvatar", avatarObj.id);
 
-
-            let listMediaId = [];
-
-            for (let i = 0; i< mediaObj.length; i++){
-                listMediaId.push(mediaObj[i].id)
-            }
-            formData.append("oldMedia", listMediaId);
-
-            console.log(listMediaId);
-
-            if (mediaUpdate.length == 0){
-                formData.append("updateMedias", null);
-            }else {
-                for (let i=0; i<mediaUpdate.length; i++){
-                    formData.append("updateMedias", mediaUpdate[i]);
-                }
-            }
-
-            if (avatarUpdate == undefined){
-                formData.append("updateAvatar", null);
-            }else {
-                formData.append("updateAvatar", avatarUpdate);
+            if (avatarFile != undefined){
+                formData.append("discountName", discountName);
             }
 
             $.ajax({
@@ -274,7 +249,7 @@
                 contentType: false,
                 cache: false,
                 processData: false,
-                url: page.urls.updateProduct + '/' + id,
+                url: page.urls.updateProductNoMulti + '/' + id,
                 data: formData
             })
                 .done((data)=>{
