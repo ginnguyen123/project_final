@@ -27,15 +27,5 @@ public class CategoryDTO {
 
     private CategoryChildDTO categoryChild;
 
-    public Category toCategory(){
-        return new Category()
-                .setId(id)
-                .setName(name)
-                .setStatus(status)
-                .setCategoryAvatar(avatar.toMedia())
-                ;
-    }
-
-
 
 }

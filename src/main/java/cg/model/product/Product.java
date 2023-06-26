@@ -84,7 +84,7 @@ public class Product extends BaseEntity {
                 .setAvatar(productAvatar.toMediaDTO())
                 .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
-                .setCategory(category.toCategoryDTO());
+                .setCategory(category.toCategoryChild());
         if (discount == null){
             productDTO.setDiscount(null);
         }else {

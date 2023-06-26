@@ -25,7 +25,6 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 public class ProductCreReqDTO implements Validator {
-
     private Long id;
     @NotEmpty(message = "The title is required")
     @NotNull(message = "The title is required")
@@ -40,6 +39,7 @@ public class ProductCreReqDTO implements Validator {
     @NotNull(message = "The brand is required")
     private Long brandId;
     private String brandName;
+    @NotNull(message = "The category child is required")
     private Long categoryId;
     private String categoryName;
     @NotNull(message = "The category is required")
@@ -47,11 +47,6 @@ public class ProductCreReqDTO implements Validator {
     private String categoryParentName;
     private Long discountId;
     private String discountName;
-
-//    private List<MultipartFile> medias;
-
-//    @NotNull(message = "The avatar is required")
-//    private  MultipartFile fileAvatar;
 
     @Override
     public boolean supports(Class<?> clazz) {

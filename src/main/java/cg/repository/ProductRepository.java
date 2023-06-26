@@ -1,25 +1,18 @@
 package cg.repository;
 
-import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductListResponse;
-import cg.dto.productImport.ProductImportDTO;
-import cg.model.category.Category;
 import cg.model.product.Product;
-import cg.model.product.ProductImport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
-
-    List<Product> findAllByDeletedFalse();
+    List<Product> findAllByDeletedIsFalse();
 
     @Query(value = "SELECT p.id, p.created_at, p.created_by, p.deleted, p.update_at, p.update_by," +
             " p.code, p.description, p.prices, p.title, p.brand_id, p.category_id,p.product_avatar_id, p.product_avatar_id" +

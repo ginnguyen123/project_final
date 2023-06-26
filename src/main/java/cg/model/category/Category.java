@@ -2,6 +2,7 @@ package cg.model.category;
 
 import cg.dto.category.*;
 import cg.model.BaseEntity;
+import cg.model.discount.Discount;
 import cg.model.enums.ECategoryStatus;
 import cg.model.media.Media;
 import cg.model.product.Product;
@@ -39,6 +40,10 @@ public class Category extends BaseEntity {
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
+
+    @ManyToOne
+    @JoinColumn(name = "discount_id", referencedColumnName = "id")
+    private Discount discount;
 
     @OneToOne
     @JoinColumn(name = "category_avatar_id", referencedColumnName = "id", nullable = false)

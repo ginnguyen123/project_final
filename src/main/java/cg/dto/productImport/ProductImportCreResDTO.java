@@ -57,19 +57,5 @@ public class ProductImportCreResDTO {
     }
 
 
-    public ProductImport toProductImport(){
-        return new ProductImport()
-                .setId(id)
-                .setSize(ESize.getESize(size))
-                .setColor(EColor.getEColor(color))
-                .setCode(code)
-                .setPrice(price)
-                .setQuantity(Long.valueOf(quantity))
-                .setDate_added(date_added)
-                .setProductStatus(EProductStatus.getEProductStatus(productStatus))
-                .setProduct(product.toProduct());
-
-    }
-
 
 }

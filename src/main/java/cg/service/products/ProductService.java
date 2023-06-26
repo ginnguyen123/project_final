@@ -1,28 +1,24 @@
 package cg.service.products;
 
 import cg.dto.product.*;
-import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
 import cg.model.media.Media;
 import cg.model.product.Product;
-import cg.model.product.ProductImport;
 import cg.repository.*;
+import cg.service.media.IUploadMediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 @Transactional
 public class ProductService implements IProductService{
@@ -32,6 +28,9 @@ public class ProductService implements IProductService{
 
     @Autowired
     private MediaRepository mediaRepository;
+
+    @Autowired
+    private IUploadMediaService uploadMediaService;
 
     @Autowired
     private BrandRepository brandRepository;
@@ -48,9 +47,7 @@ public class ProductService implements IProductService{
         return productRepository.findAll();
     }
 
-
     @Override
-    @Transactional
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
     }
@@ -60,23 +57,10 @@ public class ProductService implements IProductService{
         return productRepository.saveAll(products);
     }
 
-
-    @Override
-    public List<Product> findProductsByCategoryWithLimit(Long idCategory) {
-        return productRepository.findProductsByCategoryWithLimit(idCategory);
-    }
-
     @Override
     public List<Product> findAllByDeletedFalse() {
-        return productRepository.findAllByDeletedFalse();
+        return productRepository.findAllByDeletedIsFalse();
     }
-
-
-    @Override
-    public List<Product> findProductWithSorting(String field) {
-        return productRepository.findAll(Sort.by(Sort.Direction.DESC,field));
-    }
-
 
     @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
@@ -110,48 +94,64 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public ProductUpdaResDTO update(ProductUpdaReqDTO productUpdaReqDTO) {
-        Optional<Product> productOp = findById(productUpdaReqDTO.getId());
-        if (!productOp.isPresent()){
-            throw new DataInputException("Product not exist");
-        }
-        Product product = productOp.get();
-
-        Optional<Brand> brandOptional = brandRepository.findById(productUpdaReqDTO.getId());
-        if (!brandOptional.isPresent()){
-            throw new DataInputException("Brand not exist!");
-        }
-        Brand brand = brandOptional.get();
-        product.setBrand(brand);
-
-        Discount discount = null;
-
-        Optional<Discount> discountOptional =  discountRepository.findById(productUpdaReqDTO.getDiscountId());
-        if (discountOptional.isPresent()){
-            discount = discountOptional.get();
+    public Product update(ProductUpdaReqDTO productUpdaReqDTO) {
+        Long productId = productUpdaReqDTO.getId();
+        if (!findById(productId).isPresent()){
+            return null;
         }
 
-        Optional<Category> categoryChildOp = categoryRepository.findById(productUpdaReqDTO.getCategoryId());
-        if (!categoryChildOp.isPresent()){
-            Category category = categoryRepository.findById(productUpdaReqDTO.getCategoryParentId()).get();
-            product.setCategory(category);
-        }else {
-            Category categoryChild = categoryChildOp.get();
-            product.setCategory(categoryChild);
-        }
+        Brand brand = brandRepository.findById(productUpdaReqDTO.getBrandId()).get();
+        Category category = categoryRepository.findById(productUpdaReqDTO.getCategoryId()).get();
+
+        Product product = findById(productId).get();
         product.setTitle(productUpdaReqDTO.getTitle());
         product.setPrice(BigDecimal.valueOf(Long.parseLong(productUpdaReqDTO.getPrice())));
         product.setDescription(productUpdaReqDTO.getDescription());
-        save(product);
-
-        if (discount != null){
-            List<Product> productList = discount.getProducts();
-            productList = productList.stream().filter(i -> i.getId() != product.getId()).collect(Collectors.toList());
-            productList.add(product);
-            discount.setProducts(productList);
-            discountRepository.save(discount);
+        product.setBrand(brand);
+        product.setCategory(category);
+        if (productUpdaReqDTO.getDiscountId() == null){
+            product.setDiscount(null);
         }
+        else {
+            Discount discount = discountRepository.findById(productUpdaReqDTO.getDiscountId()).get();
+            product.setDiscount(discount);
+        }
+        save(product);
+        return product;
+    }
 
-        return product.toProductUpdaResDTO();
+    @Override
+    public List<Product> findProductsByCategoryWithLimit(Long idCategory) {
+        return productRepository.findProductsByCategoryWithLimit(idCategory);
+    }
+
+    @Override
+    public Product updateWithAvatar(ProductUpdaReqDTO productUpdaReqDTO, MultipartFile avatar) {
+        Product product = update(productUpdaReqDTO);
+        Media oldMedia = product.getProductAvatar();
+        Media media = uploadMediaService.uploadImageAndSaveImage(avatar, oldMedia);
+        product.setProductAvatar(media);
+        save(product);
+        return product;
+    }
+
+    @Override
+    public Product updateWithMedias(ProductUpdaReqDTO productUpdaReqDTO, List<MultipartFile> medias) {
+        Product product = update(productUpdaReqDTO);
+        List<Media> newMedias = new ArrayList<>();
+        newMedias = uploadMediaService.uploadAllImageAndSaveAllImage(medias, newMedias);
+        product.setProductAvatarList(newMedias);
+        save(product);
+        return product;
+    }
+
+    @Override
+    public Product updateWithAvatarAndMedias(ProductUpdaReqDTO productUpdaReqDTO, MultipartFile avatar, List<MultipartFile> medias) {
+        Product product = updateWithAvatar(productUpdaReqDTO, avatar);
+        List<Media> newMedias = new ArrayList<>();
+        newMedias = uploadMediaService.uploadAllImageAndSaveAllImage(medias, newMedias);
+        product.setProductAvatarList(newMedias);
+        save(product);
+        return product;
     }
 }

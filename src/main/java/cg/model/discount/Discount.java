@@ -2,6 +2,7 @@ package cg.model.discount;
 
 import cg.dto.discount.DiscountDTO;
 import cg.model.BaseEntity;
+import cg.model.category.Category;
 import cg.model.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,8 +30,11 @@ public class Discount extends BaseEntity {
     private String name;
     @Column(nullable = false)
     private Long discount;
-    @OneToMany(mappedBy = "discount", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "discount")
     private List<Product> products;
+
+    @OneToMany(mappedBy = "discount", fetch = FetchType.EAGER)
+    private List<Category> categories;
 
     public DiscountDTO toDiscountDTO(){
         return new DiscountDTO()
