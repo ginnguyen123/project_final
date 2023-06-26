@@ -2,16 +2,19 @@ package cg.api;
 
 import cg.dto.media.MediaDTO;
 import cg.dto.product.*;
+import cg.dto.productImport.ProductImportResDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
 import cg.model.media.Media;
 import cg.model.product.Product;
+import cg.model.product.ProductImport;
 import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
 import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
+import cg.service.product.IProductImportService;
 import cg.service.products.IProductService;
 import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
@@ -52,6 +55,9 @@ public class ProductAPI {
     @Autowired
     private AppUtils appUtils;
 
+    @Autowired
+    private IProductImportService productImportService;
+
     @GetMapping
     private ResponseEntity<?> getAll(){
         List<Product> products = productService.findAll();
@@ -87,8 +93,8 @@ public class ProductAPI {
         }
 
         Product product = productOptional.get();
-
-        ProductResDTO productResDTO = product.toProductResDTO();
+        List<ProductImportResDTO> productImports = productImportService.findQuantityProductImportBySizeAndColor();
+        ProductResDTO productResDTO = product.toProductResDTO(productImports);
 
         return new ResponseEntity<>(productResDTO,HttpStatus.OK);
     }

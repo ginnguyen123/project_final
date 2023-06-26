@@ -16,20 +16,27 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 public class ProductImportResDTO {
-    private Long id;
-    private String size;
-    private String color;
-    private String productStatus;
+//    private Long productid;
+//    private String size;
+//    private String color;
+//    private String productStatus;
+//    private Long quantity;
 
-    public ProductImportResDTO toProductImportDTOWithSizeColor() {
-        return new ProductImportResDTO()
-                .setId(id)
-                .setSize(size)
-                .setColor(color)
-                .setProductStatus(productStatus);
+    private Long productId;
+    private ESize size;
+    private EColor color;
+    private EProductStatus productStatus;
+    private Long quantity;
+
+    public ProductImportResDTO(Long productId, ESize size, EColor color, EProductStatus productStatus, Long quantity) {
+        this.productId = productId;
+        this.size = size;
+        this.color = color;
+        this.productStatus = productStatus;
+        this.quantity = quantity;
     }
 
 }

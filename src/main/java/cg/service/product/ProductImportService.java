@@ -74,6 +74,11 @@ public class ProductImportService implements IProductImportService {
     }
 
 
+    @Override
+    public List<ProductImportResDTO> findQuantityProductImportBySizeAndColor() {
+        return productImportRepository.findQuantityProductImportBySizeAndColor();
+    }
+
 
     @Override
     public ProductImport save(ProductImport productImport) {

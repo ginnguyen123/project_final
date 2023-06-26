@@ -5,6 +5,7 @@ import cg.dto.product.ProductListResponse;
 import cg.dto.productImport.ProductImportDTO;
 import cg.model.category.Category;
 import cg.model.product.Product;
+import cg.model.product.ProductImport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,4 +35,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "OR p.code LIKE :search " +
             "OR p.price = :search" )
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
+
+
 }

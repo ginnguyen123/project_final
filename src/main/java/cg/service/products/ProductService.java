@@ -7,6 +7,7 @@ import cg.model.category.Category;
 import cg.model.discount.Discount;
 import cg.model.media.Media;
 import cg.model.product.Product;
+import cg.model.product.ProductImport;
 import cg.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -81,7 +82,6 @@ public class ProductService implements IProductService{
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
         return productRepository.findAllWithSearch(search, pageable);
     }
-
 
     @Override
     public Product save(Product product) {

@@ -5,6 +5,7 @@ import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
 import cg.dto.product.ProductResDTO;
 import cg.dto.product.ProductUpdaResDTO;
+import cg.dto.productImport.ProductImportResDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
@@ -111,7 +112,7 @@ public class Product extends BaseEntity {
                 .setDescription(description)
                 .setAvatar(productAvatar.toMediaDTO());
     }
-    public ProductResDTO toProductResDTO() {
+    public ProductResDTO toProductResDTO(List<ProductImportResDTO> quantityProductImports) {
         return new ProductResDTO()
                 .setId(id)
                 .setTitle(title)
@@ -121,8 +122,10 @@ public class Product extends BaseEntity {
                 .setBrandName(brand.getName())
                 .setCategoryId(category.getId())
                 .setCategoryName(category.getName())
-                .setImages(productAvatarList.stream().map(item->item.toMediaDTO()).collect(Collectors.toList()))
-                .setProductImportResDTOS(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
+                .setImages(productAvatarList.stream().map(item -> item.toMediaDTO()).collect(Collectors.toList()))
+                //xu ly truyen vao list ProductImportResDTO hoac thay doi voi mot class moi
+                .setProductImportResDTOS(quantityProductImports)
+//                .setProductImportResDTOS(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
                 ;
     }
 

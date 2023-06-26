@@ -2,6 +2,7 @@ package cg.service.products;
 
 import cg.dto.product.*;
 import cg.model.product.Product;
+import cg.model.product.ProductImport;
 import cg.service.IGeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,6 @@ public interface IProductService extends IGeneralService<Product,Long> {
     List<Product> findProductWithSorting(String field);
     ProductUpdaResDTO update(ProductUpdaReqDTO productUpdaReqDTO);
     Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable);
-
 
 
 }
