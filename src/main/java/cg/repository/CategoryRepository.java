@@ -20,6 +20,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findAllByCategoryParentIsNull();
 
+    List<Category> findAllByDeletedIsFalse();
+
 
     //Cach viet native SQL
 //    @Query(value = "SELECT * FROM category c WHERE c.status= :status",nativeQuery = true)

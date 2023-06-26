@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface ICategoryService extends IGeneralService<Category,Long> {
     boolean existsById(Long id);
 
+    List<Category> findAllByDeletedIsFalse();
+
     List<Category> findCategoriesByCategoryParentNotNull();
 
     List<Category> findAllByCategoryParent_Id(Long categoryParentId);
