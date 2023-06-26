@@ -5,6 +5,7 @@ import cg.dto.product.ProductListResponse;
 import cg.dto.productImport.ProductImportDTO;
 import cg.model.category.Category;
 import cg.model.product.Product;
+import cg.model.product.ProductImport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,8 +22,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByDeletedFalse();
 
     @Query(value = "SELECT p.id, p.created_at, p.created_by, p.deleted, p.update_at, p.update_by," +
-            " p.code, p.description, p.prices, p.title, p.brand_id, p.category_id,p.product_avatar_id, p.product_avatar_id\n" +
-            " ,p.discount_id, p.discount_amounts FROM products p INNER JOIN product_import pi " +
+            " p.code, p.description, p.prices, p.title, p.brand_id, p.category_id,p.product_avatar_id, p.product_avatar_id" +
+            " ,p.discount_id FROM products p INNER JOIN product_import pi " +
             "ON p.id=pi.product_id WHERE p.category_id= :idCategory AND pi.quantity>0 group by p.id  LIMIT 10",nativeQuery = true)
     List<Product> findProductsByCategoryWithLimit( @Param("idCategory") Long idCategory);
 
@@ -34,4 +35,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "OR p.code LIKE :search " +
             "OR p.price = :search" )
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
+
+
 }
