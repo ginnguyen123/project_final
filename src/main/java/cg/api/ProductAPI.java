@@ -77,8 +77,7 @@ public class ProductAPI {
         Optional<Product> productOptional = productService.findById(id);
 
         if (!productOptional.isPresent()){
-            ProductResDTO productResDTO = new ProductResDTO();
-            return new ResponseEntity<>(productResDTO, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
         Product product = productOptional.get();
@@ -86,6 +85,22 @@ public class ProductAPI {
         ProductResDTO productResDTO = product.toProductResDTO(productImports);
 
         return new ResponseEntity<>(productResDTO,HttpStatus.OK);
+    }
+
+    @GetMapping("/find-by-id/{id}")
+    public ResponseEntity<?> findProductByIdForDb(@PathVariable Long id){
+        if (id == null){
+            throw new DataInputException("Product does not exist");
+        }
+        Optional<Product> productOptional = productService.findById(id);
+
+        if (!productOptional.isPresent()){
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+        Product product = productOptional.get();
+
+        return new ResponseEntity<>(product.toProductDTO(), HttpStatus.OK);
     }
 
     @GetMapping("/visited")
@@ -201,7 +216,6 @@ public class ProductAPI {
         return new ResponseEntity<>(productCreResDTO, HttpStatus.CREATED);
     }
 
-
     @PatchMapping("/update/{productId}")
     public ResponseEntity<?> update(@PathVariable Long productId,
                                     @Validated ProductUpdaReqDTO productUpdaReqDTO) {
@@ -238,7 +252,7 @@ public class ProductAPI {
 
         productUpdaReqDTO.setId(productOptional.get().getId());
         Product product = productService.update(productUpdaReqDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
     }
 
     @PatchMapping("/update-with-avatar/{id}")

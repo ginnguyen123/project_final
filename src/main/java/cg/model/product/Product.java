@@ -73,7 +73,6 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product")
     private List<ProductImport> productImports;
 
-
     public ProductDTO toProductDTO(){
         ProductDTO productDTO = new ProductDTO()
                 .setId(id)
@@ -84,7 +83,7 @@ public class Product extends BaseEntity {
                 .setAvatar(productAvatar.toMediaDTO())
                 .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
-                .setCategory(category.toCategoryChild());
+                .setCategory(category.toCategoryDTO());
         if (discount == null){
             productDTO.setDiscount(null);
         }else {
@@ -150,16 +149,23 @@ public class Product extends BaseEntity {
 
     public ProductUpdaResDTO toProductUpdaResDTO(){
         String strPrice = String.valueOf(price.longValue());
-        return new ProductUpdaResDTO()
+        ProductUpdaResDTO productUpdaResDTO = new ProductUpdaResDTO()
                 .setId(id)
                 .setTitle(title)
                 .setCode(code)
-                .setDescription(description)
                 .setPrice(strPrice)
+                .setDescription(description)
                 .setAvatar(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
-                .setCategory(category.toCategoryDTO())
-                .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()));
+                .setCategory(category.toCategoryDTO());
+        if (discount == null){
+            productUpdaResDTO.setDiscount(null);
+        }else {
+            productUpdaResDTO.setDiscount(discount.toDiscountDTO());
+        }
+
+        return productUpdaResDTO;
     }
 }
 
