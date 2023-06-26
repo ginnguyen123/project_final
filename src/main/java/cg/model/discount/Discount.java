@@ -44,21 +44,21 @@ public class Discount extends BaseEntity {
     @Column(nullable = false)
     private Date endDate;
 
-    @OneToMany(mappedBy = "product")
-    private List<Product> productList;
+//    @OneToMany(mappedBy = "product")
+//    private List<Product> productList;
 
 
     @OneToMany(mappedBy = "discount", fetch = FetchType.EAGER)
     private List<Category> categories;
 
-    public DiscountDTO toDiscountDTO(){
-        return new DiscountDTO()
-                .setId(id)
-                .setName(name)
-                .setDiscount(discount)
-                .setStartDate(String.valueOf(startDate))
-                .setEndDate(String.valueOf(endDate));
-    }
+//    public DiscountDTO toDiscountDTO(){
+//        return new DiscountDTO()
+//                .setId(id)
+//                .setName(name)
+//                .setDiscount(discount)
+//                .setStartDate(String.valueOf(startDate))
+//                .setEndDate(String.valueOf(endDate));
+//    }
 
 
 }
