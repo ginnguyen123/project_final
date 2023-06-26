@@ -30,16 +30,13 @@ public class ProductImportCreReqDTO implements Validator {
 
     private String size;
 
-
     private String color;
-
 
     private String price;
 
     private String date_added;
 
     private String quantity;
-
 
     private String productId;
 
