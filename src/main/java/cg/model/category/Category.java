@@ -115,6 +115,10 @@ public class Category extends BaseEntity {
                     .setStatus(status);
         }
         else
-            return null;
+            return new CategogyParentDTO()
+                    .setId(categoryParent.id)
+                    .setName(categoryParent.name)
+                    .setAvatar(categoryParent.categoryAvatar.toMediaDTO())
+                    .setStatus(categoryParent.status);
     }
 }
