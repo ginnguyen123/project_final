@@ -41,7 +41,7 @@ public class CategoryAPI {
 
     @GetMapping("/get")
     public ResponseEntity<?> getAllCategories(){
-        List<Category> categoryList = categoryService.findCategoriesByCategoryParentNotNull();
+        List<Category> categoryList = categoryService.findAllByDeletedIsFalse();
         List<CategoryChildDTO> categoryDTOS = categoryList.stream().map(i-> i.toCategoryChild()).collect(Collectors.toList());
         return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
     }
