@@ -238,9 +238,6 @@ public class ProductAPI {
 
         productUpdaReqDTO.setId(productOptional.get().getId());
         Product product = productService.update(productUpdaReqDTO);
-
-
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
