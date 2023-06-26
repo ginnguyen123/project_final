@@ -219,6 +219,11 @@
         })
             .done((data) => {
                 console.log(data)
+
+                $('.select-search').select2({
+                    dropdownParent: $('#ModalUP')
+                });
+
             })
             .fail(() => {
 

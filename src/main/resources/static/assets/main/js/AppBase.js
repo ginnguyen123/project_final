@@ -4,6 +4,7 @@ class AppBase{
     static API_PRODUCT = this.API_SERVER + '/products';
     static API_PRODUCT_IMPORT = this.API_SERVER + '/product-import';
     static API_BRAND = this.API_SERVER + '/brands';
+    static API_CART = this.API_SERVER + '/carts';
     static API_CATEGORY = this.API_SERVER + '/categories';
     static API_DISCOUNT = this.API_SERVER + '/discounts';
     static SERVER_CLOUDINARY = "https://res.cloudinary.com";
@@ -277,6 +278,25 @@ class AppBase{
                         </tr>`
     }
 
+    static renderCart(item){
+        return`   <tr role="row" class="odd">
+                    <td width="10" class="sorting_1"><input type="checkbox"name="check1" value="1"></td>
+                    <td>${item.id}</td>
+                    <td>${item.customerName}</td>
+                    <td>${item.productsName}</td>
+                    <td>${item.total}</td>
+                    <td>${item.address}</td>
+                    <td><span class="btn-add btn-sm">${item.status}</span></td>
+                    
+                    <td><button class="btn btn-trash btn-sm trash" type="button"
+                                title="Xóa"><i class="fas fa-trash-alt"></i>
+                    </button>
+                      <button class="btn btn-edit btn-sm edit" type="button"
+                              title="Sửa"><i class="fa fa-edit"></i></button>
+                    </td>
+                  </tr>`
+    }
+
 
 
 }
@@ -295,6 +315,9 @@ class Category{
         this.categoryParentId = categoryParentId;
         this.categoryParentName = categoryParentName;
     }
+}
+class Customer{
+
 }
 
 class Avatar{
@@ -348,6 +371,19 @@ class LocationRegion {
         this.wardId = wardId;
         this.wardName = wardName;
         this.address = address;
+    }
+}
+
+
+class Cart{
+    constructor(id,customerName,productTitle,totalAmount, locationRegion, status) {
+        this.id = id;
+        this.customer = customerName;
+        this.productTitle = productTitle;
+        this.totalAmount = totalAmount;
+        this.locationRegion = locationRegion;
+        this.status = status;
+
     }
 }
 

@@ -29,7 +29,7 @@ public class BillAPI {
     @GetMapping
     public ResponseEntity<?> getAllDeleteFalse() {
         List<Bill> billList = billService.findAllByDeletedFalse();
-        List<BillDTO> billDTOS = billList.stream().map(item -> item.ToBillDTO()).collect(Collectors.toList());
+        List<BillDTO> billDTOS = billList.stream().map(Bill::toBillDTO).collect(Collectors.toList());
         return new ResponseEntity<>(billDTOS, HttpStatus.OK);
     }
 
@@ -48,7 +48,7 @@ public class BillAPI {
 //        Khong set user
         newBill.setUser(billDTO.toBill().getUser());
         billService.save(newBill);
-        BillDTO newBillDTO = newBill.ToBillDTO();
+        BillDTO newBillDTO = newBill.toBillDTO();
         return new ResponseEntity<>(newBillDTO, HttpStatus.OK);
     }
 }

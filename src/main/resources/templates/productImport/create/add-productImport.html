@@ -81,9 +81,17 @@
 
   .error{
     color: red;
-    margin: 15px 15px 8px 46px;
   }
-
+  .select2-selection__rendered {
+    line-height: 45px !important;
+  }
+  .select2-container .select2-selection--single {
+    height: 45px !important;
+    background: #f5f5f5;
+  }
+  .select2-selection__arrow {
+    height: 45px !important;
+  }
 
 
 </style>
@@ -127,17 +135,6 @@
                 </th:block>
               </select>
             </div>
-              <div class="form-group col-md-3" >
-                <label class="control-label add">Giá gốc </label>
-                <input class="form-control-add" type="text" placeholder=""  id="priceCre" name="priceCre">
-              </div>
-              <div class="col-sm-3">
-                <label class="control-label add">Ngày nhập</label>
-                <input id="myInput-add" type="date" placeholder="Search.." name="dateCre">
-              </div>
-
-              </div>
-            <div class="row lg-12 ">
               <div class="col-md-3">
                 <label  class="control-label add">Màu sắc</label>
                 <select class="form-control-add select-search" id="select-color" name="colorCre">
@@ -160,12 +157,24 @@
                   </th:block>
                 </select>
               </div>
+
+
+              </div>
+            <div class="row lg-12 ">
+              <div class="form-group col-md-3" >
+                <label class="control-label add">Giá gốc </label>
+                <input class="form-control-add" type="text" placeholder=""  id="priceCre" name="priceCre">
+              </div>
+
               <div class="form-group  col-md-3 slidecontainer">
                 <label class="control-label add">Số lượng </label>
                 <input type="text" value="0" class="form-control-add" id="myRangeCre" name="quantityCre">
 
               </div>
-
+              <div class="col-sm-3">
+                <label class="control-label add">Ngày nhập</label>
+                <input id="myInput-add" type="date" placeholder="Search.." name="dateCre">
+              </div>
             </div>
           </form>
           <div class="d-flex justify-content-end">
