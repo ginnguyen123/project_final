@@ -82,15 +82,15 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
 //            "FROM product_import pi",nativeQuery = true)
 
 // Tao ra 1 ProductImport DTO moi voi size, color ,... ENum => hung gia tri tu productimport
-    @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
-        "pi.product.id, " +
-        "pi.size, " +
-        "pi.color, " +
-        "pi.productStatus, " +
-        "SUM(pi.quantity)) " +
-        "FROM ProductImport AS pi " +
-        "GROUP BY pi.product.id, pi.size, pi.color, pi.productStatus")
-    List<ProductImportResDTO> findQuantityProductImportBySizeAndColor();
+        @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
+            "pi.product.id, " +
+            "pi.size, " +
+            "pi.color, " +
+            "pi.productStatus, " +
+            "SUM(pi.quantity)) " +
+            "FROM ProductImport AS pi where pi.product.id = :productId " +
+            "GROUP BY pi.product.id, pi.size, pi.color, pi.productStatus")
+            List<ProductImportResDTO> findQuantityProductImportBySizeAndColor(@Param("productId") Long productId);
 
 
 }

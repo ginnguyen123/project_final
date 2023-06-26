@@ -93,7 +93,7 @@ public class ProductAPI {
         }
 
         Product product = productOptional.get();
-        List<ProductImportResDTO> productImports = productImportService.findQuantityProductImportBySizeAndColor();
+        List<ProductImportResDTO> productImports = productImportService.findQuantityProductImportBySizeAndColor(id);
         ProductResDTO productResDTO = product.toProductResDTO(productImports);
 
         return new ResponseEntity<>(productResDTO,HttpStatus.OK);
