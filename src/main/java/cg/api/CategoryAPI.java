@@ -39,6 +39,13 @@ public class CategoryAPI {
     @Autowired
     private MediaRepository mediaRepository;
 
+    @GetMapping()
+    public ResponseEntity<?> getAllCategory(){
+        List<Category> categories = categoryService.findCategoriesByCategoryParentNotNull();
+        List<CategoryDTO> categorys = categories.stream().map(i->i.toCategoryDTO()).collect(Collectors.toList());
+        return new ResponseEntity<>(categorys, HttpStatus.OK);
+    }
+
     @GetMapping("/get")
     public ResponseEntity<?> getAllCategories(){
         List<Category> categoryList = categoryService.findAllByDeletedIsFalse();
