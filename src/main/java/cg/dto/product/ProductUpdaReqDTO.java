@@ -23,17 +23,14 @@ public class ProductUpdaReqDTO {
     private String price;
     private String description;
     @NotNull(message = "Brand's value void")
-    @Pattern(regexp = "^[0-9]*$", message = "The number is required")
     private Long brandId;
     private String brandName;
     @NotNull(message = "Category's value void")
-    @Pattern(regexp = "^[0-9]*$", message = "The number is required")
     private Long categoryId;
     private String categoryName;
-    @Pattern(regexp = "^[0-9]*$", message = "The number is required")
+    @NotNull(message = "Category parent's value void")
     private Long categoryParentId;
     private String categoryParentName;
-    @Pattern(regexp = "^[0-9]*$", message = "The number is required")
     private Long discountId;
     private String discountName;
 

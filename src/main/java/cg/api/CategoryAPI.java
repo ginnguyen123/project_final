@@ -49,7 +49,7 @@ public class CategoryAPI {
     @GetMapping("/category-parents")
     public ResponseEntity<?> getAllCategoryParents(){
         List<Category> categories = categoryService.findAllByCategoryParentIsNull();
-        List<CategogyParentDTO> categorys = categories.stream().map(i->i.toCategogyParentDTO()).collect(Collectors.toList());
+        List<CategoryChildDTO> categorys = categories.stream().map(i->i.toCategoryChild()).collect(Collectors.toList());
         return new ResponseEntity<>(categorys, HttpStatus.OK);
     }
 

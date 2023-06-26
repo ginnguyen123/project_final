@@ -73,7 +73,7 @@ public class Category extends BaseEntity {
                     .setName(name)
                     .setStatus(status)
                     .setAvatar(categoryAvatar.toMediaDTO())
-                    .setCategory(null);
+                    .setCategoryChild(null);
         }
         else {
             CategoryChildDTO categoryChild = new CategoryChildDTO(id, name, categoryAvatar.toMediaDTO() ,status);
@@ -82,7 +82,7 @@ public class Category extends BaseEntity {
                     .setName(categoryParent.getName())
                     .setStatus(categoryParent.getStatus())
                     .setAvatar(categoryParent.getCategoryAvatar().toMediaDTO())
-                    .setCategory(categoryChild);
+                    .setCategoryChild(categoryChild);
         }
     }
 
