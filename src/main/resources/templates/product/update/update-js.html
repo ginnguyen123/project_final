@@ -239,9 +239,13 @@
             formData.append("categoryParentName", categoryParentName);
             formData.append("discountId", discountId);
             formData.append("discountName", discountName);
-
+            let urlUpdate = '';
             if (avatarFile != undefined){
                 formData.append("discountName", discountName);
+                urlUpdate = page.urls.updateProductWithAvatar;
+            }
+            else {
+                urlUpdate = page.urls.updateProductNoMulti;
             }
 
             $.ajax({
@@ -249,7 +253,7 @@
                 contentType: false,
                 cache: false,
                 processData: false,
-                url: page.urls.updateProductNoMulti + '/' + id,
+                url: urlUpdate + '/' + id,
                 data: formData
             })
                 .done((data)=>{
@@ -262,6 +266,8 @@
                 .always(()=>{
                     page.dialogs.commands.hideLoading();
                 })
+
+
         }
 
         page.commands.handleChangeCategory = (elemCategory, elemCategoryParent) =>{
