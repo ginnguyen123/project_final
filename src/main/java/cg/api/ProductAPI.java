@@ -53,25 +53,10 @@ public class ProductAPI {
     private AppUtils appUtils;
 
     @GetMapping
-    private ResponseEntity<?> getAll(){
-        List<Product> products = productService.findAll();
-        List<ProductDTO> productDTOS = products.stream().map(item -> item.toProductDTO()).collect(Collectors.toList());
-        return new ResponseEntity<>(productDTOS,HttpStatus.OK);
-    }
-
-    @GetMapping("/delete-list")
     private ResponseEntity<?> getAllProductsDeleteFalse() {
         List<Product> products = productService.findAllByDeletedFalse();
-        List<ProductDTO> productDTOS = products.stream().map(item -> item.toProductDTO()).collect(Collectors.toList());
+        List<ProductDTO> productDTOS = products.stream().map(product -> product.toProductDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
-    }
-
-
-    @GetMapping("/category={idCategory}")
-    private ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
-        List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);
-        List<ProductCreResDTO> productCreResDTOS = products.stream().map(item -> item.toProductCreResDTOByCategory()).collect(Collectors.toList());
-        return new ResponseEntity<>(productCreResDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -93,8 +78,6 @@ public class ProductAPI {
         return new ResponseEntity<>(productDTO,HttpStatus.OK);
     }
 
-//    @DeleteMapping
-//    private ResponseEntity<?> delete(@RequestBody )
 
     @PostMapping("/create")
     private ResponseEntity<?> create(@Validated ProductCreReqDTO productCreReqDTO,
@@ -115,21 +98,21 @@ public class ProductAPI {
 
         //        check category child
         Optional<Category> categoryChildOp = categoryService.findById(categoryChildId);
-        Category categoryChild = null;
-        if (categoryChildId != null && categoryChildOp.isPresent()){
-            categoryChild = categoryChildOp.get();
+        if (categoryChildOp.isPresent()){
+            throw new DataInputException("The category child does not exist");
         }
 
         if (!categoryService.existsById(categoryParentId)){
             throw new DataInputException("The category does not exist");
         }
-        Category categoryParent = categoryService.findById(categoryParentId).get();
 
+        Category category = categoryChildOp.get();
+
+        //Tạo mã code sp theo tên brand
         if (code == null){
             code = "";
             Long numCode = System.currentTimeMillis()/1000;
             String[] brandCodes = brand.getName().split("", 3);
-            String[] categoryCodes = categoryParent.getName().split("",3);
             for (var i = 0; i < brandCodes.length - 1; i++){
                 code = code + brandCodes[i];
             }
@@ -165,14 +148,10 @@ public class ProductAPI {
         }
 
         Product product = productCreReqDTO.toProduct();
-        if (categoryChild != null){
-            product.setCategory(categoryChild);
-        }else {
-            product.setCategory(categoryParent);
-        }
         product.setBrand(brand);
         product.setProductAvatarList(list);
         product.setProductAvatar(avatarMedia);
+        product.setCategory(category);
 
         if (discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).isPresent()){
             Discount discount = discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).get();
@@ -186,15 +165,13 @@ public class ProductAPI {
         return new ResponseEntity<>(productCreResDTO, HttpStatus.CREATED);
     }
 
+
     @PatchMapping("/update/{productId}")
-    public ResponseEntity<?> update(@PathVariable Long productId, @Validated ProductUpdaReqDTO productUpdaReqDTO,
-                                    @RequestParam("updateMedias") List<MultipartFile> updateMedias,
-                                    @RequestParam("updateAvatar") MultipartFile updateAvatar,
-                                    @RequestParam("oldAvatar") MediaDTO oldAvatar,
-                                    @RequestParam("oldMedia") List<MediaDTO> oldMedia) {
+    public ResponseEntity<?> update(@PathVariable Long productId,
+                                    @Validated ProductUpdaReqDTO productUpdaReqDTO) {
 
         if(productId == null){
-            throw new DataInputException("Product is void");
+            throw new DataInputException("Product's value void");
         }
 
         Optional<Product> productOptional = productService.findById(productId);
@@ -202,83 +179,128 @@ public class ProductAPI {
         if (!productOptional.isPresent()){
             throw new DataInputException("Product isn't exist");
         }
-        Product product = productUpdaReqDTO.toProduct();
-        product.setId(productId);
 
-
-        if (productUpdaReqDTO.getBrandId() == null){
-            throw new DataInputException("Brand is void");
-        }
-
-        if (productUpdaReqDTO.getCategoryParentId() == null){
-            throw new DataInputException("Category parent is void");
-        }
-        if (!categoryService.findById(productUpdaReqDTO.getCategoryParentId()).isPresent()){
-            throw new DataInputException("Category isn't exist");
-        }
-        Optional<Category> newCategoryParent = categoryService.findById(productUpdaReqDTO.getCategoryParentId());
-        Category newCategory = null;
-
-        if (productUpdaReqDTO.getCategoryId() != null){
-            Optional<Category> categoryChildOptional = categoryService.findById(productUpdaReqDTO.getCategoryId());
-            if (categoryChildOptional.isPresent()){
-                Category categoryChild = categoryChildOptional.get();
-                categoryChild.setCategoryParent(newCategoryParent.get());
-                newCategory = categoryChild;
-            }
-            else {
-                newCategory = newCategoryParent.get();
-            }
-        }else {
-            newCategory = newCategoryParent.get();
-        }
-
-        System.out.println(newCategory);
-        Optional<Brand> brandOptional = brandService.findById(productUpdaReqDTO.getBrandId());
-
-        if (!brandOptional.isPresent()){
+        Long brandId = productUpdaReqDTO.getBrandId();
+        Optional<Brand> brandOp = brandService.findById(brandId);
+        if (!brandOp.isPresent()){
             throw new DataInputException("Brand isn't exist");
         }
 
-        if (updateAvatar == null && oldAvatar == null){
-            throw new DataInputException("Avata is require");
+        Long categoryId = productUpdaReqDTO.getCategoryId();
+        Optional<Category> categoryOp = categoryService.findById(categoryId);
+        if (!categoryOp.isPresent()){
+            throw new DataInputException("Category isn't exist");
         }
 
-        if (updateAvatar != null){
-            if (!updateAvatar.getContentType().equals("image/jpeg") && !updateAvatar.getContentType().equals("image/png")){
-                throw new DataInputException("Only image files with .png or .jpeg");
+        if (productUpdaReqDTO.getDiscountId() != null){
+            Long discountId = productUpdaReqDTO.getDiscountId();
+            Optional<Discount> discountOp = discountService.findById(discountId);
+            if (!discountOp.isPresent()){
+                throw new DataInputException("Discount isn't exist");
             }
-            Media avatarMedia = uploadMediaService.uploadImageAndSaveImage(updateAvatar, oldAvatar.toMedia());
-            product.setProductAvatar(avatarMedia);
-        }else {
-            Media avatarMedia = oldAvatar.toMedia();
-            product.setProductAvatar(avatarMedia);
         }
 
-        if (updateMedias.size() == 0 || updateMedias == null){
-            List<Media> mediaList = oldMedia.stream().map(i ->i.toMedia()).collect(Collectors.toList());
-            product.setProductAvatarList(mediaList);
-        }else {
-            for (MultipartFile file : updateMedias){
-                if (file.getContentType().equals("image/jpeg") || file.getContentType().equals("image/png")){
-                    updateMedias.remove(file);
-                }
-            }
-            List<Media> medias = new ArrayList<>();
-            List<Media> mediaList = uploadMediaService.uploadAllImageAndSaveAllImage(updateMedias, medias);
-            if (oldMedia.size() != 0){
-                List<Media> oldMedias = oldMedia.stream().map(i-> i.toMedia()).collect(Collectors.toList());
-                mediaList.addAll(oldMedias);
-            }
-            product.setProductAvatarList(mediaList);
-        }
+        productUpdaReqDTO.setId(productOptional.get().getId());
+        Product product = productService.update(productUpdaReqDTO);
 
-        Brand newBrand = brandOptional.get();
-        product.setBrand(newBrand);
-        product.setCategory(newCategory);
-        productService.save(product);
-        return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PatchMapping("/update-with-avatar/{id}")
+    public ResponseEntity<?> updateWithAvatar(@PathVariable Long id,
+                                              @RequestBody @Validated ProductUpdaReqDTO productUpdaReqDTO,
+                                              @RequestParam("avatar") MultipartFile avatar){
+        if(id == null){
+            throw new DataInputException("Product's value void");
+        }
+
+        Optional<Product> productOptional = productService.findById(id);
+
+        if (!productOptional.isPresent()){
+            throw new DataInputException("Product isn't exist");
+        }
+
+        Long brandId = productUpdaReqDTO.getBrandId();
+        Optional<Brand> brandOp = brandService.findById(brandId);
+        if (!brandOp.isPresent()){
+            throw new DataInputException("Brand isn't exist");
+        }
+
+        Long categoryId = productUpdaReqDTO.getCategoryId();
+        Optional<Category> categoryOp = categoryService.findById(categoryId);
+        if (!categoryOp.isPresent()){
+            throw new DataInputException("Category isn't exist");
+        }
+
+        if (productUpdaReqDTO.getDiscountId() != null){
+            Long discountId = productUpdaReqDTO.getDiscountId();
+            Optional<Discount> discountOp = discountService.findById(discountId);
+            if (!discountOp.isPresent()){
+                throw new DataInputException("Discount isn't exist");
+            }
+        }
+
+        productUpdaReqDTO.setId(productOptional.get().getId());
+        Product product = productService.updateWithAvatar(productUpdaReqDTO, avatar);
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/update-with-medias/{id}")
+    public ResponseEntity<?> updateWithMedias(@PathVariable Long id,
+                                              @RequestBody @Validated ProductUpdaReqDTO productUpdaReqDTO,
+                                              @RequestParam("medias") List<MultipartFile> medias){
+        if(id == null){
+            throw new DataInputException("Product's value void");
+        }
+
+        Optional<Product> productOptional = productService.findById(id);
+
+        if (!productOptional.isPresent()){
+            throw new DataInputException("Product isn't exist");
+        }
+
+        Long brandId = productUpdaReqDTO.getBrandId();
+        Optional<Brand> brandOp = brandService.findById(brandId);
+        if (!brandOp.isPresent()){
+            throw new DataInputException("Brand isn't exist");
+        }
+
+        Long categoryId = productUpdaReqDTO.getCategoryId();
+        Optional<Category> categoryOp = categoryService.findById(categoryId);
+        if (!categoryOp.isPresent()){
+            throw new DataInputException("Category isn't exist");
+        }
+
+        if (productUpdaReqDTO.getDiscountId() != null){
+            Long discountId = productUpdaReqDTO.getDiscountId();
+            Optional<Discount> discountOp = discountService.findById(discountId);
+            if (!discountOp.isPresent()){
+                throw new DataInputException("Discount isn't exist");
+            }
+        }
+
+        productUpdaReqDTO.setId(productOptional.get().getId());
+        Product product = productService.updateWithMedias(productUpdaReqDTO, medias);
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/update-with-all/{id}")
+    public ResponseEntity<?> updateWithAll(@PathVariable Long id,
+                                           @RequestBody @Validated ProductUpdaReqDTO productUpdaReqDTO,
+                                           @RequestParam("avatar") MultipartFile avatar,
+                                           @RequestParam("medias") List<MultipartFile> medias){
+
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @DeleteMapping("/{productID}")
     public ResponseEntity<?> delete(@PathVariable Long productID) {
@@ -291,17 +313,18 @@ public class ProductAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/sort/{field}")
-    private ResponseEntity<?> getProductsWithSort(@PathVariable String field){
-        List<Product> products = productService.findProductWithSorting(field);
-        List<ProductDTO> productDTOS = products.stream().map(i -> i.toProductDTO()).collect(Collectors.toList());
-        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
-    }
+//    @PostMapping("/sort/{field}")
+//    private ResponseEntity<?> getProductsWithSort(@PathVariable String field){
+//        List<Product> products = productService.findProductWithSorting(field);
+//        List<ProductDTO> productDTOS = products.stream().map(i -> i.toProductDTO()).collect(Collectors.toList());
+//        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
+//    }
 
     @PostMapping("/pagination")
     private ResponseEntity<?> getProductsWithSort(@RequestParam(required = false, defaultValue = "") String search, Pageable pageable){
         search = "%" + search + "%";
         return new ResponseEntity<>(productService.findProductWithPaginationAndSortAndSearch(search, pageable),HttpStatus.OK);
     }
+
 
 }

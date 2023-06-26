@@ -1,16 +1,13 @@
 package cg.dto.product;
 
-import cg.dto.media.MediaDTO;
 import cg.model.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -25,24 +22,19 @@ public class ProductUpdaReqDTO {
     @Pattern(regexp = "^[0-9]*$", message = "The price is number")
     private String price;
     private String description;
+    @NotNull(message = "Brand's value void")
+    @Pattern(regexp = "^[0-9]*$", message = "The number is required")
     private Long brandId;
     private String brandName;
-    @NotNull(message = "The category is required")
+    @NotNull(message = "Category's value void")
+    @Pattern(regexp = "^[0-9]*$", message = "The number is required")
     private Long categoryId;
     private String categoryName;
+    @Pattern(regexp = "^[0-9]*$", message = "The number is required")
     private Long categoryParentId;
     private String categoryParentName;
+    @Pattern(regexp = "^[0-9]*$", message = "The number is required")
     private Long discountId;
     private String discountName;
-//    private MediaDTO oldAvatar;
-//    private List<MediaDTO> oldMedia;
-
-    public Product toProduct(){
-        return new Product()
-                .setId(id)
-                .setTitle(title)
-                .setPrice(BigDecimal.valueOf(Long.parseLong(price)))
-                .setDescription(description);
-    }
 
 }
