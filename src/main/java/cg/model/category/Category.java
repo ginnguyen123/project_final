@@ -58,15 +58,11 @@ public class Category extends BaseEntity {
     }
 
     public CategoryChildDTO toCategoryChild(){
-        if (categoryParent != null){
-            return new CategoryChildDTO()
-                    .setId(id)
-                    .setName(name)
-                    .setStatus(status)
-                    .setAvatar(categoryAvatar.toMediaDTO());
-        }
-        else
-            return null;
+        return new CategoryChildDTO()
+                .setId(id)
+                .setName(name)
+                .setStatus(status)
+                .setAvatar(categoryAvatar.toMediaDTO());
     }
 
 
