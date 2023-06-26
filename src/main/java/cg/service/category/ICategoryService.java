@@ -17,9 +17,10 @@ public interface ICategoryService extends IGeneralService<Category,Long> {
 
     List<Category> findAllByCategoryParent_Id(Long categoryParentId);
 
+    List<Category> findCategoriesByCategoryParentIdAndDeletedIsFalse(Category categoryParent);
+
     List<Category> findAllCategoryByStatus(ECategoryStatus status);
 
-    Optional<Category> findByName(String name);
     List<Category> findCategoriesByCategoryParent_Id(Long id);
 
     List<Category> findAllByCategoryParentIsNull();

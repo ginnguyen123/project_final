@@ -1,6 +1,7 @@
 package cg.service.products;
 
 import cg.dto.product.*;
+import cg.model.category.Category;
 import cg.model.product.Product;
 import cg.service.IGeneralService;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import java.util.List;
 public interface IProductService extends IGeneralService<Product,Long> {
     List<Product> saveAll(List<Product> products);
     List<Product> findAllByDeletedFalse();
+
     Product update(ProductUpdaReqDTO productUpdaReqDTO);
 
     Product updateWithAvatar(ProductUpdaReqDTO productUpdaReqDTO, MultipartFile avatar);

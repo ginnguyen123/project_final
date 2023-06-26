@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class CategoryServiceService implements ICategoryService {
+public class CategoryService implements ICategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -30,8 +30,8 @@ public class CategoryServiceService implements ICategoryService {
     }
 
     @Override
-    public Optional<Category> findByName(String name) {
-        return categoryRepository.findByName(name);
+    public List<Category> findCategoriesByCategoryParentIdAndDeletedIsFalse(Category categoryParent) {
+        return categoryRepository.findCategoriesByCategoryParentAndDeletedIsFalse(categoryParent);
     }
 
     @Override
