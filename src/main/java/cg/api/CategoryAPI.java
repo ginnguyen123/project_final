@@ -42,22 +42,8 @@ public class CategoryAPI {
     @GetMapping("/get")
     public ResponseEntity<?> getAllCategories(){
         List<Category> categoryList = categoryService.findCategoriesByCategoryParentNotNull();
-        Map<Category, List<Category>> map = categoryList.stream()
-                .collect(groupingBy(Category::getCategoryParent));
-        List<CategoryCreResDTO> categoryCreResDTOList = new ArrayList<>();
-//        Phương thức groupingBy được sử dụng để nhóm các đối tượng Category theo giá trị được trả về
-//        từ phương thức getCategoryParent của mỗi đối tượng. Kết quả của groupingBy là một Map với khóa
-//        là giá trị được trả về từ getCategoryParent và giá trị là một danh sách các đối tượng Category có
-//        cùng giá trị getCategoryParent.
-        for (Map.Entry<Category, List<Category>> entry : map.entrySet()) {
-            CategoryCreResDTO categoryCreResDTO = new CategoryCreResDTO();
-            categoryCreResDTO.setId(entry.getKey().getId());
-            categoryCreResDTO.setName(entry.getKey().getName());
-            categoryCreResDTO.setStatus(entry.getKey().getStatus());
-            categoryCreResDTO.setCategoryChilds(entry.getValue().stream().map(item -> item.toCategoryChild()).collect(Collectors.toList()));
-            categoryCreResDTOList.add(categoryCreResDTO);
-        }
-        return new ResponseEntity<>(categoryCreResDTOList,HttpStatus.OK);
+        List<CategoryChildDTO> categoryDTOS = categoryList.stream().map(i-> i.toCategoryChild()).collect(Collectors.toList());
+        return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
     }
 
     @GetMapping("/category-parents")
