@@ -162,12 +162,16 @@ class AppBase{
                       <input type="checkbox" id="delete_${item.id}">
                     </td>
                     <td>${item.code}</td>
-                    <td>
+                    <td class="d-flex justify-content-center align-items-center" style="border: none">
                         <img src="${image_thumbnail}"/>
                     </td>
                     <td>${item.title}</td>
-                    <td>${item.price}</td>
-                    <td>${item.category.name}</td>
+                    <td>${new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                            }).format(item.price)}
+                    </td>
+                    <td>${item.categoryName}</td>
                     <td>
                         <button class="btn btn-delete btn-sm delete" id="${item.id}" data-id = "${item.id}" type="button" title="Xóa">
                             <i class="fas fa-trash-alt"></i>

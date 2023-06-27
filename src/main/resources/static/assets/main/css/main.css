@@ -15562,10 +15562,6 @@ be a descendant of the grid when it is being dragged.
 margin-right: 10px;
 }
 
-#btnSearch{
-  left: 218px;
-  height: 100%;
-}
 #myOutput{
   width: 100%;
   padding: 5px;
