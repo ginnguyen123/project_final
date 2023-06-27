@@ -1,5 +1,7 @@
 package cg.dto.product;
 
+import cg.dto.media.MediaDTO;
+import cg.model.media.Media;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +14,7 @@ public class ProductListResponse {
     private Long id;
     private String code;
 
-    private String imageName;
+    private MediaDTO avatar;
 
     private String title;
 
@@ -20,11 +22,12 @@ public class ProductListResponse {
 
     private String categoryName;
 
-    public ProductListResponse(Long id, String code, String imageName, String title,BigDecimal price,String categoryName) {
+    public ProductListResponse(Long id, String code, Media avatar, String title, BigDecimal price, String categoryName) {
 //        String strPrice = String.valueOf(price.longValue());
+        MediaDTO mediaDTO = avatar.toMediaDTO();
         this.id = id;
         this.code = code;
-        this.imageName = imageName;
+        this.avatar = mediaDTO;
         this.title = title;
         this.price = price;
         this.categoryName = categoryName;

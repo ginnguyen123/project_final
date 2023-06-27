@@ -21,7 +21,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProductsByCategoryWithLimit( @Param("idCategory") Long idCategory);
 
     @Query(value = "SELECT new cg.dto.product.ProductListResponse(" +
-            "p.id,p.code,p.productAvatar.fileName,p.title,p.price,p.category.name" +
+            "p.id,p.code,p.productAvatar,p.title,p.price,p.category.name" +
             ") " +
             "FROM Product p " +
             "WHERE  p.title like :search " +

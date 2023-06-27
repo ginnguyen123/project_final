@@ -64,7 +64,20 @@
                       </div>`;
       }
       $('.container-image').empty();
+
       $('.container-image').prepend(images);
+
+      let lightSliders = '';
+      for (let i = 0; i < list.length; i++){
+        lightSliders += `<li class="image" style="height: 100%">
+                                <img class="me-2 ms-2" src="${URL.createObjectURL(list[i])}" style="height: 100%; width: 80%" alt="image">
+                                <span class="delete-image" data-id="${i}">&times;</span>
+                          </li>`;
+      }
+
+      $('#slider').prepend(lightSliders);
+      $('#slider').lightSlider();
+
 
       $('.delete-image').off();
 

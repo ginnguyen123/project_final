@@ -254,6 +254,10 @@
         width: 80px;
     }
 
+    .error{
+        color: red;
+    }
+
 
 </style>
 <!-- Navbar-->
@@ -319,16 +323,16 @@
                     <form class="row" id="frmUpdateProduct">
                         <div class="form-group col-md-12">
                             <div class="col-md-4 float-left">
-                                <label class="control-label">Tên sản phẩm</label>
-                                <input class="form-control"  name="productTitle" id="productTitleUp" type="text">
+                                <label for="productTitleUp" class="control-label">Tên sản phẩm</label>
+                                <input class="form-control"  name="productTitleUp" id="productTitleUp" type="text">
                             </div>
                             <div class="col-md-4 float-left">
-                                <label class="control-label">Giá bán</label>
-                                <input class="form-control" id="productPriceUp"  name="productPrices" type="number" min="0">
+                                <label for="productPriceUp" class="control-label">Giá bán</label>
+                                <input class="form-control" id="productPriceUp"  name="productPriceUp" type="number" min="0">
                             </div>
                             <div class="col-md-4 float-left">
-                                <label class="control-label">Discount</label>
-                                <select class="form-control" id="discountUpdate" name="discount">
+                                <label for="discountUpdate" class="control-label">Discount</label>
+                                <select class="form-control" id="discountUpdate" name="discountUpdate">
                                     <option value="">-- Chọn discount --</option>
                                 </select>
                             </div>
@@ -337,21 +341,21 @@
                         <div class="form-group col-md-12">
                             <div class="col-md-4 float-left">
                                 <label for="categoryUp" class="control-label">Danh mục</label>
-                                <select class="form-control" id="categoryUp" name="category">
+                                <select class="form-control" id="categoryUp" name="categoryUp">
                                     <option value="-1">-- Chọn danh mục --</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4 float-left">
                                 <label for="categoryParentUp" class="control-label">Danh mục con</label>
-                                <select class="form-control" id="categoryParentUp" name="categoryParent">
+                                <select class="form-control" id="categoryParentUp" name="categoryParentUp">
                                     <option value="-1">-- Chọn danh mục con--</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4 float-left">
                                 <label for="brandUp" class="control-label">Nhà cung cấp</label>
-                                <select class="form-control" id="brandUp" name="brand">
+                                <select class="form-control" id="brandUp" name="brandUp">
                                     <option value="-1">-- Chọn nhà cung cấp --</option>
                                 </select>
                             </div>

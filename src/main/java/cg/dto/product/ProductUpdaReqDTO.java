@@ -1,5 +1,6 @@
 package cg.dto.product;
 
+import cg.dto.media.MediaDTO;
 import cg.model.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -33,5 +35,9 @@ public class ProductUpdaReqDTO {
     private String categoryParentName;
     private Long discountId;
     private String discountName;
+
+    private String oldAvatar;
+
+    private String oldMedias;
 
 }
