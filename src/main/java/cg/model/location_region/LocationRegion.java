@@ -50,6 +50,7 @@ public class LocationRegion {
                 .setDistrictName(districtName)
                 .setWardId(wardId)
                 .setWardName(wardName)
-                .setAddress(address);
+                .setAddress(address)
+                .setCustomerId(customer.getId());
     }
 }

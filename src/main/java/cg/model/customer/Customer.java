@@ -28,7 +28,7 @@ public class Customer extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_names", nullable = false)
+    @Column(name = "full_names")
     private String fullName;
 
     @Column(nullable = false, unique = true)
@@ -39,11 +39,11 @@ public class Customer extends BaseEntity {
 
 
     private ESex sex;
+//
+//    @OneToMany(mappedBy = "customer")
+//    private List<Cart> carts;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Cart> carts;
-
-    @Column(nullable = false)
+    @Column
     private String phone;
 
     @OneToMany(mappedBy = "customer")
