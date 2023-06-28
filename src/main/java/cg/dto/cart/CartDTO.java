@@ -22,12 +22,22 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class CartDTO {
     private Long id;
+
+    private Long customerId;
     private CustomerDTO customer;
     private BigDecimal totalAmount;
+    private Long locationRegionId;
     private LocationRegionDTO locationRegionDTO;
     private ECartStatus status;
     private List<CartDetailDTO> cartDetailDTOList;
 
+    public CartDTO(Long id,Long customerId,BigDecimal totalAmount,Long locationRegionId,ECartStatus status){
+        this.id = id;
+        this.customerId = customerId;
+        this.totalAmount = totalAmount;
+        this.locationRegionId = locationRegionId;
+        this.status = status;
+    }
 
     public Cart toCart() {
         return new Cart()
@@ -37,4 +47,6 @@ public class CartDTO {
                 .setStatus(status)
                 .setTotalAmount(totalAmount);
     }
+
+
 }

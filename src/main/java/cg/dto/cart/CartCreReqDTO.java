@@ -1,6 +1,8 @@
 package cg.dto.cart;
 
 import cg.dto.cartDetail.CartDetailCreReqDTO;
+import cg.dto.locationRegionDTO.LocationRegionDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,13 +20,14 @@ import java.util.List;
 public class CartCreReqDTO implements Validator {
 
 //list cartdetail
-    private Long customerId;
+
     private String fullName;
     private String email;
     private String phone;
     private List<CartDetailCreReqDTO> cartDetailDTOList;
     private BigDecimal totalAmount;
-    private String locationRegion;
+    private LocationRegionDTO locationRegion;
+    private String status;
 
 
 
@@ -37,17 +40,14 @@ public class CartCreReqDTO implements Validator {
     public void validate(Object target, Errors errors) {
         CartCreReqDTO cartCreReqDTO = (CartCreReqDTO) target;
 
-        Long customerId = cartCreReqDTO.getCustomerId();
         String fullName = cartCreReqDTO.getFullName();
         String email = cartCreReqDTO.getEmail();
         String phone = cartCreReqDTO.getPhone();
         String totalAmount = String.valueOf(cartCreReqDTO.getTotalAmount());
-        String locationRegion = cartCreReqDTO.getLocationRegion();
+        String locationRegion = String.valueOf(cartCreReqDTO.getLocationRegion());
 
 
-        if (customerId == null) {
-            errors.reject("ID.null", "CustomerId must not be null");
-        }
+
         if (fullName.isEmpty()) {
             errors.reject("fullName.null", "Customer fullName must not be null");
         }
@@ -60,7 +60,7 @@ public class CartCreReqDTO implements Validator {
             errors.reject("date.null", "Product date must not be null");
         }
         if (email != null && email.length() > 0) {
-            if (!email.matches("^(.+)@(\\\\S+)$")) {
+            if (!email.matches("^(.+)@(\\S+)$")) {
                     errors.rejectValue("email", "Email must be in the correct format");
             }
         } else {
@@ -71,7 +71,7 @@ public class CartCreReqDTO implements Validator {
             if (!phone.matches("(^$|[0-9]*$)")) {
                 errors.rejectValue("phone", "phone.number", "phone must be a number");
             }
-            if (phone.length() == 10) {
+            if (phone.length() == 11) {
                 errors.rejectValue("phone", "phone", "Phone number must be 10 digits");
             }
 

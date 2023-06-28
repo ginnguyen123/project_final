@@ -34,7 +34,7 @@ public enum ECartStatus {
         return eCartStatus;
     }
 
-    public static ECartStatus getEProductStatus(String value){
+    public static ECartStatus getECartStatus(String value){
         for (ECartStatus status: ECartStatus.values()){
             if (status.getValue().equalsIgnoreCase(value)){
                 return status;

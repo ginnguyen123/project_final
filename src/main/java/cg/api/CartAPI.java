@@ -1,11 +1,11 @@
 package cg.api;
 
-import cg.dto.cart.CartCreReqDTO;
-import cg.dto.cart.CartDTO;
-import cg.dto.cart.CartCreResDTO;
-import cg.dto.productImport.ProductImportCreReqDTO;
-import cg.dto.productImport.ProductImportCreResDTO;
+import cg.dto.cart.*;
+import cg.dto.cartDetail.CartDetailCreReqDTO;
+import cg.dto.productImport.*;
+import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
+import cg.model.product.ProductImport;
 import cg.service.cart.ICartService;
 import cg.service.cart.response.CartListResponse;
 import cg.utils.AppUtils;
@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,14 +49,44 @@ public class CartAPI {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createCart(@Validated CartCreReqDTO cartCreReqDTO , BindingResult bindingResult){
-        new ProductImportCreReqDTO().validate(cartCreReqDTO, bindingResult);
+    public ResponseEntity<?> createCart(@RequestBody @Validated CartCreReqDTO cartCreReqDTO ,  BindingResult bindingResult){
+        new CartCreReqDTO().validate(cartCreReqDTO, bindingResult);
 
         if (bindingResult.hasFieldErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
 
-        CartCreResDTO cartCreResDTO = cartService.create(cartCreReqDTO);
-        return new ResponseEntity<>(cartCreResDTO,HttpStatus.OK);
+          cartService.create(cartCreReqDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateCart(@PathVariable Long id, @Validated CartUpReqDTO cartUpReqDTO, BindingResult bindingResult ) throws IOException {
+        new CartUpReqDTO().validate(cartUpReqDTO,bindingResult);
+
+        cartUpReqDTO.setId(id);
+
+        if (bindingResult.hasFieldErrors()) {
+            return appUtils.mapErrorToResponse(bindingResult);
+        }
+        CartListResponse cartUpResDTO = cartService.update(cartUpReqDTO);
+        return new ResponseEntity<>(cartUpResDTO,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        Cart cart = cartService.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Not found this cart to delete"));
+        cartService.delete(cart);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getCartById(@PathVariable Long id) {
+        CartDTO cartDTO = cartService
+                .getCartDTOByIdDeletedIsFalse(id)
+                .orElseThrow(
+                        ()-> new ResourceNotFoundException("Not found this cart"));
+        return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 }

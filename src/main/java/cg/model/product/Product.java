@@ -73,6 +73,10 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product")
     private List<ProductImport> productImports;
 
+    public Product(String title) {
+        this.title = title;
+    }
+
     public ProductDTO toProductDTO(){
         ProductDTO productDTO = new ProductDTO()
                 .setId(id)
