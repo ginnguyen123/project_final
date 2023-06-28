@@ -67,23 +67,12 @@ public class Category extends BaseEntity {
 
 
     public CategoryDTO toCategoryDTO(){
-        if (categoryParent == null){
             return new CategoryDTO()
                     .setId(id)
                     .setName(name)
                     .setStatus(status)
                     .setAvatar(categoryAvatar.toMediaDTO())
                     .setCategoryChild(null);
-        }
-        else {
-            CategoryChildDTO categoryChild = new CategoryChildDTO(id, name, categoryAvatar.toMediaDTO() ,status);
-            return new CategoryDTO()
-                    .setId(categoryParent.getId())
-                    .setName(categoryParent.getName())
-                    .setStatus(categoryParent.getStatus())
-                    .setAvatar(categoryParent.getCategoryAvatar().toMediaDTO())
-                    .setCategoryChild(categoryChild);
-        }
     }
 
     public CategoryCreateRespDTO toCategoryCreateRespDTO(){
