@@ -4,7 +4,9 @@ package cg.model.product;
 import cg.dto.category.CategoryChildDTO;
 import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
+import cg.dto.product.ProductResDTO;
 import cg.dto.product.ProductUpdaResDTO;
+import cg.dto.productImport.ProductImportResDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 @Table(name = "products")
 @Accessors(chain = true)
 public class Product extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -70,6 +73,10 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product")
     private List<ProductImport> productImports;
 
+    public Product(String title) {
+        this.title = title;
+    }
+
     public ProductDTO toProductDTO(){
         ProductDTO productDTO = new ProductDTO()
                 .setId(id)
@@ -78,17 +85,16 @@ public class Product extends BaseEntity {
                 .setPrice(price)
                 .setDescription(description)
                 .setAvatar(productAvatar.toMediaDTO())
-                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
+                .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
-        if (discount == null){
-            productDTO.setDiscount(null);
-        }else {
-            productDTO.setDiscount(discount.toDiscountDTO());
-        }
+//        if (discount == null){
+//            productDTO.setDiscount(null);
+//        }else {
+//            productDTO.setDiscount(discount.toDiscountDTO());
+//        }
         return productDTO;
     }
-
 
     public ProductCreResDTO toProductCreResDTO(){
         return new ProductCreResDTO()
@@ -98,7 +104,7 @@ public class Product extends BaseEntity {
                 .setPrice(price)
                 .setDescription(description)
                 .setAvatar(productAvatar.toMediaDTO())
-                .setMedias(productAvatarList.stream().map(i -> i.toMediaDTO()).collect(Collectors.toList()))
+                .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
     }
@@ -111,19 +117,59 @@ public class Product extends BaseEntity {
                 .setDescription(description)
                 .setAvatar(productAvatar.toMediaDTO());
     }
-
-    public ProductUpdaResDTO toProductUpdaResDTO(){
-        String strPrice = String.valueOf(price.longValue());
-        return new ProductUpdaResDTO()
+    public ProductResDTO toProductResDTO(List<ProductImportResDTO> quantityProductImports) {
+        return new ProductResDTO()
                 .setId(id)
                 .setTitle(title)
                 .setCode(code)
+                .setPrice(price)
                 .setDescription(description)
+                .setBrandName(brand.getName())
+                .setCategoryId(category.getId())
+                .setCategoryName(category.getName())
+                .setImages(productAvatarList.stream().map(item -> item.toMediaDTO()).collect(Collectors.toList()))
+                //xu ly truyen vao list ProductImportResDTO hoac thay doi voi mot class moi
+                .setProductImportResDTOS(quantityProductImports)
+//                .setProductImportResDTOS(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
+                ;
+    }
+
+    public ProductResDTO toVisitedAndRelatedProductResDTO() {
+        return new ProductResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setPrice(price)
+                .setDescription(description)
+                .setUrlImage(productAvatar.getFileUrl())
+                .setCategoryName(category.getName());
+    }
+
+    public Product(Long id, String title, BigDecimal price) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+    }
+
+    public ProductUpdaResDTO toProductUpdaResDTO(){
+        String strPrice = String.valueOf(price.longValue());
+        ProductUpdaResDTO productUpdaResDTO = new ProductUpdaResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
                 .setPrice(strPrice)
+                .setDescription(description)
                 .setAvatar(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
-                .setCategory(category.toCategoryDTO())
-                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()));
+                .setCategory(category.toCategoryDTO());
+//        if (discount == null){
+//            productUpdaResDTO.setDiscount(null);
+//        }else {
+//            productUpdaResDTO.setDiscount(discount);
+//        }
+
+        return productUpdaResDTO;
     }
 }
 

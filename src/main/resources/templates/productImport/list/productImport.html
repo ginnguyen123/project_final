@@ -27,6 +27,7 @@
     let price;
     let quantityMin;
     let quantityMax;
+    let size = +$('#size-page-imp').val();
 
 
     page.elements.tbodyTableImport = $('#tbProductImport tbody');
@@ -60,7 +61,7 @@
                 'accept': 'application/json',
                 'content-type': 'application/json'
             },
-            url: page.urls.getAllProductImport + `/search?size=5&sort=id,desc&page=${obj.currentPageNumber}&keyword=${obj.keyword}`,
+            url: page.urls.getAllProductImport + `/search?size=${size}&sort=id,desc&page=${obj.currentPageNumber}&keyword=${obj.keyword}`,
             data: JSON.stringify(obj)
             // search?size=2&sort=id,desc
         })
@@ -69,7 +70,7 @@
                 console.log(data)
                 page.elements.tbodyTableImport.empty();
                 listProductImport = data.content;
-
+                size = +$('#size-page-imp').val();
 
                 currentPageNumber = data.pageable.pageNumber
 
@@ -84,7 +85,7 @@
                     page.elements.tbodyTableImport.prepend(str);
                 })
                 let strPage = page.commands.renderPagination(currentPageNumber, totalElements, totalPages );
-                $('#body-foot').empty().append(strPage);
+                $('#paginationUl').empty().append(strPage);
 
 
                 addAllEvent();
@@ -104,6 +105,7 @@
             quantityMin = page.elements.myRangeMin.val();
             quantityMax = page.elements.myRangeMax.val();
             currentPageNumber= pageNumber;
+            size = +$('#size-page-imp').val();
 
             page.loadData.getAllProductImport();
         })
@@ -116,32 +118,25 @@
         quantityMin = page.elements.myRangeMin.val();
         quantityMax = page.elements.myRangeMax.val();
         currentPageNumber= 0;
+        size = +$('#size-page-imp').val();
         page.loadData.getAllProductImport();
     })
 
     page.commands.renderPagination = (currentPageNumber, totalElements, totalPages) => {
-        let str = `
-                            <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-start">
-                                <div class="dataTables_info" id="sampleTable_info" role="status" aria-live="polite">
-                                    [ 1 -- 20 ] của [ ${totalElements} ] sản phẩm
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-7 pagination-foot">
-                                <div class="dataTables_paginate paging_simple_numbers" id="sampleTable_paginate">
-                                    <ul class="pagination">
-                `;
-
+        let str = ``;
 
         if (currentPageNumber != 0) {
             str += `
                             <li class="paginate_button page-item previous " id="sampleTable_previous" data-page="${currentPageNumber-1}">
-                                <a class="page-link" data-page="${currentPageNumber-1}">Lùi</a>
+                                <a class="page-link" data-page="${currentPageNumber-1}">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
                             </li>
                             `;
         } else {
             str += `
                             <li class="paginate_button page-item previous disabled" id="sampleTable_previous">
-                                <a class="page-link">Lùi</a>
+                                <a class="page-link"><span aria-hidden="true">&laquo;</span></a>
                             </li>
                             `;
         }
@@ -165,22 +160,19 @@
         if(currentPageNumber != (totalPages - 1)){
             str += `
                             <li class="paginate_button page-item next" id="sampleTable_next" >
-                                <a class="page-link" data-page="${currentPageNumber+1}">Tiếp</a>
+                                <a class="page-link" data-page="${currentPageNumber+1}"><span aria-hidden="true">&raquo;</span></a>
                             </li>
                         `;
         } else {
             str += `
                             <li class="paginate_button page-item next disabled" id="sampleTable_next">
-                                <a class="page-link">Tiếp</a>
+                                <a class="page-link"><span aria-hidden="true">&raquo;</span></a>
                             </li>
                         `;
         }
 
         return str;
     }
-
-
-
 
     function addEventDeleteClick() {
         $(".delete").on('click', function () {
@@ -219,6 +211,11 @@
         })
             .done((data) => {
                 console.log(data)
+
+                $('.select-search').select2({
+                    dropdownParent: $('#ModalUP')
+                });
+
             })
             .fail(() => {
 

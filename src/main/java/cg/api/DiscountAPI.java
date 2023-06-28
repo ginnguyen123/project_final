@@ -20,10 +20,10 @@ public class DiscountAPI {
     @Autowired
     private IDiscountService discountService;
 
-    @GetMapping
-    public ResponseEntity<?> getAllDiscount(){
-        List<Discount> discounts = discountService.getAllByDeletedIsFalse();
-        List<DiscountDTO> discountDTOS = discounts.stream().map(item -> item.toDiscountDTO()).collect(Collectors.toList());
-        return new ResponseEntity<>(discountDTOS, HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<?> getAllDiscount(){
+//        List<Discount> discounts = discountService.getAllByDeletedIsFalse();
+//        List<DiscountDTO> discountDTOS = discounts.stream().map(item -> item.toDiscountDTO()).collect(Collectors.toList());
+//        return new ResponseEntity<>(discountDTOS, HttpStatus.OK);
+//    }
 }

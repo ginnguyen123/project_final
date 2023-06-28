@@ -31,6 +31,6 @@ public class BillDetail extends BaseEntity {
     private BigDecimal totalAmount;
 
     @ManyToOne
-    @JoinColumn(name = "bill_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "bill_id", referencedColumnName = "id")
     private Bill bill;
 }

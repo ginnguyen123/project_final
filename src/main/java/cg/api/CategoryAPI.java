@@ -39,64 +39,49 @@ public class CategoryAPI {
     @Autowired
     private MediaRepository mediaRepository;
 
+    @GetMapping()
+    public ResponseEntity<?> getAllCategory(){
+        List<Category> categoryParents = categoryService.findAllByCategoryParentIsNull(); // call category cha
+        //Chuyển về list Category DTO cha với list Category DTO con = null
+        List<CategogyParentDTO> categogyParentDTOS = categoryParents.stream().map(i -> i.toCategogyParentDTO()).collect(Collectors.toList());
+
+        for (int i = 0; i<categogyParentDTOS.size(); i++){
+//            khởi tạo 1 list con DTO mới sau mỗi idex để lưu vào category dto cha
+            List<CategoryChildDTO> categoryChildDTOS = new ArrayList<>();
+//            lấy ra danh sách con theo cha
+            List<Category> categoryChilds = categoryService.findCategoriesByCategoryParentIdAndDeletedIsFalse(categoryParents.get(i));
+            categoryChildDTOS.addAll(categoryChilds.stream().map(c -> c.toCategoryChild()).collect(Collectors.toList()));
+            categogyParentDTOS.get(i).setCategoryChilds(categoryChildDTOS);
+        }
+
+        return new ResponseEntity<>(categogyParentDTOS, HttpStatus.OK);
+    }
+
     @GetMapping("/get")
     public ResponseEntity<?> getAllCategories(){
-        List<Category> categoryList = categoryService.findCategoriesByCategoryParentNotNull();
-        Map<Category, List<Category>> map = categoryList.stream()
-                .collect(groupingBy(Category::getCategoryParent));
-        List<CategoryCreResDTO> categoryCreResDTOList = new ArrayList<>();
-//        Phương thức groupingBy được sử dụng để nhóm các đối tượng Category theo giá trị được trả về
-//        từ phương thức getCategoryParent của mỗi đối tượng. Kết quả của groupingBy là một Map với khóa
-//        là giá trị được trả về từ getCategoryParent và giá trị là một danh sách các đối tượng Category có
-//        cùng giá trị getCategoryParent.
-        for (Map.Entry<Category, List<Category>> entry : map.entrySet()) {
-            CategoryCreResDTO categoryCreResDTO = new CategoryCreResDTO();
-            categoryCreResDTO.setId(entry.getKey().getId());
-            categoryCreResDTO.setName(entry.getKey().getName());
-            categoryCreResDTO.setStatus(entry.getKey().getStatus());
-            categoryCreResDTO.setCategoryChilds(entry.getValue().stream().map(item -> item.toCategoryChild()).collect(Collectors.toList()));
-            categoryCreResDTOList.add(categoryCreResDTO);
-        }
-        return new ResponseEntity<>(categoryCreResDTOList,HttpStatus.OK);
+        List<Category> categoryList = categoryService.findAllByDeletedIsFalse();
+        List<CategoryChildDTO> categoryDTOS = categoryList.stream().map(i-> i.toCategoryChild()).collect(Collectors.toList());
+        return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
     }
 
     @GetMapping("/category-parents")
     public ResponseEntity<?> getAllCategoryParents(){
         List<Category> categories = categoryService.findAllByCategoryParentIsNull();
-        List<CategogyParentDTO> categorys = categories.stream().map(i->i.toCategogyParentDTO()).collect(Collectors.toList());
+        List<CategoryChildDTO> categorys = categories.stream().map(i->i.toCategoryChild()).collect(Collectors.toList());
         return new ResponseEntity<>(categorys, HttpStatus.OK);
     }
 
     @GetMapping("/status={status}")
     public ResponseEntity<?> getAllCategoriesByStatus(@PathVariable String status) {
         List<Category> categoryList = categoryService.findAllCategoryByStatus(ECategoryStatus.valueOf(status.toUpperCase()));
-        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+        List<CategoryChildDTO> categoryDTOS = new ArrayList<>();
 
         if (categoryList.size() != 0){
-            categoryDTOS = categoryList.stream().map(i -> i.toCategoryDTO()).collect(Collectors.toList());
+            categoryDTOS = categoryList.stream().map(i -> i.toCategoryChild()).collect(Collectors.toList());
         }
         return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
     }
 
-    @PostMapping("/{idParent}")
-    public ResponseEntity<?> getAllCategoriesByStatus(@PathVariable Long idParent){
-        Optional<Category> categoryOptional = categoryService.findById(idParent);
-        if (!categoryOptional.isPresent()){
-            throw new DataInputException("khong ton tai");
-        }
-
-        String name = categoryOptional.get().getName();
-        List<String> aolist = new ArrayList<>();
-        if (idParent == 1){
-
-        }
-
-        else {
-
-        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
 
     @GetMapping("/{categoryParentId}")

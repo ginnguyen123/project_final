@@ -66,7 +66,7 @@
                     totalPages = data.totalPages;
                     page.elements.tbodyTable.empty();
                     $.each(products, (i, item)=>{
-                        let str = AppBase.renderProductWithNameImage(item);
+                        let str = AppBase.renderProduct(item);
                         page.elements.tbodyTable.prepend(str);
                     })
 
@@ -160,7 +160,7 @@
             }
             // currentPageNumber
             if (currentPageNumber<totalPages)
-                str += `<li class="page-item"><a class="page-link" style="color: red">${currentPageNumber + 1}</a></li>`;
+                str += `<li class="page-item active"><a class="page-link">${currentPageNumber + 1}</a></li>`;
 
             // next page
             if (currentPageNumber < totalPages-1){
@@ -327,7 +327,7 @@
                     totalPages = data.totalPages;
                     page.elements.tbodyTable.empty();
                     $.each(data.content, (i, item)=>{
-                        let str = AppBase.renderProductWithNameImage(item);
+                        let str = AppBase.renderProduct(item);
                         page.elements.tbodyTable.prepend(str);
                     })
 

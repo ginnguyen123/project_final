@@ -2,6 +2,7 @@ package cg.model.customer;
 
 import cg.dto.customerDTO.CustomerDTO;
 import cg.model.BaseEntity;
+import cg.model.cart.Cart;
 import cg.model.enums.ESex;
 import cg.model.location_region.LocationRegion;
 import lombok.AllArgsConstructor;
@@ -36,13 +37,16 @@ public class Customer extends BaseEntity {
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
+
     private ESex sex;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Cart> carts;
 
     @Column(nullable = false)
     private String phone;
 
-    @OneToMany
-    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    @OneToMany(mappedBy = "customer")
     private List<LocationRegion> locationRegions;
 
     public CustomerDTO toCustomerDTO() {
@@ -53,6 +57,7 @@ public class Customer extends BaseEntity {
                 .setDateOfBirth(dateOfBirth)
                 .setSex(sex)
                 .setPhone(phone)
-                .setLocationRegionDTOS(locationRegions.stream().map(item -> item.toLocationRegionDTO()).collect(Collectors.toList()));
+                .setLocationRegionDTOS(locationRegions.stream().map(LocationRegion::toLocationRegionDTO).collect(Collectors.toList()))
+                ;
     }
 }

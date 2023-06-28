@@ -4,6 +4,7 @@ class AppBase{
     static API_PRODUCT = this.API_SERVER + '/products';
     static API_PRODUCT_IMPORT = this.API_SERVER + '/product-import';
     static API_BRAND = this.API_SERVER + '/brands';
+    static API_CART = this.API_SERVER + '/carts';
     static API_CATEGORY = this.API_SERVER + '/categories';
     static API_DISCOUNT = this.API_SERVER + '/discounts';
     static SERVER_CLOUDINARY = "https://res.cloudinary.com";
@@ -161,12 +162,16 @@ class AppBase{
                       <input type="checkbox" id="delete_${item.id}">
                     </td>
                     <td>${item.code}</td>
-                    <td>
+                    <td class="d-flex justify-content-center align-items-center" style="border: none">
                         <img src="${image_thumbnail}"/>
                     </td>
                     <td>${item.title}</td>
-                    <td>${item.price}</td>
-                    <td>${item.category.name}</td>
+                    <td>${new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                            }).format(item.price)}
+                    </td>
+                    <td>${item.categoryName}</td>
                     <td>
                         <button class="btn btn-delete btn-sm delete" id="${item.id}" data-id = "${item.id}" type="button" title="Xóa">
                             <i class="fas fa-trash-alt"></i>
@@ -277,6 +282,28 @@ class AppBase{
                         </tr>`
     }
 
+    static renderCart(item){
+        return`   <tr id="tr_${item.id}">
+                    <td> <input type="checkbox" id="delete_${item.id}"> </td>
+                    <td>${item.id}</td>
+                    <td>${item.customerName}</td>
+                    <td>${item.productsName}</td>
+                    <td>${new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(item.total)}</td>
+                    <td>${item.address}</td>
+                    <td><span class="btn-add btn-sm">${item.status}</span></td>
+                    
+                    <td><button class="btn btn-trash btn-sm delete" type="button"
+                                title="Xóa" data-id="${item.id}"><i class="fas fa-trash-alt"></i>
+                    </button>
+                      <button class="btn btn-edit btn-sm edit" type="button"
+                              title="Sửa" data-id="${item.id}"><i class="fa fa-edit"></i></button>
+                    </td>
+                  </tr>`
+    }
+
 
 
 }
@@ -295,6 +322,9 @@ class Category{
         this.categoryParentId = categoryParentId;
         this.categoryParentName = categoryParentName;
     }
+}
+class Customer{
+
 }
 
 class Avatar{
@@ -348,6 +378,19 @@ class LocationRegion {
         this.wardId = wardId;
         this.wardName = wardName;
         this.address = address;
+    }
+}
+
+
+class Cart{
+    constructor(id,customerName,productTitle,totalAmount, locationRegion, status) {
+        this.id = id;
+        this.customer = customerName;
+        this.productTitle = productTitle;
+        this.totalAmount = totalAmount;
+        this.locationRegion = locationRegion;
+        this.status = status;
+
     }
 }
 

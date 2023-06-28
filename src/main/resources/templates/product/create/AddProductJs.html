@@ -56,15 +56,34 @@
     }
 
     page.dialogs.commands.showImage = (list) =>{
-      let images = '';
+
+      let lightSliders = '';
       for (let i = 0; i < list.length; i++){
-        images += `<div class="image ms-2 me-2">
-                          <img src="${URL.createObjectURL(list[i])}" alt="image">
-                          <span class="delete-image" data-id="${i}">&times;</span>
-                      </div>`;
+        lightSliders += `<li style="height: 100%">
+                            <div class="image">
+                                <img class="me-2 ms-2" src="${URL.createObjectURL(list[i])}" style="height: 100%; width: 80%;" alt="image">
+                                <span class="delete-image" data-id="${i}">&times;</span>
+                            </div>
+                          </li>`;
       }
-      $('.container-image').empty();
-      $('.container-image').prepend(images);
+
+      let ul = '';
+
+      ul += `<ul id="slider" style="height: 340px"></ul>`;
+
+      $('#cls-slider').prepend(ul);
+
+      $('#slider').empty();
+
+      $('#slider').prepend(lightSliders);
+
+      $('#slider').lightSlider({
+        loop:false,
+        keyPress: false
+      });
+
+
+      // $('#slider').lightSlider().refresh();
 
       $('.delete-image').off();
 
@@ -87,7 +106,7 @@
                 files.push(file[i]);
               }
             }
-        $('.container-image').empty();
+        $('#cls-slider').empty();
         page.dialogs.commands.showImage(files);
       })
     }
@@ -183,7 +202,7 @@
           }
         }
         files = tem;
-        $('.container-image').empty();
+        $('#cls-slider').empty();
         page.dialogs.commands.showImage(files);
       })
     }
@@ -236,14 +255,13 @@
         data: formData
       })
               .done((data)=>{
-
-                // $('#productDescription').cleditor().clear();
                 AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
               })
               .catch((jqXHR)=>{
                 console.log(jqXHR);
               })
               .always(()=>{
+                page.dialogs.elements.productDescription.cleditor()[0].clear();
                 page.dialogs.elements.frmCreateProduct[0].reset();
                 $('.container-image').empty();
                 files = [];
@@ -266,6 +284,9 @@
         category:{
           handleSelectValidate: "-1"
         },
+        categoryParent:{
+          handleSelectValidate: "-1"
+        },
         brand: {
           handleSelectValidate: "-1"
         }
@@ -282,6 +303,9 @@
           maxlength: 'Số tiền tối đa không lớn hơn 1.000.000.000'
         },
         category:{
+          handleSelectValidate: 'Cần chọn danh mục sản phẩm!'
+        },
+        categoryParent:{
           handleSelectValidate: 'Cần chọn danh mục sản phẩm!'
         },
         brand: {

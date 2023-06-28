@@ -35,7 +35,6 @@ public class CustomerDTO {
                 .setEmail(email)
                 .setDateOfBirth(dateOfBirth)
                 .setSex(sex)
-                .setPhone(phone)
-                .setLocationRegions(locationRegionDTOS.stream().map(item -> item.toLocationRegion()).collect(Collectors.toList()));
+                .setPhone(phone);
     }
 }

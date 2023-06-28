@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -26,16 +28,5 @@ public class CategoryDTO {
     private MediaDTO avatar;
 
     private CategoryChildDTO categoryChild;
-
-    public Category toCategory(){
-        return new Category()
-                .setId(id)
-                .setName(name)
-                .setStatus(status)
-                .setCategoryAvatar(avatar.toMedia())
-                ;
-    }
-
-
 
 }

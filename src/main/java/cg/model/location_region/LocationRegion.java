@@ -1,6 +1,7 @@
 package cg.model.location_region;
 
 import cg.dto.locationRegionDTO.LocationRegionDTO;
+import cg.model.customer.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,10 @@ public class LocationRegion {
     private String wardName;
 
     private String address;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    private Customer customer;
 
     public LocationRegionDTO toLocationRegionDTO() {
         return new LocationRegionDTO()

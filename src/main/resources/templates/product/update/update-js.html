@@ -14,7 +14,10 @@
                 getAllDiscount: AppBase.API_DISCOUNT,
                 getAllProducts: AppBase.API_PRODUCT,
                 createProduct: AppBase.API_PRODUCT + '/create',
-                updateProduct: AppBase.API_PRODUCT + '/update',
+                updateProductNoMulti: AppBase.API_PRODUCT + '/update',
+                updateProductWithAvatar: AppBase.API_PRODUCT + '/update-with-avatar',
+                updateProductWithMedias: AppBase.API_PRODUCT + '/update-with-medias',
+                updateProductWithAll: AppBase.API_PRODUCT + '/update-with-all',
                 getProduct: AppBase.API_PRODUCT + '/products'
             },
             elements:{},
@@ -119,9 +122,10 @@
                 url: page.urls.getAllCategoryParent
             })
                 .done((data)=>{
+                    console.log(data);
                     $.each(data, (i, item)=>{
                         let str = AppBase.renderCategoryParent(item);
-                        page.elements.categoryParent.append(str);
+                        $('#categoryUp').append(str);
                     })
                 })
                 .fail((jqXHR)=>{
@@ -156,7 +160,7 @@
                         let str = AppBase.renderCategoryChild(item);
                         elem.append(str);
                     })
-                    elem.prepend('<option>-- Chọn danh mục con--</option>');
+                    elem.prepend('<option value="-1">-- Chọn danh mục con--</option>');
                 })
                         .fail((jqXHR)=>{
                             console.log(jqXHR);
@@ -171,12 +175,11 @@
             idProduct = +product.id;
             avatarObj = product.avatar;
             mediaObj = product.medias;
-
             page.elements.productTitle.val(product.title);
             page.elements.productPrice.val(product.price);
 
             page.loadData.getAllCategoryParent().then(()=>{
-                page.elements.categoryParent.val(product.category.id);
+                $('#categoryUp').val(product.category.id);
                 let categoryId = product.category.id;
                 page.loadData.getAllCategoryChildByCategogyId(categoryId,  page.elements.categoryChild);
             })
@@ -205,7 +208,7 @@
 
         page.dialogs.commands.doUpdate = () =>
         {
-            page.dialogs.commands.showLoading();
+             page.dialogs.commands.showLoading();
             let id = idProduct;
             let title = page.elements.productTitle.val();
             let price = page.elements.productPrice.val();
@@ -222,13 +225,8 @@
         //     category child
             let categoryChildId = page.elements.categoryChild.find('option:selected').val();
             let categoryChildName = page.elements.categoryChild.find('option:selected').text();
-        //     avatar
-            let avatarUpdate = page.dialogs.elements.inputAvatar[0].files[0];
-            let mediaUpdate = page.dialogs.elements.inputImages[0].files;
+            let avatarFile = $('#in-avatar')[0].files[0];
 
-            if (avatarUpdate == undefined && avatarObj == null){
-                return AppBase.IziToast.showErrorAlert("Yêu cầu có hình đại diện");
-            }
 
             let formData = new FormData();
             formData.append("id", id);
@@ -243,41 +241,48 @@
             formData.append("categoryParentName", categoryParentName);
             formData.append("discountId", discountId);
             formData.append("discountName", discountName);
-            formData.append("oldAvatar", avatarObj);
-
-
-            for(let i = 0; i<mediaObj.length; i++){
-                formData.append("oldMedia", mediaObj[i]);
+            formData.append("oldAvatar", avatarObj.id);
+            let mediasObjId = [];
+            for (let i = 0; i<mediaObj.length; i++){
+                mediasObjId.push(mediaObj[i].id)
             }
+            formData.append("oldMedias", mediasObjId);
 
-            if (mediaObj.length == 0){
-                formData.append("oldMedia", []);
-            }
-
-            for (let i=0; i<mediaUpdate.length; i++){
-                formData.append("updateMedias", mediaUpdate[i]);
-            }
-
-            if (mediaUpdate.length == 0){
-                formData.append("updateMedias", []);
-            }
-
-            if (avatarUpdate == undefined){
-                formData.append("updateAvatar", null);
+            let urlUpdate = '';
+            if (avatarFile != undefined && imageFiles.length != 0){
+                formData.append("avatar", avatarFile);
+                for(let i = 0; i<imageFiles.length; i++){
+                    formData.append("medias", imageFiles[i]);
+                }
+                urlUpdate = page.urls.updateProductWithAll;
             }else {
-                formData.append("updateAvatar", avatarUpdate);
+                if (avatarFile != undefined){
+                    formData.append("avatar", avatarFile);
+                    urlUpdate = page.urls.updateProductWithAvatar;
+                }
+                else {
+                    if (imageFiles.length != 0){
+                        for(let i = 0; i<imageFiles.length; i++){
+                            formData.append("medias", imageFiles[i]);
+                        }
+                        urlUpdate = page.urls.updateProductWithMedias;
+                    }
+                    else {
+                        urlUpdate = page.urls.updateProductNoMulti;
+                    }
+                }
             }
+
 
             $.ajax({
                 type: 'PATCH',
                 contentType: false,
                 cache: false,
                 processData: false,
-                url: page.urls.updateProduct + '/' + id,
+                url: urlUpdate + '/' + id,
                 data: formData
             })
                 .done((data)=>{
-                    console.log(data);
                     AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
                 })
                 .catch((jqXHR)=>{
@@ -286,6 +291,8 @@
                 .always(()=>{
                     page.dialogs.commands.hideLoading();
                 })
+
+
         }
 
         page.commands.handleChangeCategory = (elemCategory, elemCategoryParent) =>{
@@ -293,7 +300,7 @@
                 let categoryId = +elemCategory.val();
                 if (isNaN(categoryId) || categoryId == -1){
                     elemCategoryParent.empty();
-                    let str = `<option>-- Chọn danh mục con --</option>`;
+                    let str = `<option value="-1">-- Chọn danh mục con --</option>`;
                     elemCategoryParent.append(str);
                 }
                 else{
@@ -370,38 +377,44 @@
 
         page.elements.frmUpdate.validate({
             rules:{
-                productTitle:{
+                productTitleUp:{
                     required: true,
                     minlength: 3,
                     maxlength: 200
                 },
-                productPrices:{
+                productPriceUp:{
                     required: true,
                     minlength: 0,
                     maxlength: 9
                 },
-                category:{
+                categoryUp:{
                     handleValidate: "-1"
                 },
-                brand: {
+                categoryParentUp:{
+                    handleValidate: "-1"
+                },
+                brandUp: {
                     handleValidate: "-1"
                 }
             },
             messages:{
-                productTitle:{
+                productTitleUp:{
                     required: 'Tên sản phẩm không được bỏ trống.',
                     minlength: 'Số kí tự tối thiểu là 3 kí tự.',
                     maxlength: 'Số kí tự tối đa là 3 kí tự.'
                 },
-                productPrices:{
+                productPriceUp:{
                     required: 'Giá sản phẩm không được bỏ trống.',
                     minlength: 'Giá sản phẩm không được bỏ trống.',
                     maxlength: 'Số tiền tối đa không lớn hơn 1.000.000.000'
                 },
-                category:{
+                categoryUp:{
                     handleValidate: 'Cần chọn danh mục sản phẩm!'
                 },
-                brand: {
+                categoryParentUp:{
+                    handleValidate: 'Cần chọn danh mục sản phẩm!'
+                },
+                brandUp: {
                     handleValidate: 'Cần chọn tên thương hiệu!'
                 }
 

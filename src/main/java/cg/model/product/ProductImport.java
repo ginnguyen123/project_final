@@ -2,6 +2,7 @@ package cg.model.product;
 
 import cg.dto.productImport.ProductImportCreResDTO;
 import cg.dto.productImport.ProductImportDTO;
+import cg.dto.productImport.ProductImportResDTO;
 import cg.dto.productImport.ProductImportUpResDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.EColor;
@@ -55,6 +56,14 @@ public class ProductImport extends BaseEntity {
     @JoinColumn(name = "product_id" ,nullable = false)
     private Product product;
 
+//    public ProductImport( ESize size, EColor color, EProductStatus eProductStatus, Long quantity, Product product) {
+//        this.size = size;
+//        this.product = product;
+//        this.color = color;
+//        this.productStatus = eProductStatus;
+//        this.quantity = quantity;
+//
+//    }
 
     public ProductImportDTO toProductImportDTO(){
         return new ProductImportDTO()
@@ -68,6 +77,24 @@ public class ProductImport extends BaseEntity {
                 .setProductStatus(productStatus)
                 .setProduct(product.toProductDTO())
                 ;
+    }
+
+//    public ProductImportResDTO toProductImportDTOWithSizeColor() {
+//        return new ProductImportResDTO()
+//                .setProductid(product.getId())
+//                .setSize(size.getValue())
+//                .setColor(color.getValue())
+//                .setQuantity(quantity)
+//                .setProductStatus(productStatus.getValue());
+//    }
+
+    public ProductImportResDTO toGetQuantityOfProductImportDTOBySizeAndColor() {
+        return new ProductImportResDTO()
+                .setProductId(product.getId())
+                .setSize(size)
+                .setColor(color)
+                .setProductStatus(productStatus)
+                .setQuantity(quantity);
     }
 
     public ProductImportCreResDTO toProductImportCreResDTO(){
