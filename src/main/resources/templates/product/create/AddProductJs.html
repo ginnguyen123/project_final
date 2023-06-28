@@ -56,28 +56,34 @@
     }
 
     page.dialogs.commands.showImage = (list) =>{
-      let images = '';
-      for (let i = 0; i < list.length; i++){
-        images += `<div class="image ms-2 me-2">
-                          <img src="${URL.createObjectURL(list[i])}" alt="image">
-                          <span class="delete-image" data-id="${i}">&times;</span>
-                      </div>`;
-      }
-      $('.container-image').empty();
-
-      $('.container-image').prepend(images);
 
       let lightSliders = '';
       for (let i = 0; i < list.length; i++){
-        lightSliders += `<li class="image" style="height: 100%">
-                                <img class="me-2 ms-2" src="${URL.createObjectURL(list[i])}" style="height: 100%; width: 80%" alt="image">
+        lightSliders += `<li style="height: 100%">
+                            <div class="image">
+                                <img class="me-2 ms-2" src="${URL.createObjectURL(list[i])}" style="height: 100%; width: 80%;" alt="image">
                                 <span class="delete-image" data-id="${i}">&times;</span>
+                            </div>
                           </li>`;
       }
 
-      $('#slider').prepend(lightSliders);
-      $('#slider').lightSlider();
+      let ul = '';
 
+      ul += `<ul id="slider" style="height: 340px"></ul>`;
+
+      $('#cls-slider').prepend(ul);
+
+      $('#slider').empty();
+
+      $('#slider').prepend(lightSliders);
+
+      $('#slider').lightSlider({
+        loop:false,
+        keyPress: false
+      });
+
+
+      // $('#slider').lightSlider().refresh();
 
       $('.delete-image').off();
 
@@ -100,7 +106,7 @@
                 files.push(file[i]);
               }
             }
-        $('.container-image').empty();
+        $('#cls-slider').empty();
         page.dialogs.commands.showImage(files);
       })
     }
@@ -195,7 +201,7 @@
           }
         }
         files = tem;
-        $('.container-image').empty();
+        $('#cls-slider').empty();
         page.dialogs.commands.showImage(files);
       })
     }

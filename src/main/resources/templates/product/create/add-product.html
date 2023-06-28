@@ -82,6 +82,18 @@
         margin-top: -2px;
     }
 
+    .image{
+        position: relative;
+    }
+
+    .delete-image{
+        position: absolute;
+        top: 0;
+        left: 15px;
+        color: white;
+        font-size: 25px;
+    }
+
     ::after, ::before {
         margin: 0;
         padding: 0;
@@ -90,7 +102,7 @@
 
     .card{
         width: 98%;
-        height: 500px;
+        height: 450px;
         padding: 15px;
         margin-left: 10px;
         box-shadow: 0 0 5px rgba(0,0,0,0.15);
@@ -133,22 +145,6 @@
         transform: translateY(5px);
     }
 
-    #frm-image{
-        width: 96%;
-        height: 400px;
-        margin-left: 25px;
-        border-radius: 5px;
-        border:  2px dashed #d5d5e1;
-        color: #c8c9dd;
-        font-size: 0.9rem;
-        font-weight: 500;
-        position: relative;
-        background: #dfe3f259;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        user-select: none;
-    }
 
     .inner{
         position: relative;
@@ -157,11 +153,6 @@
         align-items: center;
     }
 
-    #frm-image .select{
-        color: #5256ad;
-        margin-left: 7px;
-        cursor: pointer;
-    }
 
     .dragover{
         border-style: solid;
@@ -169,51 +160,6 @@
         color: #c8c9dd;
         font-weight: 600;
         background: rgba(0,0,0,0.34);
-    }
-
-    .container-image{
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        position: relative;
-        height: auto;
-        max-height: 300px;
-        overflow-y: auto;
-    }
-
-    .container-image .image{
-        height: 85px;
-        width: 85px;
-        border-radius: 5px;
-        box-shadow: 0 0 5px rgba(0,0,0, 0.15);
-        overflow: hidden;
-        position: relative;
-        margin-bottom: 7px;
-        margin-right: 7px;
-    }
-
-    .container-image .image:nth-child(4n){
-        margin-right: 0;
-    }
-
-    .container-image .image img{
-        height: 100%;
-        width: 100%;
-    }
-
-    .container-image .image span{
-        position: absolute;
-        top: -4px;
-        right: 5px;
-        cursor: pointer;
-        font-size: 22px;
-        color: #000000;
-    }
-
-    .container-image .image span:hover{
-        opacity: 0.8;
     }
 
     .spinner-wrapper{
@@ -348,21 +294,14 @@
                                         <i class="fas fa-cloud-upload-alt me-2"></i>Chọn ảnh
                                     </span>
                                 </div>
-                                <div id="frm-image">
-                                    <!--                                    <span class="inner">Drag & drop image here or <span class="select">Brows</span>-->
-                                    <!--                                    </span>-->
+                                <div>
+                                <!-- id="frm-image"-->
                                     <input name="imageFileProduct" id="imageFileProduct" type="file" hidden multiple/>
-                                    <div class="container-image">
+                                    <div id="cls-slider">
+
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div>
-                            <!-- test slider -->
-                            <ul id="slider" style="height: 400px">
-                            </ul>
-
                         </div>
 
                         <div class="form-group">
