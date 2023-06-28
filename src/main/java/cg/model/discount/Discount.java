@@ -9,11 +9,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.Validate;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.Validator;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Pattern;
+import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -32,14 +39,26 @@ public class Discount extends BaseEntity {
     private Long discount;
     @OneToMany(mappedBy = "discount")
     private List<Product> products;
+    @Column(nullable = false)
+    private Date startDate;
+    @Column(nullable = false)
+    private Date endDate;
+
+//    @OneToMany(mappedBy = "product")
+//    private List<Product> productList;
+
 
     @OneToMany(mappedBy = "discount", fetch = FetchType.EAGER)
     private List<Category> categories;
 
-    public DiscountDTO toDiscountDTO(){
-        return new DiscountDTO()
-                .setId(id)
-                .setName(name)
-                .setDiscount(discount);
-    }
+//    public DiscountDTO toDiscountDTO(){
+//        return new DiscountDTO()
+//                .setId(id)
+//                .setName(name)
+//                .setDiscount(discount)
+//                .setStartDate(String.valueOf(startDate))
+//                .setEndDate(String.valueOf(endDate));
+//    }
+
+
 }

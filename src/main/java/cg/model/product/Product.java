@@ -84,11 +84,11 @@ public class Product extends BaseEntity {
                 .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
-        if (discount == null){
-            productDTO.setDiscount(null);
-        }else {
-            productDTO.setDiscount(discount.toDiscountDTO());
-        }
+//        if (discount == null){
+//            productDTO.setDiscount(null);
+//        }else {
+//            productDTO.setDiscount(discount.toDiscountDTO());
+//        }
         return productDTO;
     }
 
@@ -159,11 +159,11 @@ public class Product extends BaseEntity {
                 .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
-        if (discount == null){
-            productUpdaResDTO.setDiscount(null);
-        }else {
-            productUpdaResDTO.setDiscount(discount.toDiscountDTO());
-        }
+//        if (discount == null){
+//            productUpdaResDTO.setDiscount(null);
+//        }else {
+//            productUpdaResDTO.setDiscount(discount);
+//        }
 
         return productUpdaResDTO;
     }
