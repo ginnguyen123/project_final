@@ -2,6 +2,7 @@ package cg.model.customer;
 
 import cg.dto.customerDTO.CustomerDTO;
 import cg.model.BaseEntity;
+import cg.model.cart.Cart;
 import cg.model.enums.ESex;
 import cg.model.location_region.LocationRegion;
 import lombok.AllArgsConstructor;
@@ -36,7 +37,11 @@ public class Customer extends BaseEntity {
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
+
     private ESex sex;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Cart> carts;
 
     @Column(nullable = false)
     private String phone;

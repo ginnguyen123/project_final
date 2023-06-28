@@ -1,5 +1,6 @@
 package cg.dto.cartDetail;
 
+import cg.model.cart.CartDetail;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
 import lombok.AllArgsConstructor;
@@ -17,12 +18,19 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class CartDetailCreReqDTO implements Validator {
 
-    private String productTitle;
-    private BigDecimal totalAmount;
+    private Long productId;
     private Long quantity;
     private ESize size;
     private EColor color;
-    private Long cartId;
+
+    public CartDetail toCartDetail() {
+        return new CartDetail()
+                .setId(null)
+                .setQuantity(quantity)
+                .setSize(size)
+                .setColor(color)
+                ;
+    }
     @Override
     public boolean supports(Class<?> clazz) {
         return false;

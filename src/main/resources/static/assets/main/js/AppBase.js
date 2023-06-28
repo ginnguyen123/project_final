@@ -279,20 +279,23 @@ class AppBase{
     }
 
     static renderCart(item){
-        return`   <tr role="row" class="odd">
-                    <td width="10" class="sorting_1"><input type="checkbox"name="check1" value="1"></td>
+        return`   <tr id="tr_${item.id}">
+                    <td> <input type="checkbox" id="delete_${item.id}"> </td>
                     <td>${item.id}</td>
                     <td>${item.customerName}</td>
                     <td>${item.productsName}</td>
-                    <td>${item.total}</td>
+                    <td>${new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(item.total)}</td>
                     <td>${item.address}</td>
                     <td><span class="btn-add btn-sm">${item.status}</span></td>
                     
-                    <td><button class="btn btn-trash btn-sm trash" type="button"
-                                title="Xóa"><i class="fas fa-trash-alt"></i>
+                    <td><button class="btn btn-trash btn-sm delete" type="button"
+                                title="Xóa" data-id="${item.id}"><i class="fas fa-trash-alt"></i>
                     </button>
                       <button class="btn btn-edit btn-sm edit" type="button"
-                              title="Sửa"><i class="fa fa-edit"></i></button>
+                              title="Sửa" data-id="${item.id}"><i class="fa fa-edit"></i></button>
                     </td>
                   </tr>`
     }

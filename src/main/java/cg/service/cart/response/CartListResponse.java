@@ -26,9 +26,9 @@ public class CartListResponse {
 
     public CartListResponse(Cart cart){
         id = cart.getId();
-        customerName = cart.getCustomer().getFullName();
-        productsName = cart.getCartDetails().stream().map(p -> p.getProduct().getTitle()).collect(Collectors.joining(", "));
+        customerName = cart.getName_receiver();
         total = cart.getTotalAmount();
+        productsName = cart.getCartDetails().stream().map(p -> p.getProduct().getTitle()).collect(Collectors.joining(", "));
         address = cart.getLocationRegion().getAddress() + ", " + cart.getLocationRegion().getWardName() + ", " + cart.getLocationRegion().getDistrictName() + ", " + cart.getLocationRegion().getProvinceName();
         status = cart.getStatus();
     }

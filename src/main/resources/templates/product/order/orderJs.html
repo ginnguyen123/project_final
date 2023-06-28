@@ -16,6 +16,7 @@
       }
     }
     let currentPageNumber = 0;
+    let currentCartId;
     let cart = new Cart();
     let keyword;
     let total;
@@ -38,7 +39,7 @@
       let obj = {
         currentPageNumber: currentPageNumber,
         keyword:keyword,
-        // total:total,
+        total:total,
         sizePage:sizePage
       }
       console.log('obj'+obj)
@@ -49,7 +50,7 @@
           'accept': 'application/json',
           'content-type': 'application/json'
         },
-        url: page.urls.getAllCartPageSearch + `/search?size=${obj.sizePage}&sort=id,desc&page=${obj.currentPageNumber}&keyword=${obj.keyword}`,
+        url: page.urls.getAllCartPageSearch + `/search?size=${obj.sizePage}&sort=${obj.total},desc&page=${obj.currentPageNumber}&keyword=${obj.keyword}`,
         data: JSON.stringify(obj)
         // search?size=2&sort=id,desc
       })
@@ -58,7 +59,7 @@
                 console.log(data)
                 $('#cartTable tbody').empty();
                 listCart = data.content;
-
+                console.log('list cart'+listCart)
 
                 currentPageNumber = data.pageable.pageNumber
 
@@ -70,13 +71,13 @@
 
                 $.each(listCart, (i, item)=>{
                   let str = AppBase.renderCart(item);
-                  $('#cartTable tbody').prepend(str);
+                  console.log('item' + i)
+                  $('#cartTable tbody').append(str);
                 })
                 let strPage = page.commands.renderPagination(currentPageNumber, totalElements, totalPages );
                 $('#body-foot').empty().append(strPage);
-
-
                 addAllEvent();
+
               })
               .fail((jqXHR) => {
                 console.log(jqXHR);
@@ -91,7 +92,7 @@
         total = page.elements.total.val();
         sizePage = page.elements.sizePage.val();
         currentPageNumber= pageNumber;
-
+        console.log('add event')
         page.loadData.getAllCart();
       })
     }
@@ -112,7 +113,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-7 pagination-foot">
-                                <div class="dataTables_paginate paging_simple_numbers" id="sampleTable_paginate">
+                                <div class="dataTables_paginate paging_simple_numbers d-flex" id="sampleTable_paginate">
                                     <ul class="pagination">
                 `;
 
@@ -160,60 +161,59 @@
                             </li>
                         `;
       }
-
       return str;
     }
 
 
 
 
-    // function addEventDeleteClick() {
-    //   $(".delete").on('click', function () {
-    //     let productId = $(this).data('id');
-    //     page.loadData.findProductById(productId).then((data) => {
-    //       currentId = data.id;
-    //       AppBase.showDeleteCartItemConfirmDialog().then((result) => {
-    //         if (result.isConfirmed) {
-    //           $.ajax({
-    //             headers: {
-    //               'accept': 'application/json',
-    //               'content-type': 'application/json'
-    //             },
-    //             type: "DELETE",
-    //             url: page.urls.getAllProductImport + "/" + currentId
-    //           })
-    //                   .done(() => {
-    //                     $("#tr_" + currentId).remove();
-    //                     AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_DELETED);
-    //                   })
-    //                   .fail((error) => {
-    //                     AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_DELETED);
-    //                   })
-    //
-    //         }
-    //       })
-    //     })
-    //   })
-    //
-    // }
-    //
-    // page.loadData.findProductById = (id) => {
-    //   return $.ajax({
-    //     type: 'GET',
-    //     url: page.urls.getAllProductImport + '/' + id
-    //   })
-    //           .done((data) => {
-    //             console.log(data)
-    //
-    //             $('.select-search').select2({
-    //               dropdownParent: $('#ModalUP')
-    //             });
-    //
-    //           })
-    //           .fail(() => {
-    //
-    //           })
-    // }
+    function addEventDeleteClick() {
+      $(".delete").on('click', function () {
+        let cartId = $(this).data('id');
+        page.loadData.findCartById(cartId).then((data) => {
+          currentCartId = data.id;
+          AppBase.showDeleteCartItemConfirmDialog().then((result) => {
+            if (result.isConfirmed) {
+              $.ajax({
+                headers: {
+                  'accept': 'application/json',
+                  'content-type': 'application/json'
+                },
+                type: "DELETE",
+                url: page.urls.getAllCartPageSearch + "/" + currentCartId
+              })
+                      .done(() => {
+                        $("#tr_" + currentCartId).remove();
+                        AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_DELETED);
+                        page.loadData.getAllCart();
+                      })
+                      .fail((error) => {
+                        AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_DELETED);
+                      })
+            }
+          })
+        })
+      })
+
+    }
+
+    page.loadData.findCartById = (id) => {
+      return $.ajax({
+        type: 'GET',
+        url: page.urls.getAllCartPageSearch + '/' + id
+      })
+              .done((data) => {
+                console.log(data)
+
+                $('.select-search').select2({
+                  dropdownParent: $('#ModalUP')
+                });
+
+              })
+              .fail(() => {
+
+              })
+    }
     //
     // page.dialogs.elements.selectProduct = $('#select-productUp');
     //
@@ -327,7 +327,8 @@
 
     function addAllEvent(){
       // addEventEditClick();
-      // addEventDeleteClick();
+      addEventDeleteClick();
+
       page.commands.addEventChangePage();
     }
 
