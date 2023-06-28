@@ -8,6 +8,7 @@ import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
 import cg.service.media.IUploadMediaService;
+import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,9 @@ public class ProductService implements IProductService{
     @Autowired
     private DiscountRepository discountRepository;
 
+    @Autowired
+    private UploadUtils uploadUtils;
+
 
     @Override
     public List<Product> findAll() {
@@ -61,6 +66,7 @@ public class ProductService implements IProductService{
     public List<Product> findAllByDeletedFalse() {
         return productRepository.findAllByDeletedIsFalse();
     }
+
 
     @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
@@ -128,8 +134,10 @@ public class ProductService implements IProductService{
     @Override
     public Product updateWithAvatar(ProductUpdaReqDTO productUpdaReqDTO, MultipartFile avatar) {
         Product product = update(productUpdaReqDTO);
-        Media oldMedia = product.getProductAvatar();
-        Media media = uploadMediaService.uploadImageAndSaveImage(avatar, oldMedia);
+//        Media oldMedia = product.getProductAvatar();
+        Media newMedia = new Media();
+        newMedia = mediaRepository.save(newMedia);
+        Media media = uploadMediaService.uploadImageAndSaveImage(avatar, newMedia);
         product.setProductAvatar(media);
         save(product);
         return product;
@@ -138,8 +146,10 @@ public class ProductService implements IProductService{
     @Override
     public Product updateWithMedias(ProductUpdaReqDTO productUpdaReqDTO, List<MultipartFile> medias) {
         Product product = update(productUpdaReqDTO);
+        List<Media> oldMedias = product.getProductAvatarList();
         List<Media> newMedias = new ArrayList<>();
         newMedias = uploadMediaService.uploadAllImageAndSaveAllImage(medias, newMedias);
+        newMedias.addAll(oldMedias);
         product.setProductAvatarList(newMedias);
         save(product);
         return product;
@@ -147,10 +157,8 @@ public class ProductService implements IProductService{
 
     @Override
     public Product updateWithAvatarAndMedias(ProductUpdaReqDTO productUpdaReqDTO, MultipartFile avatar, List<MultipartFile> medias) {
+        updateWithMedias(productUpdaReqDTO, medias);
         Product product = updateWithAvatar(productUpdaReqDTO, avatar);
-        List<Media> newMedias = new ArrayList<>();
-        newMedias = uploadMediaService.uploadAllImageAndSaveAllImage(medias, newMedias);
-        product.setProductAvatarList(newMedias);
         save(product);
         return product;
     }

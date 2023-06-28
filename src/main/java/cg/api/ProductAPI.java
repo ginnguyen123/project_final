@@ -12,6 +12,7 @@ import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
 import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
+import cg.service.media.UploadMediaServiceImpl;
 import cg.service.product.IProductImportService;
 import cg.service.products.IProductService;
 import cg.service.products.ProductService;
@@ -81,7 +82,7 @@ public class ProductAPI {
         }
 
         Product product = productOptional.get();
-        List<ProductImportResDTO> productImports = productImportService.findQuantityProductImportBySizeAndColor();
+        List<ProductImportResDTO> productImports = productImportService.findQuantityProductImportBySizeAndColor(id);
         ProductResDTO productResDTO = product.toProductResDTO(productImports);
 
         return new ResponseEntity<>(productResDTO,HttpStatus.OK);
@@ -220,6 +221,7 @@ public class ProductAPI {
     public ResponseEntity<?> update(@PathVariable Long productId,
                                     @Validated ProductUpdaReqDTO productUpdaReqDTO) {
 
+
         if(productId == null){
             throw new DataInputException("Product's value void");
         }
@@ -252,12 +254,30 @@ public class ProductAPI {
 
         productUpdaReqDTO.setId(productOptional.get().getId());
         Product product = productService.update(productUpdaReqDTO);
+
+//        check kiểm tra có gửi lên id medias cũ
+        if (!productUpdaReqDTO.getOldMedias().isEmpty()){
+            String[] idOldMedias = productUpdaReqDTO.getOldMedias().split(",");
+            List<Media> mediaList = new ArrayList<>();
+            for (String str : idOldMedias){
+                Media mda = uploadMediaService.findById(str).get();
+                mediaList.add(mda);
+            }
+//            lọc ra danh sách cần xóa
+            product.setProductAvatarList(mediaList);
+            productService.save(product);
+        }else {
+            product.setProductAvatarList(null);
+            productService.save(product);
+        }
+
+
         return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
     }
 
     @PatchMapping("/update-with-avatar/{id}")
     public ResponseEntity<?> updateWithAvatar(@PathVariable Long id,
-                                              @RequestBody @Validated ProductUpdaReqDTO productUpdaReqDTO,
+                                              @Validated ProductUpdaReqDTO productUpdaReqDTO,
                                               @RequestParam("avatar") MultipartFile avatar){
         if(id == null){
             throw new DataInputException("Product's value void");
@@ -292,13 +312,29 @@ public class ProductAPI {
         productUpdaReqDTO.setId(productOptional.get().getId());
         Product product = productService.updateWithAvatar(productUpdaReqDTO, avatar);
 
+        //        check kiểm tra có gửi lên id medias cũ
+        if (!productUpdaReqDTO.getOldMedias().isEmpty()){
+            String[] idOldMedias = productUpdaReqDTO.getOldMedias().split(",");
+            List<Media> mediaList = new ArrayList<>();
+            for (String str : idOldMedias){
+                Media mda = uploadMediaService.findById(str).get();
+                mediaList.add(mda);
+            }
+//            lọc ra danh sách cần xóa
+            product.setProductAvatarList(mediaList);
+            productService.save(product);
+        }else {
+            product.setProductAvatarList(null);
+            productService.save(product);
+        }
+
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/update-with-medias/{id}")
     public ResponseEntity<?> updateWithMedias(@PathVariable Long id,
-                                              @RequestBody @Validated ProductUpdaReqDTO productUpdaReqDTO,
+                                              @Validated ProductUpdaReqDTO productUpdaReqDTO,
                                               @RequestParam("medias") List<MultipartFile> medias){
         if(id == null){
             throw new DataInputException("Product's value void");
@@ -330,22 +366,90 @@ public class ProductAPI {
             }
         }
 
+//        xử lý list hình cũ trước khi đưa xuống service để up hình
+        Product product1 = productOptional.get();
+
+        //        check kiểm tra có gửi lên id medias cũ
+        if (!productUpdaReqDTO.getOldMedias().isEmpty()){
+            String[] idOldMedias = productUpdaReqDTO.getOldMedias().split(",");
+            List<Media> mediaList = new ArrayList<>();
+            for (String str : idOldMedias){
+                Media mda = uploadMediaService.findById(str).get();
+                mediaList.add(mda);
+            }
+            product1.setProductAvatarList(mediaList);
+            productService.save(product1);
+        }else {
+            product1.setProductAvatarList(null);
+            productService.save(product1);
+        }
+
         productUpdaReqDTO.setId(productOptional.get().getId());
         Product product = productService.updateWithMedias(productUpdaReqDTO, medias);
 
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
     }
 
     @PatchMapping("/update-with-all/{id}")
     public ResponseEntity<?> updateWithAll(@PathVariable Long id,
-                                           @RequestBody @Validated ProductUpdaReqDTO productUpdaReqDTO,
+                                           @Validated ProductUpdaReqDTO productUpdaReqDTO,
                                            @RequestParam("avatar") MultipartFile avatar,
                                            @RequestParam("medias") List<MultipartFile> medias){
 
 
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(id == null){
+            throw new DataInputException("Product's value void");
+        }
+
+        Optional<Product> productOptional = productService.findById(id);
+
+        if (!productOptional.isPresent()){
+            throw new DataInputException("Product isn't exist");
+        }
+
+        Long brandId = productUpdaReqDTO.getBrandId();
+        Optional<Brand> brandOp = brandService.findById(brandId);
+        if (!brandOp.isPresent()){
+            throw new DataInputException("Brand isn't exist");
+        }
+
+        Long categoryId = productUpdaReqDTO.getCategoryId();
+        Optional<Category> categoryOp = categoryService.findById(categoryId);
+        if (!categoryOp.isPresent()){
+            throw new DataInputException("Category isn't exist");
+        }
+
+        if (productUpdaReqDTO.getDiscountId() != null){
+            Long discountId = productUpdaReqDTO.getDiscountId();
+            Optional<Discount> discountOp = discountService.findById(discountId);
+            if (!discountOp.isPresent()){
+                throw new DataInputException("Discount isn't exist");
+            }
+        }
+
+//        xử lý list hình cũ trước khi đưa xuống service để up hình
+        Product product1 = productOptional.get();
+
+        //        check kiểm tra có gửi lên id medias cũ
+        if (!productUpdaReqDTO.getOldMedias().isEmpty()){
+            String[] idOldMedias = productUpdaReqDTO.getOldMedias().split(",");
+            List<Media> mediaList = new ArrayList<>();
+            for (String str : idOldMedias){
+                Media mda = uploadMediaService.findById(str).get();
+                mediaList.add(mda);
+            }
+            product1.setProductAvatarList(mediaList);
+            productService.save(product1);
+        }else {
+            product1.setProductAvatarList(null);
+            productService.save(product1);
+        }
+
+        productUpdaReqDTO.setId(productOptional.get().getId());
+        Product product = productService.updateWithAvatarAndMedias(productUpdaReqDTO, avatar ,medias);
+
+        return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
     }
 
 

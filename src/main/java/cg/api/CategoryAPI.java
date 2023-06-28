@@ -41,9 +41,20 @@ public class CategoryAPI {
 
     @GetMapping()
     public ResponseEntity<?> getAllCategory(){
-        List<Category> categories = categoryService.findCategoriesByCategoryParentNotNull();
-        List<CategoryDTO> categorys = categories.stream().map(i->i.toCategoryDTO()).collect(Collectors.toList());
-        return new ResponseEntity<>(categorys, HttpStatus.OK);
+        List<Category> categoryParents = categoryService.findAllByCategoryParentIsNull(); // call category cha
+        //Chuyển về list Category DTO cha với list Category DTO con = null
+        List<CategogyParentDTO> categogyParentDTOS = categoryParents.stream().map(i -> i.toCategogyParentDTO()).collect(Collectors.toList());
+
+        for (int i = 0; i<categogyParentDTOS.size(); i++){
+//            khởi tạo 1 list con DTO mới sau mỗi idex để lưu vào category dto cha
+            List<CategoryChildDTO> categoryChildDTOS = new ArrayList<>();
+//            lấy ra danh sách con theo cha
+            List<Category> categoryChilds = categoryService.findCategoriesByCategoryParentIdAndDeletedIsFalse(categoryParents.get(i));
+            categoryChildDTOS.addAll(categoryChilds.stream().map(c -> c.toCategoryChild()).collect(Collectors.toList()));
+            categogyParentDTOS.get(i).setCategoryChilds(categoryChildDTOS);
+        }
+
+        return new ResponseEntity<>(categogyParentDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/get")
@@ -71,25 +82,6 @@ public class CategoryAPI {
         return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
     }
 
-    @PostMapping("/{idParent}")
-    public ResponseEntity<?> getAllCategoriesByStatus(@PathVariable Long idParent){
-        Optional<Category> categoryOptional = categoryService.findById(idParent);
-        if (!categoryOptional.isPresent()){
-            throw new DataInputException("khong ton tai");
-        }
-
-        String name = categoryOptional.get().getName();
-        List<String> aolist = new ArrayList<>();
-        if (idParent == 1){
-
-        }
-
-        else {
-
-        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
 
     @GetMapping("/{categoryParentId}")
