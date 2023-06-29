@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="update-orderJs" th:inline="javascript">
+
+    <script>
+
+        page.commands.loadData = ()=>{
+
+        }
+        page.initializeControlEvent = ()=>{
+
+
+        }
+        $(()=>{
+            page.commands.loadData();
+
+            page.initializeControlEvent();
+        })
+    </script>
+</th:block>

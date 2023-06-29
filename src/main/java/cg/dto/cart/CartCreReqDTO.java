@@ -20,14 +20,15 @@ import java.util.List;
 public class CartCreReqDTO implements Validator {
 
 //list cartdetail
-
-    private String fullName;
     private String email;
-    private String phone;
+    private String receivedName;
+//    private String fullName;
+    private String receivedPhone;
     private List<CartDetailCreReqDTO> cartDetailDTOList;
     private BigDecimal totalAmount;
     private LocationRegionDTO locationRegion;
     private String status;
+
 
 
 
@@ -40,9 +41,9 @@ public class CartCreReqDTO implements Validator {
     public void validate(Object target, Errors errors) {
         CartCreReqDTO cartCreReqDTO = (CartCreReqDTO) target;
 
-        String fullName = cartCreReqDTO.getFullName();
+        String fullName = cartCreReqDTO.getReceivedName();
         String email = cartCreReqDTO.getEmail();
-        String phone = cartCreReqDTO.getPhone();
+        String phone = cartCreReqDTO.getReceivedPhone();
         String totalAmount = String.valueOf(cartCreReqDTO.getTotalAmount());
         String locationRegion = String.valueOf(cartCreReqDTO.getLocationRegion());
 

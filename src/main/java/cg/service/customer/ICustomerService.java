@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ICustomerService extends IGeneralService<Customer,Long > {
 
-    Optional<Customer> findCustomerByPhoneAndEmailAndAndFullName(String phone , String email , String fullName);
+    Optional<Customer> findCustomerByEmail(String email);
 }

@@ -2,6 +2,7 @@ package cg.dto.cart;
 
 
 import cg.dto.cartDetail.CartDetailCreReqDTO;
+import cg.dto.cartDetail.CartDetailUpReqDTO;
 import cg.dto.locationRegionDTO.LocationRegionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,10 +21,10 @@ import java.util.List;
 public class CartUpReqDTO implements Validator {
 
     private Long id;
-    private String fullName;
+    private String name_receiver;
     private String email;
-    private String phone;
-    private List<CartDetailCreReqDTO> cartDetailDTOList;
+    private String phone_receiver;
+    private List<CartDetailUpReqDTO> cartDetailDTOList;
     private BigDecimal totalAmount;
     private LocationRegionDTO locationRegion;
     private String status;

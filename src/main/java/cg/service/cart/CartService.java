@@ -3,6 +3,7 @@ package cg.service.cart;
 import cg.dto.cart.*;
 import cg.dto.cartDetail.CartDetailCreReqDTO;
 import cg.dto.cartDetail.CartDetailDTO;
+import cg.dto.cartDetail.CartDetailUpReqDTO;
 import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
@@ -27,6 +28,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -79,79 +81,70 @@ public class CartService implements ICartService {
 
     @Override
     public Page<CartDTO> findAllByFilters(CartRequest keyword, Pageable pageable) {
-        return cartFilterRepository.findAllByFilters(keyword,pageable).map(Cart::toCartDTO);
+        return cartFilterRepository.findAllByFilters(keyword, pageable).map(Cart::toCartDTO);
     }
 
 
     @Override
     public Page<CartListResponse> pageableByKeyword(CartRequest keyword, Pageable pageable) {
 
-        if(keyword.getKeyword() != null){
-            keyword.setKeyword("%"+keyword.getKeyword()+"%");
+        if (keyword.getKeyword() != null) {
+            keyword.setKeyword("%" + keyword.getKeyword() + "%");
         }
 
-        return cartRepository.pageableByKeyword(keyword,pageable).map(CartListResponse::new);
+        return cartRepository.pageableByKeyword(keyword, pageable).map(CartListResponse::new);
     }
 
     @Override
     public void create(CartCreReqDTO cartCreReqDTO) {
-        String fullName = cartCreReqDTO.getFullName();
-        String phone = cartCreReqDTO.getPhone();
         String email = cartCreReqDTO.getEmail();
-        Optional<Customer> customerOptional=customerRepository.findCustomerByPhoneAndEmailAndAndFullName(phone,email ,fullName);
+        Optional<Customer> customerOptional = customerRepository.findCustomerByEmail(email);
         Customer customer = new Customer();
-        if (customerOptional.isPresent()){
+        LocationRegion locationRegion = cartCreReqDTO.getLocationRegion().toLocationRegion(customer);
+        if (customerOptional.isPresent()) {
             customer = customerOptional.get();
-            // set :dia chi, tên ng sdt //=> = cus
-            List<LocationRegion> locationRegions = customer.getLocationRegions();
-            locationRegions.add(cartCreReqDTO.getLocationRegion().toLocationRegion());
-            customer.setLocationRegions(locationRegions);
-        }else {
-            customer.setFullName(cartCreReqDTO.getFullName());
+            //set lai dia chi cũ của cus
+            Long idLocationRegion = cartCreReqDTO.getLocationRegion().getId();
+            Optional<LocationRegion> optionalLocationRegion = locationRegionRepository.findById(idLocationRegion);
+            if (optionalLocationRegion.isPresent()) {
+                List<LocationRegion> locationRegionsOfCustomer = customer.getLocationRegions();
+                LocationRegion lcReve = locationRegionsOfCustomer.stream().
+                        filter(i -> i.getId() == idLocationRegion).collect(Collectors.toList()).get(0);
+                locationRegion = lcReve;
+            }
+        } else if (customerOptional.isEmpty()) {
             customer.setEmail(cartCreReqDTO.getEmail());
-            customer.setPhone(cartCreReqDTO.getPhone());
-            List<LocationRegion> locationRegions = customer.getLocationRegions();
-            locationRegions.add(cartCreReqDTO.getLocationRegion().toLocationRegion());
-            customer.setLocationRegions(locationRegions);
             customerRepository.save(customer);
+            locationRegion.setId(null);
+            locationRegionRepository.save(locationRegion);
         }
-        ECartStatus status = ECartStatus.getECartStatus(cartCreReqDTO.getStatus());
         Cart cart = new Cart();
-        cart.setName_receiver(cartCreReqDTO.getFullName());
-        cart.setPhone_receiver(cartCreReqDTO.getPhone());
-        cart.setStatus(status);
-        cart.setTotalAmount(BigDecimal.ZERO);
-        cart.setCustomer(customer);
-        cartRepository.save(cart);
+        cart.setName_receiver(cartCreReqDTO.getReceivedName());
+        cart.setPhone_receiver(cartCreReqDTO.getReceivedPhone());
+        cart.setStatus(ECartStatus.getECartStatus(cartCreReqDTO.getStatus()));
 
-        Optional<LocationRegion> locationRegion = locationRegionRepository.findById(cartCreReqDTO.getLocationRegion().getId());
         List<CartDetailCreReqDTO> cartDetailCreReqDTOs = cartCreReqDTO.getCartDetailDTOList();
         BigDecimal totalTotal = BigDecimal.ZERO;
         List<CartDetail> cartDetails = new ArrayList<>();
         for (CartDetailCreReqDTO item : cartDetailCreReqDTOs) {
             CartDetail cartDetail = item.toCartDetail();
             Optional<Product> product = productRepository.findById(item.getProductId());
-
             BigDecimal price = product.get().getPrice();
             long quantity = item.getQuantity();
             BigDecimal totalLe = price.multiply(BigDecimal.valueOf(quantity));
             cartDetail.setTotalAmount(totalLe);
             totalTotal = totalTotal.add(totalLe);
-
             cartDetail.setProduct(product.get());
             cartDetail.setCart(cart);
             cartDetails.add(cartDetail);
         }
 
-
-        List<CartDetail> cartDetailList = cartDetailRepository.saveAll(cartDetails);
-
-
         cart.setTotalAmount(totalTotal);
-        cart.setLocationRegion(locationRegion.get());
-
-        cart.setCartDetails(cartDetailList);
+        cart.setLocationRegion(locationRegion);
+        cart.setCustomer(customer);
         cartRepository.save(cart);
+        cartDetailRepository.saveAll(cartDetails);
+
     }
 
     @Override
@@ -161,67 +154,39 @@ public class CartService implements ICartService {
 
     @Override
     public CartListResponse update(CartUpReqDTO cartUpReqDTO) {
-        Optional<Cart>optionalCart = cartRepository.findById(cartUpReqDTO.getId());
-        if (!optionalCart.isPresent()){
+        Optional<Cart> optionalCart = cartRepository.findById(cartUpReqDTO.getId());
+        if (!optionalCart.isPresent()) {
             throw new ResourceNotFoundException("Not found cart ");
         }
         Cart cart = optionalCart.get();
-        // set lại các field người nhận.
-        // remove cartdetail
-        // add cartdetail.
-        // update cart.
-
-
-
-        String fullName = cartUpReqDTO.getFullName();
-        String phone = cartUpReqDTO.getPhone();
-        String email = cartUpReqDTO.getEmail();
-        Optional<Customer> customerOptional=customerRepository.findCustomerByPhoneAndEmailAndAndFullName(phone,email ,fullName);
-        Customer customer = customerOptional.get();
-        if (customerOptional.isPresent()) {
-            customer.setFullName(cartUpReqDTO.getFullName());
-            customer.setEmail(cartUpReqDTO.getEmail());
-            customer.setPhone(cartUpReqDTO.getPhone());
-            customerRepository.save(customer);
-        }
-        ECartStatus status = ECartStatus.getECartStatus(cartUpReqDTO.getStatus());
-
-        cart.setName_receiver(customer.getFullName());
-        cart.setPhone_receiver(customer.getPhone());
-        cart.setStatus(status);
-        cart.setTotalAmount(BigDecimal.ZERO);
-        cart.setCustomer(customer);
-        cartRepository.save(cart);
-
-        Optional<LocationRegion> locationRegion = locationRegionRepository.findById(cartUpReqDTO.getLocationRegion().getId());
-        List<CartDetailCreReqDTO> cartDetailCreReqDTOs = cartUpReqDTO.getCartDetailDTOList();
+        cart.setName_receiver(cartUpReqDTO.getName_receiver());
+        cart.setPhone_receiver(cartUpReqDTO.getPhone_receiver());
+        List<CartDetailUpReqDTO> cartDetailDTOList = cartUpReqDTO.getCartDetailDTOList(); //cartDetailUp đang null
         BigDecimal totalTotal = BigDecimal.ZERO;
         List<CartDetail> cartDetails = new ArrayList<>();
-        for (CartDetailCreReqDTO item : cartDetailCreReqDTOs) {
+        for (CartDetailUpReqDTO item : cartDetailDTOList) {
             CartDetail cartDetail = item.toCartDetail();
             Optional<Product> product = productRepository.findById(item.getProductId());
-
             BigDecimal price = product.get().getPrice();
             long quantity = item.getQuantity();
             BigDecimal totalLe = price.multiply(BigDecimal.valueOf(quantity));
             cartDetail.setTotalAmount(totalLe);
             totalTotal = totalTotal.add(totalLe);
-
             cartDetail.setProduct(product.get());
             cartDetail.setCart(cart);
             cartDetails.add(cartDetail);
         }
-
-
         List<CartDetail> cartDetailList = cartDetailRepository.saveAll(cartDetails);
-
-
         cart.setTotalAmount(totalTotal);
+        Optional<LocationRegion> locationRegion = locationRegionRepository.findById(cartUpReqDTO.getLocationRegion().getId());
         cart.setLocationRegion(locationRegion.get());
-
         cart.setCartDetails(cartDetailList);
         cartRepository.save(cart);
         CartListResponse cartUpResDTO = new CartListResponse(cart);
         return cartUpResDTO;
+        // set lại các field người nhận.
+        // remove cartdetail
+        // add cartdetail.
+        // update cart.
     }
 }
