@@ -46,7 +46,7 @@ public class Customer extends BaseEntity {
     @Column
     private String phone;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
     private List<LocationRegion> locationRegions;
 
     public CustomerDTO toCustomerDTO() {
