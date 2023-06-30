@@ -21,5 +21,7 @@ public interface ICartService extends IGeneralService<Cart,Long> {
 
     Optional<CartDTO> getCartDTOByIdDeletedIsFalse(Long id);
 
-    CartListResponse update(CartUpReqDTO cartUpReqDTO);
+    CartUpReqDTO getCartDTOByCartDetail(CartUpReqDTO cartUpReqDTO);
+
+    CartUpResDTO update(CartUpReqDTO cartUpReqDTO);
 }

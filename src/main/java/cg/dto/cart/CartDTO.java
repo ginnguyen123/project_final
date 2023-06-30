@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class CartDTO {
     private Long id;
-
     private Long customerId;
     private CustomerDTO customer;
     private BigDecimal totalAmount;
@@ -31,6 +30,7 @@ public class CartDTO {
     private ECartStatus status;
     private List<CartDetailDTO> cartDetailDTOList;
 
+    //CartDTO (pi.id,pi.customer.id,pi.totalAmount,pi.locationRegion.id,pi.status
     public CartDTO(Long id,Long customerId,BigDecimal totalAmount,Long locationRegionId,ECartStatus status){
         this.id = id;
         this.customerId = customerId;
@@ -38,6 +38,7 @@ public class CartDTO {
         this.locationRegionId = locationRegionId;
         this.status = status;
     }
+
 
     public Cart toCart() {
         return new Cart()

@@ -4,6 +4,7 @@ class AppBase{
     static API_PRODUCT = this.API_SERVER + '/products';
     static API_PRODUCT_IMPORT = this.API_SERVER + '/product-import';
     static API_BRAND = this.API_SERVER + '/brands';
+    static API_CART_DETAIL = this.API_SERVER + '/cart-details/';
     static API_CART = this.API_SERVER + '/carts';
     static API_CATEGORY = this.API_SERVER + '/categories';
     static API_DISCOUNT = this.API_SERVER + '/discounts';
@@ -303,6 +304,32 @@ class AppBase{
                     </td>
                   </tr>`
     }
+    static renderCartDetail(item){
+        return`   <tr id="tr_${item.id}">
+                    <td> <input type="checkbox" id="delete_${item.id}"> </td>
+                    <td>${item.id}</td>
+                    <td>${item.productTitle}</td>
+                    <td>${item.color}</td>
+                    <td>${item.size}</td>
+                    <td>${new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(item.productPrice)}</td>
+                    <td>${item.quantity}</td>
+                    <td>${new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(item.totalAmount)}</td>
+                    <td><span class="btn-add btn-sm">${item.status}</span></td>
+                    
+                    <td><button class="btn btn-trash btn-sm delete" type="button"
+                                title="Xóa" data-id="${item.id}"><i class="fas fa-trash-alt"></i>
+                    </button>
+                      <button class="btn btn-edit btn-sm edit" type="button"
+                              title="Sửa" data-id="${item.id}"><i class="fa fa-edit"></i></button>
+                    </td>
+                  </tr>`
+    }
 
 
 
@@ -391,6 +418,19 @@ class Cart{
         this.locationRegion = locationRegion;
         this.status = status;
 
+    }
+}
+
+class CartDetail{
+    constructor(id,productsName,color,size,price,quantity,totalAmount,status) {
+        this.id = id;
+        this.productsName = productsName;
+        this.color = color;
+        this.size = size;
+        this.price = price;
+        this.quantity = quantity;
+        this.totalAmount = totalAmount;
+        this.status = status;
     }
 }
 

@@ -34,6 +34,7 @@ public class ProductImport extends BaseEntity {
     @Column(nullable = false)
     private ESize size;
 
+
     @Column(nullable = false)
     private EColor color;
 
