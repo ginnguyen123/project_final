@@ -9,10 +9,8 @@ import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
 import cg.model.media.Media;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,9 +30,11 @@ public class ProductImport extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ESize size;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private EColor color;
 
     @Column(nullable = false)

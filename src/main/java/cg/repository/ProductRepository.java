@@ -2,6 +2,8 @@ package cg.repository;
 
 import cg.dto.product.ProductListResponse;
 import cg.dto.product.client.ProductResClientDTO;
+import cg.model.enums.EColor;
+import cg.model.enums.ESize;
 import cg.model.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +13,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -33,21 +34,34 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "OR p.price = :search" )
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
 
-//    @Query(value = "SELECT NEW cg.dto.product.ProductListResponse() " +
-//            "FROM Product AS prod " +
-//            "JOIN ProductImport AS prodImp ON prodImp.product = prod " +
-//            "JOIN Category AS cate ON cate = prod.category " +
-//            "JOIN Brand AS bra ON bra = prod.brand " +
-//            "WHERE prod.title LIKE :search")
-//    Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, Pageable pageable);
+    @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
+            "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
+            "FROM Product AS prod " +
+            "JOIN ProductImport AS prodImp ON prodImp.product = prod " +
+            "JOIN Category AS cate ON cate = prod.category " +
+            "JOIN Brand AS bra ON bra = prod.brand " +
+            "WHERE prodImp.quantity > 0 " +
+            "AND prod.title LIKE :search " +
+            "OR prod.code LIKE :search " +
+            "OR prodImp.code LIKE :search " +
+            "OR prodImp.color LIKE :color " +
+            "OR prodImp.size LIKE :size " +
+            "OR bra.name LIKE :search " +
+            "OR cate.name LIKE :search " +
+            "OR cate.categoryParent.name LIKE :search")
+    Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, @Param("color") EColor color,
+            @Param("size")ESize size, Pageable pageable);
+
+//    @Query(value = "")
+//    Page<ProductResClientDTO> findAllByCategory(@Param("id")Long id);
 
     @Query(value = "SELECT prod FROM Product AS prod " +
-            "INNER JOIN Discount AS disc ON disc = prod.discount " +
+            "LEFT JOIN Discount AS disc ON disc = prod.discount " +
             "INNER JOIN ProductImport AS proImp ON proImp.product = prod " +
             "WHERE proImp.quantity > 0 " +
             "AND prod.deleted = FALSE " +
             "AND :day BETWEEN disc.startDate AND disc.endDate " +
-            "GROUP BY prod.id")
+            "GROUP BY prod.id", nativeQuery = true)
     List<Product> findAllByDiscountTime(@Param("day") LocalDate date);
 
 
