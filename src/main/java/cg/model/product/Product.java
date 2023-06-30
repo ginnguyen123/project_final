@@ -6,6 +6,7 @@ import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
 import cg.dto.product.ProductResDTO;
 import cg.dto.product.ProductUpdaResDTO;
+import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
@@ -184,6 +185,21 @@ public class Product extends BaseEntity {
 //        }
 
         return productUpdaResDTO;
+    }
+
+    public ProductResClientDTO toProductResClientDTO(){
+        Long priceDiscount = price.multiply(BigDecimal.valueOf(discount.getDiscount())).divide(BigDecimal.valueOf(100)).longValue();
+        return new ProductResClientDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setPrice(String.valueOf(price.longValue()))
+                .setPriceDiscount(priceDiscount)
+                .setPercent(discount.getDiscount())
+                .setAvatar(productAvatar.getFileUrl())
+                .setBrand(brand.getName())
+                .setCategory(category.toCategoryClientDTO())
+                ;
     }
 }
 

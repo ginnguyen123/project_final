@@ -4,10 +4,13 @@ import cg.model.discount.Discount;
 import cg.model.product.Product;
 import cg.repository.DiscountRepository;
 import cg.repository.ProductRepository;
+import cg.service.discount.request.DiscountCreateRequest;
+import cg.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +23,9 @@ public class DiscountServiceImpl implements IDiscountService{
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private AppUtils appUtils;
 
     @Override
     public List<Discount> findAll() {
@@ -69,4 +75,17 @@ public class DiscountServiceImpl implements IDiscountService{
         Discount discount = findById(id).get();
         delete(discount);
     }
+
+    @Override
+    public Discount create(DiscountCreateRequest createRequest) {
+        createRequest.setId(null);
+        Date startDay = appUtils.stringToDate(createRequest.getStartDate());
+        Date endDay = appUtils.stringToDate(createRequest.getEndDate());
+        Discount discount = createRequest.toDiscount();
+        discount.setStartDate(startDay);
+        discount.setEndDate(endDay);
+        discountRepository.save(discount);
+        return discount;
+    }
+
 }

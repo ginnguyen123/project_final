@@ -37,7 +37,7 @@ public class LocationRegion {
 
     private String address;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
@@ -50,6 +50,7 @@ public class LocationRegion {
                 .setDistrictName(districtName)
                 .setWardId(wardId)
                 .setWardName(wardName)
-                .setAddress(address);
+                .setAddress(address)
+                .setCustomerId(customer.getId());
     }
 }

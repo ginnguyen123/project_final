@@ -3,6 +3,7 @@ package cg.repository;
 
 import cg.dto.product.ProductListResponse;
 
+import cg.dto.product.client.ProductFilterDTO;
 import cg.model.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -35,5 +37,26 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
 
 
+    @Query(value = "SELECT prod FROM Product AS prod " +
+            "INNER JOIN Discount AS disc ON disc = prod.discount " +
+            "WHERE :day BETWEEN disc.startDate AND disc.endDate " +
+            "AND prod.deleted = FALSE")
+    List<Product> findAllByDiscountTime(@Param("day")Date date);
+
+
+    @Query(value = "SELECT new cg.dto.product.client.ProductFilterDTO(" +
+
+            "p.id," +
+            "p.title," +
+            "p.brand.name," +
+            "pi.color," +
+            "pi.size," +
+            "p.category.name," +
+            "p.price," +
+            "p.discount.name" +
+            ") " +
+            "FROM Product AS p " +
+            "JOIN ProductImport AS pi " +
+            "WHERE p.title LIKE :search " +)
 
 }

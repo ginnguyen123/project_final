@@ -5,6 +5,7 @@
         let avatarObj
         let mediaObj = [];
         let imageFiles = [];
+        let ul = `<ul id="slider-up" style="height: 90px"></ul>`;
         let page = {
             urls:{
                 getAllBrand: AppBase.API_BRAND,
@@ -55,37 +56,58 @@
         }, "");
 
         page.dialogs.commands.showImagesObj = (listObj)=>{
+            $('#cls-slider-up').empty();
+
+            $('#cls-slider-up').prepend(ul);
+
             if (listObj.length != 0){
+
+                let strSlider = '';
+
                 for (let i=0; i<listObj.length; i++){
-                    let strImage = AppBase.image_thumbnail(listObj[i]);
-                    let str = `<div class="image ms-2 me-2">
-                                    <img src='${strImage}' alt="image">
-                                    <span class="delete-image" data-id= "${i}">&times;</span>
-                                </div>`;
-                    page.elements.medias.append(str);
+                    let strImageSlider = AppBase.image_thumbnail(listObj[i]);
+                    strSlider += `<li style="height: 100%">
+                                      <div class="image">
+                                        <img src='${strImageSlider}' alt="image">
+                                        <span class="delete-image" data-id= "${i}">&times;</span>
+                                        </div>
+                                   </li>`;
+
                 }
+
+                $('#slider-up').append(strSlider);
 
                 $('.delete-image').off();
 
                 page.dialogs.commands.evenDeleteImageObj();
-
             }
+
+            $('#slider-up').lightSlider({
+                loop: false,
+                item: 8
+            });
+
+            page.dialogs.commands.showImageFiles(imageFiles);
         }
 
         page.dialogs.commands.showImageFiles = (listFiles) =>{
-            let images = '';
-            for (let i = 0; i<listFiles.length; i++){
-                images += `<div class="image ms-2 me-2">
-                                <img src="${URL.createObjectURL(listFiles[i])}" alt="image">
+            let images = ``;
+            if (listFiles.length != 0){
+                for (let i = 0; i<listFiles.length; i++){
+                    images += `<li style="height: 100%">
+                            <div class="image">
+                                <img class="img-files" src="${URL.createObjectURL(listFiles[i])}" alt="image">
                                 <span class="delete-file" data-id="${i}">&times;</span>
-                            </div>`;
+                            </div>
+                          </li>`;
+                }
+
+                $('#slider-up').append(images);
+
+                $('.delete-file').off();
+
+                page.dialogs.commands.evenDeleteImageFile();
             }
-
-            page.elements.medias.prepend(images);
-
-            $('.delete-file').off();
-
-            page.dialogs.commands.evenDeleteImageFile();
         }
 
         page.dialogs.commands.showLoading = () =>{
@@ -206,8 +228,7 @@
             /*]]>*/
         }
 
-        page.dialogs.commands.doUpdate = () =>
-        {
+        page.dialogs.commands.doUpdate = () => {
              page.dialogs.commands.showLoading();
             let id = idProduct;
             let title = page.elements.productTitle.val();
@@ -309,17 +330,25 @@
             })
         }
 
-        page.commands.handleChangeImage = () =>{
+        page.commands.handleChangeImage = () => {
             page.dialogs.elements.inputImages.on('change', ()=>{
-                let file = page.dialogs.elements.inputImages[0].files;
-                for (let i = 0; i < file.length; i++){
-                    if (imageFiles.every(e => e.name != file[i].name)){
-                        imageFiles.push(file[i]);
+                let file = $('#imageFileProduct')[0].files;
+                let fileValideds = [];
+                for (let i = 0; i<file.length; i++){
+                    if (file[i].type === 'image/jpeg' || file[i].type === 'image/png') {
+                        fileValideds.push(file[i])
+                    }else{
+                        AppBase.IziToast.showErrorAlert(file[i].name + " không hợp lệ!");
+                        AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_IMAGE);
                     }
                 }
-                page.elements.medias.empty();
+
+                for (let f = 0; f < fileValideds.length; f++){
+                    if (imageFiles.every(e => e.name != fileValideds[f].name)){
+                        imageFiles.push(fileValideds[f]);
+                    }
+                }
                 page.dialogs.commands.showImagesObj(mediaObj);
-                page.dialogs.commands.showImageFiles(imageFiles);
             })
         }
 
@@ -347,9 +376,9 @@
                     }
                 }
                 mediaObj = tem;
-                page.elements.medias.empty();
+                // page.elements.medias.empty();
                 page.dialogs.commands.showImagesObj(mediaObj);
-                page.dialogs.commands.showImageFiles(imageFiles);
+                // page.dialogs.commands.showImageFiles(imageFiles);
             })
         }
 
@@ -363,15 +392,13 @@
                     }
                 }
                 imageFiles = tem;
-                page.elements.medias.empty();
+                // page.elements.medias.empty();
                 page.dialogs.commands.showImagesObj(mediaObj);
-                page.dialogs.commands.showImageFiles(imageFiles);
+                // page.dialogs.commands.showImageFiles(imageFiles);
             })
         }
 
         page.commands.loadData = ()=>{
-            // page.loadData.showEditor();
-
             page.loadData.getProduct();
         }
 

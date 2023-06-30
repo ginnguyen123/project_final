@@ -41,7 +41,7 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public Optional<Customer> findCustomerByPhoneAndEmailAndAndFullName(String phone, String email, String fullName) {
-        return customerRepository.findCustomerByPhoneAndEmailAndAndFullName(phone,email,fullName);
+    public Optional<Customer> findCustomerByEmail(String email) {
+        return customerRepository.findCustomerByEmail(email);
     }
 }
