@@ -1,6 +1,7 @@
 package cg.dto.product;
 
 import cg.dto.media.MediaDTO;
+import cg.model.brand.Brand;
 import cg.model.media.Media;
 import lombok.AllArgsConstructor;
 import lombok.Data;

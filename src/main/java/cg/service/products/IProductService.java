@@ -25,5 +25,4 @@ public interface IProductService extends IGeneralService<Product,Long> {
 
     List<Product> findProductsByCategoryWithLimit(Long idCategory);
 
-    Page<ProductResDTO> findAll(ProductFilterReqDTO productFilterReqDTO, Pageable pageable);
 }

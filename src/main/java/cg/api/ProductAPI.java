@@ -68,23 +68,6 @@ public class ProductAPI {
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/get-all")
-    private ResponseEntity<?> getAllProduct(@RequestBody ProductFilterReqDTO productFilterReqDTO,
-                                            @PageableDefault(sort = "id",
-                                                    direction = Sort.Direction.DESC,
-                                                    size = 100) Pageable pageable){
-        int size = 10;
-        int currentPageNumber = productFilterReqDTO.getCurrentPageNumber();
-
-        pageable = PageRequest.of(currentPageNumber, size,Sort.by("id").ascending());
-
-        Page<ProductResDTO> productDTOS = productService.findAll(productFilterReqDTO, pageable);
-        if (productDTOS.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
-    }
-
     @GetMapping("/category/{idCategory}")
     public ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
         List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);

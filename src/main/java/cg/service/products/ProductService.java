@@ -131,10 +131,7 @@ public class ProductService implements IProductService{
         return productRepository.findProductsByCategoryWithLimit(idCategory);
     }
 
-    @Override
-    public Page<ProductResDTO> findAll(ProductFilterReqDTO productFilterReqDTO, Pageable pageable) {
-        return productRepository.findAll(productFilterReqDTO, pageable);
-    }
+
 
     @Override
     public Product updateWithAvatar(ProductUpdaReqDTO productUpdaReqDTO, MultipartFile avatar) {

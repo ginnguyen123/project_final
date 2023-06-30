@@ -3,6 +3,9 @@ package cg.dto.product;
 import cg.dto.media.MediaDTO;
 import cg.dto.productImport.ProductImportDTO;
 import cg.dto.productImport.ProductImportResDTO;
+import cg.model.brand.Brand;
+import cg.model.category.Category;
+import cg.model.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,4 +43,19 @@ public class ProductResDTO {
         this.urlImage = urlImage;
         this.categoryName = categoryName;
     }
+
+    public ProductResDTO(Long id, String title, String code, BigDecimal price, String description, Brand brand, Category category, String urlImage){
+        this.id = id;
+        this.title = title;
+        this.code = code;
+        this.price = price;
+        this.description = description;
+        this.brandName = brand.getName();
+        this.categoryName = category.getName();
+        this.categoryId = category.getId();
+        this.urlImage = urlImage;
+    }
+
+
 }
+
