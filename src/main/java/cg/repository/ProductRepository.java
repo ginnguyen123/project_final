@@ -13,7 +13,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+<<<<<<< HEAD
 
+=======
+import java.time.LocalDate;
+>>>>>>> 321ca106f0e310998e9c639d73fa43ce25866714
 import java.util.Date;
 import java.util.List;
 
@@ -39,8 +43,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     @Query(value = "SELECT prod FROM Product AS prod " +
             "INNER JOIN Discount AS disc ON disc = prod.discount " +
-            "WHERE :day BETWEEN disc.startDate AND disc.endDate " +
+            "INNER JOIN ProductImport AS proImp ON proImp.product = prod " +
+            "WHERE :day " +
+            "BETWEEN disc.startDate AND disc.endDate " +
+            "AND proImp.quantity > 0 " +
             "AND prod.deleted = FALSE")
+<<<<<<< HEAD
     List<Product> findAllByDiscountTime(@Param("day")Date date);
 
 
@@ -59,4 +67,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "JOIN ProductImport AS pi " +
             "WHERE p.title LIKE :search " +)
 
+=======
+    List<Product> findAllByDiscountTime(@Param("day") LocalDate date);
+>>>>>>> 321ca106f0e310998e9c639d73fa43ce25866714
 }

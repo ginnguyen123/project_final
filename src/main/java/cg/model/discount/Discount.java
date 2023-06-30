@@ -42,10 +42,10 @@ public class Discount extends BaseEntity {
     private List<Product> products;
 
     @Column(name = "start_date" ,nullable = false)
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date" ,nullable = false)
-    private Date endDate;
+    private LocalDate endDate;
 
     @OneToMany(mappedBy = "discount", fetch = FetchType.EAGER)
     private List<Category> categories;

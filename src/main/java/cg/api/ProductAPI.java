@@ -29,16 +29,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/products")
+@PreAuthorize("hasAnyAuthority('ADMIN')")
 public class ProductAPI {
 
     private final IProductService productService;
@@ -73,17 +77,6 @@ public class ProductAPI {
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/discount-time")
-    private ResponseEntity<?> getAllProductByDiscountTime(@RequestBody String string){
-        Date date = appUtils.stringToDate(string);
-        if (date == null){
-            throw new DataInputException(AppConstant.INVALID_DATE_MESSAGE);
-        }
-        List<Product> products = productService.findAllByDiscountTime(date);
-        List<ProductResClientDTO> productResClientDTOS = products.stream().map(i->i.toProductResClientDTO()).collect(Collectors.toList());
-        return new ResponseEntity<>(productResClientDTOS,
-                HttpStatus.OK);
-    }
 
     @GetMapping("/category/{idCategory}")
     public ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
