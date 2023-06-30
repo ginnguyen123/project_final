@@ -53,8 +53,6 @@ public class ProductClientAPI {
         LocalDate date = LocalDate.now();
         List<Product> products = productService.findAllByDiscountTime(date);
         List<ProductResClientDTO> productResClientDTOS = products.stream().map(i->i.toProductResClientDTO()).collect(Collectors.toList());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(productResClientDTOS, HttpStatus.OK);
     }
-
-
 }
