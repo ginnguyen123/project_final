@@ -188,19 +188,26 @@ public class Product extends BaseEntity {
     }
 
     public ProductResClientDTO toProductResClientDTO(){
-        Long pricePercent = price.multiply(BigDecimal.valueOf(discount.getDiscount())).divide(BigDecimal.valueOf(100)).longValue();
-        Long priceDiscount = price.subtract(BigDecimal.valueOf(pricePercent)).longValue();
-        return new ProductResClientDTO()
+
+        ProductResClientDTO clientDTO = new ProductResClientDTO()
                 .setId(id)
                 .setTitle(title)
                 .setCode(code)
                 .setPrice(String.valueOf(price.longValue()))
-                .setPriceDiscount(priceDiscount)
-                .setPercent(discount.getDiscount())
                 .setAvatar(productAvatar.getFileUrl())
                 .setBrand(brand.getName())
                 .setCategory(category.toCategoryClientDTO())
                 ;
+        if (discount == null){
+            clientDTO.setPriceDiscount(BigDecimal.ZERO.longValue());
+            clientDTO.setPercent(BigDecimal.ZERO.longValue());
+        }else {
+            Long pricePercent = price.multiply(BigDecimal.valueOf(discount.getDiscount())).divide(BigDecimal.valueOf(100)).longValue();
+            Long priceDiscount = price.subtract(BigDecimal.valueOf(pricePercent)).longValue();
+            clientDTO.setPriceDiscount(priceDiscount);
+            clientDTO.setPercent(discount.getDiscount());
+        }
+        return clientDTO;
     }
 }
 
