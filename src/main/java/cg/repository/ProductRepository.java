@@ -2,8 +2,12 @@ package cg.repository;
 
 
 import cg.dto.product.ProductListResponse;
+<<<<<<< HEAD
 
 import cg.dto.product.client.ProductFilterDTO;
+=======
+import cg.dto.product.client.ProductResClientDTO;
+>>>>>>> 6b4a45be0478a69a6647a9d0da9b83c61df81778
 import cg.model.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +31,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "ON p.id=pi.product_id WHERE p.category_id= :idCategory AND pi.quantity>0 group by p.id  LIMIT 10",nativeQuery = true)
     List<Product> findProductsByCategoryWithLimit( @Param("idCategory") Long idCategory);
 
-    @Query(value = "SELECT new cg.dto.product.ProductListResponse(" +
+    @Query(value = "SELECT NEW cg.dto.product.ProductListResponse(" +
             "p.id,p.code,p.productAvatar,p.title,p.price,p.category.name" +
             ") " +
             "FROM Product p " +
@@ -36,10 +40,21 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "OR p.price = :search" )
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
 
+<<<<<<< HEAD
+=======
+//    @Query(value = "SELECT NEW cg.dto.product.ProductListResponse() " +
+//            "FROM Product AS prod " +
+//            "JOIN ProductImport AS prodImp ON prodImp.product = prod " +
+//            "JOIN Category AS cate ON cate = prod.category " +
+//            "JOIN Brand AS bra ON bra = prod.brand " +
+//            "WHERE prod.title LIKE :search")
+//    Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, Pageable pageable);
+>>>>>>> 6b4a45be0478a69a6647a9d0da9b83c61df81778
 
     @Query(value = "SELECT prod FROM Product AS prod " +
             "INNER JOIN Discount AS disc ON disc = prod.discount " +
             "INNER JOIN ProductImport AS proImp ON proImp.product = prod " +
+<<<<<<< HEAD
             "WHERE :day " +
             "BETWEEN disc.startDate AND disc.endDate " +
             "AND proImp.quantity > 0 " +
@@ -52,4 +67,13 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
 
 
+=======
+            "WHERE proImp.quantity > 0 " +
+            "AND prod.deleted = FALSE " +
+            "AND :day BETWEEN disc.startDate AND disc.endDate " +
+            "GROUP BY prod.id")
+    List<Product> findAllByDiscountTime(@Param("day") LocalDate date);
+
+
+>>>>>>> 6b4a45be0478a69a6647a9d0da9b83c61df81778
 }

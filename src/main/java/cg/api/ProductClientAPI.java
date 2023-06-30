@@ -55,6 +55,4 @@ public class ProductClientAPI {
         List<ProductResClientDTO> productResClientDTOS = products.stream().map(i->i.toProductResClientDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(productResClientDTOS, HttpStatus.OK);
     }
-
-
 }
