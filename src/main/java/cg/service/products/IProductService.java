@@ -1,6 +1,7 @@
 package cg.service.products;
 
 import cg.dto.product.*;
+import cg.dto.product.client.ProductResClientDTO;
 import cg.model.category.Category;
 import cg.model.product.Product;
 import cg.service.IGeneralService;
@@ -29,4 +30,6 @@ public interface IProductService extends IGeneralService<Product,Long> {
     List<Product> findProductsByCategoryWithLimit(Long idCategory);
 
     List<Product> findAllByDiscountTime(LocalDate date);
+
+    Page<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable);
 }
