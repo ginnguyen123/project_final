@@ -6,6 +6,7 @@ import cg.dto.product.ProductCreResDTO;
 import cg.dto.product.ProductDTO;
 import cg.dto.product.ProductResDTO;
 import cg.dto.product.ProductUpdaResDTO;
+import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
@@ -170,6 +171,28 @@ public class Product extends BaseEntity {
 //        }
 
         return productUpdaResDTO;
+    }
+
+    public ProductResClientDTO toProductResClientDTO(){
+        ProductResClientDTO clientDTO = new ProductResClientDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setPrice(String.valueOf(price.longValue()))
+                .setAvatar(productAvatar.getFileUrl())
+                .setBrand(brand.getName())
+                .setCategory(category.toCategoryClientDTO())
+                ;
+        if (discount == null){
+            clientDTO.setPriceDiscount(BigDecimal.ZERO.longValue());
+            clientDTO.setPercent(BigDecimal.ZERO.longValue());
+        }else {
+            Long pricePercent = price.multiply(BigDecimal.valueOf(discount.getDiscount())).divide(BigDecimal.valueOf(100)).longValue();
+            Long priceDiscount = price.subtract(BigDecimal.valueOf(pricePercent)).longValue();
+            clientDTO.setPriceDiscount(priceDiscount);
+            clientDTO.setPercent(discount.getDiscount());
+        }
+        return clientDTO;
     }
 }
 

@@ -53,6 +53,8 @@ class AppBase{
         static ERROR_UPDATED = "Cập nhật không dữ liệu thành công !";
         static ERROR_DELETED = 'Xóa không thành công';
 
+        static ERROR_IMAGE = 'Hình không hợp lệ. Yêu cầu hình định dạng .png hoặc .jpg';
+
         static ERROR_LOADING_PROVINCE = "Tải danh sách tỉnh - thành phố không thành công !";
         static ERROR_LOADING_DISTRICT = "Tải danh sách quận - phường - huyện không thành công !";
         static ERROR_LOADING_WARD = "Tải danh sách phường - xã - thị trấn không thành công !";

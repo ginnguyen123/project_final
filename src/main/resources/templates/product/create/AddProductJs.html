@@ -9,6 +9,7 @@
         getAllCategoryParent: AppBase.API_CATEGORY + '/category-parents',
         getAllCategoryChildByCategoryParentId: AppBase.API_CATEGORY,
         getAllDiscount: AppBase.API_DISCOUNT,
+        createDiscount: AppBase.API_DISCOUNT,
         getAllProducts: AppBase.API_PRODUCT,
         createProduct: AppBase.API_PRODUCT + '/create'
       },
@@ -78,12 +79,8 @@
       $('#slider').prepend(lightSliders);
 
       $('#slider').lightSlider({
-        loop:false,
-        keyPress: false
+        loop:true,
       });
-
-
-      // $('#slider').lightSlider().refresh();
 
       $('.delete-image').off();
 
@@ -101,11 +98,21 @@
     page.commands.handleChangeImage = () =>{
       page.dialogs.elements.productImage.on('change', ()=>{
         let file = page.dialogs.elements.productImage[0].files;
-            for (let i = 0; i < file.length; i++){
-              if (files.every(e => e.name != file[i].name)){
-                files.push(file[i]);
-              }
-            }
+        let fileAalided = [];
+        for (let i = 0; i<file.length; i++){
+          if (file[i].type === 'image/jpeg' || file[i].type === 'image/png') {
+            fileAalided.push(file[i])
+          }else{
+            AppBase.IziToast.showErrorAlert(file[i].name + " không hợp lệ!");
+            AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_IMAGE);
+          }
+        }
+        for (let i = 0; i < fileAalided.length; i++){
+          if (files.every(e => e.name != fileAalided[i].name)){
+            files.push(fileAalided[i]);
+          }
+        }
+
         $('#cls-slider').empty();
         page.dialogs.commands.showImage(files);
       })
@@ -182,7 +189,7 @@
         let categoryId = +elemCategory.val();
         if (isNaN(categoryId) || categoryId == -1){
           elemCategoryParent.empty();
-          let str = `<option>-- Chọn danh mục con --</option>`;
+          let str = `<option value="-1">-- Chọn danh mục con --</option>`;
           elemCategoryParent.append(str);
         }
         else{
@@ -222,9 +229,9 @@
       let categoryName = $('#categoryParent').find("option:selected").text();
       let brandId =  page.dialogs.elements.productBrand.val();
       let brandName = page.dialogs.elements.productBrand.find("option:selected").text();
-      let avatar = page.dialogs.elements.productImage[0].files[0];
-      let medias = page.dialogs.elements.productImage[0].files;
-      let htmls = page.dialogs.elements.productDescription.val()
+      let medias = files;
+      let htmls = page.dialogs.elements.productDescription.val();
+      let avatar = medias[0];
 
       let formData = new FormData();
       formData.append("title", title);
@@ -240,10 +247,13 @@
       formData.append("discountName", discountName);
       formData.append("avatar", avatar);
 
+      if (medias.length == 0){
+        return AppBase.IziToast.showErrorAlert('Yêu cầu cần ít nhất 1 hình ảnh làm đại diện.')
+      }
+
       for (let i = 0; i<medias.length; i++){
         formData.append("medias", medias[i]);
       }
-
 
       $.ajax({
         type: 'POST',
@@ -254,16 +264,50 @@
         data: formData
       })
               .done((data)=>{
+                page.dialogs.elements.productDescription.cleditor()[0].clear();
+                page.dialogs.elements.frmCreateProduct[0].reset();
+                $('#cls-slider').empty();
+                files = [];
                 AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
               })
               .catch((jqXHR)=>{
                 console.log(jqXHR);
               })
               .always(()=>{
-                page.dialogs.elements.productDescription.cleditor()[0].clear();
-                page.dialogs.elements.frmCreateProduct[0].reset();
-                $('.container-image').empty();
-                files = [];
+                page.dialogs.commands.hideLoading();
+              })
+    }
+
+    page.dialogs.commands.doCreateDiscount = () =>{
+      page.dialogs.commands.showLoading();
+      let name = $('#name-discount').val();
+      let percent = $('#percent-discount').val();
+      let startDay = $('#start-day').val();
+      let endDay = $('#end-day').val();
+
+      let obj = {
+        name: name,
+        percent: percent,
+        startDate: startDay,
+        endDate: endDay
+      }
+
+      $.ajax({
+        type: "POST",
+        url: page.urls.createDiscount,
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(obj)
+      })
+              .done((data)=>{
+                alert("ạkasjksajkas");
+                AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_CREATED);
+                $('#frmCreateDiscount')[0].reset();
+              })
+              .fail((error)=>{
+                console.log(error);
+              })
+              .always(()=>{
                 page.dialogs.commands.hideLoading();
               })
     }
@@ -316,6 +360,42 @@
       }
     })
 
+    $('#frmCreateDiscount').validate({
+      rules: {
+        nameDiscount:{
+          required: true
+        },
+        percentDiscount:{
+          required: true,
+          maxlength: 3
+        },
+        startDay:{
+          required: true
+        },
+        endDay:{
+          required: true
+        }
+      },
+      messages: {
+        nameDiscount:{
+          required: 'Yêu cầu nhập tên ưu đãi'
+        },
+        percentDiscount:{
+          required: 'Yêu cầu nhập phần trăm giảm giá',
+          maxlength: 'Nhập số phần trăm(%) giảm giá từ 0% - 100%'
+        },
+        startDay:{
+          required: 'Yêu cầu nhập ngày bắt đầu ưu đãi'
+        },
+        endDay:{
+          required: 'Yêu cầu nhập ngày kết thúc ưu đãi'
+        }
+      },
+      submitHandler: function (){
+        page.dialogs.commands.doCreateDiscount();
+      }
+    })
+
     page.commands.loadData = () =>{
       page.loadData.getAllCategory();
 
@@ -327,23 +407,30 @@
     }
 
     page.initializeControlEvent = () =>{
+      // click ẩn tất cả các modal
+      $('.btn-cancel').on('click', () => {
+        $('#modalAddDanhMuc').modal('hide');
 
+        $('#modalNhaCungCap').modal('hide');
+
+        $('#modalDiscount').modal('hide');
+      })
+
+      $('#addDiscount').on('click', ()=>{
+        $('#modalDiscount').modal('show');
+      })
 
       $('#addNhaCungCap').on('click', () => {
         $('#modalNhaCungCap').modal('show');
-      })
-
-      $('.btn-cancel').on('click', () => {
-        $('#modalNhaCungCap').modal('hide');
       })
 
       $('#addDanhMuc').on('click', () => {
         $('#modalAddDanhMuc').modal('show');
       })
 
-      $('.btn-cancel').on('click', () => {
-        $('#modalAddDanhMuc').modal('hide');
-      })
+      // $('.btn-cancel').on('click', () => {
+      //   $('#modalNhaCungCap').modal('hide');
+      // })
 
       page.commands.handleChangeCategory(page.elements.selectCategory, page.elements.selectCategoryParent);
 
@@ -356,6 +443,11 @@
 
       page.dialogs.elements.btnSaveCreateProduct.on('click', ()=>{
         page.dialogs.elements.frmCreateProduct.trigger('submit');
+      })
+
+      //   an save tao moi discount
+      $('#btn-save-discount').on('click', ()=>{
+        $('#frmCreateDiscount').trigger('submit');
       })
     }
 
