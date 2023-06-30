@@ -12,11 +12,10 @@ import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -54,5 +53,11 @@ public class ProductClientAPI {
         List<Product> products = productService.findAllByDiscountTime(date);
         List<ProductResClientDTO> productResClientDTOS = products.stream().map(i->i.toProductResClientDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(productResClientDTOS, HttpStatus.OK);
+    }
+
+    @PostMapping("/category/{id}")
+    private ResponseEntity<?> getAllProductByCategory(@PathVariable Long id, Pageable pageable){
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

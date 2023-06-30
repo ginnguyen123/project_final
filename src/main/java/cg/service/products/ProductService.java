@@ -80,6 +80,11 @@ public class ProductService implements IProductService{
     }
 
     @Override
+    public Page<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable) {
+        return productRepository.findAllByCategory(id, pageable);
+    }
+
+    @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
         return productRepository.findAllWithSearch(search, pageable);
     }

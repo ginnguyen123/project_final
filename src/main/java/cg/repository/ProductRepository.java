@@ -52,8 +52,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, @Param("color") EColor color,
             @Param("size")ESize size, Pageable pageable);
 
-//    @Query(value = "")
-//    Page<ProductResClientDTO> findAllByCategory(@Param("id")Long id);
+    @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
+            "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
+            "FROM Product AS prod " +
+            "LEFT JOIN Category AS cate " +
+            "JOIN ProductImport AS imp " +
+            "WHERE imp.quantity > 0 " +
+            "AND prod.deleted = false " +
+            "AND cate.id = :id ")
+    Page<ProductResClientDTO> findAllByCategory(@Param("id")Long id, Pageable pageable);
 
     @Query(value = "SELECT prod FROM Product AS prod " +
             "LEFT JOIN Discount AS disc ON disc = prod.discount " +

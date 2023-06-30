@@ -111,6 +111,6 @@ public class Category extends BaseEntity {
     }
 
     public CategoryClientDTO toCategoryClientDTO(){
-        return new CategoryClientDTO(id, name);
+        return new CategoryClientDTO(id, name, categoryAvatar.getFileUrl());
     }
 }
