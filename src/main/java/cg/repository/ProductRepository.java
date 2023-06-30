@@ -61,6 +61,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "WHERE proImp.quantity > 0 " +
             "AND prod.deleted = FALSE " +
             "AND :day BETWEEN disc.startDate AND disc.endDate " +
+            "OR prod.discount IS NULL " +
             "GROUP BY prod.id", nativeQuery = true)
     List<Product> findAllByDiscountTime(@Param("day") LocalDate date);
 
