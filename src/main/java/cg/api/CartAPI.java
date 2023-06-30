@@ -5,6 +5,7 @@ import cg.dto.cartDetail.CartDetailCreReqDTO;
 import cg.dto.productImport.*;
 import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
+import cg.model.cart.CartDetail;
 import cg.model.product.ProductImport;
 import cg.service.cart.ICartService;
 import cg.service.cart.response.CartListResponse;
@@ -35,12 +36,12 @@ public class CartAPI {
     @Autowired
     private AppUtils appUtils;
 
-    @GetMapping
-    public ResponseEntity<?> getAllDeleteFalse() {
-        List<Cart> carts = cartService.findAll();
-        List<CartDTO> cartDTOS = carts.stream().map(Cart::toCartDTO).collect(Collectors.toList());
-        return new ResponseEntity<>(cartDTOS, HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<?> getAllDeleteFalse() {
+//        List<Cart> carts = cartService.findAll();
+//        List<CartDTO> cartDTOS = carts.stream().map(Cart::toCartDTO).collect(Collectors.toList());
+//        return new ResponseEntity<>(cartDTOS, HttpStatus.OK);
+//    }
 
     @PostMapping("/search")
     public ResponseEntity<?> pageableByKeyword(@RequestBody CartRequest keyword ,Pageable pageable) {
@@ -69,7 +70,7 @@ public class CartAPI {
         if (bindingResult.hasFieldErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
-        CartListResponse cartUpResDTO = cartService.update(cartUpReqDTO);
+        CartUpResDTO cartUpResDTO = cartService.update(cartUpReqDTO);
         return new ResponseEntity<>(cartUpResDTO,HttpStatus.OK);
     }
 
@@ -89,4 +90,5 @@ public class CartAPI {
                         ()-> new ResourceNotFoundException("Not found this cart"));
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
+
 }

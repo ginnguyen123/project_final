@@ -2,6 +2,7 @@ package cg.repository;
 
 import cg.dto.cart.CartCreResDTO;
 import cg.dto.cart.CartDTO;
+import cg.dto.cart.CartUpReqDTO;
 import cg.model.cart.Cart;
 import cg.utils.CartRequest;
 import org.springframework.data.domain.Page;
@@ -39,4 +40,19 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "AND pi.id = :id "
     )
     Optional<CartDTO> getCartDTOByIdDeletedIsFalse(Long id);
+
+//   private Long id;
+//    private String name_receiver;
+//    private String email;
+//    private String phone_receiver;
+//    private List<CartDetailUpReqDTO> cartDetailDTOList;
+//    private BigDecimal totalAmount;
+//    private LocationRegionDTO locationRegion;
+//    private String status;
+    @Query("SELECT NEW cg.dto.cart.CartUpReqDTO (pi.id,pi.name_receiver,pi.phone_receiver,pi.totalAmount,pi.locationRegion.id,pi.status) " +
+            "FROM Cart AS pi " +
+            "WHERE pi.deleted = false " +
+            "AND pi.id = :id "
+    )
+    Optional<CartUpReqDTO> getCartDTOByCartDetail(Long id);
 }

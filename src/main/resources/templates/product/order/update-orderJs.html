@@ -3,17 +3,207 @@
 
     <script>
 
-        page.commands.loadData = ()=>{
+        let pageCart = {
+            urls: {
+                getAllCartDetail: AppBase.API_CART_DETAIL
+            },
+            elements: {},
+            loadData: {},
+            commands: {},
+            dialogs: {
+                elements: {},
+                loadData: {},
+                commands: {}
+            }
+        }
+        let locationRegion = new LocationRegion();
+        pageCart.dialogs.elements.locationRegionIdUp = $('#locationRegionIdUp');
+        pageCart.dialogs.elements.provinceUp = $('#provinceUp');
+        pageCart.dialogs.elements.districtUp = $('#districtUp');
+        pageCart.dialogs.elements.wardUp = $('#wardsUp');
+        pageCart.dialogs.elements.addressUp = $('#addressUp');
+
+        pageCart.dialogs.loadData.getAllProvinces = () => {
+            return $.ajax({
+                type: 'GET',
+                url: 'https://vapi.vnappmob.com/api/province/'
+            })
+                .done((data) => {
+                    $.each(data.results, (i, item) => {
+                        let str = `<option value="${item.province_id}">${item.province_name}</option>`;
+                        pageCart.dialogs.elements.provinceUp.append(str);
+
+                    })
+
+                    addEventChangeProvinceUp();
+                    addEventChangeDistrictUp();
+
+                })
+                .fail((jqXHR) => {
+                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_404);
+                })
+        }
+        pageCart.dialogs.loadData.getAllDistrictsByProvince = (provinceId) => {
+            return $.ajax({
+                type: 'GET',
+                url: 'https://vapi.vnappmob.com/api/province/district/' + provinceId
+            })
+                .done((data) => {
+                    // console.log(data)
+                    let dir = data.results;
+                    console.log("-------data-------")
+                    console.log(data)
+                    console.log(dir)
+                    pageCart.dialogs.elements.districtUp.empty();
+                    $.each(dir, (i, item) => {
+                        let str = `<option value="${item.district_id}">${item.district_name}</option>`;
+
+                        pageCart.dialogs.elements.districtUp.append(str);
+
+                    })
+
+
+                })
+                .fail((jqXHR) => {
+                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_404);
+                })
+        }
+        pageCart.dialogs.loadData.getAllWardsByDistrict = (districtId) => {
+            return $.ajax({
+                type: 'GET',
+                url: 'https://vapi.vnappmob.com/api/province/ward/' + districtId
+            })
+                .done((data) => {
+                    pageCart.dialogs.elements.wardUp.empty();
+                    $.each(data.results, (i, item) => {
+                        let str = `<option value="${item.ward_id}">${item.ward_name}</option>`;
+                        pageCart.dialogs.elements.wardUp.append(str);
+                    })
+
+
+                })
+                .fail((jqXHR) => {
+                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_404);
+                })
+        }
+
+        pageCart.loadData.getAllCartDetail = (id) =>{
+
+                return $.ajax({
+                    type: 'GET',
+                    url: pageCart.urls.getAllCartDetail + id
+                })
+                    .done((data)=>{
+                        $.each(data, (i, item)=>{
+                            let str = AppBase.renderCartDetail(item);
+                            $('#tbCartDetail').append(str);
+                        })
+                    })
+                    .fail((jqXHR)=>{
+                        console.log(jqXHR);
+                    })
 
         }
-        page.initializeControlEvent = ()=>{
+
+
+        pageCart.loadData.getCart = () => {
+            /*<![CDATA[*/
+            let data = /*[[${data}]]*/ 'default';
+            let cart = data.cart;
+            let name_receiver = data.cart.name_receiver;
+            let phone_receiver = data.cart.phone_receiver;
+            let locationRegion = data.cart.locationRegion;
+            let status = data.cart.status;
+            let idCart = data.cart.id;
+            let totalAmount = data.cart.totalAmount;
+            let address = data.cart.locationRegion.address;
+            console.log(cart);
+            $('#nameReceiverUp').val(name_receiver);
+            $('#phoneReceiverUp').val(phone_receiver);
+            $('#totalAmountUp').val(totalAmount);
+            $('#statusUp').val(status);
+            $('#addressUp').val(address);
+
+
+
+            pageCart.dialogs.loadData.getAllProvinces().then(() => {
+                pageCart.dialogs.elements.provinceUp.val(locationRegion.provinceId)
+            })
+            pageCart.dialogs.loadData.getAllDistrictsByProvince(locationRegion.provinceId).then(() => {
+                pageCart.dialogs.elements.districtUp.val(locationRegion.districtId)
+            })
+            pageCart.dialogs.loadData.getAllWardsByDistrict(locationRegion.districtId).then(() => {
+                pageCart.dialogs.elements.wardUp.val(locationRegion.wardId)
+            })
+
+            pageCart.loadData.getAllCartDetail(idCart).then(()=>{
+                $('#tbCartDetail').val();
+            });
+
+
+            // page.loadData.getAllCategoryParent().then(()=>{
+            //     $('#categoryUp').val(product.category.id);
+            //     let categoryId = product.category.id;
+            //     page.loadData.getAllCategoryChildByCategogyId(categoryId,  page.elements.categoryChild);
+            // })
+            //
+            // page.loadData.getAllDiscount().then(()=>{
+            //     if (discount != null){
+            //         page.elements.discountUpdate.val(discount.id);
+            //     }
+            // })
+            // page.loadData.getAllBrand().then(()=>{
+            //     page.elements.brandUp.val(product.brand.id);
+            // })
+            // let strAvatar = AppBase.avatar_image_thumbnail(product.avatar);
+            // page.elements.showAvatar.append(strAvatar);
+            //
+            // if (mediaObj.length != 0){
+            //     page.dialogs.commands.showImagesObj(mediaObj);
+            // }
+            //
+            // // hiển thị decreption
+            // $('#productDescriptionUp').val(product.description);
+            // $('#productDescriptionUp').cleditor();
+
+            /*]]>*/
+        }
+
+        function addEventChangeProvinceUp() {
+            pageCart.dialogs.elements.provinceUp.on("change", function () {
+                let provinceId = $(this).val();
+                if (provinceId !== 0) {
+                    pageCart.dialogs.loadData.getAllDistrictsByProvince(provinceId).then(() => {
+                        let districtId = pageCart.dialogs.elements.districtUp.val();
+                        pageCart.dialogs.loadData.getAllWardsByDistrict(districtId);
+                    })
+                }
+            })
+        }
+
+        function addEventChangeDistrictUp() {
+
+            pageCart.dialogs.elements.districtUp.on("change", function () {
+                let districtId = $(this).val();
+
+                if (districtId !== 0) {
+                    pageCart.dialogs.loadData.getAllWardsByDistrict(districtId);
+                }
+
+            })
+        }
+
+        pageCart.commands.loadData = () => {
+            pageCart.loadData.getCart();
+        }
+        pageCart.initializeControlEvent = () => {
 
 
         }
-        $(()=>{
-            page.commands.loadData();
+        $(() => {
+            pageCart.commands.loadData();
 
-            page.initializeControlEvent();
+            pageCart.initializeControlEvent();
         })
     </script>
 </th:block>
