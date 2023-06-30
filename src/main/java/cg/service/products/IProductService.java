@@ -28,10 +28,6 @@ public interface IProductService extends IGeneralService<Product,Long> {
 
     List<Product> findProductsByCategoryWithLimit(Long idCategory);
 
-<<<<<<< HEAD
-    List<Product> findAllByDiscountTime(Date date);
-
-=======
     List<Product> findAllByDiscountTime(LocalDate date);
->>>>>>> 321ca106f0e310998e9c639d73fa43ce25866714
+
 }

@@ -13,12 +13,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-<<<<<<< HEAD
 
-=======
 import java.time.LocalDate;
->>>>>>> 321ca106f0e310998e9c639d73fa43ce25866714
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -47,27 +43,13 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "WHERE :day " +
             "BETWEEN disc.startDate AND disc.endDate " +
             "AND proImp.quantity > 0 " +
-            "AND prod.deleted = FALSE")
-<<<<<<< HEAD
-    List<Product> findAllByDiscountTime(@Param("day")Date date);
+            "AND prod.deleted = FALSE " +
+            "GROUP BY prod.id")
 
-
-    @Query(value = "SELECT new cg.dto.product.client.ProductFilterDTO(" +
-
-            "p.id," +
-            "p.title," +
-            "p.brand.name," +
-            "pi.color," +
-            "pi.size," +
-            "p.category.name," +
-            "p.price," +
-            "p.discount.name" +
-            ") " +
-            "FROM Product AS p " +
-            "JOIN ProductImport AS pi " +
-            "WHERE p.title LIKE :search " +)
-
-=======
     List<Product> findAllByDiscountTime(@Param("day") LocalDate date);
->>>>>>> 321ca106f0e310998e9c639d73fa43ce25866714
+
+
+
+
+
 }

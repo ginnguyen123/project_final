@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/products")
-@PreAuthorize("hasAnyAuthority('ADMIN')")
+//@PreAuthorize("hasAnyAuthority('ADMIN')")
 public class ProductAPI {
 
     private final IProductService productService;
