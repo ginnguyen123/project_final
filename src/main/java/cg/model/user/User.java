@@ -2,6 +2,7 @@ package cg.model.user;
 
 import cg.dto.userDTO.UserDTO;
 import cg.model.BaseEntity;
+import cg.model.customer.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,9 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToOne(mappedBy = "user")
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)

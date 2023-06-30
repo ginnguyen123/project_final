@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -79,8 +80,8 @@ public class DiscountServiceImpl implements IDiscountService{
     @Override
     public Discount create(DiscountCreateRequest createRequest) {
         createRequest.setId(null);
-        Date startDay = appUtils.stringToDate(createRequest.getStartDate());
-        Date endDay = appUtils.stringToDate(createRequest.getEndDate());
+        LocalDate startDay = appUtils.convertStringToLocalDate(createRequest.getStartDate());
+        LocalDate endDay = appUtils.convertStringToLocalDate(createRequest.getEndDate());
         Discount discount = createRequest.toDiscount();
         discount.setStartDate(startDay);
         discount.setEndDate(endDay);
