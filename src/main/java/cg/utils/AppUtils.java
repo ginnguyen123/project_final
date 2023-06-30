@@ -50,7 +50,7 @@ public class AppUtils {
         return userName;
     }
 
-    public static LocalDate convertStringToLocalDate(String str) {
+    public LocalDate convertStringToLocalDate(String str) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN_YYYY_MM_DD);
         return LocalDate.parse(str, formatter);
     }
@@ -69,5 +69,6 @@ public class AppUtils {
         }
         return null;
     }
+
 
 }

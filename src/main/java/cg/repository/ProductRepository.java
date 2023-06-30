@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +34,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT prod FROM Product AS prod " +
             "INNER JOIN Discount AS disc ON disc = prod.discount " +
-            "WHERE :day BETWEEN disc.startDate AND disc.endDate " +
+            "INNER JOIN ProductImport AS proImp ON proImp.product = prod " +
+            "WHERE :day " +
+            "BETWEEN disc.startDate AND disc.endDate " +
+            "AND proImp.quantity > 0 " +
             "AND prod.deleted = FALSE")
-    List<Product> findAllByDiscountTime(@Param("day")Date date);
+    List<Product> findAllByDiscountTime(@Param("day") LocalDate date);
 }

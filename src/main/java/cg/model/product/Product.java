@@ -174,7 +174,8 @@ public class Product extends BaseEntity {
     }
 
     public ProductResClientDTO toProductResClientDTO(){
-        Long priceDiscount = price.multiply(BigDecimal.valueOf(discount.getDiscount())).divide(BigDecimal.valueOf(100)).longValue();
+        Long pricePercent = price.multiply(BigDecimal.valueOf(discount.getDiscount())).divide(BigDecimal.valueOf(100)).longValue();
+        Long priceDiscount = price.subtract(BigDecimal.valueOf(pricePercent)).longValue();
         return new ProductResClientDTO()
                 .setId(id)
                 .setTitle(title)

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,7 +74,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public List<Product> findAllByDiscountTime(Date date) {
+    public List<Product> findAllByDiscountTime(LocalDate date) {
         List<Product> products = productRepository.findAllByDiscountTime(date);
         return products;
     }
