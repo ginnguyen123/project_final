@@ -1,5 +1,7 @@
 package cg.utils;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,16 +10,22 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Component
 public class AppUtils {
-
+    public static final ModelMapper mapper;
+    static {
+        mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+    }
     private static final String DATE_PATTERN_YYYY_MM_DD = "yyyy-MM-dd";
 
     public ResponseEntity<?> mapErrorToResponse(BindingResult result) {
@@ -50,6 +58,16 @@ public class AppUtils {
     public String convertLocalDateToString(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN_YYYY_MM_DD);
         return formatter.format(date);
+    }
+
+    public Date stringToDate(String string){
+        try{
+            Date date = new SimpleDateFormat(DATE_PATTERN_YYYY_MM_DD).parse(string);
+            return date;
+        }catch (ParseException parseException){
+            parseException.printStackTrace();
+        }
+        return null;
     }
 
 }

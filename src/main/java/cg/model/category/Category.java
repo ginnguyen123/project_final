@@ -1,6 +1,7 @@
 package cg.model.category;
 
 import cg.dto.category.*;
+import cg.dto.category.client.CategoryClientDTO;
 import cg.model.BaseEntity;
 import cg.model.discount.Discount;
 import cg.model.enums.ECategoryStatus;
@@ -107,5 +108,9 @@ public class Category extends BaseEntity {
                     .setName(categoryParent.name)
                     .setAvatar(categoryParent.categoryAvatar.toMediaDTO())
                     .setStatus(categoryParent.status);
+    }
+
+    public CategoryClientDTO toCategoryClientDTO(){
+        return new CategoryClientDTO(id, name);
     }
 }

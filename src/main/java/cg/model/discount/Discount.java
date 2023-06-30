@@ -36,30 +36,28 @@ public class Discount extends BaseEntity {
     private Long id;
     private String name;
     @Column(nullable = false)
+    //discount chính là percent % (1 -> 100)
     private Long discount;
     @OneToMany(mappedBy = "discount")
     private List<Product> products;
 
-//    @Column(nullable = false)
-//    private Date startDate;
-//    @Column(nullable = false)
-//    private Date endDate;
+    @Column(name = "start_date" ,nullable = false)
+    private Date startDate;
 
-//    @OneToMany(mappedBy = "product")
-//    private List<Product> productList;
-
+    @Column(name = "end_date" ,nullable = false)
+    private Date endDate;
 
     @OneToMany(mappedBy = "discount", fetch = FetchType.EAGER)
     private List<Category> categories;
 
-//    public DiscountDTO toDiscountDTO(){
-//        return new DiscountDTO()
-//                .setId(id)
-//                .setName(name)
-//                .setDiscount(discount)
+    public DiscountDTO toDiscountDTO(){
+        return new DiscountDTO()
+                .setId(id)
+                .setName(name)
+                .setDiscount(discount);
 //                .setStartDate(String.valueOf(startDate))
 //                .setEndDate(String.valueOf(endDate));
-//    }
+    }
 
 
 }

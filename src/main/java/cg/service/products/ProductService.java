@@ -1,6 +1,7 @@
 package cg.service.products;
 
 import cg.dto.product.*;
+import cg.dto.product.client.ProductResClientDTO;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
@@ -8,6 +9,7 @@ import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
 import cg.service.media.IUploadMediaService;
+import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,8 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class ProductService implements IProductService{
@@ -67,6 +72,11 @@ public class ProductService implements IProductService{
         return productRepository.findAllByDeletedIsFalse();
     }
 
+    @Override
+    public List<Product> findAllByDiscountTime(Date date) {
+        List<Product> products = productRepository.findAllByDiscountTime(date);
+        return products;
+    }
 
     @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
@@ -75,6 +85,7 @@ public class ProductService implements IProductService{
 
     @Override
     public Product save(Product product) {
+//        ProductListResponse productListResponse = AppUtils.mapper.map(product, ProductListResponse.class);
         Brand brand = product.getBrand();
         Category category = product.getCategory();
         Media avatar = product.getProductAvatar();

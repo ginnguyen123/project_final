@@ -1,6 +1,7 @@
 package cg.api;
 
 import cg.dto.product.*;
+import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
@@ -16,6 +17,7 @@ import cg.service.media.UploadMediaServiceImpl;
 import cg.service.product.IProductImportService;
 import cg.service.products.IProductService;
 import cg.service.products.ProductService;
+import cg.utils.AppConstant;
 import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
 import lombok.AllArgsConstructor;
@@ -55,6 +57,9 @@ public class ProductAPI {
     private AppUtils appUtils;
 
     @Autowired
+    private AppConstant appConstant;
+
+    @Autowired
     private IProductImportService productImportService;
 
     @GetMapping
@@ -62,6 +67,18 @@ public class ProductAPI {
         List<Product> products = productService.findAllByDeletedFalse();
         List<ProductDTO> productDTOS = products.stream().map(product -> product.toProductDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/discount-time")
+    private ResponseEntity<?> getAllProductByDiscountTime(@RequestBody String string){
+        Date date = appUtils.stringToDate(string);
+        if (date == null){
+            throw new DataInputException(AppConstant.INVALID_DATE_MESSAGE);
+        }
+        List<Product> products = productService.findAllByDiscountTime(date);
+        List<ProductResClientDTO> productResClientDTOS = products.stream().map(i->i.toProductResClientDTO()).collect(Collectors.toList());
+        return new ResponseEntity<>(productResClientDTOS,
+                HttpStatus.OK);
     }
 
     @GetMapping("/category/{idCategory}")
@@ -150,7 +167,7 @@ public class ProductAPI {
 
         //        check category child
         Optional<Category> categoryChildOp = categoryService.findById(categoryChildId);
-        if (categoryChildOp.isPresent()){
+        if (!categoryChildOp.isPresent()){
             throw new DataInputException("The category child does not exist");
         }
 
@@ -208,6 +225,8 @@ public class ProductAPI {
         if (discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).isPresent()){
             Discount discount = discountService.findDiscountByIdAndDeletedIsFalse(productCreReqDTO.getDiscountId()).get();
             product.setDiscount(discount);
+        }else {
+            product.setDiscount(null);
         }
 
         productService.save(product);
