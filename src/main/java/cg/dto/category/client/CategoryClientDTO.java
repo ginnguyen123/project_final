@@ -8,4 +8,5 @@ import lombok.Data;
 public class CategoryClientDTO {
     private Long id;
     private String name;
+    private String avatar;
 }

@@ -188,7 +188,6 @@ public class Product extends BaseEntity {
     }
 
     public ProductResClientDTO toProductResClientDTO(){
-
         ProductResClientDTO clientDTO = new ProductResClientDTO()
                 .setId(id)
                 .setTitle(title)
