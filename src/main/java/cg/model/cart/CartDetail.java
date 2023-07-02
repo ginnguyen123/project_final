@@ -1,6 +1,7 @@
 package cg.model.cart;
 
 import cg.dto.cartDetail.CartDetailDTO;
+import cg.dto.cartDetail.CartDetailResDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
@@ -41,16 +42,13 @@ public class CartDetail extends BaseEntity {
     @Column(name = "color", nullable = false)
     private EColor color;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
     private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;
-
-    //id,quantity,tAmount,size,color,cartID,productID, name,price
-
 
     public CartDetailDTO toCartDetailDTO() {
         return new CartDetailDTO()
@@ -60,6 +58,20 @@ public class CartDetail extends BaseEntity {
                 .setSize(size)
                 .setColor(color)
                 .setCart(cart.toCartDTO());
+    }
+
+    public CartDetailResDTO toCartDetailResDTO() {
+        return new CartDetailResDTO()
+                .setProductId(product.getId())
+                .setColor(color)
+                .setSize(size)
+                .setQuantity(quantity)
+                .setPrice(product.getPrice())
+                .setTitle(product.getTitle())
+                .setTotalAmountItem(totalAmount)
+                .setTotalAmountCart(cart.getTotalAmount())
+                .setAvt(product.getProductAvatar().getFileUrl());
+
     }
 
 

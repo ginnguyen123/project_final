@@ -3,12 +3,15 @@ package cg.service.cart;
 import cg.dto.cart.*;
 import cg.dto.cartDetail.CartDetailCreReqDTO;
 import cg.model.cart.Cart;
+import cg.model.cart.CartDetail;
+import cg.model.enums.ECartStatus;
 import cg.service.IGeneralService;
 import cg.service.cart.response.CartListResponse;
 import cg.utils.CartRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ICartService extends IGeneralService<Cart,Long> {
@@ -22,4 +25,10 @@ public interface ICartService extends IGeneralService<Cart,Long> {
     Optional<CartDTO> getCartDTOByIdDeletedIsFalse(Long id);
 
     CartListResponse update(CartUpReqDTO cartUpReqDTO);
+
+//    Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status);
+
+    Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status);
+
+    public CartDetail createNewCartDetail(CartCreMiniCartReqDTO cartCreMiniCartReqDTO, Cart cart);
 }

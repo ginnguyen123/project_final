@@ -4,6 +4,7 @@ import cg.dto.cart.*;
 import cg.dto.cartDetail.CartDetailCreReqDTO;
 import cg.dto.cartDetail.CartDetailDTO;
 import cg.dto.cartDetail.CartDetailUpReqDTO;
+import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
@@ -17,6 +18,7 @@ import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import cg.repository.*;
 import cg.service.cart.response.CartListResponse;
+import cg.service.products.IProductService;
 import cg.utils.CartRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,6 +54,9 @@ public class CartService implements ICartService {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    IProductService productService;
 
     @Override
     public List<Cart> findAll() {
@@ -148,6 +153,25 @@ public class CartService implements ICartService {
     }
 
     @Override
+    public CartDetail createNewCartDetail(CartCreMiniCartReqDTO cartCreMiniCartReqDTO, Cart cart) {
+        CartDetail cartDetail = new CartDetail();
+        cartDetail.setQuantity(cartCreMiniCartReqDTO.getQuantity());
+        Optional<Product> productOptional = productService.findById(cartCreMiniCartReqDTO.getProductId());
+
+        if (!productOptional.isPresent()) {
+            throw new DataInputException("Product is not found");
+        }
+        Product product  = productOptional.get();
+        BigDecimal totalAmount = product.getPrice().multiply(BigDecimal.valueOf(cartCreMiniCartReqDTO.getQuantity()));
+        cartDetail.setTotalAmount(totalAmount);
+        cartDetail.setSize(ESize.getESize(cartCreMiniCartReqDTO.getSize()));
+        cartDetail.setColor(EColor.getEColor(cartCreMiniCartReqDTO.getColor()));
+        cartDetail.setCart(cart);
+        cartDetail.setProduct(product);
+        return cartDetail;
+    }
+
+    @Override
     public Optional<CartDTO> getCartDTOByIdDeletedIsFalse(Long id) {
         return cartRepository.getCartDTOByIdDeletedIsFalse(id);
     }
@@ -188,5 +212,10 @@ public class CartService implements ICartService {
         // remove cartdetail
         // add cartdetail.
         // update cart.
+    }
+
+    @Override
+    public Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status) {
+        return cartRepository.findCartsByCustomerIdAndStatusIsCart(customerId,status);
     }
 }

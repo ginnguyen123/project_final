@@ -11,7 +11,9 @@ import java.util.stream.Stream;
 public enum ECartStatus {
 
     PAID ("PAID"),
-    UNPAID ("UNPAID");
+    UNPAID ("UNPAID"),
+
+    ISCART("ISCART");
 
     private final String value;
 

@@ -24,15 +24,21 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "customers")
 public class Customer extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "full_names")
     private String fullName;
+
     @Column(nullable = false, unique = true)
     private String email;
+
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
+
+
     private ESex sex;
 
     @OneToOne
@@ -43,8 +49,12 @@ public class Customer extends BaseEntity {
 //    private List<Cart> carts;
     @Column
     private String phone;
-    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+
+    @OneToMany(mappedBy = "customer")
     private List<LocationRegion> locationRegions;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Cart> carts;
 
     public CustomerDTO toCustomerDTO() {
         return new CustomerDTO()
