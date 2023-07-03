@@ -68,8 +68,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "AND cate.id = :id ")
     Page<ProductResClientDTO> findAllByCategory(@Param("id")Long id, Pageable pageable);
 
-
-
     @Query(value = "SELECT prod FROM Product AS prod " +
             "LEFT JOIN Discount AS disc ON disc = prod.discount " +
             "INNER JOIN ProductImport AS proImp ON proImp.product = prod " +
@@ -77,7 +75,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "AND prod.deleted = FALSE " +
             "AND :day BETWEEN disc.startDate AND disc.endDate " +
             "OR prod.discount IS NULL " +
-            "GROUP BY prod.id", nativeQuery = true)
+            "GROUP BY prod.id")
 
     List<Product> findAllByDiscountTime(@Param("day") LocalDate date);
 
