@@ -18,7 +18,7 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
     List<CartDetail> findAllByCart_IdAndAndDeletedIsFalse(Long id);
 
 
-    @Query("SELECT NEW cg.dto.cartDetail.CartDetailDTO (pi.totalAmount,pi.quantity,pi.size,pi.color, pi.cart.id,pi.product.id,pi.product.title,pi.product.price) " +
+    @Query("SELECT NEW cg.dto.cartDetail.CartDetailDTO (pi.id,pi.totalAmount,pi.quantity,pi.size,pi.color, pi.cart.id,pi.product.id,pi.product.title,pi.product.price) " +
             "FROM CartDetail AS pi " +
             "WHERE pi.deleted = false " +
             "AND pi.id = :id "

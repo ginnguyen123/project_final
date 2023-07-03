@@ -1,6 +1,10 @@
 package cg.service.cartDetail;
 
 import cg.dto.cartDetail.CartDetailDTO;
+import cg.dto.cartDetail.CartDetailNotCart;
+import cg.dto.cartDetail.CartDetailUpReqDTO;
+import cg.exception.ResourceNotFoundException;
+import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.repository.CartDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +45,7 @@ public class CartDetailService implements ICartDetailService{
 
     @Override
     public CartDetail save(CartDetail cartDetail) {
-        return null;
+        return cartDetailRepository.save(cartDetail);
     }
 
     @Override
@@ -53,5 +57,23 @@ public class CartDetailService implements ICartDetailService{
     @Override
     public void deleteById(Long id) {
 
+    }
+
+    @Override
+    public CartDetailNotCart update(CartDetailUpReqDTO cartDetailUpReqDTO) {
+        Optional<CartDetail> optionalCartDetail = cartDetailRepository.findById(cartDetailUpReqDTO.getId());
+        if (!optionalCartDetail.isPresent()) {
+            throw new ResourceNotFoundException("Not found cartDetail ");
+        }
+        CartDetail cartDetail = optionalCartDetail.get();
+        cartDetail.setCart(cartDetailUpReqDTO.toCartDetail().getCart());
+        cartDetail.setProduct(cartDetailUpReqDTO.toCartDetail().getProduct());
+        cartDetail.setTotalAmount(cartDetailUpReqDTO.toCartDetail().getTotalAmount());
+        cartDetail.setColor(cartDetailUpReqDTO.getColor());
+        cartDetail.setSize(cartDetailUpReqDTO.getSize());
+        cartDetail.setQuantity(cartDetailUpReqDTO.getQuantity());
+        cartDetail.setCart(new Cart().setStatus(cartDetailUpReqDTO.getStatus()));
+        cartDetailRepository.save(cartDetail);
+        return new CartDetailNotCart(cartDetail);
     }
 }
