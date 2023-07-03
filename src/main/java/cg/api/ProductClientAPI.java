@@ -58,8 +58,8 @@ public class ProductClientAPI {
         return new ResponseEntity<>(productResClientDTOS, HttpStatus.OK);
     }
 
-    @PostMapping("/category/{id}")
-    private ResponseEntity<?> getAllProductByCategory(@PathVariable Long id, Pageable pageable){
+    @PostMapping("/category")
+    private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
         return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
     }
 }

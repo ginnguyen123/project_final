@@ -3,6 +3,7 @@ package cg.repository;
 
 import cg.dto.product.ProductListResponse;
 import cg.dto.product.client.ProductResClientDTO;
+import cg.model.category.Category;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
 
@@ -59,15 +60,19 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             @Param("size")ESize size, Pageable pageable);
 
 //    query theo id category ở trang home
-    @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
-            "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
-            "FROM Product AS prod " +
-            "LEFT JOIN Category AS cate " +
-            "JOIN ProductImport AS imp " +
-            "WHERE imp.quantity > 0 " +
-            "AND prod.deleted = false " +
-            "AND cate.id = :id ")
-    Page<ProductResClientDTO> findAllByCategory(@Param("id")Long id, Pageable pageable);
+//    @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
+//            "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
+//            "FROM Product AS prod " +
+//            "LEFT JOIN Category AS cate ON cate = prod.category " +
+//            "JOIN ProductImport AS imp ON imp.product = prod " +
+//            "LEFT JOIN Discount  AS dis ON prod.discount = dis " +
+//            "WHERE imp.quantity > 0 " +
+//            "AND prod.deleted = false " +
+//            "AND prod.category = :category " +
+//            "OR prod.discount IS NULL " +
+//            "OR :today BETWEEN dis.startDate AND dis.endDate " +
+//            "GROUP BY prod.id")
+//    Page<ProductResClientDTO> findAllByCategory(@Param("category") Category category,@Param("today")LocalDate today,Pageable pageable);
 
     //query product cho trang home
     @Query(value = "SELECT prod FROM Product AS prod " +
@@ -75,7 +80,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "INNER JOIN ProductImport AS proImp ON proImp.product = prod " +
             "WHERE proImp.quantity > 0 " +
             "AND prod.deleted = FALSE " +
-            "AND :day BETWEEN disc.startDate AND disc.endDate " +
+            "OR :day BETWEEN disc.startDate AND disc.endDate " +
             "OR prod.discount IS NULL " +
             "GROUP BY prod.id")
     List<Product> findAllByDiscountTime(@Param("day") LocalDate date);

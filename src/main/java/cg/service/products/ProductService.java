@@ -82,12 +82,15 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Page<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable) {
+    public Page<ProductResClientDTO> findAllByCategory(Long id,Pageable pageable) {
         Optional<Category> categoryOp = categoryRepository.findById(id);
         if (!categoryOp.isPresent()){
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
-        return productRepository.findAllByCategory(id, pageable);
+        LocalDate today = LocalDate.now();
+        Page<ProductResClientDTO> productResClientDTOS = productRepository.findAllByCategory(categoryOp.get(), today,pageable);
+        System.out.println(productResClientDTOS);
+        return productResClientDTOS;
     }
     @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
