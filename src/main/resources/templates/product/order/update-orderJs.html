@@ -17,6 +17,7 @@
             }
         }
         let locationRegion = new LocationRegion();
+        let idCartDetail;
         pageCart.dialogs.elements.locationRegionIdUp = $('#locationRegionIdUp');
         pageCart.dialogs.elements.provinceUp = $('#provinceUp');
         pageCart.dialogs.elements.districtUp = $('#districtUp');
@@ -117,7 +118,7 @@
             let idCart = data.cart.id;
             let totalAmount = data.cart.totalAmount;
             let address = data.cart.locationRegion.address;
-            console.log(cart);
+            console.log(data);
             $('#nameReceiverUp').val(name_receiver);
             $('#phoneReceiverUp').val(phone_receiver);
             $('#totalAmountUp').val(totalAmount);
@@ -138,7 +139,10 @@
 
             pageCart.loadData.getAllCartDetail(idCart).then(()=>{
                 $('#tbCartDetail').val();
+                addEventDeleteClick();
             });
+
+
 
 
             // page.loadData.getAllCategoryParent().then(()=>{
@@ -167,6 +171,55 @@
             // $('#productDescriptionUp').cleditor();
 
             /*]]>*/
+        }
+
+        function addEventDeleteClick() {
+            $(".delete").on('click', function () {
+                let cartId = $(this).data('id');
+                pageCart.loadData.findCartById(cartId).then((data) => {
+                     idCartDetail = data.id;
+                    console.log("-------data------");
+                    console.log(data.id);
+                    AppBase.showDeleteCartItemConfirmDialog().then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                headers: {
+                                    'accept': 'application/json',
+                                    'content-type': 'application/json'
+                                },
+                                type: "DELETE",
+                                url: pageCart.urls.getAllCartDetail + "" + idCartDetail
+                            })
+                                .done(() => {
+                                    $("#tr_" + idCartDetail).remove();
+                                    AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_DELETED);
+                                })
+                                .fail((error) => {
+                                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_DELETED);
+                                })
+                        }
+                    })
+                })
+            })
+
+        }
+
+        pageCart.loadData.findCartById = (id) => {
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getAllCartDetail + 'find-id-cart-detail/' + id
+            })
+                .done((data) => {
+                    console.log(data)
+                    //
+                    // $('.select-search').select2({
+                    //     dropdownParent: $('#tbCartDetail')
+                    // });
+
+                })
+                .fail(() => {
+
+                })
         }
 
         function addEventChangeProvinceUp() {

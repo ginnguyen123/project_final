@@ -116,6 +116,7 @@ public class CartService implements ICartService {
             locationRegion.setId(null);
             locationRegionRepository.save(locationRegion);
         }
+        ECartStatus status = ECartStatus.getECartStatus("UNPAID");
         Cart cart = new Cart();
         cart.setName_receiver(cartCreReqDTO.getReceivedName());
         cart.setPhone_receiver(cartCreReqDTO.getReceivedPhone());
@@ -135,6 +136,7 @@ public class CartService implements ICartService {
             cartDetail.setCart(cart);
             cartDetails.add(cartDetail);
         }
+        cart.setCartDetails(cartDetails);
         cart.setTotalAmount(totalTotal);
         cart.setLocationRegion(locationRegion);
         cart.setCustomer(customer);

@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 public class CartDetailDTO {
-
+    private Long id;
     private BigDecimal totalAmount;
     private Long quantity;
     private ESize size;
@@ -28,7 +28,8 @@ public class CartDetailDTO {
     private String productTitle;
     private BigDecimal productPrice;
 
-    public CartDetailDTO(BigDecimal totalAmount, Long quantity, ESize size, EColor color, Long cartId, Long productId, String productTitle, BigDecimal productPrice) {
+    public CartDetailDTO( Long id ,BigDecimal totalAmount, Long quantity, ESize size, EColor color, Long cartId, Long productId, String productTitle, BigDecimal productPrice) {
+        this.id = id;
         this.totalAmount = totalAmount;
         this.quantity = quantity;
         this.size = size;
