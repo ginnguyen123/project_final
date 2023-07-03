@@ -1,6 +1,8 @@
 package cg.api;
 
 import cg.dto.product.client.ProductResClientDTO;
+import cg.exception.DataInputException;
+import cg.model.category.Category;
 import cg.model.product.Product;
 import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -57,7 +60,6 @@ public class ProductClientAPI {
 
     @PostMapping("/category/{id}")
     private ResponseEntity<?> getAllProductByCategory(@PathVariable Long id, Pageable pageable){
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
     }
 }

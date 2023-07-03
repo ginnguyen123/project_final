@@ -34,6 +34,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "OR p.price = :search" )
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
 
+//    query search ở trang home
     @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
             "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
             "FROM Product AS prod " +
@@ -44,14 +45,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND prod.title LIKE :search " +
             "OR prod.code LIKE :search " +
             "OR prodImp.code LIKE :search " +
-            "OR prodImp.color LIKE :color " +
-            "OR prodImp.size LIKE :size " +
+            "OR prodImp.color = :color " +
+            "OR prodImp.size = :size " +
             "OR bra.name LIKE :search " +
             "OR cate.name LIKE :search " +
             "OR cate.categoryParent.name LIKE :search")
     Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, @Param("color") EColor color,
             @Param("size")ESize size, Pageable pageable);
 
+//    query theo id category ở trang home
     @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
             "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
             "FROM Product AS prod " +
@@ -62,6 +64,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND cate.id = :id ")
     Page<ProductResClientDTO> findAllByCategory(@Param("id")Long id, Pageable pageable);
 
+    //query product cho trang home
     @Query(value = "SELECT prod FROM Product AS prod " +
             "LEFT JOIN Discount AS disc ON disc = prod.discount " +
             "INNER JOIN ProductImport AS proImp ON proImp.product = prod " +
@@ -69,7 +72,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND prod.deleted = FALSE " +
             "AND :day BETWEEN disc.startDate AND disc.endDate " +
             "OR prod.discount IS NULL " +
-            "GROUP BY prod.id", nativeQuery = true)
+            "GROUP BY prod.id")
     List<Product> findAllByDiscountTime(@Param("day") LocalDate date);
 
 
