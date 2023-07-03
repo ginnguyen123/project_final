@@ -1,6 +1,8 @@
 package cg.service.cartDetail;
 
 import cg.dto.cartDetail.CartDetailDTO;
+import cg.dto.cartDetail.CartDetailNotCart;
+import cg.dto.cartDetail.CartDetailUpReqDTO;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.service.IGeneralService;
@@ -13,4 +15,6 @@ public interface ICartDetailService extends IGeneralService<CartDetail,Long> {
     List<CartDetail> findAllByCart_IdAndAndDeletedIsFalse(Long id);
 
     Optional<CartDetailDTO> getByIdAndDeletedIsFalse(Long id);
+
+    CartDetailNotCart update(CartDetailUpReqDTO cartDetailUpReqDTO);
 }

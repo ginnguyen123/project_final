@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -30,9 +29,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/client/products")
 public class ProductClientAPI {
     private final IProductService productService;
-
     private final IUploadMediaService uploadMediaService;
-
     @Autowired
     private IBrandService brandService;
 
