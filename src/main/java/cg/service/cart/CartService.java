@@ -103,13 +103,11 @@ public class CartService implements ICartService {
         LocationRegion locationRegion = cartCreReqDTO.getLocationRegion().toLocationRegion(customer);
         if (customerOptional.isPresent()) {
             customer = customerOptional.get();
-            //set lai dia chi cũ của cus
             Long idLocationRegion = cartCreReqDTO.getLocationRegion().getId();
             Optional<LocationRegion> optionalLocationRegion = locationRegionRepository.findById(idLocationRegion);
             if (optionalLocationRegion.isPresent()) {
                 List<LocationRegion> locationRegionsOfCustomer = customer.getLocationRegions();
-                LocationRegion lcReve = locationRegionsOfCustomer.stream().
-                        filter(i -> i.getId() == idLocationRegion).collect(Collectors.toList()).get(0);
+                LocationRegion lcReve = locationRegionsOfCustomer.stream().filter(i -> i.getId() == idLocationRegion).collect(Collectors.toList()).get(0);
                 locationRegion = lcReve;
             }
         } else if (customerOptional.isEmpty()) {
@@ -122,7 +120,6 @@ public class CartService implements ICartService {
         cart.setName_receiver(cartCreReqDTO.getReceivedName());
         cart.setPhone_receiver(cartCreReqDTO.getReceivedPhone());
         cart.setStatus(ECartStatus.getECartStatus(cartCreReqDTO.getStatus()));
-
         List<CartDetailCreReqDTO> cartDetailCreReqDTOs = cartCreReqDTO.getCartDetailDTOList();
         BigDecimal totalTotal = BigDecimal.ZERO;
         List<CartDetail> cartDetails = new ArrayList<>();
@@ -138,13 +135,11 @@ public class CartService implements ICartService {
             cartDetail.setCart(cart);
             cartDetails.add(cartDetail);
         }
-
         cart.setTotalAmount(totalTotal);
         cart.setLocationRegion(locationRegion);
         cart.setCustomer(customer);
         cartRepository.save(cart);
         cartDetailRepository.saveAll(cartDetails);
-
     }
 
     @Override
@@ -153,7 +148,23 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public CartListResponse update(CartUpReqDTO cartUpReqDTO) {
+    public CartUpReqDTO getCartDTOByCartDetail(CartUpReqDTO cartUpReqDTO) {
+        Cart oldCart = cartRepository.findById(cartUpReqDTO.getId()).get();
+        List<CartDetail> newCartDetail = cartUpReqDTO.toCart().getCartDetails();
+        oldCart.setCartDetails(newCartDetail);
+        oldCart.setName_receiver(cartUpReqDTO.getName_receiver());
+        oldCart.setPhone_receiver(cartUpReqDTO.getPhone_receiver());
+        oldCart.setLocationRegion(cartUpReqDTO.toCart().getLocationRegion());
+        oldCart.setTotalAmount(cartUpReqDTO.getTotalAmount());
+        oldCart.setStatus(cartUpReqDTO.toCart().getStatus());
+        Cart upCart = cartRepository.save(oldCart);
+
+
+        return upCart.toCartUpReqDTO();
+    }
+
+    @Override
+    public CartUpResDTO update(CartUpReqDTO cartUpReqDTO) {
         Optional<Cart> optionalCart = cartRepository.findById(cartUpReqDTO.getId());
         if (!optionalCart.isPresent()) {
             throw new ResourceNotFoundException("Not found cart ");
@@ -182,11 +193,7 @@ public class CartService implements ICartService {
         cart.setLocationRegion(locationRegion.get());
         cart.setCartDetails(cartDetailList);
         cartRepository.save(cart);
-        CartListResponse cartUpResDTO = new CartListResponse(cart);
+        CartUpResDTO cartUpResDTO = new CartUpResDTO(cart);
         return cartUpResDTO;
-        // set lại các field người nhận.
-        // remove cartdetail
-        // add cartdetail.
-        // update cart.
     }
 }

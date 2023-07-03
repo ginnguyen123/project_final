@@ -289,93 +289,110 @@
             <div class="tile">
                 <h3 class="tile-title">Cập nhật thông tin đơn hàng</h3>
                 <div class="tile-body">
-                    <form class="row" id="frmUpdateProduct">
+                    <form class="row" id="frmUpdateCart">
                         <div class="form-group col-md-12">
                             <div class="col-md-4 float-left">
-                                <label for="productTitleUp" class="control-label">Tên sản phẩm</label>
-                                <input class="form-control"  name="productTitleUp" id="productTitleUp" type="text">
+                                <label for="nameReceiverUp" class="control-label add">Tên khách hàng</label>
+                                <input class="form-control-add"  name="nameReceiverUp" id="nameReceiverUp" type="text">
                             </div>
                             <div class="col-md-4 float-left">
-                                <label for="productPriceUp" class="control-label">Giá bán</label>
-                                <input class="form-control" id="productPriceUp"  name="productPriceUp" type="number" min="0">
+                                <label class="control-label add"> Số điện thoại </label>
+                                <input class="form-control-add" type="text" placeholder=""  id="phoneReceiverUp" name="phoneReceiverUp">
                             </div>
+                            <input type="hidden" id="locationRegionIdUp">
                             <div class="col-md-4 float-left">
-                                <label for="discountUpdate" class="control-label">Discount</label>
-                                <select class="form-control" id="discountUpdate" name="discountUpdate">
-                                    <option value="">-- Chọn discount --</option>
+                                <label for="provinceUp" class="control-label"> Thành Phố </label>
+                                <select class="form-control-add" id="provinceUp" name="provinceUp">
+
                                 </select>
+                            </div>
+                            <div class="col-md-4 float-left">
+                                <label for="districtUp" class="control-label"> Huyện </label>
+                                <select class="form-control-add" id="districtUp" name="districtUp">
+
+                                </select>
+                            </div>
+                            <div class="col-md-4 float-left">
+                                <label for="wardsUp" class="control-label"> Phường </label>
+                                <select class="form-control-add" id="wardsUp" name="wardsUp">
+
+                                </select>
+                            </div>
+                            <div class="col-md-4 float-left">
+                                <label for="addressUp" class="control-label">Thông tin địa chỉ</label>
+                                <input class="form-control-add"  name="addressUp" id="addressUp" type="text">
                             </div>
                         </div>
 
                         <div class="form-group col-md-12">
-                            <div class="col-md-4 float-left">
-                                <label for="categoryUp" class="control-label">Danh mục</label>
-                                <select class="form-control" id="categoryUp" name="categoryUp">
-                                    <option value="-1">-- Chọn danh mục --</option>
-                                </select>
-                            </div>
 
-                            <div class="col-md-4 float-left">
-                                <label for="categoryParentUp" class="control-label">Danh mục con</label>
-                                <select class="form-control" id="categoryParentUp" name="categoryParentUp">
-                                    <option value="-1">-- Chọn danh mục con--</option>
-                                </select>
-                            </div>
+                            <table class="table table-hover table-bordered" id="tbCartDetail">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="all-delete"></th>
+                                    <th>ID</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Màu sắc</th>
+                                    <th>Kích cỡ</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Tình trạng</th>
+                                    <th>Tính năng </th>
+                                </tr>
+                                </thead>
+                                <tbody>
 
-                            <div class="col-md-4 float-left">
-                                <label for="brandUp" class="control-label">Nhà cung cấp</label>
-                                <select class="form-control" id="brandUp" name="brandUp">
-                                    <option value="-1">-- Chọn nhà cung cấp --</option>
-                                </select>
-                            </div>
+                                </tbody>
+                            </table>
+
+
+
+
+
+
+
+
+<!--                            <div class="col-md-4 float-left">-->
+<!--                                <label for="productNameUp" class="control-label"> Tên sản phẩm</label>-->
+<!--                                <select class="form-control-add" id="productNameUp" name="productNameUp">-->
+
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-4 float-left">-->
+<!--                                <label class="control-label add">Số lượng </label>-->
+<!--                                <input class="form-control-add" type="text" placeholder=""  id="quantityUp" name="quantityUp">-->
+<!--                            </div>-->
+<!--                            <div class="col-md-4 float-left">-->
+<!--                                <label class="control-label add">Kích cỡ</label>-->
+<!--                                <select class="select-search form-control-add" style="width: 100%" id="sizeUp" name="sizeUp">-->
+
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-4 float-left">-->
+<!--                                <label  class="control-label add">Màu sắc</label>-->
+<!--                                <select class="form-control-add select-search" id="select-color" name="colorUp">-->
+
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-4 float-left">-->
+<!--                                <label class="control-label add">Tông tiền </label>-->
+<!--                                <input class="form-control-add" type="text" placeholder=""  id="totalAmountUp" name="totalAmountUp">-->
+<!--                            </div>-->
+<!--                            <div class="col-md-4 float-left">-->
+<!--                                <label for="StatusUp" class="control-label">Status</label>-->
+<!--                                <select class="form-control-add" id="statusUp" name="statusUp">-->
+<!--                                    <option value="-1">&#45;&#45; Chọn danh mục con&#45;&#45;</option>-->
+<!--                                </select>-->
+<!--                            </div>-->
                         </div>
-                        <div class="form-group col-md-4 float-left" >
-                            <!--                            <label class="control-label">Ảnh sản phẩm</label>-->
-                            <div class="card">
-                                <div class="top mb-3">
-                                    <p>Avatar</p>
-                                    <span id="btn-avatar">
-                                        <i class="fas fa-cloud-upload-alt me-2"></i>Chọn avatar
-                                    </span>
-                                </div>
-                                <div id="frm-avatar" style="width: 100%">
-                                    <input id="in-avatar" name="imageFileProduct" type="file" hidden/>
-                                    <div id="show-avatar" style="width: 100%">
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="form-group col-md-8 float-left" >
-                            <!--                            <label class="control-label">Ảnh sản phẩm</label>-->
-                            <div class="card">
-                                <div class="top mb-3">
-                                    <p>Drag & drop image uploading</p>
-                                    <span class="boxChoiceImage">
-                                        <i class="fas fa-cloud-upload-alt me-2"></i>Chọn ảnh
-                                    </span>
-                                </div>
 
-                                <div id="frm-image">
-                                    <!--                                    <span class="inner">Drag & drop image here or <span class="select">Brows</span>-->
-                                    <!--                                    </span>-->
-                                    <input name="imageFileProduct" id="imageFileProduct" type="file" hidden multiple/>
-                                    <div class="container-image">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label">Mô tả sản phẩm</label>
-                            <textarea class="form-control" name="mota"id="productDescriptionUp"></textarea>
-                        </div>
                     </form>
-                    <div>
+                    <div style="margin-top: 17px">
                         <button class="btn btn-save btn-luu-lai" id="btnSaveProductUpdate" type="button">Lưu lại</button>
-                        <a class="btn btn-cancel " href="/products">Hủy bỏ</a>
+                        <a class="btn btn-cancel " href="/carts">Hủy bỏ</a>
                     </div>
                 </div>
             </div>

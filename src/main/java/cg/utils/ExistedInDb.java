@@ -2,11 +2,13 @@ package cg.utils;
 
 import cg.anotation.ExistInDb;
 import cg.service.ExistService;
+import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
+@Component
 public class ExistedInDb implements ConstraintValidator<ExistInDb, Object>{
     private Class<?> aClass;
     private final List<ExistService> existServices;
