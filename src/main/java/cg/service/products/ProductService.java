@@ -87,11 +87,11 @@ public class ProductService implements IProductService{
         if (!categoryOp.isPresent()){
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
-        return productRepository.findAllByCategory(id, pageable);
+        LocalDate today = LocalDate.now();
+        return productRepository.findAllByCategory(categoryOp.get(), today,pageable);
     }
     @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
-//
         return productRepository.findAllWithSearch(search, pageable);
     }
 
@@ -121,8 +121,6 @@ public class ProductService implements IProductService{
         product.setDeleted(true);
         save(product);
     }
-
-
 
     @Override
     public Product update(ProductUpdaReqDTO productUpdaReqDTO) {
