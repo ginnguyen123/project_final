@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -30,9 +29,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/client/products")
 public class ProductClientAPI {
     private final IProductService productService;
-
     private final IUploadMediaService uploadMediaService;
-
     @Autowired
     private IBrandService brandService;
 
@@ -58,8 +55,8 @@ public class ProductClientAPI {
         return new ResponseEntity<>(productResClientDTOS, HttpStatus.OK);
     }
 
-    @PostMapping("/category/{id}")
-    private ResponseEntity<?> getAllProductByCategory(@PathVariable Long id, Pageable pageable){
+    @PostMapping("/category")
+    private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
         return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
     }
 }
