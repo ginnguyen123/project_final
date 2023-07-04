@@ -78,13 +78,7 @@ public class ProductService implements IProductService{
     @Override
     public List<Product> findAllByDiscountTime(LocalDate date) {
         List<Long> idList = productRepository.findAllByDiscountTime(date);
-        List<Product> products = new ArrayList<>();
-        if (idList.size() != 0){
-            for (Long id : idList){
-                Product product = findById(id).get();
-                products.add(product);
-            }
-        }
+        List<Product> products = productRepository.findByDeletedAndIdIn(false, idList);
         return products;
     }
 
