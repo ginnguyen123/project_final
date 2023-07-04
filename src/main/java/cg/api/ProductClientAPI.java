@@ -51,12 +51,16 @@ public class ProductClientAPI {
     private ResponseEntity<?> getAllProductByDiscountTime(){
         LocalDate date = LocalDate.now();
         List<Product> products = productService.findAllByDiscountTime(date);
-        List<ProductResClientDTO> productResClientDTOS = products.stream().map(i->i.toProductResClientDTO()).collect(Collectors.toList());
-        return new ResponseEntity<>(productResClientDTOS, HttpStatus.OK);
+        if (products.size() != 0){
+            List<ProductResClientDTO> productResClientDTOS = products.stream().map(i->i.toProductResClientDTO()).collect(Collectors.toList());
+            return new ResponseEntity<>(productResClientDTOS, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/category")
-    private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
-        return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
+    @PostMapping("/category/{id}")
+    private ResponseEntity<?> getAllProductByCategory(@PathVariable("id") Long id){
+        productService.findAllByCategory(id);
+        return new ResponseEntity<>(productService.findAllByCategory(id),HttpStatus.OK);
     }
 }
