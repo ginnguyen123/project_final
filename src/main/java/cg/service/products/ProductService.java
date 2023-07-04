@@ -18,7 +18,6 @@ import cg.utils.ExistedInDb;
 import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
 
     @Autowired
     private ProductRepository productRepository;
@@ -61,7 +60,6 @@ public class ProductService implements IProductService{
 
     @Autowired
     private AppUtils appUtils;
-
 
     @Override
     public List<Product> findAll() {
@@ -91,13 +89,11 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public List<ProductResClientDTO> findAllByCategory(Long id,Long minPrice,Long maxPrice ,EColor color, ESize size, Pageable pageable) {
-    public List<ProductResClientDTO> findAllByCategory(Long id,Pageable pageable) {
+    public List<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable) {
         Optional<Category> categoryOp = categoryRepository.findById(id);
-        if (!categoryOp.isPresent()){
+        if (!categoryOp.isPresent()) {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
-        Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(),minPrice,maxPrice,color,size,pageable);
         Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(),pageable);
         System.out.println(productPage);
         List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
@@ -105,23 +101,14 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public List<ProductResClientDTO> findAllByCategoryFilter(Long id, Long min, Long max, Pageable pageable) {
-        Optional<Category> categoryOp = categoryRepository.findById(id);
-        if (!categoryOp.isPresent()){
-            throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
-        }
-        Page<Product> productPage = productRepository.findAllByCategoryFilter(id, LocalDate.now(), min, max, pageable);
-        System.out.println(productPage);
-        List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
-        return dtoList;
+    public List<ProductResClientDTO> findAllByCategoryFilter(Long id, Pageable pageable) {
+        return null;
     }
 
     @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
         return productRepository.findAllWithSearch(search, pageable);
     }
-
-
 
     @Override
     public Product save(Product product) {
@@ -153,7 +140,7 @@ public class ProductService implements IProductService{
     @Override
     public Product update(ProductUpdaReqDTO productUpdaReqDTO) {
         Long productId = productUpdaReqDTO.getId();
-        if (!findById(productId).isPresent()){
+        if (!findById(productId).isPresent()) {
             return null;
         }
 
@@ -166,10 +153,9 @@ public class ProductService implements IProductService{
         product.setDescription(productUpdaReqDTO.getDescription());
         product.setBrand(brand);
         product.setCategory(category);
-        if (productUpdaReqDTO.getDiscountId() == null){
+        if (productUpdaReqDTO.getDiscountId() == null) {
             product.setDiscount(null);
-        }
-        else {
+        } else {
             Discount discount = discountRepository.findById(productUpdaReqDTO.getDiscountId()).get();
             product.setDiscount(discount);
         }

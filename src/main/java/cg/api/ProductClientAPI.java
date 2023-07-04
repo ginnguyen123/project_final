@@ -62,38 +62,12 @@ public class ProductClientAPI {
     }
 
     @PostMapping("/category")
-    private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id,
-                                                      @RequestParam("color") String color,
-                                                      @RequestParam("esize") String eSize,
-                                                      @RequestParam("min") Long minPrice,
-                                                      @RequestParam("max") Long maxPrice,Pageable pageable){
-        EColor eColor = EColor.getEColor(color);
-        ESize fieldSize = ESize.getESize(eSize);
-        if (eColor == null || color.equals(""))
-            eColor = EColor.BLUE;
-
-        if (fieldSize == null || eSize.equals(""))
-            fieldSize = ESize.M;
-
-        if (minPrice == null)
-            minPrice = 0l;
     private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
         return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
     }
     @PostMapping("/filter/category")
-    private ResponseEntity<?> getAllProductFilter(@RequestParam("id") Long id,
-                                                  @RequestParam("min") Long min,
-                                                  @RequestParam("max") Long max, Pageable pageable){
-//        if (max <= min)
-//            throw new DataInputException("The wrong filter by price");
-//        if (min == null)
-//            min = 0l;
-//        if (max == null || max == 0)
-//            max = 100000000l;
+    private ResponseEntity<?> getAllProductFilter(@RequestParam("id") Long id, Pageable pageable){
 
-        if (maxPrice == null || maxPrice == 0)
-            maxPrice = 100000000l;
-        return new ResponseEntity<>(productService.findAllByCategory(id,minPrice, maxPrice,eColor,fieldSize,pageable),HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
