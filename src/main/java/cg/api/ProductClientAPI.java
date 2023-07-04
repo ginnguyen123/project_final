@@ -3,6 +3,8 @@ package cg.api;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.exception.DataInputException;
 import cg.model.category.Category;
+import cg.model.enums.EColor;
+import cg.model.enums.ESize;
 import cg.model.product.Product;
 import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
@@ -60,7 +62,24 @@ public class ProductClientAPI {
     }
 
     @PostMapping("/category")
-    private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
-        return new ResponseEntity<>(productService.findAllByCategory(id, pageable),HttpStatus.OK);
+    private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id,
+                                                      @RequestParam("color") String color,
+                                                      @RequestParam("esize") String eSize,
+                                                      @RequestParam("min") Long minPrice,
+                                                      @RequestParam("max") Long maxPrice,Pageable pageable){
+        EColor eColor = EColor.getEColor(color);
+        ESize fieldSize = ESize.getESize(eSize);
+        if (eColor == null || color.equals(""))
+            eColor = EColor.BLUE;
+
+        if (fieldSize == null || eSize.equals(""))
+            fieldSize = ESize.M;
+
+        if (minPrice == null)
+            minPrice = 0l;
+
+        if (maxPrice == null || maxPrice == 0)
+            maxPrice = 100000000l;
+        return new ResponseEntity<>(productService.findAllByCategory(id,minPrice, maxPrice,eColor,fieldSize,pageable),HttpStatus.OK);
     }
 }

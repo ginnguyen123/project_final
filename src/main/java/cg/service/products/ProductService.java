@@ -6,6 +6,8 @@ import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
+import cg.model.enums.EColor;
+import cg.model.enums.ESize;
 import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
@@ -89,12 +91,12 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public List<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable) {
+    public List<ProductResClientDTO> findAllByCategory(Long id,Long minPrice,Long maxPrice ,EColor color, ESize size, Pageable pageable) {
         Optional<Category> categoryOp = categoryRepository.findById(id);
         if (!categoryOp.isPresent()){
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
-        Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(), pageable);
+        Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(),minPrice,maxPrice,color,size,pageable);
         System.out.println(productPage);
         List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
         return dtoList;
