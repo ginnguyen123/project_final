@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -38,7 +39,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "OR p.code LIKE :search " +
             "OR p.price = :search" )
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
-
 
 //    query search ở trang home
     @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
@@ -84,6 +84,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "GROUP BY prod.id LIMIT 10 ", nativeQuery = true)
     List<Long> findAllByDiscountTime(@Param("day") LocalDate date);
 
+    List<Product> findByDeletedAndIdIn(boolean deleted, Collection<Long> id);
 
 
 }

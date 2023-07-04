@@ -16,6 +16,7 @@ import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,13 +79,7 @@ public class ProductService implements IProductService{
     @Override
     public List<Product> findAllByDiscountTime(LocalDate date) {
         List<Long> idList = productRepository.findAllByDiscountTime(date);
-        List<Product> products = new ArrayList<>();
-        if (idList.size() != 0){
-            for (Long id : idList){
-                Product product = findById(id).get();
-                products.add(product);
-            }
-        }
+        List<Product> products = productRepository.findByDeletedAndIdIn(false, idList);
         return products;
     }
 
