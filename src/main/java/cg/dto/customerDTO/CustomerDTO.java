@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class CustomerDTO {
     private Long id;
-    private String fullname;
+    private String fullName;
     private String email;
     private Date dateOfBirth;
     private ESex sex;
@@ -31,7 +30,7 @@ public class CustomerDTO {
     public Customer toCustomer() {
         return new Customer()
                 .setId(id)
-                .setFullName(fullname)
+                .setFullName(fullName)
                 .setEmail(email)
                 .setDateOfBirth(dateOfBirth)
                 .setSex(sex)

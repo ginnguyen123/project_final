@@ -2,7 +2,6 @@ package cg.model.customer;
 
 import cg.dto.customerDTO.CustomerDTO;
 import cg.model.BaseEntity;
-import cg.model.cart.Cart;
 import cg.model.enums.ESex;
 import cg.model.location_region.LocationRegion;
 import cg.model.user.User;
@@ -59,7 +58,7 @@ public class Customer extends BaseEntity {
     public CustomerDTO toCustomerDTO() {
         return new CustomerDTO()
                 .setId(id)
-                .setFullname(fullName)
+                .setFullName(fullName)
                 .setEmail(email)
                 .setDateOfBirth(dateOfBirth)
                 .setSex(sex)

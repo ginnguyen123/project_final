@@ -2,6 +2,7 @@ package cg.repository;
 
 import cg.dto.cart.CartCreResDTO;
 import cg.dto.cart.CartDTO;
+import cg.dto.cart.CartUpReqDTO;
 import cg.model.cart.Cart;
 import cg.model.enums.ECartStatus;
 import cg.utils.CartRequest;
@@ -18,7 +19,6 @@ import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
-
 
     @Query("SELECT cr FROM Cart AS cr " +
             " join CartDetail cd on cr.id = cd.cart.id " +
@@ -45,7 +45,14 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     )
     Optional<CartDTO> getCartDTOByIdDeletedIsFalse(Long id);
 
+    @Query("SELECT NEW cg.dto.cart.CartUpReqDTO (pi.id,pi.name_receiver,pi.phone_receiver,pi.totalAmount,pi.locationRegion.id,pi.status) " +
+            "FROM Cart AS pi " +
+            "WHERE pi.deleted = false " +
+            "AND pi.id = :id "
+    )
+    Optional<CartUpReqDTO> getCartDTOByCartDetail(Long id);
+
     @Query("SELECT c FROM Cart AS c WHERE c.customer.id = :customerId AND c.status = :status")
     Cart findCartsByCustomerIdAndStatusIsCart(@Param("customerId")Long customerId , @Param("status") ECartStatus status);
-
 }
+

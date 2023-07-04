@@ -1,7 +1,8 @@
 package cg.model.cart;
 
+import cg.dto.cartDetail.CartDetailNotCart;
 import cg.dto.cartDetail.CartDetailDTO;
-import cg.dto.cartDetail.CartDetailResDTO;
+import cg.dto.cartDetail.CartDetailUpReqDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
@@ -50,15 +51,48 @@ public class CartDetail extends BaseEntity {
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;
 
+    //id,quantity,tAmount,size,color,cartID,productID, name,price
+
+
     public CartDetailDTO toCartDetailDTO() {
         return new CartDetailDTO()
-                .setProduct(product)
+                .setProductId(product.getId())
+                .setProductTitle(product.getTitle())
+                .setProductPrice(product.getPrice())
                 .setQuantity(quantity)
                 .setTotalAmount(totalAmount)
                 .setSize(size)
                 .setColor(color)
-                .setCart(cart.toCartDTO());
+                .setCartId(cart.getId())
+        ;
     }
+
+    public CartDetailUpReqDTO toCartDetailUpReqDTO() {
+        return new CartDetailUpReqDTO()
+                .setProductId(product.getId())
+                .setQuantity(quantity)
+                .setSize(size)
+                .setColor(color);
+    }
+
+    public CartDetailNotCart toCartDetailNotCart(){
+        return new CartDetailNotCart()
+                .setId(id)
+                .setQuantity(quantity)
+                .setTotalAmount(totalAmount)
+                .setIdProduct(product.getId())
+                .setProductPrice(product.getPrice())
+                .setProductTitle(product.getTitle())
+                .setColor(color)
+                .setSize(size)
+                .setStatus(cart.getStatus())
+                .setIdCart(cart.getId())
+                ;
+    }
+
+
+
+
 
     public CartDetailResDTO toCartDetailResDTO() {
         return new CartDetailResDTO()

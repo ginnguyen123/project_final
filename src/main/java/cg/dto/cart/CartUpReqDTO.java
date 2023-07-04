@@ -4,6 +4,8 @@ package cg.dto.cart;
 import cg.dto.cartDetail.CartDetailCreReqDTO;
 import cg.dto.cartDetail.CartDetailUpReqDTO;
 import cg.dto.locationRegionDTO.LocationRegionDTO;
+import cg.model.cart.Cart;
+import cg.model.enums.ECartStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +30,16 @@ public class CartUpReqDTO implements Validator {
     private BigDecimal totalAmount;
     private LocationRegionDTO locationRegion;
     private String status;
+
+
+    public CartUpReqDTO(Long id, String name_receiver,String phone_receiver,  BigDecimal totalAmount, Long locationRegionId, ECartStatus status) {
+        this.id = id;
+        this.name_receiver = name_receiver;
+        this.phone_receiver = phone_receiver;
+        this.totalAmount = totalAmount;
+        this.status = String.valueOf(status);
+    }
+
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -75,4 +87,14 @@ public class CartUpReqDTO implements Validator {
 //
 //        }
     }
+    public Cart toCart() {
+        return new Cart()
+                .setId(id)
+                .setName_receiver(name_receiver)
+                .setPhone_receiver(phone_receiver)
+                .setLocationRegion(locationRegion.toLocationRegion())
+                .setStatus(ECartStatus.valueOf(status))
+                .setTotalAmount(totalAmount);
+    }
+
 }

@@ -32,31 +32,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/carts")
 public class CartAPI {
-    @Autowired
-    private ICartDetailService cartDetailService;
 
     @Autowired
     private ICartService cartService;
 
     @Autowired
-    private ICustomerService customerService;
-
-    @Autowired
     private AppUtils appUtils;
-
-    @Autowired
-    private IProductService productService;
 
     @GetMapping
     public ResponseEntity<?> getAllDeleteFalse() {
@@ -174,7 +162,7 @@ public class CartAPI {
         if (bindingResult.hasFieldErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
-        CartListResponse cartUpResDTO = cartService.update(cartUpReqDTO);
+        CartUpResDTO cartUpResDTO = cartService.update(cartUpReqDTO);
         return new ResponseEntity<>(cartUpResDTO,HttpStatus.OK);
     }
 
@@ -194,7 +182,4 @@ public class CartAPI {
                         ()-> new ResourceNotFoundException("Not found this cart"));
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
-
-
-
 }

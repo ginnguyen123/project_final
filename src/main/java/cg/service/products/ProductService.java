@@ -2,6 +2,7 @@ package cg.service.products;
 
 import cg.dto.product.*;
 import cg.dto.product.client.ProductResClientDTO;
+import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
@@ -9,7 +10,8 @@ import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
 import cg.service.media.IUploadMediaService;
-import cg.utils.AppUtils;
+import cg.utils.AppConstant;
+import cg.utils.ExistedInDb;
 import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,14 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -51,6 +50,9 @@ public class ProductService implements IProductService{
 
     @Autowired
     private UploadUtils uploadUtils;
+
+    @Autowired
+    private ExistedInDb existedInDb;
 
 
     @Override
@@ -81,9 +83,13 @@ public class ProductService implements IProductService{
 
     @Override
     public Page<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable) {
-        return productRepository.findAllByCategory(id, pageable);
+        Optional<Category> categoryOp = categoryRepository.findById(id);
+        if (!categoryOp.isPresent()){
+            throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
+        }
+        LocalDate today = LocalDate.now();
+        return productRepository.findAllByCategory(categoryOp.get(), today,pageable);
     }
-
     @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
         return productRepository.findAllWithSearch(search, pageable);

@@ -1,6 +1,8 @@
 package cg.api;
 
 import cg.dto.product.client.ProductResClientDTO;
+import cg.exception.DataInputException;
+import cg.model.category.Category;
 import cg.model.product.Product;
 import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
@@ -27,9 +29,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/client/products")
 public class ProductClientAPI {
     private final IProductService productService;
-
     private final IUploadMediaService uploadMediaService;
-
     @Autowired
     private IBrandService brandService;
 
@@ -55,9 +55,8 @@ public class ProductClientAPI {
         return new ResponseEntity<>(productResClientDTOS, HttpStatus.OK);
     }
 
-    @PostMapping("/category/{id}")
-    private ResponseEntity<?> getAllProductByCategory(@PathVariable Long id, Pageable pageable){
-
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/category")
+    private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
+        return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
     }
 }

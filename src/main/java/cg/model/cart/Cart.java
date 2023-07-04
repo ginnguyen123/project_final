@@ -2,6 +2,7 @@ package cg.model.cart;
 
 import cg.dto.cart.CartCreResDTO;
 import cg.dto.cart.CartDTO;
+import cg.dto.cart.CartUpReqDTO;
 import cg.model.BaseEntity;
 import cg.model.customer.Customer;
 import cg.model.enums.ECartStatus;
@@ -85,7 +86,15 @@ public class Cart extends BaseEntity {
                 .setTotalAmount(totalAmount);
     }
 
-
-
-
+    public CartUpReqDTO toCartUpReqDTO() {
+        return new CartUpReqDTO()
+                .setEmail(customer.getEmail())
+                .setName_receiver(name_receiver)
+                .setPhone_receiver(phone_receiver)
+//                .setCartDetailDTOList(cartDetails.stream().map(CartDetail::toCartDetailUpReqDTO).collect(Collectors.toList()))
+                .setLocationRegion(locationRegion.toLocationRegionDTO())
+                .setTotalAmount(totalAmount)
+                .setStatus(String.valueOf(status))
+                .setId(id);
+    }
 }
