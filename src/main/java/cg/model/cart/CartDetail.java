@@ -2,6 +2,7 @@ package cg.model.cart;
 
 import cg.dto.cartDetail.CartDetailNotCart;
 import cg.dto.cartDetail.CartDetailDTO;
+import cg.dto.cartDetail.CartDetailResDTO;
 import cg.dto.cartDetail.CartDetailUpReqDTO;
 import cg.model.BaseEntity;
 import cg.model.enums.EColor;
@@ -103,7 +104,6 @@ public class CartDetail extends BaseEntity {
                 .setPrice(product.getPrice())
                 .setTitle(product.getTitle())
                 .setTotalAmountItem(totalAmount)
-                .setTotalAmountCart(cart.getTotalAmount())
                 .setAvt(product.getProductAvatar().getFileUrl());
 
     }

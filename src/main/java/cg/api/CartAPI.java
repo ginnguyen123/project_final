@@ -1,22 +1,18 @@
 package cg.api;
 
 import cg.dto.cart.*;
-import cg.dto.cartDetail.CartDetailCreReqDTO;
 import cg.dto.cartDetail.CartDetailResDTO;
-import cg.dto.productImport.*;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.model.customer.Customer;
 import cg.model.enums.ECartStatus;
-import cg.model.enums.EColor;
-import cg.model.enums.ESize;
 import cg.model.product.Product;
-import cg.model.product.ProductImport;
-import cg.service.cart.ICartDetailService;
+import cg.service.ExistService;
 import cg.service.cart.ICartService;
 import cg.service.cart.response.CartListResponse;
+import cg.service.cartDetail.ICartDetailService;
 import cg.service.customer.ICustomerService;
 import cg.service.products.IProductService;
 import cg.utils.AppUtils;
@@ -24,8 +20,6 @@ import cg.utils.CartRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -33,7 +27,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,10 +38,20 @@ import java.util.stream.Collectors;
 public class CartAPI {
 
     @Autowired
+    IProductService productService;
+
+    @Autowired
     private ICartService cartService;
 
     @Autowired
     private AppUtils appUtils;
+
+    @Autowired
+    private ICustomerService customerService;
+    private ExistService existService;
+
+    @Autowired
+    private ICartDetailService cartDetailService;
 
     @GetMapping
     public ResponseEntity<?> getAllDeleteFalse() {
@@ -55,7 +62,6 @@ public class CartAPI {
 
     @GetMapping("/cart-details/{customerId}")
     public ResponseEntity<?> getAllCartDetails(@PathVariable Long customerId) {
-//        List<CartDetail> cartDetailList = cartDetailService.
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
         List<CartDetail> cartDetailList = cart.getCartDetails();
@@ -83,15 +89,9 @@ public class CartAPI {
 
     @PostMapping("/add")
     public  ResponseEntity<?> addToCart(@RequestBody CartCreMiniCartReqDTO cartCreMiniCartReqDTO) {
-        if (cartCreMiniCartReqDTO.getCustomerId() == null) {
-            throw new DataInputException("id customer null");
-        }
+
         Long customerId = cartCreMiniCartReqDTO.getCustomerId();
-        Optional<Customer> customerOptional = customerService.findById(customerId);
-        if (!customerOptional.isPresent()) {
-            throw new DataInputException("Customer is not found");
-        }
-        Customer customer = customerOptional.get();
+        Customer customer = customerService.findById(customerId).get();
         String status_str = cartCreMiniCartReqDTO.getStatus();
         ECartStatus status = ECartStatus.getECartStatus(status_str);
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customer.getId(), status);

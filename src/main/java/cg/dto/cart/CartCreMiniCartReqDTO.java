@@ -1,11 +1,14 @@
 package cg.dto.cart;
 
+import cg.anotation.ExistInDb;
+import cg.model.customer.Customer;
 import cg.model.enums.ECartStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Getter
@@ -13,6 +16,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartCreMiniCartReqDTO {
+    @NotNull
+    @ExistInDb(entity = Customer.class)
     private Long customerId;
     private Long productId;
     private BigDecimal price;

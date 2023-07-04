@@ -2,6 +2,7 @@ package cg.model.customer;
 
 import cg.dto.customerDTO.CustomerDTO;
 import cg.model.BaseEntity;
+import cg.model.cart.Cart;
 import cg.model.enums.ESex;
 import cg.model.location_region.LocationRegion;
 import cg.model.user.User;

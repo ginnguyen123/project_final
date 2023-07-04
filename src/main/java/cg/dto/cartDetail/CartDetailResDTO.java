@@ -21,6 +21,5 @@ public class CartDetailResDTO {
     private BigDecimal price;
     private String title;
     private BigDecimal totalAmountItem;
-    private BigDecimal totalAmountCart;
     private String avt;
 }
