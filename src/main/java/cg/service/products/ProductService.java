@@ -11,10 +11,12 @@ import cg.model.product.Product;
 import cg.repository.*;
 import cg.service.media.IUploadMediaService;
 import cg.utils.AppConstant;
+import cg.utils.AppUtils;
 import cg.utils.ExistedInDb;
 import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -53,6 +56,9 @@ public class ProductService implements IProductService{
 
     @Autowired
     private ExistedInDb existedInDb;
+
+    @Autowired
+    private AppUtils appUtils;
 
 
     @Override
@@ -83,15 +89,17 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public List<Long> findAllByCategory(Long id) {
+    public List<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable) {
         Optional<Category> categoryOp = categoryRepository.findById(id);
         if (!categoryOp.isPresent()){
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
-        List<Long> ids = productRepository.findAllByCategoryToday(id, LocalDate.now());
-//        System.out.println(ids);
-        return ids;
+        Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(), pageable);
+        System.out.println(productPage);
+        List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+        return dtoList;
     }
+
     @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
         return productRepository.findAllWithSearch(search, pageable);

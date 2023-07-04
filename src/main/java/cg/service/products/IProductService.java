@@ -32,5 +32,5 @@ public interface IProductService extends IGeneralService<Product,Long> {
 
     List<Product> findAllByDiscountTime(LocalDate date);
 
-    List<Long> findAllByCategory(Long id);
+    List<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable);
 }

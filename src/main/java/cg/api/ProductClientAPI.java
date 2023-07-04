@@ -14,6 +14,7 @@ import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,9 +59,8 @@ public class ProductClientAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/category/{id}")
-    private ResponseEntity<?> getAllProductByCategory(@PathVariable("id") Long id){
-        productService.findAllByCategory(id);
-        return new ResponseEntity<>(productService.findAllByCategory(id),HttpStatus.OK);
+    @PostMapping("/category")
+    private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
+        return new ResponseEntity<>(productService.findAllByCategory(id, pageable),HttpStatus.OK);
     }
 }
