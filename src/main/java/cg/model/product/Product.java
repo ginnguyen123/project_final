@@ -89,11 +89,11 @@ public class Product extends BaseEntity {
                 .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
-//        if (discount == null){
-//            productDTO.setDiscount(null);
-//        }else {
-//            productDTO.setDiscount(discount.toDiscountDTO());
-//        }
+        if (discount == null){
+            productDTO.setDiscount(null);
+        }else {
+            productDTO.setDiscount(discount.toDiscountDTO());
+        }
         return productDTO;
     }
 

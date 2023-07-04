@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
 
     @Autowired
     private ProductRepository productRepository;
@@ -93,7 +93,7 @@ public class ProductService implements IProductService{
 
     public List<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable) {
         Optional<Category> categoryOp = categoryRepository.findById(id);
-        if (!categoryOp.isPresent()){
+        if (!categoryOp.isPresent()) {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
         Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(), pageable);
@@ -137,7 +137,7 @@ public class ProductService implements IProductService{
     @Override
     public Product update(ProductUpdaReqDTO productUpdaReqDTO) {
         Long productId = productUpdaReqDTO.getId();
-        if (!findById(productId).isPresent()){
+        if (!findById(productId).isPresent()) {
             return null;
         }
 
@@ -150,10 +150,9 @@ public class ProductService implements IProductService{
         product.setDescription(productUpdaReqDTO.getDescription());
         product.setBrand(brand);
         product.setCategory(category);
-        if (productUpdaReqDTO.getDiscountId() == null){
+        if (productUpdaReqDTO.getDiscountId() == null) {
             product.setDiscount(null);
-        }
-        else {
+        } else {
             Discount discount = discountRepository.findById(productUpdaReqDTO.getDiscountId()).get();
             product.setDiscount(discount);
         }
@@ -165,7 +164,6 @@ public class ProductService implements IProductService{
     public List<Product> findProductsByCategoryWithLimit(Long idCategory) {
         return productRepository.findProductsByCategoryWithLimit(idCategory);
     }
-
 
 
     @Override
