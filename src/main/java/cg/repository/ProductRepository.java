@@ -2,10 +2,10 @@ package cg.repository;
 
 import cg.dto.product.ProductListResponse;
 import cg.dto.product.client.ProductResClientDTO;
-import cg.model.category.Category;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
 import cg.model.product.Product;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,7 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT p.id, p.created_at, p.created_by, p.deleted, p.update_at, p.update_by," +
             " p.code, p.description, p.prices, p.title, p.brand_id, p.category_id,p.product_avatar_id, p.product_avatar_id" +
             " ,p.discount_id FROM products p INNER JOIN product_import pi " +
-            "ON p.id=pi.product_id WHERE p.category_id= :idCategory AND pi.quantity>0 group by p.id  LIMIT 10",nativeQuery = true)
+            "ON p.id=pi.product_id WHERE p.category_id= :idCategory AND pi.quantity>0 group by p.id  LIMIT 10", nativeQuery = true)
     List<Product> findProductsByCategoryWithLimit( @Param("idCategory") Long idCategory);
 
     @Query(value = "SELECT NEW cg.dto.product.ProductListResponse(" +
@@ -52,33 +52,32 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "OR cate.name LIKE :search " +
             "OR cate.categoryParent.name LIKE :search")
     Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, @Param("color") EColor color,
-            @Param("size")ESize size, Pageable pageable);
+                                                        @Param("size") ESize size, Pageable pageable);
 
 //    query theo id category ở trang home
-    @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
-            "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
-            "FROM Product AS prod " +
-            "LEFT JOIN Category AS cate " +
-            "JOIN ProductImport AS imp " +
-            "WHERE imp.quantity > 0 " +
-            "AND prod.deleted = false " +
-            "AND prod.category = :category " +
-            "AND prod = (SELECT produ " +
-            "               FROM Product AS produ " +
-            "               LEFT JOIN Discount AS disc ON disc = produ.discount " +
-            "               WHERE produ.discount IS NULL OR :today BETWEEN disc.startDate AND disc.endDate) ")
-    Page<ProductResClientDTO> findAllByCategory(@Param("category") Category category,@Param("today")LocalDate today,Pageable pageable);
+    @Query(value = "SELECT prod.id " +
+            "FROM products AS prod " +
+            "INNER JOIN product_import AS imp ON imp.product_id = prod.id " +
+            "LEFT JOIN category AS cate ON cate.id = prod.category_id " +
+            "LEFT JOIN discounts AS disc ON disc.id = prod.discount_id " +
+            "WHERE prod.deleted = 0 " +
+            "AND imp.quantity > 0 " +
+            "AND prod.category_id = :category " +
+            "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+            "GROUP BY prod.id LIMIT 10", nativeQuery = true )
+    List<Long> findAllByCategoryToday ( @Param("category") Long idCategory,
+                                           @Param("today") LocalDate today);
 
     //query product theo discount còn hạn cho trang home
-    @Query(value = "SELECT prod FROM Product AS prod " +
-            "LEFT JOIN Discount AS disc ON disc = prod.discount " +
-            "INNER JOIN ProductImport AS proImp ON proImp.product = prod " +
+    @Query(value = "SELECT prod.id FROM products AS prod " +
+            "LEFT JOIN discounts AS disc ON disc.id = prod.discount_id " +
+            "LEFT JOIN product_import AS proImp ON proImp.product_id = prod.id " +
             "WHERE proImp.quantity > 0 " +
-            "AND prod.deleted = FALSE " +
-            "AND :day BETWEEN disc.startDate AND disc.endDate " +
-            "OR prod.discount IS NULL " +
-            "GROUP BY prod.id")
-    List<Product> findAllByDiscountTime(@Param("day") LocalDate date);
+            "AND prod.deleted = 0 " +
+            "AND :day BETWEEN disc.start_date AND disc.end_date " +
+            "OR prod.discount_id IS NULL " +
+            "GROUP BY prod.id LIMIT 10 ", nativeQuery = true)
+    List<Long> findAllByDiscountTime(@Param("day") LocalDate date);
 
 
 }
