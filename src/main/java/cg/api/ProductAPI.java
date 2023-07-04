@@ -1,7 +1,6 @@
 package cg.api;
 
 import cg.dto.product.*;
-import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
@@ -13,10 +12,8 @@ import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
 import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
-import cg.service.media.UploadMediaServiceImpl;
 import cg.service.product.IProductImportService;
 import cg.service.products.IProductService;
-import cg.service.products.ProductService;
 import cg.utils.AppConstant;
 import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
@@ -29,13 +26,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 

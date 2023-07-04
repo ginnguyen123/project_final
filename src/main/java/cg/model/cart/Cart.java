@@ -33,11 +33,11 @@ public class Cart extends BaseEntity {
     private Long id;
 
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Pattern(regexp = "[0-9]*")
     private String phone_receiver;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String name_receiver;
 
     @OneToOne
@@ -45,23 +45,24 @@ public class Cart extends BaseEntity {
     private LocationRegion locationRegion;
 
 
-    @Column(name = "total_amounts", precision = 10, scale = 0, nullable = false)
+    @Column(name = "total_amounts", precision = 10, scale = 0, nullable = true)
     private BigDecimal totalAmount;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = true)
-    private Customer customer;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
     private ECartStatus status;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart",fetch = FetchType.EAGER)
     private List<CartDetail> cartDetails;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    private Customer customer;
 
     public CartDTO toCartDTO() {
         return new CartDTO()
@@ -70,6 +71,10 @@ public class Cart extends BaseEntity {
                 .setLocationRegionDTO(locationRegion.toLocationRegionDTO())
                 .setTotalAmount(totalAmount)
                 .setStatus(status)
+//                .setCartDetailDTOList(
+//                        cartDetails.stream()
+//                                .map(CartDetail::toCartDetailDTO)
+//                                .collect(Collectors.toList()))
                 ;
     }
 
