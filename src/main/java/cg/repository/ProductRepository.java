@@ -59,43 +59,28 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, @Param("color") EColor color,
             @Param("size")ESize size, Pageable pageable);
 
-//    query theo id category ở trang home
-
-//    @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
-//            "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
-//            "FROM Product AS prod " +
-//            "LEFT JOIN Category AS cate ON cate = prod.category " +
-//            "JOIN ProductImport AS imp ON imp.product = prod " +
-//            "LEFT JOIN Discount  AS dis ON prod.discount = dis " +
-//            "WHERE imp.quantity > 0 " +
-//            "AND prod.deleted = false " +
-//            "AND prod.category = :category " +
-//            "OR prod.discount IS NULL " +
-//            "OR :today BETWEEN dis.startDate AND dis.endDate " +
-//            "GROUP BY prod.id")
-//    Page<ProductResClientDTO> findAllByCategory(@Param("category") Category category,@Param("today")LocalDate today,Pageable pageable);
 
     @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
             "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
             "FROM Product AS prod " +
-            "LEFT JOIN Category AS cate " +
-            "JOIN ProductImport AS imp " +
+            "LEFT JOIN Category AS cate ON prod.category = cate " +
+//            "LEFT JOIN Discount AS dis ON prod.discount = dis "+
+            "LEFT JOIN ProductImport AS imp ON imp.product = prod " +
             "WHERE imp.quantity > 0 " +
             "AND prod.deleted = false " +
             "AND prod.category = :category " +
-            "AND prod = (SELECT produ " +
-            "               FROM Product AS produ " +
-            "               LEFT JOIN Discount AS disc ON disc = produ.discount " +
-            "               WHERE produ.discount IS NULL OR :today BETWEEN disc.startDate AND disc.endDate) ")
-    Page<ProductResClientDTO> findAllByCategory(@Param("category") Category category,@Param("today")LocalDate today,Pageable pageable);
+            "AND  :today BETWEEN prod.discount.startDate AND prod.discount.endDate " +
+            "OR prod.discount IS NULL  " +
+            "GROUP BY prod.id")
+    Page<ProductResClientDTO> findAllByCategory(@Param("category")Category category,@Param("today")LocalDate today,Pageable pageable);
 
     //query product theo discount còn hạn cho trang home
     @Query(value = "SELECT prod FROM Product AS prod " +
             "LEFT JOIN Discount AS disc ON disc = prod.discount " +
-            "INNER JOIN ProductImport AS proImp ON proImp.product = prod " +
+            "LEFT JOIN ProductImport AS proImp ON proImp.product = prod " +
             "WHERE proImp.quantity > 0 " +
             "AND prod.deleted = FALSE " +
-            "OR :day BETWEEN disc.startDate AND disc.endDate " +
+            "AND :day BETWEEN disc.startDate AND disc.endDate " +
             "OR prod.discount IS NULL " +
             "GROUP BY prod.id")
     List<Product> findAllByDiscountTime(@Param("day") LocalDate date);

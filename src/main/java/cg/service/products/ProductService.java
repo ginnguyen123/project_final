@@ -88,13 +88,9 @@ public class ProductService implements IProductService{
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
         LocalDate today = LocalDate.now();
-<<<<<<< HEAD
-        Page<ProductResClientDTO> productResClientDTOS = productRepository.findAllByCategory(categoryOp.get(), today,pageable);
-        System.out.println(productResClientDTOS);
+        Page<ProductResClientDTO> productResClientDTOS = productRepository.findAllByCategory(categoryOp.get(),today ,pageable);
         return productResClientDTOS;
-=======
-        return productRepository.findAllByCategory(categoryOp.get(), today,pageable);
->>>>>>> cbe3e76b5cb5a4cf428d7a27d49f01a9e66bc6b1
+
     }
     @Override
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
