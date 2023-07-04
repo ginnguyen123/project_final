@@ -92,11 +92,25 @@ public class ProductService implements IProductService{
 
     @Override
     public List<ProductResClientDTO> findAllByCategory(Long id,Long minPrice,Long maxPrice ,EColor color, ESize size, Pageable pageable) {
+    public List<ProductResClientDTO> findAllByCategory(Long id,Pageable pageable) {
         Optional<Category> categoryOp = categoryRepository.findById(id);
         if (!categoryOp.isPresent()){
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
         Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(),minPrice,maxPrice,color,size,pageable);
+        Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(),pageable);
+        System.out.println(productPage);
+        List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+        return dtoList;
+    }
+
+    @Override
+    public List<ProductResClientDTO> findAllByCategoryFilter(Long id, Long min, Long max, Pageable pageable) {
+        Optional<Category> categoryOp = categoryRepository.findById(id);
+        if (!categoryOp.isPresent()){
+            throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
+        }
+        Page<Product> productPage = productRepository.findAllByCategoryFilter(id, LocalDate.now(), min, max, pageable);
         System.out.println(productPage);
         List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
         return dtoList;
@@ -106,6 +120,8 @@ public class ProductService implements IProductService{
     public Page<ProductListResponse> findProductWithPaginationAndSortAndSearch(String search, Pageable pageable) {
         return productRepository.findAllWithSearch(search, pageable);
     }
+
+
 
     @Override
     public Product save(Product product) {

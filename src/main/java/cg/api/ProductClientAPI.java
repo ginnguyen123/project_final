@@ -77,9 +77,23 @@ public class ProductClientAPI {
 
         if (minPrice == null)
             minPrice = 0l;
+    private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
+        return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
+    }
+    @PostMapping("/filter/category")
+    private ResponseEntity<?> getAllProductFilter(@RequestParam("id") Long id,
+                                                  @RequestParam("min") Long min,
+                                                  @RequestParam("max") Long max, Pageable pageable){
+//        if (max <= min)
+//            throw new DataInputException("The wrong filter by price");
+//        if (min == null)
+//            min = 0l;
+//        if (max == null || max == 0)
+//            max = 100000000l;
 
         if (maxPrice == null || maxPrice == 0)
             maxPrice = 100000000l;
         return new ResponseEntity<>(productService.findAllByCategory(id,minPrice, maxPrice,eColor,fieldSize,pageable),HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
