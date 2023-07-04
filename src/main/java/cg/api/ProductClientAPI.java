@@ -3,6 +3,8 @@ package cg.api;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.exception.DataInputException;
 import cg.model.category.Category;
+import cg.model.enums.EColor;
+import cg.model.enums.ESize;
 import cg.model.product.Product;
 import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
@@ -61,6 +63,11 @@ public class ProductClientAPI {
 
     @PostMapping("/category")
     private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
-        return new ResponseEntity<>(productService.findAllByCategory(id, pageable),HttpStatus.OK);
+        return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
+    }
+    @PostMapping("/filter/category")
+    private ResponseEntity<?> getAllProductFilter(@RequestParam("id") Long id, Pageable pageable){
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

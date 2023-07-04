@@ -83,7 +83,36 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
                     "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
                     "GROUP BY prod.id" ,nativeQuery = true )
     Page<Product> findAllByCategoryToday (@Param("category") Long idCategory,
-                                            @Param("today") LocalDate today, Pageable pageable);
+                                          @Param("today") LocalDate today,Pageable pageable);
+
+    @Query(value = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
+            "prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id,prod.product_avatar_id " +
+            "FROM products AS prod " +
+            "INNER JOIN product_import AS imp ON imp.product_id = prod.id " +
+            "LEFT JOIN category AS cate ON cate.id = prod.category_id " +
+            "LEFT JOIN discounts AS disc ON disc.id = prod.discount_id " +
+            "WHERE prod.deleted = 0 " +
+            "AND imp.quantity > 0 " +
+            "AND prod.category_id = :category " +
+            "AND prod.prices BETWEEN :min AND :max " +
+            "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+            "GROUP BY prod.id",
+            countQuery = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
+                    "prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id,prod.product_avatar_id  " +
+                    "FROM products AS prod " +
+                    "INNER JOIN product_import AS imp ON imp.product_id = prod.id " +
+                    "LEFT JOIN category AS cate ON cate.id = prod.category_id " +
+                    "LEFT JOIN discounts AS disc ON disc.id = prod.discount_id " +
+                    "WHERE prod.deleted = 0 " +
+                    "AND imp.quantity > 0 " +
+                    "AND prod.category_id = :category " +
+                    "AND prod.prices BETWEEN :min AND :max " +
+                    "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+                    "GROUP BY prod.id" ,nativeQuery = true )
+    Page<Product> findAllByCategoryFilter(@Param("category") Long idCategory,
+                                          @Param("today") LocalDate today,
+                                          @Param("min") Long minPrice,
+                                          @Param("max")Long maxPrice, Pageable pageable);
 
     //query product theo discount còn hạn cho trang home
     @Query(value = "SELECT prod.id FROM products AS prod " +

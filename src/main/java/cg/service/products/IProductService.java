@@ -3,6 +3,8 @@ package cg.service.products;
 import cg.dto.product.*;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.model.category.Category;
+import cg.model.enums.EColor;
+import cg.model.enums.ESize;
 import cg.model.product.Product;
 import cg.service.ExistService;
 import cg.service.IGeneralService;
@@ -32,5 +34,7 @@ public interface IProductService extends IGeneralService<Product,Long> {
 
     List<Product> findAllByDiscountTime(LocalDate date);
 
-    List<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable);
+    List<ProductResClientDTO> findAllByCategory(Long id,Pageable pageable);
+
+    List<ProductResClientDTO> findAllByCategoryFilter(Long id,Pageable pageable);
 }
