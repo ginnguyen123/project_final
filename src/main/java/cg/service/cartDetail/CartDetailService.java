@@ -18,8 +18,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CartDetailService implements ICartDetailService{
-
-
     @Autowired
     CartDetailRepository cartDetailRepository;
 

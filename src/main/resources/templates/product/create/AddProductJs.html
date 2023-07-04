@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="AddProductJs">
-  <script type="text/javascript" src="/assets/lightslider/js/lightslider.js"></script>
+<!--  <script type="text/javascript" src="/assets/lightslider/js/lightslider.js"></script>-->
   <script>
     let page = {
       urls:{
@@ -156,9 +156,10 @@
         url: page.urls.getAllCategoryParent
       })
               .done((data)=>{
-                $.each(data, (i, item)=>{
-                  let str = AppBase.renderCategoryParent(item);
-                  page.dialogs.elements.productCategory.append(str);
+                console.log(data)
+                $.each(data, (i,item)=>{
+                  let str = AppBase.renderCategoryParent(item)
+                  page.elements.selectCategory.append(str);
                 })
               })
               .fail((jqXHR)=>{
