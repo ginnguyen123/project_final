@@ -1,8 +1,9 @@
 package cg.service.cart;
 
 import cg.dto.cart.*;
-import cg.dto.cartDetail.CartDetailCreReqDTO;
 import cg.model.cart.Cart;
+import cg.model.cart.CartDetail;
+import cg.model.enums.ECartStatus;
 import cg.service.IGeneralService;
 import cg.service.cart.response.CartListResponse;
 import cg.utils.CartRequest;
@@ -21,7 +22,13 @@ public interface ICartService extends IGeneralService<Cart,Long> {
 
     Optional<CartDTO> getCartDTOByIdDeletedIsFalse(Long id);
 
-    CartUpReqDTO getCartDTOByCartDetail(CartUpReqDTO cartUpReqDTO);
-
     CartUpResDTO update(CartUpReqDTO cartUpReqDTO);
+
+//    Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status);
+
+    Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status);
+
+    public CartDetail createNewCartDetail(CartCreMiniCartReqDTO cartCreMiniCartReqDTO, Cart cart);
+
+    CartUpReqDTO getCartDTOByCartDetail(CartUpReqDTO cartUpReqDTO);
 }

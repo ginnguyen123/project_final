@@ -75,13 +75,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
     )
     Page<ProductImportDTO> pageableByKeywordAndDate( ProductImportRequest request, Pageable pageable);
 
-//    @Query(value = "SELECT p.product_id, p.size, p.color, SUM(p.quantity) " +
-//            "FROM product_import p " +
-//            "GROUP BY p.product_id, p.size, p.color", nativeQuery = true)
-//    @Query(value = "SELECT NEW cg.dto.productImport.ProductImportDTO(pi.) " +
-//            "FROM product_import pi",nativeQuery = true)
 
-// Tao ra 1 ProductImport DTO moi voi size, color ,... ENum => hung gia tri tu productimport
         @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
             "pi.product.id, " +
             "pi.size, " +
