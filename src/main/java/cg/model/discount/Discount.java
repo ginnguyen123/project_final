@@ -30,7 +30,7 @@ import java.util.List;
 @Entity
 @Table(name = "discounts")
 @Accessors(chain = true)
-public class Discount extends BaseEntity {
+public class    Discount extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

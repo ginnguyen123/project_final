@@ -3,6 +3,7 @@ package cg.dto.product;
 import cg.dto.media.MediaDTO;
 import cg.dto.productImport.ProductImportDTO;
 import cg.dto.productImport.ProductImportResDTO;
+import io.micrometer.core.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,8 @@ public class ProductResDTO {
     private String categoryName;
     private List<MediaDTO> images;
     private List<ProductImportResDTO> productImportResDTOS;
+    @Nullable
+    private Long discount;
 
 
     public ProductResDTO(Long id, String title, String code, BigDecimal price, String description, String brandName, String urlImage, String categoryName) {
