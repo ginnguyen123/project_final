@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -54,7 +55,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, @Param("color") EColor color,
                                                         @Param("size") ESize size, Pageable pageable);
 
-//    query theo id category ở trang home
+//    query theo id category ở trang filter
     @Query(value = "SELECT prod.id " +
             "FROM products AS prod " +
             "INNER JOIN product_import AS imp ON imp.product_id = prod.id " +
@@ -76,8 +77,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND prod.deleted = 0 " +
             "AND :day BETWEEN disc.start_date AND disc.end_date " +
             "OR prod.discount_id IS NULL " +
-            "GROUP BY prod.id LIMIT 10 ", nativeQuery = true)
+            "GROUP BY prod.id ", nativeQuery = true)
     List<Long> findAllByDiscountTime(@Param("day") LocalDate date);
+
+    List<Product> findByDeletedAndIdIn(boolean deleted, Collection<Long> id);
 
 
 }
