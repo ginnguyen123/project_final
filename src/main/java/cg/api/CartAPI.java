@@ -2,6 +2,7 @@ package cg.api;
 
 import cg.dto.cart.*;
 import cg.dto.cartDetail.CartDetailResDTO;
+import cg.dto.customerDTO.CustomerDTO;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
@@ -183,5 +184,16 @@ public class CartAPI {
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("Not found this cart"));
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<?> getCustomerCheckout(@PathVariable Long customerId) {
+        Optional<Customer> customerOptional = customerService.findById(customerId);
+        if (!customerOptional.isPresent()) {
+            throw new DataInputException("customer is not found");
+        }
+        Customer customer = customerOptional.get();
+        CustomerDTO customerDTO = customer.toCustomerDTO();
+        return new ResponseEntity<>(customerDTO,HttpStatus.OK);
     }
 }
