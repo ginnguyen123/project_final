@@ -1,5 +1,6 @@
 package cg.api;
 
+import cg.dto.product.client.FilterRes;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.exception.DataInputException;
 import cg.model.category.Category;
@@ -20,11 +21,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 
 @RestController
@@ -65,9 +70,14 @@ public class ProductClientAPI {
     private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
         return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
     }
-    @PostMapping("/filter/category")
-    private ResponseEntity<?> getAllProductFilter(@RequestParam("id") Long id, Pageable pageable){
-
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/filter/category/{id}")
+    private ResponseEntity<?> getAllProductFilter(@RequestBody @Validated FilterRes filterRes,
+                                                  @PathVariable Long id, Pageable pageable){
+        Long min = filterRes.getMinPrice();
+        Long max = filterRes.getMaxPrice();
+        if (max < min || min < 0 || max < 0)
+            throw new DataInputException("");
+        return new ResponseEntity<>(productService.findAllByCategoryFilter(id,filterRes.getMinPrice(),
+                filterRes.getMaxPrice(), pageable),HttpStatus.OK);
     }
 }

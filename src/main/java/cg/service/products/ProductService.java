@@ -101,8 +101,27 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductResClientDTO> findAllByCategoryFilter(Long id, Pageable pageable) {
-        return null;
+    public List<ProductResClientDTO> findAllByCategoryFilter(Long id,Long min,Long max ,Pageable pageable) {
+        LocalDate localDate = LocalDate.now();
+        if (min == null )
+            min = 0l;
+
+        if (max == null)
+            max = 1000000000l;
+
+        if (min == 0 && max == 0)
+            max = 1000000000l;
+
+        Optional<Category> categoryOp = categoryRepository.findById(id);
+        if (!categoryOp.isPresent()) {
+            throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
+        }
+
+        Page<Product> productPage = productRepository.findAllByCategoryFilter(id,localDate,min,max,pageable);
+
+        List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i ->i.toProductResClientDTO()).collect(Collectors.toList());
+        System.out.println(dtoList);
+        return dtoList;
     }
 
     @Override

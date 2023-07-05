@@ -85,6 +85,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     Page<Product> findAllByCategoryToday (@Param("category") Long idCategory,
                                           @Param("today") LocalDate today,Pageable pageable);
 
+//    query filter cho product theo category
     @Query(value = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
             "prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id,prod.product_avatar_id " +
             "FROM products AS prod " +
@@ -94,8 +95,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "WHERE prod.deleted = 0 " +
             "AND imp.quantity > 0 " +
             "AND prod.category_id = :category " +
-            "AND prod.prices BETWEEN :min AND :max " +
             "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+            "AND prod.prices BETWEEN :min AND :max " +
             "GROUP BY prod.id",
             countQuery = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
                     "prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id,prod.product_avatar_id  " +

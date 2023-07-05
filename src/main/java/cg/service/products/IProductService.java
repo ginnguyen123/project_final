@@ -36,5 +36,5 @@ public interface IProductService extends IGeneralService<Product,Long> {
 
     List<ProductResClientDTO> findAllByCategory(Long id,Pageable pageable);
 
-    List<ProductResClientDTO> findAllByCategoryFilter(Long id,Pageable pageable);
+    List<ProductResClientDTO> findAllByCategoryFilter(Long id,Long min,Long max,Pageable pageable);
 }
