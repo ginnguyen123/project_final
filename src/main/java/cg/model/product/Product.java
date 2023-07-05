@@ -2,10 +2,7 @@ package cg.model.product;
 
 
 import cg.dto.category.CategoryChildDTO;
-import cg.dto.product.ProductCreResDTO;
-import cg.dto.product.ProductDTO;
-import cg.dto.product.ProductResDTO;
-import cg.dto.product.ProductUpdaResDTO;
+import cg.dto.product.*;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.BaseEntity;
@@ -34,7 +31,6 @@ import java.util.stream.Collectors;
 @Table(name = "products")
 @Accessors(chain = true)
 public class Product extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -166,6 +162,27 @@ public class Product extends BaseEntity {
         this.price = price;
     }
 
+    public ProductUpdaCateResDTO toProductUpdaCateResDTO(){
+        String strPrice = String.valueOf(price.longValue());
+        ProductUpdaCateResDTO productDTO = new ProductUpdaCateResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setPrice(strPrice)
+                .setDescription(description)
+                .setAvatar(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
+                .setBrand(brand.toBrandDTO())
+                .setCategory(category.toCategoryUpdaDTO());
+        if (discount == null){
+            productDTO.setDiscount(null);
+        }else {
+            productDTO.setDiscount(discount.toDiscountDTO());
+        }
+
+        return productDTO;
+    }
+
     public ProductUpdaResDTO toProductUpdaResDTO(){
         String strPrice = String.valueOf(price.longValue());
         ProductUpdaResDTO productUpdaResDTO = new ProductUpdaResDTO()
@@ -178,11 +195,11 @@ public class Product extends BaseEntity {
                 .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
-//        if (discount == null){
-//            productUpdaResDTO.setDiscount(null);
-//        }else {
-//            productUpdaResDTO.setDiscount(discount);
-//        }
+        if (discount == null){
+            productUpdaResDTO.setDiscount(null);
+        }else {
+            productUpdaResDTO.setDiscount(discount.toDiscountDTO());
+        }
 
         return productUpdaResDTO;
     }

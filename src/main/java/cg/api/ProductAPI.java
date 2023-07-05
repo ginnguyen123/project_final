@@ -71,7 +71,6 @@ public class ProductAPI {
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
-
     @GetMapping("/category/{idCategory}")
     public ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
         List<Product> products = productService.findProductsByCategoryWithLimit(idCategory);
@@ -282,7 +281,7 @@ public class ProductAPI {
         }
 
 
-        return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
+        return new ResponseEntity<>(product.toProductUpdaCateResDTO(), HttpStatus.OK);
     }
 
     @PatchMapping("/update-with-avatar/{id}")
@@ -339,7 +338,7 @@ public class ProductAPI {
         }
 
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
     }
 
     @PatchMapping("/update-with-medias/{id}")
@@ -461,7 +460,6 @@ public class ProductAPI {
 
         return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
     }
-
 
     @DeleteMapping("/{productID}")
     public ResponseEntity<?> delete(@PathVariable Long productID) {

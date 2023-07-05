@@ -2,6 +2,7 @@ package cg.controller;
 
 
 import cg.dto.product.ProductDTO;
+import cg.dto.product.ProductUpdaCateResDTO;
 import cg.model.discount.Discount;
 import cg.model.product.Product;
 import cg.service.category.ICategoryService;
@@ -51,7 +52,7 @@ public class ProductController {
             return "errors/pages-404";
         }
         Product product = productOp.get();
-        ProductDTO productDTO = product.toProductDTO();
+        ProductUpdaCateResDTO productDTO = product.toProductUpdaCateResDTO();
         obj.put("product", productDTO);
         model.addAttribute("data", obj);
         return "product/update/update-product";

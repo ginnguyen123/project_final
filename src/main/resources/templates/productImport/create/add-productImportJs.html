@@ -30,6 +30,7 @@
 
 
     page.dialogs.commands.doCreateImport = () => {
+      $('#loading').removeClass('visually-hidden');
       let size = page.dialogs.elements.sizeCre.find(':selected').val().trim();
       let color = page.dialogs.elements.colorCre.find(':selected').val().trim();
       let date_added = page.dialogs.elements.dateAdded.val().trim();
@@ -71,6 +72,9 @@
               })
             }
           })
+              .always(()=>{
+                $('#loading').addClass('visually-hidden');
+              })
     }
 
     page.dialogs.elements.formCreateImport.validate({
