@@ -64,6 +64,24 @@ public class Category extends BaseEntity {
                 .setAvatar(categoryAvatar.toMediaDTO());
     }
 
+    public CategoryUpdaDTO toCategoryUpdaDTO(){
+        if (categoryParent == null){
+            return new CategoryUpdaDTO()
+                    .setId(id)
+                    .setName(name)
+                    .setStatus(status)
+                    .setAvatar(categoryAvatar.toMediaDTO())
+                    .setCategoryChild(null);
+        }else {
+            return new CategoryUpdaDTO()
+                    .setId(categoryParent.getId())
+                    .setName(categoryParent.getName())
+                    .setStatus(categoryParent.getStatus())
+                    .setAvatar(categoryParent.getCategoryAvatar().toMediaDTO())
+                    .setCategoryChild(toCategoryChild());
+        }
+    }
+
 
     public CategoryDTO toCategoryDTO(){
             return new CategoryDTO()

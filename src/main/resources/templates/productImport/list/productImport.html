@@ -45,6 +45,7 @@
         keyword = page.elements.keyword.val();
         quantityMin = page.elements.myRangeMin.val();
         quantityMax = page.elements.myRangeMax.val();
+        size = +$('#size-page-imp').val();
         let obj = {
             currentPageNumber: currentPageNumber,
             keyword:keyword,
@@ -373,14 +374,17 @@
         }
     })
 
-
-
     page.initializeControlEvent = function(){
 
         page.elements.btnUpImport.on('click', () => {
             page.dialogs.elements.formUpdateImport.trigger("submit");
         })
 
+        $('#size-page-imp').on('change', function (){
+            size = $('#size-page-imp').val();
+            page.loadData.getAllProductImport();
+
+        })
 
         // page.elements.btnSearch.on("click", function () {
         //     page.elements.formSearch.trigger("submit");

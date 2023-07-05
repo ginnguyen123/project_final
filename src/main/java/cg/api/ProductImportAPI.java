@@ -3,6 +3,8 @@ package cg.api;
 import cg.dto.productImport.*;
 
 import cg.exception.ResourceNotFoundException;
+import cg.model.enums.EColor;
+import cg.model.enums.ESize;
 import cg.model.product.ProductImport;
 import cg.service.product.IProductImportService;
 import cg.service.products.IProductService;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/product-import")
@@ -40,7 +43,6 @@ public class ProductImportAPI {
         Page<ProductImportDTO> productImportList = productImportService.pageableByKeywordAndDate(request, pageable);
         return new ResponseEntity<>(productImportList, HttpStatus.OK);
     }
-
     @PostMapping
     public ResponseEntity<?> createNewProductImport(
             @Validated ProductImportCreReqDTO productImportCreReqDTO,
@@ -72,8 +74,6 @@ public class ProductImportAPI {
         List<ProductImportDTO> productImportList = productImportService.findAllByDeletedIsFalse();
         return new ResponseEntity<>(productImportList, HttpStatus.OK);
     }
-
-
     @PatchMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Validated ProductImportUpReqDTO productImportUpReqDTO, BindingResult bindingResult ) throws IOException {
         new ProductImportUpReqDTO().validate(productImportUpReqDTO,bindingResult);
@@ -86,9 +86,6 @@ public class ProductImportAPI {
             ProductImportUpResDTO productImportUpResDTO = productImportService.update(productImportUpReqDTO);
         return new ResponseEntity<>(productImportUpResDTO,HttpStatus.OK);
     }
-
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         ProductImport productImport = productImportService.findById(id).orElseThrow(
@@ -97,4 +94,16 @@ public class ProductImportAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/color/category/{id}")
+    public ResponseEntity<?> getAllColorByCategory(@PathVariable Long id){
+        List<EColor> colors = productImportService.getAllColorByCategory(id);
+        return new ResponseEntity<>(colors, HttpStatus.OK);
+    }
+
+    @GetMapping("/size/category/{id}")
+    public ResponseEntity<?> getAllSizeByCategory(@PathVariable Long id){
+        List<ESize> sizes = productImportService.getAllSizeByCategory(id);
+        List<String> strSizes = sizes.stream().map(i -> i.getValue()).collect(Collectors.toList());
+        return new ResponseEntity<>(strSizes, HttpStatus.OK);
+    }
 }
