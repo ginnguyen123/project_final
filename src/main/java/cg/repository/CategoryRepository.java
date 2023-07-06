@@ -24,7 +24,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findAllByDeletedIsFalse();
 
-
     //Cach viet JPQL
     @Query("SELECT c FROM Category c where c.status = :status AND c.categoryParent is not null")
     List<Category> findAllCategoryByStatus(@Param("status") ECategoryStatus status);

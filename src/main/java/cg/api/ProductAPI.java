@@ -19,7 +19,11 @@ import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -66,7 +70,6 @@ public class ProductAPI {
         List<ProductDTO> productDTOS = products.stream().map(product -> product.toProductDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
-
 
     @GetMapping("/category/{idCategory}")
     public ResponseEntity<?> getProductsByCategory(@PathVariable Long idCategory) {
@@ -278,7 +281,7 @@ public class ProductAPI {
         }
 
 
-        return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
+        return new ResponseEntity<>(product.toProductUpdaCateResDTO(), HttpStatus.OK);
     }
 
     @PatchMapping("/update-with-avatar/{id}")
@@ -335,7 +338,7 @@ public class ProductAPI {
         }
 
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
     }
 
     @PatchMapping("/update-with-medias/{id}")
@@ -457,7 +460,6 @@ public class ProductAPI {
 
         return new ResponseEntity<>(product.toProductUpdaResDTO(), HttpStatus.OK);
     }
-
 
     @DeleteMapping("/{productID}")
     public ResponseEntity<?> delete(@PathVariable Long productID) {

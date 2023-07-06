@@ -1,11 +1,14 @@
 package cg.service.products;
 
 import cg.dto.product.*;
+import cg.dto.product.client.FilterRes;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
+import cg.model.enums.EColor;
+import cg.model.enums.ESize;
 import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
@@ -16,7 +19,6 @@ import cg.utils.ExistedInDb;
 import cg.utils.UploadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +33,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
 
     @Autowired
     private ProductRepository productRepository;
@@ -59,7 +61,6 @@ public class ProductService implements IProductService{
 
     @Autowired
     private AppUtils appUtils;
-
 
     @Override
     public List<Product> findAll() {
@@ -91,12 +92,31 @@ public class ProductService implements IProductService{
     @Override
     public List<ProductResClientDTO> findAllByCategory(Long id, Pageable pageable) {
         Optional<Category> categoryOp = categoryRepository.findById(id);
-        if (!categoryOp.isPresent()){
+        if (!categoryOp.isPresent()) {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
-        Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(), pageable);
+        Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(),pageable);
         System.out.println(productPage);
         List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+        return dtoList;
+    }
+
+    @Override
+    public List<ProductResClientDTO> findAllByCategoryFilter(Long id, FilterRes filter, Pageable pageable) {
+        LocalDate localDate = LocalDate.now();
+        Optional<Category> categoryOp = categoryRepository.findById(id);
+        if (!categoryOp.isPresent()) {
+            throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
+        }
+
+        List<Integer> eColors = filter.getColors().stream().map(i -> EColor.getEColor(i).ordinal()).collect(Collectors.toList());
+        List<Integer> eSizes = filter.getSizes().stream().map(i -> ESize.getESize(i).ordinal()).collect(Collectors.toList());
+        Long min = filter.getMinPrice();
+        Long max = filter.getMaxPrice();
+
+        Page<Product> productPage = productRepository.findAllByCategoryFilter(id,localDate,min,max,eColors,eSizes,pageable);
+        List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i ->i.toProductResClientDTO()).collect(Collectors.toList());
+        System.out.println(dtoList);
         return dtoList;
     }
 
@@ -135,7 +155,7 @@ public class ProductService implements IProductService{
     @Override
     public Product update(ProductUpdaReqDTO productUpdaReqDTO) {
         Long productId = productUpdaReqDTO.getId();
-        if (!findById(productId).isPresent()){
+        if (!findById(productId).isPresent()) {
             return null;
         }
 
@@ -148,10 +168,9 @@ public class ProductService implements IProductService{
         product.setDescription(productUpdaReqDTO.getDescription());
         product.setBrand(brand);
         product.setCategory(category);
-        if (productUpdaReqDTO.getDiscountId() == null){
+        if (productUpdaReqDTO.getDiscountId() == null) {
             product.setDiscount(null);
-        }
-        else {
+        } else {
             Discount discount = discountRepository.findById(productUpdaReqDTO.getDiscountId()).get();
             product.setDiscount(discount);
         }

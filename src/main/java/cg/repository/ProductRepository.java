@@ -1,24 +1,29 @@
 package cg.repository;
 
+
 import cg.dto.product.ProductListResponse;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
+
 import cg.model.product.Product;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     List<Product> findAllByDeletedIsFalse();
 
     @Query(value = "SELECT p.id, p.created_at, p.created_by, p.deleted, p.update_at, p.update_by," +
@@ -79,7 +84,29 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
                     "GROUP BY prod.id" ,nativeQuery = true )
     Page<Product> findAllByCategoryToday (@Param("category") Long idCategory,
-                                            @Param("today") LocalDate today, Pageable pageable);
+                                          @Param("today") LocalDate today,Pageable pageable);
+
+//    query filter cho product theo category
+    @Query(value = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
+            "prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id,prod.product_avatar_id " +
+            "FROM products AS prod " +
+            "INNER JOIN product_import AS imp ON imp.product_id = prod.id " +
+            "LEFT JOIN category AS cate ON cate.id = prod.category_id " +
+            "LEFT JOIN discounts AS disc ON disc.id = prod.discount_id " +
+            "WHERE prod.deleted = 0 " +
+            "AND imp.quantity > 0 " +
+            "AND prod.category_id = :category " +
+            "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+            "AND imp.color IN :colors " +
+            "AND imp.size IN :sizes " +
+            "AND prod.prices BETWEEN :min AND :max  " +
+            "GROUP BY prod.id ", nativeQuery = true)
+    Page<Product> findAllByCategoryFilter(@Param("category") Long idCategory,
+                                          @Param("today") LocalDate today,
+                                          @Param("min") Long minPrice,
+                                          @Param("max") Long maxPrice,
+                                          @Param("colors")List<Integer> colors,
+                                          @Param("sizes")List<Integer> sizes,Pageable pageable);
 
     //query product theo discount còn hạn cho trang home
     @Query(value = "SELECT prod.id FROM products AS prod " +

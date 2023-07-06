@@ -64,6 +64,22 @@ public class CategoryAPI {
         return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
     }
 
+    @GetMapping("/get/{categoryId}")
+    public ResponseEntity<?> getCategoryById(@PathVariable Long categoryId) {
+        if (categoryId == null){
+            throw new DataInputException("Category does not exist");
+        }
+        Optional<Category> optionalCategory = categoryService.findById(categoryId);
+
+        if (!optionalCategory.isPresent()){
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+        Category category = optionalCategory.get();
+
+        return new ResponseEntity<>(category.toCategoryDTO(), HttpStatus.OK);
+    }
+
     @GetMapping("/category-parents")
     public ResponseEntity<?> getAllCategoryParents(){
         List<Category> categories = categoryService.findAllByCategoryParentIsNull();
@@ -142,4 +158,6 @@ public class CategoryAPI {
 
         return new ResponseEntity<>(createResp, HttpStatus.CREATED);
     }
+
+
 }

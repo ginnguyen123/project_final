@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <th:block th:replace="layout/head :: head"/>
 </head>
 <body>
-  <h1 class="text-white">404!</h1>
-  <h2 class="text-white">Sorry, page not found</h2><br>
+  <h1 class="d-flex justify-content-center align-items-center text-black">404!</h1>
+  <h2 class="d-flex justify-content-center align-items-center text-black">Sorry, page not found</h2><br>
+
+  <th:block th:replace="layout/script :: script"/>
 </body>
 </html>
