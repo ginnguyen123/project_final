@@ -1,6 +1,7 @@
 package cg.service.products;
 
 import cg.dto.product.*;
+import cg.dto.product.client.FilterRes;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
@@ -101,24 +102,19 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductResClientDTO> findAllByCategoryFilter(Long id,Long min,Long max ,Pageable pageable) {
+    public List<ProductResClientDTO> findAllByCategoryFilter(Long id, FilterRes filter, Pageable pageable) {
         LocalDate localDate = LocalDate.now();
-        if (min == null )
-            min = 0l;
-
-        if (max == null)
-            max = 1000000000l;
-
-        if (min == 0 && max == 0)
-            max = 1000000000l;
-
         Optional<Category> categoryOp = categoryRepository.findById(id);
         if (!categoryOp.isPresent()) {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
 
-        Page<Product> productPage = productRepository.findAllByCategoryFilter(id,localDate,min,max,pageable);
+        List<Integer> eColors = filter.getColors().stream().map(i -> EColor.getEColor(i).ordinal()).collect(Collectors.toList());
+        List<Integer> eSizes = filter.getSizes().stream().map(i -> ESize.getESize(i).ordinal()).collect(Collectors.toList());
+        Long min = filter.getMinPrice();
+        Long max = filter.getMaxPrice();
 
+        Page<Product> productPage = productRepository.findAllByCategoryFilter(id,localDate,min,max,eColors,eSizes,pageable);
         List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i ->i.toProductResClientDTO()).collect(Collectors.toList());
         System.out.println(dtoList);
         return dtoList;
