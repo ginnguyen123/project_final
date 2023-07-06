@@ -1,11 +1,14 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="update-orderJs" th:inline="javascript">
 
+
+
     <script>
 
         let pageCart = {
             urls: {
-                getAllCartDetail: AppBase.API_CART_DETAIL
+                getAllCartDetail: AppBase.API_CART_DETAIL,
+                getAllProducts :AppBase.API_PRODUCT
             },
             elements: {},
             loadData: {},
@@ -18,10 +21,13 @@
         }
         let locationRegion = new LocationRegion();
         let idCartDetail;
+        let color;
         pageCart.dialogs.elements.locationRegionIdUp = $('#locationRegionIdUp');
         pageCart.dialogs.elements.provinceUp = $('#provinceUp');
         pageCart.dialogs.elements.districtUp = $('#districtUp');
         pageCart.dialogs.elements.wardUp = $('#wardsUp');
+        pageCart.dialogs.elements.productNameUp = $('.productName');
+
         pageCart.dialogs.elements.addressUp = $('#addressUp');
 
         pageCart.dialogs.loadData.getAllProvinces = () => {
@@ -95,14 +101,70 @@
                     url: pageCart.urls.getAllCartDetail + id
                 })
                     .done((data)=>{
-                        $.each(data, (i, item)=>{
-                            let str = AppBase.renderCartDetail(item);
-                            $('#tbCartDetail').append(str);
-                        })
+
                     })
                     .fail((jqXHR)=>{
                         console.log(jqXHR);
                     })
+
+        }
+
+        pageCart.loadData.getProductName = () =>{
+
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getAllProducts
+            })
+                .done((data)=>{
+                    $('.productName').empty();
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item.id}">${item.title}</option>`;
+                        $('.productName').append(str);
+                    })
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+
+        }
+
+        pageCart.loadData.getSize = () =>{
+
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getSize +'sizes'
+            })
+                .done((data)=>{
+                    $('.size').empty();
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item}">${item}</option>`;
+                        $('.size').append(str);
+                    })
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+
+        }
+        pageCart.loadData.getColor = () =>{
+
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getSize +'colors'
+            })
+                .done((data)=>{
+                    $('.color').empty();
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item}">${item}</option>`;
+                        $('.color').append(str);
+                    })
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
 
         }
 
@@ -111,22 +173,21 @@
             /*<![CDATA[*/
             let data = /*[[${data}]]*/ 'default';
             let cart = data.cart;
-            let name_receiver = data.cart.name_receiver;
-            let phone_receiver = data.cart.phone_receiver;
-            let locationRegion = data.cart.locationRegion;
-            let status = data.cart.status;
-            let idCart = data.cart.id;
-            let totalAmount = data.cart.totalAmount;
-            let address = data.cart.locationRegion.address;
+            console.log(cart)
+            let name_receiver = cart.name_receiver;
+            let phone_receiver = cart.phone_receiver;
+            let locationRegion = cart.locationRegion;
+            let status = cart.status;
+            let idCart = cart.id;
+            let listCartDetail = cart.cartDetailDTOList;
+            let totalAmount = cart.totalAmount;
+            let address = cart.locationRegion.address;
             console.log(data);
             $('#nameReceiverUp').val(name_receiver);
             $('#phoneReceiverUp').val(phone_receiver);
             $('#totalAmountUp').val(totalAmount);
             $('#statusUp').val(status);
             $('#addressUp').val(address);
-
-
-
             pageCart.dialogs.loadData.getAllProvinces().then(() => {
                 pageCart.dialogs.elements.provinceUp.val(locationRegion.provinceId)
             })
@@ -136,43 +197,118 @@
             pageCart.dialogs.loadData.getAllWardsByDistrict(locationRegion.districtId).then(() => {
                 pageCart.dialogs.elements.wardUp.val(locationRegion.wardId)
             })
-
-            pageCart.loadData.getAllCartDetail(idCart).then(()=>{
-                $('#tbCartDetail').val();
+            $.each(listCartDetail, (i, item)=>{
+                let str = AppBase.renderCartDetail(item);
+                $('#tbCartDetail').append(str);
                 addEventDeleteClick();
+            });
+            pageCart.loadData.getProductName().then(()=>{
+                $.each(listCartDetail, (i, item)=>{
+                    $(`#${item.id}`).val(item.productId)
+                })
+            });
+            pageCart.loadData.getSize().then(()=>{
+                console.log(listCartDetail)
+                $.each(listCartDetail, (i, item)=>{
+                    $(`#${item.size}${item.id}`).val(item.size)
+
+                })
+            });
+
+            pageCart.loadData.getColor().then(()=>{
+                console.log(listCartDetail)
+                $.each(listCartDetail, (i, item)=>{
+
+                    $(`#${item.color}${item.id}`).val(item.color)
+                })
             });
 
 
 
+            // query : idProduct+ màu+size thêm groupBy màu
+            //jquery : 1. get chung 1 api là listproduct đã xóa , api phải check số lượng trong danh sách còn hay k
+            //         2.getcolor(idProduct) , getSize(value màu) , getPrice(???)
+            //onchange : quantity , select 3 truong (ten sp , size , mau)(call api product) ,
+            // (call api chuyen doi) stauts click đổi
 
-            // page.loadData.getAllCategoryParent().then(()=>{
-            //     $('#categoryUp').val(product.category.id);
-            //     let categoryId = product.category.id;
-            //     page.loadData.getAllCategoryChildByCategogyId(categoryId,  page.elements.categoryChild);
-            // })
-            //
-            // page.loadData.getAllDiscount().then(()=>{
-            //     if (discount != null){
-            //         page.elements.discountUpdate.val(discount.id);
-            //     }
-            // })
-            // page.loadData.getAllBrand().then(()=>{
-            //     page.elements.brandUp.val(product.brand.id);
-            // })
-            // let strAvatar = AppBase.avatar_image_thumbnail(product.avatar);
-            // page.elements.showAvatar.append(strAvatar);
-            //
-            // if (mediaObj.length != 0){
-            //     page.dialogs.commands.showImagesObj(mediaObj);
-            // }
-            //
-            // // hiển thị decreption
-            // $('#productDescriptionUp').val(product.description);
-            // $('#productDescriptionUp').cleditor();
 
             /*]]>*/
         }
 
+        function addChangeSize() {
+            // tách 2 hàm : color theo idProduct và size theo color
+            $('.size').on('change', function (item){
+                color = $(`#${item.color}${item.id}`).find('select option').val();
+                let size = $(`#${item.size}${item.id}`).find('select option').val();
+                let obj = {
+                    color: color,
+                    size : size
+                }
+                if (size !== null ){
+                    pageCart.loadData.getAllSize(color).then(()=>{
+                    })
+                }
+            })
+        }
+        function addChangeColor() {
+            // tách 2 hàm : color theo idProduct và size theo color
+            $('.color').on('change', function (item){
+                color = $(`#${item.color}${item.id}`).find('select option').val();
+                let obj = {
+                    color: color,
+                    size : size
+                }
+               if (color !== null ){
+                  pageCart.loadData.getAllColor(idProduct).then(()=>{
+                  })
+               }
+            })
+        }
+        pageCart.loadData.getAllColor = (idProduct) =>{
+            $.ajax({
+                headers: {
+                    'accept': 'application/json',
+                    'content-type': 'application/json'
+                },
+                type: "GET",
+                url: pageCart.urls.getAllCartDetail + "size_color/" + idProduct,
+                data: obj
+            })
+                .done((data) => {
+                    console.log(data);
+                    $("#tr_" + idCartDetail).remove();
+                    AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
+                })
+                .fail((error) => {
+                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_UPDATED);
+                })
+        }
+
+        pageCart.loadData.getAllSize = (color) =>{
+            $.ajax({
+                headers: {
+                    'accept': 'application/json',
+                    'content-type': 'application/json'
+                },
+                type: "GET",
+                url: pageCart.urls.getAllCartDetail + "size_color/" + idProduct,
+                data: obj
+            })
+                .done((data) => {
+                    console.log(data);
+                    $("#tr_" + idCartDetail).remove();
+                    AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
+                })
+                .fail((error) => {
+                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_UPDATED);
+                })
+        }
+
+
+
+        function doUpdate(){
+
+        }
         function addEventDeleteClick() {
             $(".delete").on('click', function () {
                 let cartId = $(this).data('id');
@@ -250,6 +386,8 @@
             pageCart.loadData.getCart();
         }
         pageCart.initializeControlEvent = () => {
+            addChangeColor();
+            addChangeSize();
 
 
         }

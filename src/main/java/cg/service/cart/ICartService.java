@@ -17,11 +17,13 @@ public interface ICartService extends IGeneralService<Cart,Long> {
 
     Page<CartListResponse> pageableByKeyword(CartRequest request, Pageable pageable);
 
-    void create(CartCreReqDTO cartCreReqDTO);
+    Cart create(CartCreReqDTO cartCreReqDTO);
 
     Optional<CartDTO> getCartDTOByIdDeletedIsFalse(Long id);
 
     CartUpReqDTO getCartDTOByCartDetail(CartUpReqDTO cartUpReqDTO);
 
     CartUpResDTO update(CartUpReqDTO cartUpReqDTO);
+
+
 }

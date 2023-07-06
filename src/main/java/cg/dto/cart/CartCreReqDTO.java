@@ -20,6 +20,7 @@ import java.util.List;
 public class CartCreReqDTO implements Validator {
 
 //list cartdetail
+    private Long id;
     private String email;
     private String receivedName;
 //    private String fullName;

@@ -2,6 +2,7 @@ package cg.repository;
 
 import cg.dto.productImport.ProductImportDTO;
 import cg.dto.productImport.ProductImportResDTO;
+import cg.model.enums.EColor;
 import cg.model.enums.ESize;
 import cg.model.product.Product;
 import cg.model.product.ProductImport;
@@ -92,5 +93,22 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "GROUP BY pi.product.id, pi.size, pi.color, pi.productStatus")
             List<ProductImportResDTO> findQuantityProductImportBySizeAndColor(@Param("productId") Long productId);
 
+    @Query("SELECT SUM(pi.quantity) " +
+            "FROM ProductImport AS pi " +
+            "where pi.product.id = :productId " +
+            "AND pi.color = :color " +
+            "AND pi.size = :size " +
+            "AND pi.deleted = FALSE " +
+            "GROUP BY pi.product.id, pi.size, pi.color")
+    Long checkQuantityProductImportBySizeAndColor(@Param("productId") Long productId,
+                                                                      @Param("color")EColor color,
+                                                                      @Param("size")ESize size);
 
+    @Query("SELECT SUM(pi.quantity) " +
+            "FROM ProductImport AS pi " +
+            "where pi.product.id = :productId " +
+            "AND pi.deleted = FALSE " +
+            "AND pi.quantity > 0 " +
+            "GROUP BY pi.product.id")
+    Long checkQuantityProductImport(@Param("productId") Long productId);
 }

@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class CartDetailCreResDTO {
     private String title;
-    private BigDecimal totalAmount;
+    private BigDecimal totalAmountDetail;
     private Long quantity;
     private ESize size;
     private EColor color;

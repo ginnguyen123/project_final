@@ -16,6 +16,7 @@ import java.util.Optional;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
+
     @Query("SELECT cr FROM Cart AS cr " +
             " join CartDetail cd on cr.id = cd.cart.id " +
             " join Customer  cus on cus.id = cr.customer.id" +
@@ -41,14 +42,6 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     )
     Optional<CartDTO> getCartDTOByIdDeletedIsFalse(Long id);
 
-//   private Long id;
-//    private String name_receiver;
-//    private String email;
-//    private String phone_receiver;
-//    private List<CartDetailUpReqDTO> cartDetailDTOList;
-//    private BigDecimal totalAmount;
-//    private LocationRegionDTO locationRegion;
-//    private String status;
     @Query("SELECT NEW cg.dto.cart.CartUpReqDTO (pi.id,pi.name_receiver,pi.phone_receiver,pi.totalAmount,pi.locationRegion.id,pi.status) " +
             "FROM Cart AS pi " +
             "WHERE pi.deleted = false " +

@@ -3,6 +3,7 @@ package cg.model.cart;
 import cg.dto.cart.CartCreResDTO;
 import cg.dto.cart.CartDTO;
 import cg.dto.cart.CartUpReqDTO;
+import cg.dto.cart.CartUpResDTO;
 import cg.model.BaseEntity;
 import cg.model.customer.Customer;
 import cg.model.enums.ECartStatus;
@@ -59,7 +60,7 @@ public class Cart extends BaseEntity {
     @Column(nullable = false)
     private ECartStatus status;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart",fetch = FetchType.EAGER)
     private List<CartDetail> cartDetails;
 
 
@@ -75,10 +76,14 @@ public class Cart extends BaseEntity {
 
     public CartCreResDTO toCartCreResDTO(){
         return new CartCreResDTO()
-                .setCustomerName(customer.toCustomerDTO())
+                .setId(id)
+                .setCartDetailDTOList(cartDetails.stream().map(item -> item.toCartDetailUpReqDTO()).collect(Collectors.toList()))
                 .setLocationRegion(locationRegion.toLocationRegionDTO())
                 .setStatus(status)
-                .setTotalAmount(totalAmount);
+                .setTotalAmount(totalAmount)
+                .setName_receiver(name_receiver)
+                .setPhone_receiver(phone_receiver)
+                ;
     }
 
     public CartUpReqDTO toCartUpReqDTO() {
@@ -91,5 +96,17 @@ public class Cart extends BaseEntity {
                 .setTotalAmount(totalAmount)
                 .setStatus(String.valueOf(status))
                 .setId(id);
+    }
+
+    public CartUpResDTO toCartUpResDTO() {
+        return new CartUpResDTO()
+                .setId(id)
+                .setName_receiver(name_receiver)
+                .setPhone_receiver(phone_receiver)
+                .setTotalAmount(totalAmount)
+                .setStatus(status)
+                .setLocationRegion(locationRegion.toLocationRegionDTO())
+                .setCartDetailDTOList(cartDetails.stream().map(item -> item.toCartDetailUpReqDTO()).collect(Collectors.toList()));
+
     }
 }

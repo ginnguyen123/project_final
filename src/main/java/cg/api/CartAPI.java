@@ -3,9 +3,11 @@ package cg.api;
 import cg.dto.cart.*;
 import cg.dto.cartDetail.CartDetailCreReqDTO;
 import cg.dto.productImport.*;
+import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
+import cg.model.enums.ECartStatus;
 import cg.model.product.ProductImport;
 import cg.service.cart.ICartService;
 import cg.service.cart.response.CartListResponse;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -57,8 +60,9 @@ public class CartAPI {
             return appUtils.mapErrorToResponse(bindingResult);
         }
 
-          cartService.create(cartCreReqDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Cart cart =  cartService.create(cartCreReqDTO);
+        CartCreResDTO cartCreResDTO = cart.toCartCreResDTO();
+        return new ResponseEntity<>(cartCreResDTO,HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
@@ -72,6 +76,23 @@ public class CartAPI {
         }
         CartUpResDTO cartUpResDTO = cartService.update(cartUpReqDTO);
         return new ResponseEntity<>(cartUpResDTO,HttpStatus.OK);
+    }
+
+    @PatchMapping("/status")
+    public ResponseEntity<?> updateStatusCart( @RequestBody CartListResponse cartListResponse) {
+        Optional<Cart> cartOptional = cartService.findById(cartListResponse.getId());
+        if (!cartOptional.isPresent()) {
+            throw new DataInputException("cart is not found");
+        }
+        Cart cart = cartOptional.get();
+        if (cartListResponse.getStatus().getValue().equals("PAID")) {
+            cart.setStatus(ECartStatus.UNPAID);
+        } else {
+            cart.setStatus(ECartStatus.PAID);
+        }
+
+        cartService.save(cart);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

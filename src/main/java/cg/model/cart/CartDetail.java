@@ -38,9 +38,11 @@ public class CartDetail extends BaseEntity {
 
 
     @Column(name = "size", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ESize size;
 
     @Column(name = "color", nullable = false)
+    @Enumerated(EnumType.STRING)
     private EColor color;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -69,6 +71,10 @@ public class CartDetail extends BaseEntity {
 
     public CartDetailUpReqDTO toCartDetailUpReqDTO() {
         return new CartDetailUpReqDTO()
+                .setId(id)
+                .setTotalAmountDetail(totalAmount)
+                .setProductPrice(product.getPrice())
+                .setProductTitle(product.getTitle())
                 .setProductId(product.getId())
                 .setQuantity(quantity)
                 .setSize(size)
@@ -85,7 +91,6 @@ public class CartDetail extends BaseEntity {
                 .setProductTitle(product.getTitle())
                 .setColor(color)
                 .setSize(size)
-                .setStatus(cart.getStatus())
                 .setIdCart(cart.getId())
                 ;
     }
