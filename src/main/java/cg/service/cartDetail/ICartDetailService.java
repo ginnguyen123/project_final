@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ICartDetailService extends IGeneralService<CartDetail,Long> {
-    Long getCartDetailWithProductAndSizeAndColor(ESize size , EColor color , Long idProduct);
+//    Long getCartDetailWithProductAndSizeAndColor(ESize size , EColor color , Long idProduct);
 
     Long getCartDetailWithProduct(Long idProduct);
     List<CartDetail> findAllByCart_IdAndDeletedIsFalse(Long id);

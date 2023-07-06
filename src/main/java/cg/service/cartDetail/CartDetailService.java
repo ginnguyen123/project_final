@@ -23,8 +23,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CartDetailService implements ICartDetailService{
-
-
     @Autowired
     CartDetailRepository cartDetailRepository;
 
@@ -37,13 +35,13 @@ public class CartDetailService implements ICartDetailService{
     }
 
 
-    @Override
-    public Long getCartDetailWithProductAndSizeAndColor(ESize size , EColor color , Long idProduct) {
-        Long quantityImp = productImportRepository.checkQuantityProductImportBySizeAndColor(idProduct,color,size);
-        //ajax -> check so luong -> data = 123
-
-        return quantityImp;
-    }
+//    @Override
+//    public Long getCartDetailWithProductAndSizeAndColor(ESize size , EColor color , Long idProduct) {
+//        Long quantityImp = productImportRepository.checkQuantityProductImportBySizeAndColor(idProduct,color,size);
+//        //ajax -> check so luong -> data = 123
+//
+//        return quantityImp;
+//    }
 
     @Override
     public Long getCartDetailWithProduct(Long idProduct) {

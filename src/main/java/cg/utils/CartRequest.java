@@ -6,6 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CartRequest {
-
     private String keyword;
 }

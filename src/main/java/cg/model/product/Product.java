@@ -2,10 +2,7 @@ package cg.model.product;
 
 
 import cg.dto.category.CategoryChildDTO;
-import cg.dto.product.ProductCreResDTO;
-import cg.dto.product.ProductDTO;
-import cg.dto.product.ProductResDTO;
-import cg.dto.product.ProductUpdaResDTO;
+import cg.dto.product.*;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.BaseEntity;
@@ -34,7 +31,6 @@ import java.util.stream.Collectors;
 @Table(name = "products")
 @Accessors(chain = true)
 public class Product extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -89,11 +85,11 @@ public class Product extends BaseEntity {
                 .setMedias(productAvatarList.stream().map(Media::toMediaDTO).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
-//        if (discount == null){
-//            productDTO.setDiscount(null);
-//        }else {
-//            productDTO.setDiscount(discount.toDiscountDTO());
-//        }
+        if (discount == null){
+            productDTO.setDiscount(null);
+        }else {
+            productDTO.setDiscount(discount.toDiscountDTO());
+        }
         return productDTO;
     }
 
@@ -118,6 +114,7 @@ public class Product extends BaseEntity {
                 .setDescription(description)
                 .setAvatar(productAvatar.toMediaDTO());
     }
+
     public ProductResDTO toProductResDTO(List<ProductImportResDTO> quantityProductImports) {
         return new ProductResDTO()
                 .setId(id)
@@ -133,6 +130,19 @@ public class Product extends BaseEntity {
                 .setProductImportResDTOS(quantityProductImports)
 //                .setProductImportResDTOS(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
                 ;
+    }
+
+    public ProductResDTO productToProductResDTO(){
+        return new ProductResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setPrice(price)
+                .setDescription(description)
+                .setBrandName(brand.getName())
+                .setCategoryName(category.getName())
+                .setCategoryId(category.getId())
+                .setImages(productAvatarList.stream().map(item -> item.toMediaDTO()).collect(Collectors.toList()));
     }
 
     public ProductResDTO toVisitedAndRelatedProductResDTO() {
@@ -152,6 +162,27 @@ public class Product extends BaseEntity {
         this.price = price;
     }
 
+    public ProductUpdaCateResDTO toProductUpdaCateResDTO(){
+        String strPrice = String.valueOf(price.longValue());
+        ProductUpdaCateResDTO productDTO = new ProductUpdaCateResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setCode(code)
+                .setPrice(strPrice)
+                .setDescription(description)
+                .setAvatar(productAvatar.toMediaDTO())
+                .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
+                .setBrand(brand.toBrandDTO())
+                .setCategory(category.toCategoryUpdaDTO());
+        if (discount == null){
+            productDTO.setDiscount(null);
+        }else {
+            productDTO.setDiscount(discount.toDiscountDTO());
+        }
+
+        return productDTO;
+    }
+
     public ProductUpdaResDTO toProductUpdaResDTO(){
         String strPrice = String.valueOf(price.longValue());
         ProductUpdaResDTO productUpdaResDTO = new ProductUpdaResDTO()
@@ -164,11 +195,11 @@ public class Product extends BaseEntity {
                 .setMedias(productAvatarList.stream().map(i->i.toMediaDTO()).collect(Collectors.toList()))
                 .setBrand(brand.toBrandDTO())
                 .setCategory(category.toCategoryDTO());
-//        if (discount == null){
-//            productUpdaResDTO.setDiscount(null);
-//        }else {
-//            productUpdaResDTO.setDiscount(discount);
-//        }
+        if (discount == null){
+            productUpdaResDTO.setDiscount(null);
+        }else {
+            productUpdaResDTO.setDiscount(discount.toDiscountDTO());
+        }
 
         return productUpdaResDTO;
     }

@@ -312,13 +312,13 @@ class AppBase{
         return`   <tr id="tr_${item.id}">
                     <td> <input type="checkbox" id="delete_${item.id}"> </td>
                     <td>
-                     <select class="form-control-add productName" id="${item.id}" name="productName">
+                     <select class="form-control-add productName"  id="${item.id}" name="productName">
                                 
                       </select></td>
-                    <td> <select class="form-control-add color" id="${item.color}${item.id}" name="color">
+                    <td> <select class="form-control-add color" data-id="${item.color}" id="${item.color}${item.id}" name="color">
                                 
                       </select></td>
-                    <td> <select class="form-control-add size" id="${item.size}${item.id}" name="size">
+                    <td> <select class="form-control-add size" data-id="${item.size}" id="${item.size}${item.id}" name="size">
                                 
                       </select></td>
                     <td>${new Intl.NumberFormat('vi-VN', {
@@ -331,7 +331,7 @@ class AppBase{
             currency: 'VND'
         }).format(item.totalAmountDetail)}</td>
                     <td><button class="btn btn-trash btn-sm delete " type="button"
-                                title="Xóa" href="http://localhost:8086/carts/update/${item.id}" data-id="${item.id}"><i class="fas fa-trash-alt"></i>
+                                title="Xóa"  data-id="${item.id}"><i class="fas fa-trash-alt"></i>
                     </button>
                     </td>
                   </tr>

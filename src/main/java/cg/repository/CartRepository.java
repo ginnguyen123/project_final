@@ -4,13 +4,17 @@ import cg.dto.cart.CartCreResDTO;
 import cg.dto.cart.CartDTO;
 import cg.dto.cart.CartUpReqDTO;
 import cg.model.cart.Cart;
+import cg.model.enums.ECartStatus;
 import cg.utils.CartRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -48,4 +52,8 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "AND pi.id = :id "
     )
     Optional<CartUpReqDTO> getCartDTOByCartDetail(Long id);
+
+    @Query("SELECT c FROM Cart AS c WHERE c.customer.id = :customerId AND c.status = :status")
+    Cart findCartsByCustomerIdAndStatusIsCart(@Param("customerId")Long customerId , @Param("status") ECartStatus status);
 }
+

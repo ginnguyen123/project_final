@@ -12,6 +12,7 @@ import cg.model.enums.EColor;
 import cg.model.enums.ESize;
 import cg.repository.ProductImportRepository;
 import cg.service.cartDetail.ICartDetailService;
+import cg.service.product.IProductImportService;
 import cg.utils.AppUtils;
 import cg.utils.RequestSizeAndColor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class CartDetailAPI {
     ICartDetailService cartDetailService;
     @Autowired
     ProductImportRepository productImportRepository;
+    @Autowired
+    IProductImportService productImportService;
     @Autowired
     AppUtils appUtils;
 
@@ -92,11 +95,24 @@ public class CartDetailAPI {
         Long quantity = productImportRepository.checkQuantityProductImport(id);
         return new ResponseEntity<>(quantity,HttpStatus.OK);
     }
-    @GetMapping("/size_color/{id}")
-    public ResponseEntity<?>getCartDetailWithSizeAndColor(@PathVariable Long id , @RequestBody RequestSizeAndColor requestSizeAndColor){
-        ESize size = ESize.getESize(requestSizeAndColor.getSize());
-        EColor  color = EColor.getEColor(requestSizeAndColor.getColor());
+    @PostMapping("/size_color")
+    public ResponseEntity<?>getCartDetailWithSizeAndColor(@RequestBody RequestSizeAndColor requestSizeAndColor){
+        String size = requestSizeAndColor.getSize();
+        String  color = requestSizeAndColor.getColor();
+        Long id = requestSizeAndColor.getId();
         Long quantity = productImportRepository.checkQuantityProductImportBySizeAndColor(id , color , size);
+        System.out.print(quantity);
         return new ResponseEntity<>(quantity,HttpStatus.OK);
     }
+
+
+
+    @GetMapping("/color/product/{id}")
+    public ResponseEntity<?> getAllSizeByProduct(@PathVariable Long id){
+        List<EColor> colors = productImportService.getAllColorByProductAndQuantity(id);
+        List<String> strColors = colors.stream().map(i -> i.getValue()).collect(Collectors.toList());
+        return new ResponseEntity<>(strColors, HttpStatus.OK);
+    }
+
+
 }

@@ -4,7 +4,6 @@ import cg.dto.productImport.ProductImportDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
-import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import cg.utils.ProductImportRequest;
 import org.springframework.data.domain.Page;
@@ -14,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,6 +75,15 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "AND pi.deleted = false"
     )
     Page<ProductImportDTO> pageableByKeywordAndDate( ProductImportRequest request, Pageable pageable);
+    @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
+        "pi.product.id, " +
+        "pi.size, " +
+        "pi.color, " +
+        "pi.productStatus, " +
+        "SUM(pi.quantity)) " +
+        "FROM ProductImport AS pi where pi.product.id = :productId " +
+        "GROUP BY pi.product.id, pi.size, pi.color, pi.productStatus")
+        List<ProductImportResDTO> findQuantityProductImportBySizeAndColor(@Param("productId") Long productId);
 
 //    @Query(value = "SELECT p.product_id, p.size, p.color, SUM(p.quantity) " +
 //            "FROM product_import p " +
@@ -83,26 +92,29 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
 //            "FROM product_import pi",nativeQuery = true)
 
 // Tao ra 1 ProductImport DTO moi voi size, color ,... ENum => hung gia tri tu productimport
-        @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
-            "pi.product.id, " +
-            "pi.size, " +
-            "pi.color, " +
-            "pi.productStatus, " +
-            "SUM(pi.quantity)) " +
-            "FROM ProductImport AS pi where pi.product.id = :productId " +
-            "GROUP BY pi.product.id, pi.size, pi.color, pi.productStatus")
-            List<ProductImportResDTO> findQuantityProductImportBySizeAndColor(@Param("productId") Long productId);
+//        @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
+//            "pi.product.id, " +
+//            "pi.size, " +
+//            "pi.color, " +
+//            "pi.productStatus, " +
+//            "SUM(pi.quantity)) " +
+//            "FROM ProductImport AS pi where pi.product.id = :productId " +
+//            "GROUP BY pi.product.id, pi.size, pi.color, pi.productStatus")
+//            List<ProductImportResDTO> findQuantityProductImportBySizeAndColor(@Param("productId") Long productId);
 
-    @Query("SELECT SUM(pi.quantity) " +
-            "FROM ProductImport AS pi " +
-            "where pi.product.id = :productId " +
+    @Query(value = "SELECT SUM(pi.quantity) " +
+            "FROM product_import AS pi " +
+            "where pi.product_id = :productId " +
             "AND pi.color = :color " +
             "AND pi.size = :size " +
             "AND pi.deleted = FALSE " +
-            "GROUP BY pi.product.id, pi.size, pi.color")
+            "GROUP BY pi.product_id, pi.size, pi.color",nativeQuery = true)
     Long checkQuantityProductImportBySizeAndColor(@Param("productId") Long productId,
-                                                                      @Param("color")EColor color,
-                                                                      @Param("size")ESize size);
+                                                                       @Param("color")String color,
+                                                                      @Param("size")String size);
+
+    @Query(value = "SELECT pi.color  FROM product_import AS pi  WHERE pi.product_id = :productId AND pi.quantity>0 AND pi.deleted = 0 GROUP BY pi.color", nativeQuery = true)
+    List<EColor> getAllColorByProductAndQuantity(@Param("productId") Long productId);
 
     @Query("SELECT SUM(pi.quantity) " +
             "FROM ProductImport AS pi " +
@@ -111,4 +123,27 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "AND pi.quantity > 0 " +
             "GROUP BY pi.product.id")
     Long checkQuantityProductImport(@Param("productId") Long productId);
+
+    @Query(value = "SELECT imp.color FROM product_import AS imp " +
+            "INNER JOIN products AS prod " +
+            "LEFT JOIN discounts AS disc ON prod.discount_id = disc.id " +
+            "LEFT JOIN category AS categ ON categ.id = prod.category_id " +
+            "WHERE imp.deleted = 0 " +
+            "AND imp.quantity > 0 " +
+            "AND prod.category_id = :categoryId " +
+            "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+            "GROUP BY imp.color", nativeQuery = true)
+    List<EColor> findAllColorCategory(@Param("categoryId") Long id, @Param("today")LocalDate today);
+
+    @Query(value = "SELECT imp.size FROM product_import AS imp " +
+            "INNER JOIN products AS prod " +
+            "LEFT JOIN discounts AS disc ON prod.discount_id = disc.id " +
+            "LEFT JOIN category AS categ ON categ.id = prod.category_id " +
+            "WHERE imp.deleted = 0 " +
+            "AND imp.quantity > 0 " +
+            "AND prod.category_id = :categoryId " +
+            "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+            "GROUP BY imp.size", nativeQuery = true)
+    List<ESize> findAllSizeCategory(@Param("categoryId") Long id, @Param("today")LocalDate today);
+
 }

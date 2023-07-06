@@ -1,5 +1,7 @@
 package cg.utils;
 
+import cg.dto.product.ProductListResponse;
+import cg.dto.product.client.ProductResClientDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @Component
 public class AppUtils {
     public static final ModelMapper mapper;
+
     static {
         mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);

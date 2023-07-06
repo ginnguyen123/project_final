@@ -1,17 +1,19 @@
 package cg.service.product;
 
-import cg.dto.product.ProductDTO;
 import cg.dto.productImport.*;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
+import cg.model.category.Category;
 import cg.model.enums.EColor;
 import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
 import cg.model.product.Product;
 import cg.model.product.ProductImport;
+import cg.repository.CategoryRepository;
 import cg.repository.ProductImportRepository;
 import cg.repository.ProductRepository;
 import cg.service.products.IProductService;
+import cg.utils.AppConstant;
 import cg.utils.AppUtils;
 import cg.utils.ProductImportRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,6 @@ import java.math.BigDecimal;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,6 +39,9 @@ public class ProductImportService implements IProductImportService {
 
     @Autowired
     private IProductService productService;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private AppUtils appUtils;
@@ -64,7 +68,6 @@ public class ProductImportService implements IProductImportService {
         return productImportRepository.getProductImportDTOByIdDeletedIsFalse(id);
     }
 
-
     @Override
     public Page<ProductImportDTO> pageableByKeywordAndDate(ProductImportRequest request, Pageable pageable) {
         if(request.getKeyword() !=null){
@@ -73,12 +76,10 @@ public class ProductImportService implements IProductImportService {
         return productImportRepository.pageableByKeywordAndDate(request, pageable);
     }
 
-
     @Override
     public List<ProductImportResDTO> findQuantityProductImportBySizeAndColor(Long productId) {
         return productImportRepository.findQuantityProductImportBySizeAndColor(productId);
     }
-
 
     @Override
     public ProductImport save(ProductImport productImport) {
@@ -91,12 +92,10 @@ public class ProductImportService implements IProductImportService {
         productImportRepository.save(productImport);
     }
 
-
     @Override
     public void deleteById(Long id) {
         productImportRepository.deleteById(id);
     }
-
 
     @Override
     public ProductImportCreResDTO create(ProductImportCreReqDTO productImportCreReqDTO) {
@@ -179,10 +178,35 @@ public class ProductImportService implements IProductImportService {
         return productImportRepository.findAllByDeletedIsFalse();
     }
 
-
     private Product findProductById(Long id){
         return productService.findById(id).orElseThrow(
                 ()-> new  ResourceNotFoundException("Not found this product")
         );
+    }
+    @Override
+    public List<EColor> getAllColorByCategory(Long id) {
+        Optional<Category> categoryOp = categoryRepository.findById(id);
+        if (!categoryOp.isPresent()) {
+            throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
+        }
+        LocalDate today = LocalDate.now();
+        return productImportRepository.findAllColorCategory(id,today);
+    }
+
+    @Override
+    public List<ESize> getAllSizeByCategory(Long id) {
+        Optional<Category> categoryOp = categoryRepository.findById(id);
+        if (!categoryOp.isPresent()) {
+            throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
+        }
+        LocalDate today = LocalDate.now();
+        return productImportRepository.findAllSizeCategory(id,today);
+    }
+
+
+
+    @Override
+    public List<EColor> getAllColorByProductAndQuantity(Long productId) {
+        return productImportRepository.getAllColorByProductAndQuantity(productId);
     }
 }
