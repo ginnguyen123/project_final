@@ -33,6 +33,8 @@ public class ProductResDTO {
     private List<MediaDTO> images;
     private List<ProductImportResDTO> productImportResDTOS;
 
+    private Long discount;
+
 
     public ProductResDTO(Long id, String title, String code, BigDecimal price, String description, String brandName, String urlImage, String categoryName) {
         this.id = id;

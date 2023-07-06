@@ -126,7 +126,7 @@ public class Product extends BaseEntity {
                 .setCategoryId(category.getId())
                 .setCategoryName(category.getName())
                 .setImages(productAvatarList.stream().map(item -> item.toMediaDTO()).collect(Collectors.toList()))
-                //xu ly truyen vao list ProductImportResDTO hoac thay doi voi mot class moi
+                .setDiscount(discount.getDiscount())
                 .setProductImportResDTOS(quantityProductImports)
 //                .setProductImportResDTOS(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
                 ;
