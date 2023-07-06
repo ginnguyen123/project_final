@@ -105,8 +105,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
                                           @Param("today") LocalDate today,
                                           @Param("min") Long minPrice,
                                           @Param("max") Long maxPrice,
-                                          @Param("colors")List<Integer> colors,
-                                          @Param("sizes")List<Integer> sizes,Pageable pageable);
+                                          @Param("colors")List<String> colors,
+                                          @Param("sizes")List<String> sizes,Pageable pageable);
 
     //query product theo discount còn hạn cho trang home
     @Query(value = "SELECT prod.id FROM products AS prod " +

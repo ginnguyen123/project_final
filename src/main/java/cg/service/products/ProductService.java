@@ -54,6 +54,9 @@ public class ProductService implements IProductService {
     private DiscountRepository discountRepository;
 
     @Autowired
+    private ProductImportRepository productImportRepository;
+
+    @Autowired
     private UploadUtils uploadUtils;
 
     @Autowired
@@ -109,10 +112,26 @@ public class ProductService implements IProductService {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
 
-        List<Integer> eColors = filter.getColors().stream().map(i -> EColor.getEColor(i).ordinal()).collect(Collectors.toList());
-        List<Integer> eSizes = filter.getSizes().stream().map(i -> ESize.getESize(i).ordinal()).collect(Collectors.toList());
+        List<String> eColors = filter.getColors().stream().map(i -> EColor.getEColor(i).getValue()).collect(Collectors.toList());
+        List<String> eSizes = filter.getSizes().stream().map(i -> ESize.getESize(i).getValue()).collect(Collectors.toList());
         Long min = filter.getMinPrice();
         Long max = filter.getMaxPrice();
+
+        if (max == 0 || max == null)
+            max = 1000000000l;
+
+        if (min == null)
+            min = 0l;
+
+        if (eColors.size() == 0){
+            List<EColor> eColorList = productImportRepository.findAllColorCategory(id,localDate);
+            eColors = eColorList.stream().map(i -> i.getValue()).collect(Collectors.toList());
+        }
+
+        if (eSizes.size() == 0){
+            List<ESize> eSizeList = productImportRepository.findAllSizeCategory(id,localDate);
+            eSizes = eSizeList.stream().map(i -> i.getValue()).collect(Collectors.toList());
+        }
 
         Page<Product> productPage = productRepository.findAllByCategoryFilter(id,localDate,min,max,eColors,eSizes,pageable);
         List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i ->i.toProductResClientDTO()).collect(Collectors.toList());
