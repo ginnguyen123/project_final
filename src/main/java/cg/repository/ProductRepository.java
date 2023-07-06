@@ -52,13 +52,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "AND prod.title LIKE :search " +
             "OR prod.code LIKE :search " +
             "OR prodImp.code LIKE :search " +
-            "OR prodImp.color = :color " +
-            "OR prodImp.size = :size " +
+//            "OR prodImp.color = :color " +
+//            "OR prodImp.size = :size " +
             "OR bra.name LIKE :search " +
             "OR cate.name LIKE :search " +
             "OR cate.categoryParent.name LIKE :search")
-    Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, @Param("color") EColor color,
-                                                        @Param("size") ESize size, Pageable pageable);
+    Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, Pageable pageable);
 
 //    query theo id category ở trang filter
     @Query(value = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
@@ -105,8 +104,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
                                           @Param("today") LocalDate today,
                                           @Param("min") Long minPrice,
                                           @Param("max") Long maxPrice,
-                                          @Param("colors")List<Integer> colors,
-                                          @Param("sizes")List<Integer> sizes,Pageable pageable);
+                                          @Param("colors")List<String> colors,
+                                          @Param("sizes")List<String> sizes,Pageable pageable);
 
     //query product theo discount còn hạn cho trang home
     @Query(value = "SELECT prod.id FROM products AS prod " +

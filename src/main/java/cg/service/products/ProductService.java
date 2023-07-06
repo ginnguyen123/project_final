@@ -109,8 +109,8 @@ public class ProductService implements IProductService {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
 
-        List<Integer> eColors = filter.getColors().stream().map(i -> EColor.getEColor(i).ordinal()).collect(Collectors.toList());
-        List<Integer> eSizes = filter.getSizes().stream().map(i -> ESize.getESize(i).ordinal()).collect(Collectors.toList());
+        List<String> eColors = filter.getColors().stream().map(i -> EColor.getEColor(i).getValue()).collect(Collectors.toList());
+        List<String> eSizes = filter.getSizes().stream().map(i -> ESize.getESize(i).getValue()).collect(Collectors.toList());
         Long min = filter.getMinPrice();
         Long max = filter.getMaxPrice();
 
