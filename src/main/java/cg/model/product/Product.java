@@ -1,14 +1,11 @@
 package cg.model.product;
 
-
-import cg.dto.category.CategoryChildDTO;
 import cg.dto.product.*;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
-
 import cg.model.discount.Discount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,8 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import cg.model.media.Media;
 import lombok.experimental.Accessors;
-import org.thymeleaf.spring5.processor.SpringInputFileFieldTagProcessor;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
