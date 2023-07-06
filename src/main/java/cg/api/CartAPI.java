@@ -2,12 +2,15 @@ package cg.api;
 
 import cg.dto.cart.*;
 import cg.dto.cartDetail.CartDetailResDTO;
+import cg.dto.customerDTO.CustomerDTO;
+import cg.dto.locationRegionDTO.LocationRegionDTO;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.model.customer.Customer;
 import cg.model.enums.ECartStatus;
+import cg.model.location_region.LocationRegion;
 import cg.model.product.Product;
 import cg.service.ExistService;
 
@@ -17,6 +20,7 @@ import cg.service.cart.ICartService;
 import cg.service.cart.response.CartListResponse;
 import cg.service.cartDetail.ICartDetailService;
 import cg.service.customer.ICustomerService;
+import cg.service.locationRegion.ILocationRegionService;
 import cg.service.products.IProductService;
 import cg.utils.AppUtils;
 import cg.utils.CartRequest;
@@ -54,6 +58,9 @@ public class CartAPI {
 
     @Autowired
     private ICartDetailService cartDetailService;
+
+    @Autowired
+    private ILocationRegionService locationRegionService;
 
     @GetMapping
     public ResponseEntity<?> getAllDeleteFalse() {
@@ -183,5 +190,20 @@ public class CartAPI {
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("Not found this cart"));
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<?> getCustomerCheckout(@PathVariable Long customerId) {
+        Optional<Customer> customerOptional = customerService.findById(customerId);
+        if (!customerOptional.isPresent()) {
+            throw new DataInputException("customer is not found");
+        }
+            Customer customer = customerOptional.get();
+        List<LocationRegion> locationRegions = locationRegionService.findAllByCustomer(customer);
+
+        List<LocationRegionDTO> locationRegionDTOS = locationRegions.stream().map(LocationRegion::toLocationRegionDTO).collect(Collectors.toList());
+
+        CustomerDTO customerDTO = customer.toCustomerDTO(locationRegionDTOS);
+        return new ResponseEntity<>(customerDTO,HttpStatus.OK);
     }
 }

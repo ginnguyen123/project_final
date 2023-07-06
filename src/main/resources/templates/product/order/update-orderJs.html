@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+        <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="update-orderJs" th:inline="javascript">
 
     <script>
@@ -27,7 +27,7 @@
         pageCart.dialogs.loadData.getAllProvinces = () => {
             return $.ajax({
                 type: 'GET',
-                url: 'https://vapi.vnappmob.com/api/province/'
+                    url: 'https://vapi.vnappmob.com/api/province/'
             })
                 .done((data) => {
                     $.each(data.results, (i, item) => {
