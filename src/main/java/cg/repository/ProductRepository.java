@@ -3,16 +3,12 @@ package cg.repository;
 
 import cg.dto.product.ProductListResponse;
 import cg.dto.product.client.ProductResClientDTO;
-import cg.model.enums.EColor;
-import cg.model.enums.ESize;
 
 import cg.model.product.Product;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -98,12 +94,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
             "AND imp.color IN :colors " +
             "AND imp.size IN :sizes " +
-            "AND prod.prices BETWEEN :min AND :max  " +
+            ":minmax " +
             "GROUP BY prod.id ", nativeQuery = true)
     Page<Product> findAllByCategoryFilter(@Param("category") Long idCategory,
                                           @Param("today") LocalDate today,
-                                          @Param("min") Long minPrice,
-                                          @Param("max") Long maxPrice,
+                                          @Param("minmax") String minMax,
                                           @Param("colors")List<String> colors,
                                           @Param("sizes")List<String> sizes,Pageable pageable);
 

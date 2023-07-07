@@ -8,9 +8,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class FilterRes {
-    Long minPrice;
-    Long maxPrice;
+    Long id;
     List<String> colors;
     List<String> sizes;
+    List<List<Long>> minMax;
 
 }

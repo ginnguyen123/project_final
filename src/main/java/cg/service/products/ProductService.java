@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,6 +37,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ProductService implements IProductService {
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private ProductRepository productRepository;
@@ -107,36 +112,53 @@ public class ProductService implements IProductService {
     @Override
     public List<ProductResClientDTO> findAllByCategoryFilter(Long id, FilterRes filter, Pageable pageable) {
         LocalDate localDate = LocalDate.now();
+        List<List<Long>> minMaxPrices = filter.getMinMax();
+        List<String> colors = filter.getColors();
+        List<String> sizes = filter.getSizes();
+
         Optional<Category> categoryOp = categoryRepository.findById(id);
         if (!categoryOp.isPresent()) {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
 
-        List<String> eColors = filter.getColors().stream().map(i -> EColor.getEColor(i).getValue()).collect(Collectors.toList());
-        List<String> eSizes = filter.getSizes().stream().map(i -> ESize.getESize(i).getValue()).collect(Collectors.toList());
-        Long min = filter.getMinPrice();
-        Long max = filter.getMaxPrice();
+        StringBuffer strBb = new StringBuffer();
 
-        if (max == 0 || max == null)
-            max = 1000000000l;
+        strBb.append("SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, " +
+                "prod.discount_id, prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id," +
+                "prod.product_avatar_id " +
+                "FROM products AS prod " +
+                "INNER JOIN product_import AS imp ON imp.product_id = prod.id " +
+                "LEFT JOIN category AS cate ON cate.id = prod.category_id " +
+                "LEFT JOIN discounts AS disc ON disc.id = prod.discount_id " +
+                "WHERE prod.deleted = 0 " +
+                "AND prod.category_id = :id " +
+                "AND imp.quantity > 0 " +
+                "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+                "AND imp.color IN :colors " +
+                "AND imp.size IN :sizes" );
 
-        if (min == null)
-            min = 0l;
-
-        if (eColors.size() == 0){
-            List<EColor> eColorList = productImportRepository.findAllColorCategory(id,localDate);
-            eColors = eColorList.stream().map(i -> i.getValue()).collect(Collectors.toList());
+        //check mảng 2 chiều [[min, max]] (mảng 2xn) để nối chuỗi vào câu query
+        if (minMaxPrices.size() != 0){
+            strBb.append(" AND ");
+            for (int i = 0; i < minMaxPrices.size(); i++){
+//                Long min = minMaxPrices.get(i).get(0);
+//                Long max = minMaxPrices.get(i).get(1);
+                strBb.append("prod.prices BETWEEN :min");
+                strBb.append(i);
+                strBb.append(" AND :max");
+                strBb.append(i);
+                if (i < minMaxPrices.size() - 1)
+                    strBb.append(" OR ");
+            }
         }
+        strBb.append(" GROUP BY prod.id");
+        System.out.println("------------------------------------------------------");
+        System.out.println(strBb);
 
-        if (eSizes.size() == 0){
-            List<ESize> eSizeList = productImportRepository.findAllSizeCategory(id,localDate);
-            eSizes = eSizeList.stream().map(i -> i.getValue()).collect(Collectors.toList());
-        }
+//        Query query = entityManager.createNativeQuery(strBb.toString());
 
-        Page<Product> productPage = productRepository.findAllByCategoryFilter(id,localDate,min,max,eColors,eSizes,pageable);
-        List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i ->i.toProductResClientDTO()).collect(Collectors.toList());
-        System.out.println(dtoList);
-        return dtoList;
+        return null;
+
     }
 
     @Override
