@@ -70,14 +70,16 @@ public class ProductClientAPI {
     private ResponseEntity<?> getAllProductByCategory(@RequestParam("id") Long id, Pageable pageable){
         return new ResponseEntity<>(productService.findAllByCategory(id,pageable),HttpStatus.OK);
     }
-    @PostMapping("/filter/category/{id}")
-    private ResponseEntity<?> getAllProductFilter(@RequestBody FilterRes filterRes,
-                                                  @PathVariable Long id, Pageable pageable){
-        Long min = filterRes.getMinPrice();
-        Long max = filterRes.getMaxPrice();
-        if (max < min || min < 0 || max < 0)
-            throw new DataInputException(AppConstant.INVALID_PRICE_FILTER_MESSAGE);
-
+    @PostMapping("/filter/category")
+    private ResponseEntity<?> getAllProductFilter(@RequestBody FilterRes filterRes, Pageable pageable){
+        List<List<Long>> minMax = filterRes.getMinMax();
+        Long id = filterRes.getId();
+        if (minMax.size() != 0){
+            for(int i = 0;  i < minMax.size(); i++){
+                if (minMax.get(i).get(0) < 0 || minMax.get(i).get(1) < 0)
+                        throw new DataInputException(AppConstant.INVALID_PRICE_FILTER_MESSAGE);
+            }
+        }
         return new ResponseEntity<>(productService.findAllByCategoryFilter(id,filterRes, pageable),HttpStatus.OK);
     }
 }
