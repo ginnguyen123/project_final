@@ -59,6 +59,9 @@ public class ProductService implements IProductService {
     private DiscountRepository discountRepository;
 
     @Autowired
+    private ProductImportRepository productImportRepository;
+
+    @Autowired
     private UploadUtils uploadUtils;
 
     @Autowired
@@ -155,6 +158,7 @@ public class ProductService implements IProductService {
 //        Query query = entityManager.createNativeQuery(strBb.toString());
 
         return null;
+
     }
 
     @Override
