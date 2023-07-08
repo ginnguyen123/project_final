@@ -220,5 +220,6 @@ public class Product extends BaseEntity {
         }
         return clientDTO;
     }
+
 }
 
