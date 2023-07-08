@@ -30,6 +30,7 @@ import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -123,9 +124,7 @@ public class ProductService implements IProductService {
 
         StringBuffer strBb = new StringBuffer();
 
-        strBb.append("SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, " +
-                "prod.discount_id, prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id," +
-                "prod.product_avatar_id " +
+        strBb.append("SELECT prod.id " +
                 "FROM products AS prod " +
                 "INNER JOIN product_import AS imp ON imp.product_id = prod.id " +
                 "LEFT JOIN category AS cate ON cate.id = prod.category_id " +
@@ -133,16 +132,17 @@ public class ProductService implements IProductService {
                 "WHERE prod.deleted = 0 " +
                 "AND prod.category_id = :id " +
                 "AND imp.quantity > 0 " +
-                "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
-                "AND imp.color IN :colors " +
-                "AND imp.size IN :sizes" );
+                "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) ");
+
+        if (colors.size() != 0)
+            strBb.append("AND imp.color IN :colors ");
+        if(sizes.size() != 0)
+            strBb.append("AND imp.size IN :sizes" );
 
         //check mảng 2 chiều [[min, max]] (mảng 2xn) để nối chuỗi vào câu query
         if (minMaxPrices.size() != 0){
             strBb.append(" AND ");
             for (int i = 0; i < minMaxPrices.size(); i++){
-//                Long min = minMaxPrices.get(i).get(0);
-//                Long max = minMaxPrices.get(i).get(1);
                 strBb.append("prod.prices BETWEEN :min");
                 strBb.append(i);
                 strBb.append(" AND :max");
@@ -155,10 +155,28 @@ public class ProductService implements IProductService {
         System.out.println("------------------------------------------------------");
         System.out.println(strBb);
 
-//        Query query = entityManager.createNativeQuery(strBb.toString());
+        Query query = entityManager.createNativeQuery(strBb.toString());
+        query.setParameter("id", id);
+        query.setParameter("today", localDate);
 
-        return null;
+        if (colors.size() != 0)
+            query.setParameter("colors",colors);
+        if (sizes.size() != 0)
+            query.setParameter("sizes", sizes);
 
+        if (minMaxPrices.size() != 0){
+            for (int i = 0; i < minMaxPrices.size(); i++){
+                Long min = minMaxPrices.get(i).get(0);
+                Long max = minMaxPrices.get(i).get(1);
+                String paraMin = "min" + i;
+                String paraMax = "max" + i;
+                query.setParameter(paraMin, min);
+                query.setParameter(paraMax, max);
+            }
+        }
+        List<?> listQuery =  query.getResultList();
+        List<Product> products = productRepository.findByDeletedAndIdIn(false, listQuery.stream().map(i -> Long.parseLong(String.valueOf(i))).collect(Collectors.toList()));
+        return products.stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
     }
 
     @Override
