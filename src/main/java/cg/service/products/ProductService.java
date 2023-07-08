@@ -17,6 +17,7 @@ import cg.utils.AppConstant;
 import cg.utils.AppUtils;
 import cg.utils.ExistedInDb;
 import cg.utils.UploadUtils;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -116,6 +117,10 @@ public class ProductService implements IProductService {
         List<List<Long>> minMaxPrices = filter.getMinMax();
         List<String> colors = filter.getColors();
         List<String> sizes = filter.getSizes();
+        Integer page = pageable.getPageNumber();
+        Integer pageSize = pageable.getPageSize();
+        String field = "";
+        String sortBy = "";
 
         Optional<Category> categoryOp = categoryRepository.findById(id);
         if (!categoryOp.isPresent()) {
@@ -137,7 +142,7 @@ public class ProductService implements IProductService {
         if (colors.size() != 0)
             strBb.append("AND imp.color IN :colors ");
         if(sizes.size() != 0)
-            strBb.append("AND imp.size IN :sizes" );
+            strBb.append("AND imp.size IN :sizes ");
 
         //check mảng 2 chiều [[min, max]] (mảng 2xn) để nối chuỗi vào câu query
         if (minMaxPrices.size() != 0){
@@ -147,17 +152,35 @@ public class ProductService implements IProductService {
                 strBb.append(i);
                 strBb.append(" AND :max");
                 strBb.append(i);
+                strBb.append(" ");
                 if (i < minMaxPrices.size() - 1)
                     strBb.append(" OR ");
             }
         }
-        strBb.append(" GROUP BY prod.id");
+        strBb.append(" GROUP BY prod.id ");
+
+        if (pageable.getSort().isSorted()){
+            String strSort = pageable.getSort().toString();
+            pageable.getSort().ascending().toString();
+            field = strSort.split(":")[0];
+            sortBy = strSort.split(":")[1].trim();
+            strBb.append("ORDER BY prod.");
+            strBb.append(field);
+            strBb.append(" ");
+            strBb.append(sortBy);
+            strBb.append("  ");
+        }
+//        phân trang
+        strBb.append("LIMIT :page,:pageSizes ");
+
         System.out.println("------------------------------------------------------");
         System.out.println(strBb);
 
         Query query = entityManager.createNativeQuery(strBb.toString());
         query.setParameter("id", id);
         query.setParameter("today", localDate);
+        query.setParameter("page", page);
+        query.setParameter("pageSizes", pageSize);
 
         if (colors.size() != 0)
             query.setParameter("colors",colors);
@@ -174,8 +197,14 @@ public class ProductService implements IProductService {
                 query.setParameter(paraMax, max);
             }
         }
+        List<Product> products = new ArrayList<>();
         List<?> listQuery =  query.getResultList();
-        List<Product> products = productRepository.findByDeletedAndIdIn(false, listQuery.stream().map(i -> Long.parseLong(String.valueOf(i))).collect(Collectors.toList()));
+        for (int i = 0; i<listQuery.size(); i++){
+            Product product = productRepository.getById(Long.parseLong(String.valueOf(listQuery.get(i))));
+            products.add(product);
+        }
+        if (products.size() == 0)
+            return null;
         return products.stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
     }
 
