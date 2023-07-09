@@ -4,6 +4,8 @@
 <head>
     <title>Danh sách sản phẩm</title>
     <th:block th:replace="layout/head :: head"/>
+
+
     <style>
         .btn-sort{
             display: flex;
@@ -70,7 +72,7 @@
         <div class="col-md-12">
             <div class="tile">
                 <div class="tile-body">
-                    <div class="row element-button">
+                    <div class="row element-button"  id="formSearch">
                             <div class="col-sm-2 d-flex align-items-center">
                                 <div class="col-12 d-flex justify-content-start">
                                     <a class="btn btn-add btn-sm" href="/product-import/create" id="add"
@@ -81,7 +83,7 @@
 
                             <div class="d-flex justify-content-end col-sm-10">
                                 <div class="input-group justify-content-end" style="padding: 3px 0px;">
-                                    <input type="text" id="keyword" class="form-control-sm" placeholder="Search..."/>
+                                    <input type="text" id="keyword" class="form-control-sm search" placeholder="Search..."/>
                                     <button class="btn btn-primary btn-sm" style="margin-bottom: 0"  type="button" id="btnSearch">
                                         <i class="fa fa-search"></i>
                                     </button>
@@ -92,7 +94,7 @@
                                 </div>
 
                             </div>
-                            <div class=" row" id="formSearch">
+                            <div class=" row">
                                 <div class="col-sm-4 d-flex">
                                     <div class="col-sm-2">
                                         <span>Từ ngày</span>
@@ -110,43 +112,46 @@
                             </div>
 
                     </div>
-                    <table class="table table-hover table-bordered" id="tbProductImport">
-                        <thead>
-                        <tr>
-                            <th><input type="checkbox" id="all-delete"></th>
-                            <th>Mã</th>
-                            <th>Kích cỡ</th>
-                            <th>Màu sắc</th>
-                            <th>
-                                <div class="d-flex me">
-                                    <div class="btn-sort me-2">
-                                        <div id="asc-code" class="up-down-sort">
-                                            <a class="up-button">
-                                                <i class="fa-solid fa-caret-up"></i>
-                                            </a>
-                                        </div>
+                    <div id="tbProductImport">
 
-                                        <div id="desc-code" class="up-down-sort">
-                                            <a class="down-button">
-                                                <i class="fa-solid fa-caret-down"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <span>Giá</span>
-                                </div>
-                            </th>
-                            <th>Số lượng</th>
-                            <th>Tình trạng</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Ngày nhập</th>
-                            <th>Tính năng</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                    </div>
+<!--                    <table class="table table-hover table-bordered" id="tbProductImport">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th><input type="checkbox" id="all-delete"></th>-->
+<!--                            <th>Mã</th>-->
+<!--                            <th>Kích cỡ</th>-->
+<!--                            <th>Màu sắc</th>-->
+<!--                            <th>-->
+<!--                                <div class="d-flex me">-->
+<!--                                    <div class="btn-sort me-2">-->
+<!--                                        <div id="asc-code" class="up-down-sort">-->
+<!--                                            <a class="up-button">-->
+<!--                                                <i class="fa-solid fa-caret-up"></i>-->
+<!--                                            </a>-->
+<!--                                        </div>-->
 
-                        </tbody>
-<!--                        paginationUl-->
-                    </table>
+<!--                                        <div id="desc-code" class="up-down-sort">-->
+<!--                                            <a class="down-button">-->
+<!--                                                <i class="fa-solid fa-caret-down"></i>-->
+<!--                                            </a>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <span>Giá</span>-->
+<!--                                </div>-->
+<!--                            </th>-->
+<!--                            <th>Số lượng</th>-->
+<!--                            <th>Tình trạng</th>-->
+<!--                            <th>Tên sản phẩm</th>-->
+<!--                            <th>Ngày nhập</th>-->
+<!--                            <th>Tính năng</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+
+<!--                        </tbody>-->
+<!--&lt;!&ndash;                        paginationUl&ndash;&gt;-->
+<!--                    </table>-->
                 </div>
                 <nav aria-label="Page navigation example d-flex">
                     <div class="d-flex justify-content-end">
@@ -185,6 +190,7 @@
 </main>
 
 <!-- javascripts for application to work-->
+
 <th:block th:replace="layout/script :: script"/>
 <th:block th:replace="productImport/list/productImport :: productImport"/>
 

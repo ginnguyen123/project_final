@@ -30,12 +30,12 @@ public class ProductImport extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private ESize size;
 
 
     @Column(nullable = false)
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private EColor color;
 
     @Column(nullable = false)
