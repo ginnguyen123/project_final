@@ -3,6 +3,7 @@ package cg.service.products;
 import cg.dto.product.*;
 import cg.dto.product.client.FilterRes;
 import cg.dto.product.client.ProductResClientDTO;
+import cg.dto.product.client.ProductSearchResClientDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
@@ -31,7 +32,6 @@ import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -106,9 +106,28 @@ public class ProductService implements IProductService {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
         Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(),pageable);
-        System.out.println(productPage);
         List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+
         return dtoList;
+    }
+
+    @Override
+    public ProductSearchResClientDTO findAllByKeyWordSearch(String keyword, Pageable pageable) {
+        ProductSearchResClientDTO searchResClient = new ProductSearchResClientDTO();
+        if (keyword.isEmpty())
+            return searchResClient;
+        LocalDate today = LocalDate.now();
+        String kw = "%" + keyword + "%";
+        Page<Product> idPage = productRepository.findAllBySearchFromClient(kw,today,keyword,pageable);
+        if (idPage.getContent().size() == 0)
+            return searchResClient;
+        System.out.println(idPage.getContent());
+        List<ProductResClientDTO> productResClientDTOS = idPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+        searchResClient.setProducts(productResClientDTOS);
+        searchResClient.setTotalPages(idPage.getTotalPages());
+        searchResClient.setTotalElements((int) idPage.getTotalElements());
+        searchResClient.setKeyword(keyword);
+        return searchResClient;
     }
 
     @Override
