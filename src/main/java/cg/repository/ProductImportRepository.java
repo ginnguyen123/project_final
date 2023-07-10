@@ -57,7 +57,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
     List<ProductImportDTO> findAllByDeletedIsFalse();
 
     @Query("SELECT NEW cg.dto.productImport.ProductImportDTO (" +
-            "pi.id, " +
+            "pi.id, " + 
             "pi.size, " +
             "pi.color, " +
             "pi.code, " +
