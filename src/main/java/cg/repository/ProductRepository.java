@@ -38,22 +38,42 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
 
 //    query search ở trang home
-    @Query(value = "SELECT NEW cg.dto.product.client.ProductResClientDTO(" +
-            "prod.id, prod.title, prod.code, prod.price, prod.discount, prod.productAvatar, prod.brand, prod.category) " +
-            "FROM Product AS prod " +
-            "JOIN ProductImport AS prodImp ON prodImp.product = prod " +
-            "JOIN Category AS cate ON cate = prod.category " +
-            "JOIN Brand AS bra ON bra = prod.brand " +
+    @Query(value = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
+            "prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id,prod.product_avatar_id " +
+            "FROM products AS prod " +
+            "INNER JOIN product_import AS prodImp ON prodImp.product_id = prod.id " +
+            "LEFT JOIN category AS cate ON cate.id = prod.category_id " +
+            "LEFT JOIN brands AS bra ON bra.id = prod.brand_id " +
+            "LEFT JOIN discounts AS disc ON disc.id = prod.discount_id " +
             "WHERE prodImp.quantity > 0 " +
-            "AND prod.title LIKE :search " +
-            "OR prod.code LIKE :search " +
-            "OR prodImp.code LIKE :search " +
-//            "OR prodImp.color = :color " +
-//            "OR prodImp.size = :size " +
+            "AND prod.deleted = 0 " +
+            "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+            "AND (prod.title LIKE :search " +
+            "OR prod.code LIKE :code " +
+            "OR prodImp.color LIKE :search " +
             "OR bra.name LIKE :search " +
-            "OR cate.name LIKE :search " +
-            "OR cate.categoryParent.name LIKE :search")
-    Page<ProductResClientDTO> findAllBySearchFromClient(@Param("search")String search, Pageable pageable);
+            "OR cate.name LIKE :search) " +
+            "GROUP BY prod.id",
+            countQuery = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
+                    "prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id,prod.product_avatar_id " +
+                    "FROM products AS prod " +
+                    "INNER JOIN product_import AS prodImp ON prodImp.product_id = prod.id " +
+                    "LEFT JOIN category AS cate ON cate.id = prod.category_id " +
+                    "LEFT JOIN brands AS bra ON bra.id = prod.brand_id " +
+                    "LEFT JOIN discounts AS disc ON disc.id = prod.discount_id " +
+                    "WHERE prodImp.quantity > 0 " +
+                    "AND prod.deleted = 0 " +
+                    "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
+                    "OR prod.title LIKE :search " +
+                    "OR prod.code LIKE :code " +
+                    "OR prodImp.color LIKE :search " +
+                    "OR bra.name LIKE :search " +
+                    "OR cate.name LIKE :search " +
+                    "GROUP BY prod.id",nativeQuery = true)
+    Page<Product> findAllBySearchFromClient(@Param("search") String search,
+                                            @Param("today") LocalDate today,
+                                            @Param("code") String code,
+                                            Pageable pageable);
 
 //    query theo id category ở trang filter
     @Query(value = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
@@ -114,6 +134,5 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Long> findAllByDiscountTime(@Param("day") LocalDate date);
 
     List<Product> findByDeletedAndIdIn(boolean deleted, Collection<Long> id);
-
 
 }
