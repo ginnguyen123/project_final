@@ -10,12 +10,13 @@ import cg.utils.CartRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface ICartService extends IGeneralService<Cart,Long> {
     Page<CartDTO> findAllByFilters(CartRequest keyword, Pageable pageable);
 
-
+    BigDecimal getTotalAmountCart(Cart cart);
     Page<CartListResponse> pageableByKeyword(CartRequest request, Pageable pageable);
 
     void create(CartCreReqDTO cartCreReqDTO);

@@ -165,7 +165,7 @@ public class ProductService implements IProductService {
 
         //check mảng 2 chiều [[min, max]] (mảng 2xn) để nối chuỗi vào câu query
         if (minMaxPrices.size() != 0){
-            strBb.append(" AND ");
+            strBb.append(" AND (");
             for (int i = 0; i < minMaxPrices.size(); i++){
                 strBb.append("prod.prices BETWEEN :min");
                 strBb.append(i);
@@ -175,6 +175,7 @@ public class ProductService implements IProductService {
                 if (i < minMaxPrices.size() - 1)
                     strBb.append(" OR ");
             }
+            strBb.append(" ) ");
         }
         strBb.append(" GROUP BY prod.id ");
 
@@ -218,6 +219,9 @@ public class ProductService implements IProductService {
         }
         List<Product> products = new ArrayList<>();
         List<?> listQuery =  query.getResultList();
+        if(listQuery.size() == 0){
+            return new ArrayList<>();
+        }
         for (int i = 0; i<listQuery.size(); i++){
             Product product = productRepository.getById(Long.parseLong(String.valueOf(listQuery.get(i))));
             products.add(product);
