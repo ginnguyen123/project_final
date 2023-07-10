@@ -10,11 +10,16 @@ import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.model.enums.ECartStatus;
+<<<<<<< HEAD
 
 import cg.model.customer.Customer;
 
 import cg.model.location_region.LocationRegion;
 
+=======
+import cg.model.customer.Customer;
+import cg.model.location_region.LocationRegion;
+>>>>>>> a36631df63684db7be34c483a927da526267e6a0
 import cg.model.product.Product;
 import cg.service.ExistService;
 import cg.service.cart.ICartService;
@@ -74,9 +79,41 @@ public class CartAPI {
     public ResponseEntity<?> getAllCartDetails(@PathVariable Long customerId) {
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
-        List<CartDetail> cartDetailList = cart.getCartDetails();
+        List<CartDetail> cartDetailList = cartDetailService.findCartDetailsByCartAndDeletedIsFalse(cart);
         List<CartDetailResDTO> cartDetailResDTOS = cartDetailList.stream().map(item->item.toCartDetailResDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(cartDetailResDTOS,HttpStatus.OK);
+    }
+
+    @PatchMapping("/cart-details/{customerId}/{cartDetailId}")
+    public ResponseEntity<?> increaseQuantityCartDetail(@PathVariable Long customerId,@PathVariable Long cartDetailId, @RequestBody Long quantity) {
+        ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
+        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
+        CartDetail cartDetail = cartDetailService.findById(cartDetailId).get();
+        Product product = cartDetail.getProduct();
+        cartDetail.setQuantity(quantity);
+        BigDecimal totalAmountCartDetail = cartDetailService.getTotalAmountCartDetail(product, quantity);
+        cartDetail.setTotalAmount(totalAmountCartDetail);
+        cartDetailService.save(cartDetail);
+        BigDecimal totalAmountCart = cartService.getTotalAmountCart(cart);
+        cart.setTotalAmount(totalAmountCart);
+        cartService.save(cart);
+//        Cart newCart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
+//        CartResDTO cartResDTO = newCart.toCartResDTO();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/cart-details/{customerId}/{cartDetailId}")
+    public ResponseEntity<?> removeCartDetail(@PathVariable Long customerId, @PathVariable Long cartDetailId) {
+        ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
+        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
+        CartDetail cartDetail = cartDetailService.findById(cartDetailId).get();
+        cartDetail.setDeleted(true);
+        cartDetailService.save(cartDetail);
+        BigDecimal totalAmountCart = cartService.getTotalAmountCart(cart);
+        cart.setTotalAmount(totalAmountCart);
+        cartService.save(cart);
+        CartResDTO cartDTO = cart.toCartResDTO();
+        return new ResponseEntity<>(cartDTO,HttpStatus.OK);
     }
 
     @PostMapping("/search")
@@ -100,7 +137,6 @@ public class CartAPI {
 
     @PostMapping("/add")
     public  ResponseEntity<?> addToCart(@RequestBody CartCreMiniCartReqDTO cartCreMiniCartReqDTO) {
-
         Long customerId = cartCreMiniCartReqDTO.getCustomerId();
         Customer customer = customerService.findById(customerId).get();
         String status_str = cartCreMiniCartReqDTO.getStatus();
@@ -111,6 +147,7 @@ public class CartAPI {
         if (cart != null) {
             List<CartDetail> cartDetailList = cart.getCartDetails();
             CartDetail cartDetail = new CartDetail();
+
             for (CartDetail item : cartDetailList) {
                 if (item.getProduct().getId()==cartCreMiniCartReqDTO.getProductId() && item.getSize().getValue().equals(cartCreMiniCartReqDTO.getSize()) && item.getColor().getValue().equals(cartCreMiniCartReqDTO.getColor())) {
                     Long current_quantity = item.getQuantity();
@@ -121,7 +158,7 @@ public class CartAPI {
                         throw new DataInputException("Product is not found");
                     }
                     Product product = productOptional.get();
-                    BigDecimal totalAmount = product.getPrice().multiply(BigDecimal.valueOf(new_quantity));
+                    BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, new_quantity);
                     item.setTotalAmount(totalAmount);
                     cartDetailService.save(item);
                     check = true;
@@ -161,7 +198,6 @@ public class CartAPI {
         return new ResponseEntity<>(cartDetail_size,HttpStatus.OK);
 
     }
-
 
 
     @PatchMapping("/{id}")

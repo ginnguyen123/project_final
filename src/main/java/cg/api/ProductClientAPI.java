@@ -3,9 +3,6 @@ package cg.api;
 import cg.dto.product.client.FilterRes;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.exception.DataInputException;
-import cg.model.category.Category;
-import cg.model.enums.EColor;
-import cg.model.enums.ESize;
 import cg.model.product.Product;
 import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
@@ -17,20 +14,13 @@ import cg.utils.AppUtils;
 import cg.utils.UploadUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 
 @RestController
 @AllArgsConstructor
@@ -81,5 +71,9 @@ public class ProductClientAPI {
             }
         }
         return new ResponseEntity<>(productService.findAllByCategoryFilter(id,filterRes, pageable),HttpStatus.OK);
+    }
+    @PostMapping("search")
+    private ResponseEntity<?> getAllProductFilter(@RequestBody String keyWord, Pageable pageable){
+        return new ResponseEntity<>(productService.findAllByKeyWordSearch(keyWord, pageable),HttpStatus.OK);
     }
 }

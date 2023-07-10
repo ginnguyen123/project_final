@@ -15,6 +15,8 @@ import cg.model.location_region.LocationRegion;
 import cg.model.product.Product;
 import cg.repository.*;
 import cg.service.cart.response.CartListResponse;
+import cg.service.cartDetail.CartDetailService;
+import cg.service.cartDetail.ICartDetailService;
 import cg.service.products.IProductService;
 import cg.utils.CartRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class CartService implements ICartService {
+    @Autowired
+    ICartDetailService cartDetailService;
 
     @Autowired
     CartRepository cartRepository;
@@ -158,7 +162,9 @@ public class CartService implements ICartService {
             throw new DataInputException("Product is not found");
         }
         Product product  = productOptional.get();
-        BigDecimal totalAmount = product.getPrice().multiply(BigDecimal.valueOf(cartCreMiniCartReqDTO.getQuantity()));
+        Long discount = product.getDiscount().getDiscount();
+        BigDecimal totalAmountPerProduct = product.getPrice().subtract((product.getPrice().multiply(BigDecimal.valueOf(discount))).divide(BigDecimal.valueOf(100)));
+        BigDecimal totalAmount = totalAmountPerProduct.multiply(BigDecimal.valueOf(cartCreMiniCartReqDTO.getQuantity()));
         cartDetail.setTotalAmount(totalAmount);
         cartDetail.setSize(ESize.getESize(cartCreMiniCartReqDTO.getSize()));
         cartDetail.setColor(EColor.getEColor(cartCreMiniCartReqDTO.getColor()));
@@ -226,4 +232,14 @@ public class CartService implements ICartService {
     public Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status) {
         return cartRepository.findCartsByCustomerIdAndStatusIsCart(customerId,status);
     }
+
+    public BigDecimal getTotalAmountCart(Cart cart) {
+        List<CartDetail> cartDetailList = cartDetailService.findCartDetailsByCartAndDeletedIsFalse(cart);
+        BigDecimal totalAmountCart = BigDecimal.ZERO;
+        for (CartDetail item : cartDetailList) {
+            totalAmountCart = item.getTotalAmount().add(totalAmountCart);
+        }
+        return totalAmountCart;
+    }
+
 }

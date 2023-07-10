@@ -3,6 +3,7 @@ package cg.service.products;
 import cg.dto.product.*;
 import cg.dto.product.client.FilterRes;
 import cg.dto.product.client.ProductResClientDTO;
+import cg.dto.product.client.ProductSearchResClientDTO;
 import cg.model.category.Category;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
@@ -38,4 +39,6 @@ public interface IProductService extends IGeneralService<Product,Long> {
     List<ProductResClientDTO> findAllByCategory(Long id,Pageable pageable);
 
     List<ProductResClientDTO> findAllByCategoryFilter(Long id, FilterRes filter, Pageable pageable);
+
+    ProductSearchResClientDTO findAllByKeyWordSearch(String keyword, Pageable pageable);
 }

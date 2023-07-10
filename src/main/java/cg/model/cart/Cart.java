@@ -2,6 +2,7 @@ package cg.model.cart;
 
 import cg.dto.cart.CartCreResDTO;
 import cg.dto.cart.CartDTO;
+import cg.dto.cart.CartResDTO;
 import cg.dto.cart.CartUpReqDTO;
 import cg.dto.cart.CartUpResDTO;
 import cg.model.BaseEntity;
@@ -77,6 +78,12 @@ public class Cart extends BaseEntity {
 //                                .map(CartDetail::toCartDetailDTO)
 //                                .collect(Collectors.toList()))
                 ;
+    }
+
+    public CartResDTO toCartResDTO() {
+        return new CartResDTO()
+                .setId(id)
+                .setTotalAmountCart(totalAmount);
     }
 
     public CartCreResDTO toCartCreResDTO(){

@@ -6,16 +6,14 @@ import cg.dto.cartDetail.CartDetailUpReqDTO;
 import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
-import cg.model.enums.EColor;
-import cg.model.enums.ESize;
 import cg.model.product.Product;
-import cg.model.product.ProductImport;
 import cg.repository.CartDetailRepository;
 import cg.repository.ProductImportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +51,12 @@ public class CartDetailService implements ICartDetailService{
     public List<CartDetail> findAllByCart_IdAndDeletedIsFalse(Long id) {
         return cartDetailRepository.findAllByCart_IdAndDeletedIsFalse(id);
     }
+
+    public List<CartDetail> findCartDetailsByCartAndDeletedIsFalse(Cart cart) {
+        return cartDetailRepository.findCartDetailsByCartAndDeletedIsFalse(cart);
+    }
+
+
 
     @Override
     public Optional<CartDetailDTO> getByIdAndDeletedIsFalse(Long id) {
@@ -96,4 +100,14 @@ public class CartDetailService implements ICartDetailService{
         cartDetailRepository.save(cartDetail);
         return new CartDetailNotCart(cartDetail);
     }
+
+    @Override
+    public BigDecimal getTotalAmountCartDetail(Product product, Long new_quantity) {
+        Long discount = product.getDiscount().getDiscount();
+        BigDecimal totalAmountPerProduct = product.getPrice().subtract((product.getPrice().multiply(BigDecimal.valueOf(discount))).divide(BigDecimal.valueOf(100)));
+        BigDecimal totalAmount = totalAmountPerProduct.multiply(BigDecimal.valueOf(new_quantity));
+        return totalAmount;
+    }
+
+
 }
