@@ -1,6 +1,7 @@
 package cg.model.customer;
 
 import cg.dto.customerDTO.CustomerDTO;
+import cg.dto.locationRegionDTO.LocationRegionDTO;
 import cg.model.BaseEntity;
 import cg.model.cart.Cart;
 import cg.model.enums.ESex;
@@ -65,6 +66,18 @@ public class Customer extends BaseEntity {
                 .setSex(sex)
                 .setPhone(phone)
                 .setLocationRegionDTOS(locationRegions.stream().map(LocationRegion::toLocationRegionDTO).collect(Collectors.toList()))
+                ;
+    }
+
+    public CustomerDTO toCustomerDTO(List<LocationRegionDTO> locationRegionDTOS) {
+        return new CustomerDTO()
+                .setId(id)
+                .setFullName(fullName)
+                .setEmail(email)
+                .setDateOfBirth(dateOfBirth)
+                .setSex(sex)
+                .setPhone(phone)
+                .setLocationRegionDTOS(locationRegionDTOS)
                 ;
     }
 }

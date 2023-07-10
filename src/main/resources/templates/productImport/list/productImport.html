@@ -5,6 +5,7 @@
     const page = {
         urls:{
             getAllProductImport : AppBase.API_PRODUCT_IMPORT,
+            getAllProductImportForDataGird: AppBase.API_PRODUCT_IMPORT + '/data-grid',
             updateProductImport : AppBase.API_PRODUCT_IMPORT,
             getAllProductImportPageSearch : AppBase.API_PRODUCT_IMPORT + '/search'
         },
@@ -28,7 +29,39 @@
     let quantityMin;
     let quantityMax;
     let size = +$('#size-page-imp').val();
+    let dataByDataGrid = [];
 
+    let collapsed = false;
+    const discountCellTemplate = function (container, options) {
+        $('<div/>').dxBullet({
+            onIncidentOccurred: null,
+            size: {
+                width: 150,
+                height: 35,
+            },
+            margin: {
+                top: 5,
+                bottom: 0,
+                left: 5,
+            },
+            showTarget: false,
+            showZeroLevel: true,
+            value: options.value * 100,
+            startScaleValue: 0,
+            endScaleValue: 100,
+            tooltip: {
+                enabled: true,
+                font: {
+                    size: 18,
+                },
+                paddingTopBottom: 2,
+                customizeTooltip() {
+                    return { text: options.text };
+                },
+                zIndex: 5,
+            },
+        }).appendTo(container);
+    };
 
     page.elements.tbodyTableImport = $('#tbProductImport tbody');
     page.elements.formSearch = $('#formSearch');
@@ -38,6 +71,21 @@
     page.elements.keyword = $("#keyword")
     page.elements.myRangeMin = $("#myRangeMin")
     page.elements.myRangeMax = $("#myRangeMax")
+
+    page.loadData.getAllProductImportForDataGrid = () =>{
+        return $.ajax({
+            type: 'GET',
+            url: page.urls.getAllProductImportForDataGird,
+        })
+            .done((data)=>{
+                console.log('--------getAllProductImportForDataGrid---------');
+                console.log(data)
+                dataByDataGrid = data.content;
+            })
+            .fail((error)=>{
+                console.log(error);
+            })
+    }
 
     page.loadData.getAllProductImport = () =>{
         fromDate =  page.elements.dateInput.val();
@@ -56,7 +104,7 @@
         }
         console.log('obj'+obj)
 
-        $.ajax({
+        return $.ajax({
             type: 'POST',
             headers: {
                 'accept': 'application/json',
@@ -95,6 +143,87 @@
                         console.log(jqXHR);
                     })
 
+    }
+
+    page.loadData.getAllProductImportByDataGrid = () =>{
+        $('#gridContainer').dxDataGrid({
+            dataSource: dataByDataGrid,
+            keyExpr: 'idProduct',
+            allowColumnReordering: true,
+            showBorders: true,
+            grouping: {
+                autoExpandAll: true,
+            },
+            searchPanel: {
+                visible: true,
+            },
+            paging: {
+                pageSize: 10,
+            },
+            pager: {
+                visible: true,
+                allowedPageSizes: [5, 10, 50,100],
+                showPageSizeSelector: true,
+                showInfo: true,
+                showNavigationButtons: true,
+            },
+            remoteOperations: false,
+            groupPanel: {
+                visible: true,
+            },
+            rowAlternationEnabled: true,
+            columns: [
+                // {
+                //     dataField: 'title',
+                //     caption: 'Sản phẩm',
+                //     groupIndex: 1,
+                //     alignment: 'center',
+                // },
+                {
+                    dataField: 'title',
+                    caption: 'Sản phẩm',
+                    groupIndex: 0,
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'size',
+                    caption: 'Kích cỡ',
+                    dataType: 'string',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'color',
+                    caption: 'Màu',
+                    dataType: 'string',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'prices',
+                    caption: 'Giá',
+                    dataType: 'number',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'quantities',
+                    caption: 'Số lượng',
+                    dataType: 'number',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'selled',
+                    caption: 'Đã bán',
+                    dataType: 'number',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'dateAdded',
+                    caption: 'Ngày nhập kho',
+                    dataType: 'string',
+                    alignment: 'center',
+                },
+
+            ],
+        },).dxDataGrid('instance');
     }
 
     page.commands.addEventChangePage = () => {
@@ -174,7 +303,6 @@
 
         return str;
     }
-
     function addEventDeleteClick() {
         $(".delete").on('click', function () {
             let productId = $(this).data('id');
@@ -339,7 +467,6 @@
         page.commands.addEventChangePage();
     }
 
-
     page.dialogs.elements.formUpdateImport.validate({
         rules: {
             priceUp: {
@@ -395,7 +522,10 @@
     }
 
     page.commands.loadData = () =>{
-        page.loadData.getAllProductImport();
+        page.loadData.getAllProductImportForDataGrid().then(()=>{
+            page.loadData.getAllProductImportByDataGrid();
+        });
+
 
 
     };

@@ -79,19 +79,19 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-end col-sm-10">
-                                <div class="input-group justify-content-end" style="padding: 3px 0px;">
-                                    <input type="text" id="keyword" class="form-control-sm" placeholder="Search..."/>
-                                    <button class="btn btn-primary btn-sm" style="margin-bottom: 0"  type="button" id="btnSearch">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
-                                <div class="ms-2 me-2 d-flex align-items-center">
-                                    <a class="btn btn-secondary btn-sm" id="delete" style="margin-bottom: 0; padding: 5.5px 9px;" title="Xóa">
-                                        <i class="fas fa-trash-alt me-2"></i>Xóa </a>
-                                </div>
+<!--                            <div class="d-flex justify-content-end col-sm-10">-->
+<!--                                <div class="input-group justify-content-end" style="padding: 3px 0px;">-->
+<!--                                    <input type="text" id="keyword" class="form-control-sm" placeholder="Search..."/>-->
+<!--                                    <button class="btn btn-primary btn-sm" style="margin-bottom: 0"  type="button" id="btnSearch">-->
+<!--                                        <i class="fa fa-search"></i>-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                                <div class="ms-2 me-2 d-flex align-items-center">-->
+<!--                                    <a class="btn btn-secondary btn-sm" id="delete" style="margin-bottom: 0; padding: 5.5px 9px;" title="Xóa">-->
+<!--                                        <i class="fas fa-trash-alt me-2"></i>Xóa </a>-->
+<!--                                </div>-->
 
-                            </div>
+<!--                            </div>-->
                             <div class=" row" id="formSearch">
                                 <div class="col-sm-4 d-flex">
                                     <div class="col-sm-2">
@@ -110,74 +110,77 @@
                             </div>
 
                     </div>
-                    <table class="table table-hover table-bordered" id="tbProductImport">
-                        <thead>
-                        <tr>
-                            <th><input type="checkbox" id="all-delete"></th>
-                            <th>Mã</th>
-                            <th>Kích cỡ</th>
-                            <th>Màu sắc</th>
-                            <th>
-                                <div class="d-flex me">
-                                    <div class="btn-sort me-2">
-                                        <div id="asc-code" class="up-down-sort">
-                                            <a class="up-button">
-                                                <i class="fa-solid fa-caret-up"></i>
-                                            </a>
-                                        </div>
+                    <div id="gridContainer">
 
-                                        <div id="desc-code" class="up-down-sort">
-                                            <a class="down-button">
-                                                <i class="fa-solid fa-caret-down"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <span>Giá</span>
-                                </div>
-                            </th>
-                            <th>Số lượng</th>
-                            <th>Tình trạng</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Ngày nhập</th>
-                            <th>Tính năng</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-<!--                        paginationUl-->
-                    </table>
-                </div>
-                <nav aria-label="Page navigation example d-flex">
-                    <div class="d-flex justify-content-end">
-                        <span>Size:</span>
-                        <div class="ms-2 me-3">
-                            <select id="size-page-imp" class="form-select form-select-sm">
-                                <option>10</option>
-                                <option>20</option>
-                                <option>50</option>
-                                <option>100</option>
-                            </select>
-                        </div>
-                        <div>
-                            <ul id="paginationUl" class="pagination">
-                                <!--                  <li id="page-back" class="page-item">-->
-                                <!--                    <a class="page-link"aria-label="Previous">-->
-                                <!--                      <span aria-hidden="true">&laquo;</span>-->
-                                <!--                    </a>-->
-                                <!--                  </li>-->
-                                <!--                  <li class="page-item"><a class="page-link">1</a></li>-->
-                                <!--                  <li class="page-item"><a class="page-link">2</a></li>-->
-                                <!--                  <li class="page-item"><a class="page-link">3</a></li>-->
-                                <!--                  <li id="page-next" class="page-item">-->
-                                <!--                    <a class="page-link" aria-label="Next">-->
-                                <!--                      <span aria-hidden="true">&raquo;</span>-->
-                                <!--                    </a>-->
-                                <!--                  </li>-->
-                            </ul>
-                        </div>
                     </div>
-                </nav>
+<!--                    <table class="table table-hover table-bordered" id="tbProductImport">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th><input type="checkbox" id="all-delete"></th>-->
+<!--                            <th>Mã</th>-->
+<!--                            <th>Kích cỡ</th>-->
+<!--                            <th>Màu sắc</th>-->
+<!--                            <th>-->
+<!--                                <div class="d-flex me">-->
+<!--                                    <div class="btn-sort me-2">-->
+<!--                                        <div id="asc-code" class="up-down-sort">-->
+<!--                                            <a class="up-button">-->
+<!--                                                <i class="fa-solid fa-caret-up"></i>-->
+<!--                                            </a>-->
+<!--                                        </div>-->
+
+<!--                                        <div id="desc-code" class="up-down-sort">-->
+<!--                                            <a class="down-button">-->
+<!--                                                <i class="fa-solid fa-caret-down"></i>-->
+<!--                                            </a>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <span>Giá</span>-->
+<!--                                </div>-->
+<!--                            </th>-->
+<!--                            <th>Số lượng</th>-->
+<!--                            <th>Tình trạng</th>-->
+<!--                            <th>Tên sản phẩm</th>-->
+<!--                            <th>Ngày nhập</th>-->
+<!--                            <th>Tính năng</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+
+<!--                        </tbody>-->
+<!--&lt;!&ndash;                        paginationUl&ndash;&gt;-->
+<!--                    </table>-->
+                </div>
+<!--                <nav aria-label="Page navigation example d-flex">-->
+<!--                    <div class="d-flex justify-content-end">-->
+<!--                        <span>Size:</span>-->
+<!--                        <div class="ms-2 me-3">-->
+<!--                            <select id="size-page-imp" class="form-select form-select-sm">-->
+<!--                                <option>10</option>-->
+<!--                                <option>20</option>-->
+<!--                                <option>50</option>-->
+<!--                                <option>100</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            <ul id="paginationUl" class="pagination">-->
+<!--                                &lt;!&ndash;                  <li id="page-back" class="page-item">&ndash;&gt;-->
+<!--                                &lt;!&ndash;                    <a class="page-link"aria-label="Previous">&ndash;&gt;-->
+<!--                                &lt;!&ndash;                      <span aria-hidden="true">&laquo;</span>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                  </li>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                  <li class="page-item"><a class="page-link">1</a></li>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                  <li class="page-item"><a class="page-link">2</a></li>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                  <li class="page-item"><a class="page-link">3</a></li>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                  <li id="page-next" class="page-item">&ndash;&gt;-->
+<!--                                &lt;!&ndash;                    <a class="page-link" aria-label="Next">&ndash;&gt;-->
+<!--                                &lt;!&ndash;                      <span aria-hidden="true">&raquo;</span>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                    </a>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                  </li>&ndash;&gt;-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </nav>-->
             </div>
         </div>
     </div>

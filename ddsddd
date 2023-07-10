@@ -1,0 +1,1747 @@
+[33mcommit b7b7972362d25b218e30c1089a235893ecf518ce[m[33m ([m[1;36mHEAD -> [m[1;32mphuoc_dev[m[33m)[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Tue Jul 4 17:14:25 2023 +0700
+
+    add discount feild
+
+[33mcommit 878c38139280bd260321e696189e438e1a269db9[m[33m ([m[1;31morigin/development[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 5057ca0 62da211
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue Jul 4 13:51:41 2023 +0700
+
+    Merge pull request #76 from ginnguyen123/nghia_dev
+    
+    api call all product by category for client view
+
+[33mcommit 62da211c2c311c1323b24e52592b84853604bd93[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jul 4 13:51:07 2023 +0700
+
+    api call all product by category for client view
+
+[33mcommit 5057ca0b6bf7e5eda534c4bac7bf59e4dbb3cc9a[m
+Merge: 5905671 00a6bc6
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue Jul 4 10:35:36 2023 +0700
+
+    Merge pull request #75 from ginnguyen123/nghia_dev
+    
+    fix sql call product by discount time
+
+[33mcommit 00a6bc6b692d7adfa059d378cc5533f9fbc46eac[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jul 4 10:29:38 2023 +0700
+
+    fix sql call product by discount time
+
+[33mcommit 59056710c52d6cf1a6d7cfd49e6b100bf106b6ce[m
+Merge: 906a88d 37022a0
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue Jul 4 09:58:17 2023 +0700
+
+    Merge pull request #74 from ginnguyen123/phuoc_dev
+    
+    Phuoc dev
+
+[33mcommit 37022a09baa0d6ccaa3b03fb225429bf5588adf4[m[33m ([m[1;31morigin/phuoc_dev[m[33m)[m
+Merge: 1c2e7f9 906a88d
+Author: vinhtran <vinhtranngoc35@gmail.com>
+Date:   Mon Jul 3 19:57:28 2023 -0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into phuoc_dev
+    
+    # Conflicts:
+    #       src/main/java/cg/api/CartAPI.java
+    #       src/main/java/cg/service/cart/CartService.java
+
+[33mcommit 1c2e7f98340aed59bd8a25a761e8715d0664821e[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Tue Jul 4 09:01:14 2023 +0700
+
+    merge code
+
+[33mcommit 906a88de0837661a19606eacf471bdc142105bb0[m
+Merge: 49ea62c 05f81e5
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue Jul 4 08:47:09 2023 +0700
+
+    Merge pull request #73 from ginnguyen123/nghia_dev
+    
+    fix api call product by discount time
+
+[33mcommit 05f81e5e24384e6e0e7d6698e2a49dfa117ebde1[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jul 4 08:46:42 2023 +0700
+
+    fix api call product by discount time
+
+[33mcommit c24d24fae68e51c3fe00e7f08c62d0c7579e1f7d[m
+Merge: c3312d5 49ea62c
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Tue Jul 4 08:44:39 2023 +0700
+
+    Merge remote-tracking branch 'origin/development' into phuoc_dev
+    
+    # Conflicts:
+    #       src/main/java/cg/api/CartAPI.java
+    #       src/main/java/cg/model/cart/CartDetail.java
+    #       src/main/java/cg/repository/CartDetailRepository.java
+    #       src/main/java/cg/repository/CartRepository.java
+    #       src/main/java/cg/service/cart/ICartService.java
+
+[33mcommit 49ea62ca6b5d9fefd0acfe736661488769f02ddb[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jul 3 15:26:18 2023 +0700
+
+    remove CartDetailService in cart path
+
+[33mcommit cbe3e76b5cb5a4cf428d7a27d49f01a9e66bc6b1[m
+Merge: 50993d3 3631169
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jul 3 11:13:27 2023 +0700
+
+    Merge pull request #72 from ginnguyen123/nghia_dev
+    
+    fix query call product by category for home page
+
+[33mcommit 36311691f6049f23d875c3848057babe18e818d9[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jul 3 11:12:53 2023 +0700
+
+    fix query call product by category for home page
+
+[33mcommit 50993d3b6dcd37de068dacc7f9e9caa64b938708[m
+Merge: 9fbae9d ffefe22
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jul 3 09:42:12 2023 +0700
+
+    Merge pull request #71 from ginnguyen123/nhan_dev_1
+    
+    fix confi
+
+[33mcommit ffefe22753de50e0829fd5b1e526b5f4600d34ea[m[33m ([m[1;31morigin/nhan_dev_1[m[33m)[m
+Author: sen <sen20312123@gmail.com>
+Date:   Mon Jul 3 09:40:11 2023 +0700
+
+    fix confi
+
+[33mcommit 9fbae9d088fd33a401138fc6a5d9ffa5690b2e83[m
+Merge: 859c23c 3f57486
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jul 3 09:11:41 2023 +0700
+
+    Merge pull request #70 from ginnguyen123/nghia_dev
+    
+    update api find product by category for home page
+
+[33mcommit 3f57486a33d26cd22ce55cda762fe18694b154dc[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jul 3 09:11:13 2023 +0700
+
+    update api find product by category for home page
+
+[33mcommit c3312d5a6353b34d65a0077cb8dd1a4c392f8b4b[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Sun Jul 2 16:58:55 2023 +0700
+
+    cart page
+
+[33mcommit 859c23cfc0417a3064cde32c37551fe8feb4426f[m
+Merge: 9573e2a 44d0fb1
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 30 16:42:21 2023 +0700
+
+    Merge pull request #68 from ginnguyen123/nhan_dev_1
+    
+    Nhan dev 1
+
+[33mcommit 9573e2ab795eede262e15d0c257b5e43dcc4a526[m
+Merge: 80a2f39 4530c82
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 30 16:42:07 2023 +0700
+
+    Merge pull request #69 from ginnguyen123/phuoc_dev
+    
+    add to cart
+
+[33mcommit 44d0fb110db9c1dda1ea49512dd59b8bc880c224[m
+Merge: 756c9bb 80a2f39
+Author: sen <sen20312123@gmail.com>
+Date:   Fri Jun 30 16:40:07 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+
+[33mcommit 756c9bbdd9756b4b954a373811894147eddc51a6[m
+Author: sen <sen20312123@gmail.com>
+Date:   Fri Jun 30 16:39:54 2023 +0700
+
+    màn update show
+
+[33mcommit 4530c82f57282b0faaec25ac47b321c4a52b0e19[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Fri Jun 30 16:37:14 2023 +0700
+
+    add to cart
+
+[33mcommit 80a2f39054352b601404354c7063d24f21daf6d4[m
+Merge: 2dcf891 3be0fb2
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 30 16:26:48 2023 +0700
+
+    Merge pull request #67 from ginnguyen123/nghia_dev
+    
+    update url img for categoty
+
+[33mcommit 3be0fb2a992345c0d5d09e7658280423d6cf84b3[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 30 16:26:09 2023 +0700
+
+    update url img for categoty
+
+[33mcommit 2dcf891849df65aee3b5cb316b0aa96041e637f6[m
+Merge: 7812dd7 b2bdfa7
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 30 16:05:13 2023 +0700
+
+    Merge pull request #66 from ginnguyen123/nghia_dev
+    
+    fix query get all product by discount time
+
+[33mcommit b2bdfa7ea8517ab5fe7cd6a02926c055d64f7c99[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 30 16:04:39 2023 +0700
+
+    fix query get all product by discount time
+
+[33mcommit 7812dd711a5210a36b700185a25dae0e7e9f41f6[m
+Merge: 6b4a45b 1568503
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 30 15:20:31 2023 +0700
+
+    Merge pull request #65 from ginnguyen123/nghia_dev
+    
+    fix query find product by discount time
+
+[33mcommit 156850369547c204d70feb35ad59b292173eb880[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 30 15:19:58 2023 +0700
+
+    fix query find product by discount time
+
+[33mcommit 6b4a45be0478a69a6647a9d0da9b83c61df81778[m
+Merge: 321ca10 777b50d
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 30 11:26:08 2023 +0700
+
+    Merge pull request #64 from ginnguyen123/nghia_dev
+    
+    fix api call product by discount time
+
+[33mcommit 777b50dbc6ab5d7cec7acb52a800296161965002[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 30 11:25:42 2023 +0700
+
+    fix api call product by discount time
+
+[33mcommit 321ca106f0e310998e9c639d73fa43ce25866714[m
+Merge: 9526fa6 0cb6364
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 30 10:03:14 2023 +0700
+
+    Merge pull request #63 from ginnguyen123/nghia_dev
+    
+    update api call all product by quantity and discount validity time
+
+[33mcommit 0cb63648eb8a6db47d5e45d384163dffba1aa7f4[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 30 10:02:21 2023 +0700
+
+    update api call all product by quantity and discount validity time
+
+[33mcommit 9526fa621a1cc0c7604a032ac19fe756fcdedf56[m
+Merge: 47e3d6c b28a1c0
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 30 08:19:06 2023 +0700
+
+    Merge pull request #62 from ginnguyen123/nghia_dev
+    
+    update api produt by discount time
+
+[33mcommit b28a1c07b0b1cc7fc3ae126eecb10ab778208aea[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 30 08:18:13 2023 +0700
+
+    update api produt by discount time
+
+[33mcommit 47e3d6c98510d34380fefe24f4fb0d259ad63c7c[m
+Merge: c0343de abffd1d
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 29 08:45:38 2023 +0700
+
+    Merge pull request #61 from ginnguyen123/nhan_dev_1
+    
+    Nhan dev 1
+
+[33mcommit abffd1d0ac00218472308aadd54e8911c4031486[m
+Author: sen <sen20312123@gmail.com>
+Date:   Thu Jun 29 08:38:51 2023 +0700
+
+    create , update(chưa view)
+
+[33mcommit a02484cc44286f64a6fb9db8eae90c9ba7265371[m
+Author: sen <sen20312123@gmail.com>
+Date:   Wed Jun 28 16:54:04 2023 +0700
+
+    update cart service
+
+[33mcommit 35b859ab4591ab1392979802fb9bab22a22c1de4[m
+Author: sen <sen20312123@gmail.com>
+Date:   Wed Jun 28 16:28:32 2023 +0700
+
+    List , create cart
+
+[33mcommit c0343de6ef3cc9521e39af72470b9e86074c8b85[m
+Merge: b1f56ca 4cca0cf
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 28 11:58:13 2023 +0700
+
+    Merge pull request #60 from ginnguyen123/nghia_dev
+    
+    update slider for create product view
+
+[33mcommit 4cca0cf50cca4f891d2ff8f163c1149fae3f0586[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 28 11:57:30 2023 +0700
+
+    update slider for create product view
+
+[33mcommit b1f56ca637ae3c05a84860b3942f521ed13e3593[m
+Merge: c609513 e0b2897
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 28 09:41:38 2023 +0700
+
+    Merge pull request #59 from ginnguyen123/nhan_dev_1
+    
+    relationship between customer and cart @onetomany
+
+[33mcommit e0b2897dbd0edbb13a83ff1a0f21099f69867168[m
+Author: sen <sen20312123@gmail.com>
+Date:   Wed Jun 28 09:37:59 2023 +0700
+
+    relationship between customer and cart @onetomany
+
+[33mcommit c6095136aa343f7aabc20896bf90e9d4d85301cc[m
+Merge: b111b54 a29ceaa
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 28 09:36:19 2023 +0700
+
+    Merge pull request #58 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit a29ceaa65a193f198938c75f52b155a1897dc423[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 28 09:35:51 2023 +0700
+
+    fix
+
+[33mcommit 94b043dedab8bbc534b5d0b1efd6a4992824eb07[m
+Merge: b350833 b111b54
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 28 09:33:04 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit b350833d06e7b481bc57925e0c497fa7fde3e0e3[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 28 09:32:24 2023 +0700
+
+    ...
+
+[33mcommit b111b5455d13defb8c88d25f8924b7c3e9c347f1[m
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Wed Jun 28 09:28:33 2023 +0700
+
+    dung_dev
+
+[33mcommit f0c5c86c6353360161f20acf625f060a22f86de5[m
+Merge: 27da0f8 23d9b36
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Wed Jun 28 08:06:31 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into development
+
+[33mcommit 23d9b36012b9983062f354112762669c8d542ade[m
+Merge: 871893d e7d0798
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue Jun 27 17:30:06 2023 +0700
+
+    Merge pull request #57 from ginnguyen123/nghia_dev
+    
+    update api product update
+
+[33mcommit e7d079811b9bea7d3e8b840e91aa9fe8d940fdc4[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jun 27 17:29:09 2023 +0700
+
+    update api product update
+
+[33mcommit 871893dd8549470e54157fee78ce4074fb081381[m
+Merge: f7efbcf 391be27
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 22:01:08 2023 +0700
+
+    Merge pull request #56 from ginnguyen123/phuoc_dev
+    
+    update productimportResDTO
+
+[33mcommit f7efbcf069cf485c4d1670f12fd9672ff8a0fcea[m
+Merge: 6f940b0 6a62b13
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 21:59:06 2023 +0700
+
+    Merge pull request #55 from ginnguyen123/nghia_dev
+    
+    update category api get all
+
+[33mcommit 6a62b1344d9b27c5bb924dc5323e622d2514d4d5[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 21:57:36 2023 +0700
+
+    update category api get all
+
+[33mcommit 391be27efc1207fb0ccd71bf8ab096fa7f685552[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Mon Jun 26 17:16:10 2023 +0700
+
+    update productimportResDTO
+
+[33mcommit 27da0f8959e88b4f879055aa29c9c32e9b897596[m
+Merge: 8251e92 6f940b0
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 16:26:24 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into development
+
+[33mcommit 6f940b0f35d0d4bc4617ec4d137ae41597014dc5[m
+Merge: e91c3cf b741ecf
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 16:20:37 2023 +0700
+
+    Merge pull request #54 from ginnguyen123/nghia_dev
+    
+    update api category
+
+[33mcommit 8251e9286622461190eef0fd5d59fddec415c63c[m
+Merge: 0a6a7dc e91c3cf
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 16:20:23 2023 +0700
+
+    nothing
+
+[33mcommit b741ecf96b8f7fefeedea8fea113f01ae5721eec[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 16:19:59 2023 +0700
+
+    update api category
+
+[33mcommit 0a6a7dcf0f424f9405c63d5a2150545eecf1f8fb[m
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 16:01:16 2023 +0700
+
+    nothing
+
+[33mcommit e91c3cfae5033d2ae30e99b7b828878bed75daf0[m
+Merge: 13e6c50 c409a1b
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 15:59:47 2023 +0700
+
+    Merge pull request #53 from ginnguyen123/nghia_dev
+    
+    update api find product by id
+
+[33mcommit c409a1b3cabca5f796ce6a56c089bfbe67532506[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 15:59:15 2023 +0700
+
+    update api find product by id
+
+[33mcommit 86eaaa12c5d76a3933c42d782da90757354497f9[m
+Merge: 3a72dee 13e6c50
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 14:02:58 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into development
+
+[33mcommit 13e6c50893c51c79551d8c16b1b9a27ac8aae430[m
+Merge: e2caca8 4e01074
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 14:02:42 2023 +0700
+
+    Merge pull request #52 from ginnguyen123/nghia_dev
+    
+    category get all api
+
+[33mcommit 4e01074b6c212711eb7262e5e26deb3b0a7d4022[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 14:02:15 2023 +0700
+
+    category get all api
+
+[33mcommit 3a72dee4b96ab9b321752495aec001fa91a72d16[m
+Merge: 212711a e2caca8
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 11:25:50 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into development
+
+[33mcommit e2caca82d3ddb87a02c87a0cc4d164529e34509a[m
+Merge: 93e3801 73ef9ef
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 11:25:26 2023 +0700
+
+    Merge pull request #51 from ginnguyen123/nghia_dev
+    
+    update api category get all
+
+[33mcommit 73ef9ef036d455f7c56d0f9222f703f4c660788f[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 11:24:49 2023 +0700
+
+    update api category get all
+
+[33mcommit 212711ace11ac06b2546cdc91d6ab540f2dc2b9c[m
+Merge: 6373e92 93e3801
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 11:18:16 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into development
+
+[33mcommit 93e380174bde020f67ea871fafdf5d73143ba287[m
+Merge: 7d5af5b 2d27857
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 11:17:08 2023 +0700
+
+    Merge pull request #50 from ginnguyen123/nghia_dev
+    
+    fix category res
+
+[33mcommit 2d27857cf000b11b049aa2ad1795b462d6fd162f[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 11:16:15 2023 +0700
+
+    fix category res
+
+[33mcommit 6373e92325ead38434b23391b29d497608dc105d[m
+Merge: 71d9c37 7d5af5b
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 10:59:14 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into development
+
+[33mcommit 7d5af5bbd4aa9f4b1223a41df84c92a10b5786c4[m
+Merge: b41648b 2da6054
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 10:58:55 2023 +0700
+
+    Merge pull request #49 from ginnguyen123/nghia_dev
+    
+    update call api catetofy by status
+
+[33mcommit 2da60541f6c926ab10f85f01e54792dbf73cf3fe[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 10:58:17 2023 +0700
+
+    update call api catetofy by status
+
+[33mcommit 71d9c37ec85388cf85d7e95145e2868c04e1a8bc[m
+Merge: 4dbe4c1 b41648b
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 10:42:53 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into development
+
+[33mcommit b41648b842178daca43e0a7911d80efd01149b3f[m
+Merge: 579db73 7487b1f
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 10:40:43 2023 +0700
+
+    Merge pull request #48 from ginnguyen123/nghia_dev
+    
+    update category field of product res
+
+[33mcommit 7487b1fdce020e5d52a370eef9cf3d32d828a968[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 10:39:52 2023 +0700
+
+    update category field of product res
+
+[33mcommit 4dbe4c11f15f7399cbfbed4f2b1f76429982a4dd[m
+Merge: e2e3025 579db73
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 10:09:16 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into development
+
+[33mcommit e2e3025bb5af7762ede9d64b08b23a5d28bfea59[m
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Mon Jun 26 10:09:09 2023 +0700
+
+    nothing
+
+[33mcommit 579db730efb2d53af8ef6f320cef3b32b488a4d2[m
+Merge: 2e53cbd c474a51
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 10:07:36 2023 +0700
+
+    Merge pull request #47 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit c474a5120980bf29a771b6b431687f740869f44d[m
+Merge: 6aacdd9 2e53cbd
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 10:06:50 2023 +0700
+
+    update
+
+[33mcommit 6aacdd9ac4c8fbc4986cbaa55a3b777954b96c9f[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 26 08:51:37 2023 +0700
+
+    update discount field of product res
+
+[33mcommit 2e53cbde9ead514ad74eb5003d21f6bb8996f281[m
+Merge: ed66692 0b88d21
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 08:49:08 2023 +0700
+
+    Merge pull request #46 from ginnguyen123/nhan_dev_1
+    
+    Nhan dev 1
+
+[33mcommit ed66692b0bc5f096582169933d923006c6061001[m
+Merge: f80aee5 fd31dd7
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 26 08:48:36 2023 +0700
+
+    Merge pull request #45 from ginnguyen123/phuoc_dev
+    
+    Phuoc dev
+
+[33mcommit 0b88d2188f8983aebcd660cc4f26d7b12a03d1b4[m
+Merge: 865d09e f80aee5
+Author: sen <sen20312123@gmail.com>
+Date:   Mon Jun 26 08:32:16 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+
+[33mcommit fd31dd73160e55fbb70401af88fde90d7f7f0726[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Mon Jun 26 08:03:32 2023 +0700
+
+    update productImportResDTO
+
+[33mcommit f80aee59552fe9bbee53bc545b4561c938a3140f[m
+Merge: 0a35a6f d77a462
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Sat Jun 24 21:19:47 2023 +0700
+
+    Merge pull request #44 from ginnguyen123/nghia_dev
+    
+    clear text editor
+
+[33mcommit 865d09e83df87123ced8c05e2085aac0c8c61a0c[m
+Author: Vinh <vinhtranngoc35@gmail.com>
+Date:   Sat Jun 24 19:47:37 2023 +0700
+
+    change api show list cart with admin screen
+
+[33mcommit d77a46214d7bf709153c185cf3378fc460483bb3[m
+Author: Vinh <vinhtranngoc35@gmail.com>
+Date:   Sat Jun 24 19:16:07 2023 +0700
+
+    clear text editor
+
+[33mcommit cfb3ce0f38114e98cae436f9c9f4e512d44242e2[m
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 24 12:04:24 2023 +0700
+
+    no message
+
+[33mcommit 3a54ca342269a5636d8a81364bd80c474dc374e3[m
+Merge: 9f9c321 0a35a6f
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 24 12:04:16 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+    
+    # Conflicts:
+    #       src/main/java/cg/model/product/Product.java
+
+[33mcommit 9f9c3215dff35ecf5be795b8fa08ffd3a648e46a[m
+Merge: 21bd46f fc14cbf
+Author: sen <sen20312123@gmail.com>
+Date:   Fri Jun 23 16:45:15 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+    
+    # Conflicts:
+    #       src/main/java/cg/model/bill/Bill.java
+    #       src/main/java/cg/model/cart/Cart.java
+
+[33mcommit 0a35a6f39b88ec4bac86e12e06b4faa0c7d9e149[m
+Merge: c3d1c3e f7f8ec6
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 23 13:38:42 2023 +0700
+
+    Merge pull request #43 from ginnguyen123/nghia_dev
+    
+    update loading view
+
+[33mcommit f7f8ec6efc0d63e21d6763701c71ce5bd46972dc[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 23 13:37:50 2023 +0700
+
+    update loading view
+
+[33mcommit 80cbd19c0740a9597cf4ef673fb4c04def67358c[m
+Merge: 05d21fe c3d1c3e
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Fri Jun 23 10:22:02 2023 +0700
+
+    Merge remote-tracking branch 'origin/development' into phuoc_dev
+
+[33mcommit c3d1c3e1c5a8f8c0b31bb052e44d8ebf2a3347ce[m
+Merge: 9299487 3bd316e
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 23 09:24:27 2023 +0700
+
+    Merge pull request #42 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit 3bd316efba88d4c8a69a5c5d563884f94da156b2[m
+Merge: eb5bf89 9299487
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 23 09:23:02 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit 05d21fe1117602b34aef1abcef47405958013ba0[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Fri Jun 23 00:10:48 2023 +0700
+
+    visited product
+
+[33mcommit 92994879b3f41c3def2ed8a3b668d5513a25bb77[m
+Merge: 1533a71 c8441ab
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 22 15:28:59 2023 +0700
+
+    Merge pull request #41 from ginnguyen123/nghia_dev
+    
+    update api get categty by status
+
+[33mcommit eb5bf894db4dd3d3f5122d778748ecc7acab453a[m
+Merge: c8441ab 1533a71
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 22 14:21:49 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit c8441ab1524f1692d5873c5a50415f2be1d1f5c0[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 22 14:20:52 2023 +0700
+
+    update api get categty by status
+
+[33mcommit 1533a716fd613c71c1c05b8e4f270364e77fe909[m
+Merge: 1bee2d8 3558b11
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 22 12:46:01 2023 +0700
+
+    Merge pull request #40 from ginnguyen123/nghia_dev
+    
+    update dynamic pagination for list product view
+
+[33mcommit 3558b119e4f0a22c3bd927c9394df8b6b0f2da30[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 22 11:54:08 2023 +0700
+
+    update dynamic pagination for list product view
+
+[33mcommit 49df8874989d02b1f831bb05195bb65c14e4459c[m
+Merge: 55f4533 1bee2d8
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Thu Jun 22 10:42:44 2023 +0700
+
+    Merge remote-tracking branch 'origin/development' into phuoc_dev
+
+[33mcommit 1bee2d8c1798ccacc79fbf8eb1acb0899e0ccb58[m
+Merge: fe9b9f3 b29605b
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 22 01:00:14 2023 +0700
+
+    Merge pull request #39 from ginnguyen123/nghia_dev
+    
+    add even show list product
+
+[33mcommit b29605b679cb6b5e0e4b8d35b137d145bbfdd09d[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 22 00:59:32 2023 +0700
+
+    add even show list product
+
+[33mcommit 55f4533ae7041c48c2e0d7c3abf9c4a8355e87ba[m
+Merge: 85823ad fe9b9f3
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Wed Jun 21 08:09:06 2023 +0700
+
+    Merge remote-tracking branch 'origin/development' into phuoc_dev
+    
+    # Conflicts:
+    #       src/main/java/cg/service/products/IProductService.java
+
+[33mcommit 85823ad8e974a00c6a079fbbcd91962ffd0d0ec6[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Tue Jun 20 17:26:52 2023 +0700
+
+    fix query
+
+[33mcommit fe9b9f3141b773686671a2c66e952c3ba06dad7d[m
+Merge: 6fa9106 1f690e6
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue Jun 20 15:45:50 2023 +0700
+
+    Merge pull request #38 from ginnguyen123/nghia_dev
+    
+    update set discout for product create
+
+[33mcommit 1f690e6b3b94b7ff065c6edd02f549dc33448207[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jun 20 15:45:18 2023 +0700
+
+    update set discout for product create
+
+[33mcommit 6fa910645e001c0b373162f5b1dc0bcbd1e3cfa3[m
+Merge: fc14cbf b0e5917
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue Jun 20 15:36:34 2023 +0700
+
+    Merge pull request #37 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit b0e5917c47a9573f5a20000ce5cdfe4cb0d171d5[m
+Merge: fbd5736 fc14cbf
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jun 20 15:35:02 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit fbd573615f98e40f81d2d260de304acc59091fc0[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jun 20 15:34:53 2023 +0700
+
+    done create product
+
+[33mcommit bf6aabadd468e8ebff2ad0b2bad689b6819960d8[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Mon Jun 19 16:58:56 2023 +0700
+
+    update product Response DTO
+
+[33mcommit 160b62caffc5b45662d15a08ede269f9759cde18[m
+Merge: aba8d89 fc14cbf
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Mon Jun 19 09:05:20 2023 +0700
+
+    Merge remote-tracking branch 'origin/development' into phuoc_dev
+    
+    # Conflicts:
+    #       src/main/java/cg/model/product/Product.java
+
+[33mcommit 21bd46fd96ec4aa0971ecf4eb26c442be8b1b161[m
+Author: sen <sen20312123@gmail.com>
+Date:   Mon Jun 19 09:03:35 2023 +0700
+
+    demo cart
+
+[33mcommit fc14cbfbfcfe6b078f300c27b371ab6e6a2f1137[m
+Merge: fe77788 37cccdb
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 19 08:57:45 2023 +0700
+
+    Merge pull request #36 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit 37cccdbe441b43d584ba933251a1ee888cc18c4c[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 19 08:57:20 2023 +0700
+
+    view update
+
+[33mcommit aba8d8938f4de2337d26ea7bcee96bad18120d3e[m
+Merge: 97f7384 fe77788
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Mon Jun 19 08:51:38 2023 +0700
+
+    Merge remote-tracking branch 'origin/development' into phuoc_dev
+    
+    # Conflicts:
+    #       src/main/java/cg/dto/productImport/ProductImportDTO.java
+    #       src/main/java/cg/model/product/Product.java
+
+[33mcommit 8100971b609e74e691051e23a80a10a161e073d6[m
+Merge: df66591 fe77788
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 19 08:43:21 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit df66591e8545e38b8b968a5fd2e6b246fb6b35e4[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 19 08:42:55 2023 +0700
+
+    view update
+
+[33mcommit 97f738429379f090353837756ab84e357b399e6b[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Mon Jun 19 07:57:23 2023 +0700
+
+    update productResDTO
+
+[33mcommit 12dcbfadb0c34417feb779aa16f764b5cf1a1c6b[m
+Merge: 4675ed8 a223997
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 17 11:16:29 2023 +0700
+
+    Merge branch 'nhan_dev_1' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+
+[33mcommit 4675ed8959664da201b4a7615933373d4d584772[m
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 17 11:15:00 2023 +0700
+
+    cart
+
+[33mcommit 49e126be515f8ceff19962546683a73f8cde9913[m
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 17 11:13:29 2023 +0700
+
+    no message
+
+[33mcommit 551306f8b5fd6e496ddd23486283700bb4c2e866[m
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 17 11:12:04 2023 +0700
+
+    update
+
+[33mcommit a223997b2f0fefc4003ab2939f0eb1a0ca66ff70[m
+Author: vinhtran <vinhtranngoc35@gmail.com>
+Date:   Sat Jun 17 11:01:25 2023 +0700
+
+    css and apply select2 for update
+
+[33mcommit fe711ec87bbf37b684ba877cba0f673bf22f7096[m
+Merge: 3ed286b fe77788
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 17 10:11:31 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+
+[33mcommit 3ed286bb2f485b997c28eabbf82c9cd79acc7acf[m
+Merge: 8a170f3 999c5bf
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 17 10:11:16 2023 +0700
+
+    Merge branch 'nhan_dev_1' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+
+[33mcommit 8a170f3a919bbaefd390b5684638690dac808fdc[m
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 17 10:10:03 2023 +0700
+
+    crud done
+
+[33mcommit 999c5bf9c41063f8757cc2b3a2c058d7ff3c43a6[m
+Author: vinhtran <vinhtranngoc35@gmail.com>
+Date:   Sat Jun 17 09:57:10 2023 +0700
+
+    css select2
+
+[33mcommit fe77788885e832d0b39c26c693a56c03274fe354[m
+Merge: 0ffac7d 9952227
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 16 16:56:19 2023 +0700
+
+    Merge pull request #35 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit 995222741ca9ee63e8b6b336ac3f66de2f20460d[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 16 16:55:50 2023 +0700
+
+    update
+
+[33mcommit e42d94789d15225a9d67a05b9c45891c3cbfc071[m
+Merge: 6d96663 0ffac7d
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 16 16:53:22 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit 6d96663f9367477f2e2bf1018cb51f960164c3a2[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 16 16:53:01 2023 +0700
+
+    fix api create product
+
+[33mcommit 0ffac7d6757ccfcd8dc9434d8bab860505441c4a[m
+Merge: 24db4c3 f6bce58
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 16 16:52:00 2023 +0700
+
+    Merge pull request #34 from ginnguyen123/nhan_dev_1
+    
+    Nhan dev 1
+
+[33mcommit f6bce58de31e3315796a45f88747ff66d95293a2[m
+Merge: 6044771 a5d0ea7
+Author: sen <sen20312123@gmail.com>
+Date:   Fri Jun 16 16:51:21 2023 +0700
+
+    crud done
+
+[33mcommit 24db4c3e670e20ff87c69c74ea3ec64dc2c480ea[m
+Merge: a5d0ea7 bb37757
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 16 16:44:46 2023 +0700
+
+    Merge pull request #33 from ginnguyen123/phuoc_dev
+    
+    update api category fix mediaDTO
+
+[33mcommit bb37757babd604bfdf0e32f09e238b2169723859[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Fri Jun 16 16:37:56 2023 +0700
+
+    update api category fix mediaDTO
+
+[33mcommit 6044771410e052a014015de8548eba48050aab8c[m
+Author: sen <sen20312123@gmail.com>
+Date:   Fri Jun 16 16:29:43 2023 +0700
+
+    crud done
+
+[33mcommit a5d0ea76e079bbf6d987e3ed2bbd0cc4aec445da[m
+Merge: e6fda83 520191d
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 15 16:51:33 2023 +0700
+
+    Merge pull request #32 from ginnguyen123/nghia_dev
+    
+    update api page + view product list
+
+[33mcommit 520191d928d305514b8845cc5e76b0e1e1c45ead[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 15 16:50:07 2023 +0700
+
+    update api page + view product list
+
+[33mcommit e6fda8380ca97d419ae41500c0ec02bd2a89d5cd[m
+Merge: 369c709 cb7ca92
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 15 08:03:34 2023 +0700
+
+    Merge pull request #31 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit cb7ca926af12d7abc366a8bdeebd4f081249a2d0[m
+Merge: 106bca6 369c709
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 15 08:01:32 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit 106bca6d40c63da530ad5d78502257f71095b8d6[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 15 08:01:09 2023 +0700
+
+    sort product demo
+
+[33mcommit 369c709f5ab968b99073bfa5f703bdf9fe79db85[m
+Merge: 321d777 0cae54c
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 15 07:59:35 2023 +0700
+
+    Merge pull request #30 from ginnguyen123/phuoc_dev
+    
+    update 3 api category
+
+[33mcommit 0cae54c6d777dace8beda0c404e837f3ebc2db42[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Wed Jun 14 16:49:30 2023 +0700
+
+    update 3 api category
+
+[33mcommit 321d77700b40ce64cc5c8ffdbbc3173818e30ff8[m
+Merge: 99a6af4 ed6c8a4
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 14 16:24:38 2023 +0700
+
+    Merge pull request #29 from ginnguyen123/nghia_dev
+    
+    update api find product
+
+[33mcommit ed6c8a49830006e193f49cc5f820dc5a60072d38[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 14 16:24:08 2023 +0700
+
+    update api find product
+
+[33mcommit 99a6af46f9671ad387ea62453e4926cb5827703e[m
+Merge: 84f5466 35ece90
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 14 16:12:41 2023 +0700
+
+    Merge pull request #28 from ginnguyen123/nghia_dev
+    
+    update find product api
+
+[33mcommit 35ece902620d4b11397e863d7cdd18b375d13817[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 14 16:11:59 2023 +0700
+
+    update find product api
+
+[33mcommit 84f54662c95d4d706ed794b90210a8465588a100[m
+Merge: 3d93e9b 453f8b4
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 14 15:08:19 2023 +0700
+
+    Merge pull request #27 from ginnguyen123/phuoc_dev
+    
+    update api category child
+
+[33mcommit 453f8b46b647bff358ca72bba85e81ef6100d534[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Wed Jun 14 15:04:52 2023 +0700
+
+    update api category child
+
+[33mcommit 3d93e9b02202fa94a1a5f205af7d72849130878f[m
+Merge: 059ba34 88548ae
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 14 14:38:44 2023 +0700
+
+    Merge pull request #26 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit 88548aee99f063d74ef254a0e7765104606fba66[m
+Merge: 05fcbfc 059ba34
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 14 14:38:03 2023 +0700
+
+    update create category api
+
+[33mcommit 05fcbfcabba44dec36af92812b6d611579da41d0[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 14 10:45:07 2023 +0700
+
+    update layout script
+
+[33mcommit 059ba34418f89145f5cadb6feb17a3283d031693[m
+Merge: 0b705e0 3b63682
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 14 10:44:00 2023 +0700
+
+    Merge pull request #25 from ginnguyen123/phuoc_dev
+    
+    Api category để hiển thị menu [{cha, []}, {cha, []}].
+
+[33mcommit 3b636824ef26d3989bb65dd38d47c675205d7324[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Wed Jun 14 10:41:11 2023 +0700
+
+    Api category để hiển thị menu [{cha, []}, {cha, []}].
+
+[33mcommit fe5c85b900aeee668fb29b35ef195695df022aab[m
+Merge: 059a9f2 0b705e0
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 14 08:32:32 2023 +0700
+
+    update again
+
+[33mcommit 059a9f27c931f4d80c8ea7aac8759fb21750a8e9[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 14 08:26:36 2023 +0700
+
+    update create product
+
+[33mcommit 0b705e00073ad66118ba6abf9d3f79cf3afbb25b[m
+Merge: a9bcb60 eee004e
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 14 08:21:53 2023 +0700
+
+    Merge pull request #24 from ginnguyen123/nhan_dev_1
+    
+    Nhan dev 1
+
+[33mcommit eee004eb54a99a2b2a27f541b89b9608cbc97ff2[m
+Author: sen <sen20312123@gmail.com>
+Date:   Tue Jun 13 09:27:56 2023 +0700
+
+    done create and delete basic
+
+[33mcommit 594f567e1ac6cf581d11918bcddaa06d59007ab9[m
+Merge: ee5a6bd a9bcb60
+Author: sen <sen20312123@gmail.com>
+Date:   Sun Jun 11 00:53:36 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+    
+    # Conflicts:
+    #       src/main/java/cg/service/product/IProductImportService.java
+
+[33mcommit ee5a6bdfdbac3daef60452679bb4b15e62fd4d76[m
+Author: sen <sen20312123@gmail.com>
+Date:   Sun Jun 11 00:43:55 2023 +0700
+
+    demo getAllSize
+
+[33mcommit a9bcb604f64fb2c98c498a4b6a94749e11e699fb[m
+Merge: ca50760 530a9c7
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Sun Jun 11 00:31:40 2023 +0700
+
+    Merge pull request #23 from ginnguyen123/nghia_dev
+    
+    update view creat
+
+[33mcommit 530a9c789812c366154eb324e90af5138aa0de2c[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Sun Jun 11 00:30:42 2023 +0700
+
+    update view creat
+
+[33mcommit ca50760ff475095f8c34cf304997a8d37018af01[m
+Merge: e8af7b8 50e4604
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Sun Jun 11 00:25:05 2023 +0700
+
+    Merge pull request #22 from ginnguyen123/phuoc_dev
+    
+    API category
+
+[33mcommit 50e4604469c2120d852f052545d5fef017ec55d1[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Sat Jun 10 15:06:19 2023 +0700
+
+    API category
+
+[33mcommit f7d5e4f6948c9cf425beced3a14040da4b0d925d[m
+Author: sen <sen20312123@gmail.com>
+Date:   Sat Jun 10 11:51:32 2023 +0700
+
+    view create
+
+[33mcommit 15638dac0b1d979a9703131c696e246ffc00b9fa[m
+Merge: 285d60f e8af7b8
+Author: sen <sen20312123@gmail.com>
+Date:   Fri Jun 9 17:03:47 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+    
+    # Conflicts:
+    #       src/main/resources/templates/layout/script.html
+
+[33mcommit 285d60faf4d755f7894b85c4af0589804fb0d97e[m
+Author: sen <sen20312123@gmail.com>
+Date:   Fri Jun 9 13:50:45 2023 +0700
+
+    no message
+
+[33mcommit 707fa6fcd0af3ee97c1a55735677add8c4ca1be0[m
+Author: sen <sen20312123@gmail.com>
+Date:   Fri Jun 9 11:43:07 2023 +0700
+
+    detele, view list
+
+[33mcommit e8af7b8b0c8df29f8f7defeeb7e64003e405c3ba[m
+Merge: 6c9c4b2 e10fe2c
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 8 17:34:13 2023 +0700
+
+    Merge pull request #21 from ginnguyen123/nghia_dev
+    
+    update validate create product
+
+[33mcommit e10fe2ccfde623639d251bf86d12e0b6c2e1f4b2[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 8 17:33:31 2023 +0700
+
+    update validate create product
+
+[33mcommit 6c9c4b2fe52fda2415e3cef1e4c0e316ad0f9a50[m
+Merge: 36b168f 1db1bf0
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 8 17:32:36 2023 +0700
+
+    Merge pull request #20 from ginnguyen123/nhan_dev_1
+    
+    Nhan dev 1
+
+[33mcommit 36b168f9844fc5cc82c5d80a8dcb8e11bae719c0[m
+Merge: ed9c3e1 bd434a1
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 8 17:32:09 2023 +0700
+
+    Merge pull request #19 from ginnguyen123/phuoc_dev
+    
+    update API Category
+
+[33mcommit 1db1bf0d81646935d678d4939cdf3bbcad46d120[m
+Merge: 35b26df ffceae3
+Author: sen <sen20312123@gmail.com>
+Date:   Thu Jun 8 17:30:20 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+    
+    # Conflicts:
+    #       src/main/java/cg/dto/media/MediaDTO.java
+    #       src/main/java/cg/dto/product/ProductDTO.java
+    #       src/main/java/cg/model/product/Product.java
+
+[33mcommit bd434a11e9abd9fb5906132d501024a9b721b72e[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Thu Jun 8 17:24:34 2023 +0700
+
+    update API Category
+
+[33mcommit ed9c3e1d9eadcb1e94429d6d42d3a192893a3abd[m
+Merge: ffceae3 04e618a
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu Jun 8 10:26:14 2023 +0700
+
+    Merge pull request #18 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit 35b26dfd6ae174d4808ae5b03b2a8f6081f0ee41[m
+Author: sen <sen20312123@gmail.com>
+Date:   Thu Jun 8 08:19:40 2023 +0700
+
+    create
+
+[33mcommit 04e618a3422b0f7ac6a2af0a6baa049dbbccc5eb[m
+Merge: 9cd8ebe ffceae3
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 7 17:31:30 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit 9cd8ebecdc78e04adde25d14376b20ad85543b4d[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 7 17:30:58 2023 +0700
+
+    update discout, aler in appbase file
+
+[33mcommit ffceae3a1dde72193419cd9f91de654be63d59b1[m
+Merge: 9a67233 1f998c6
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 7 17:28:06 2023 +0700
+
+    Merge pull request #17 from ginnguyen123/phuoc_dev
+    
+    Phuoc dev
+
+[33mcommit 1f998c668b6b1b4ef22d5276f8e7d0754a7361c7[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Wed Jun 7 17:24:50 2023 +0700
+
+    update bill
+
+[33mcommit 4ecff1f662452f1c4f3d01d213edb9fd1028522a[m
+Merge: 517784f 9a67233
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Wed Jun 7 09:12:06 2023 +0700
+
+    Merge remote-tracking branch 'origin/development' into phuoc_dev
+
+[33mcommit 517784fe80157dd43f0d1977720c0cb0077e10cc[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Wed Jun 7 09:07:33 2023 +0700
+
+    change api
+
+[33mcommit 9a672333756b441f542e46da70e69c495d5c014d[m
+Merge: 86c0d94 b6d7123
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed Jun 7 08:55:09 2023 +0700
+
+    Merge pull request #16 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit b6d712330622f42320e967dd73395dde013c2987[m
+Merge: 1619228 86c0d94
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 7 08:53:55 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit 1619228ba68e00ab34a6850b60dfb102fb8555eb[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed Jun 7 08:53:46 2023 +0700
+
+    update Entity bill
+
+[33mcommit 86c0d943908acae60c960bdde66141512feda72c[m
+Merge: 101eed4 7b509e3
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue Jun 6 22:35:16 2023 +0700
+
+    Merge pull request #15 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit 7b509e3d91bf2cf476a388e49d6105d558158f79[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jun 6 22:34:22 2023 +0700
+
+    view create product
+
+[33mcommit c8062bef613d040ccf3b6eb31b355e1242bec94c[m
+Author: sen <sen20312123@gmail.com>
+Date:   Tue Jun 6 17:37:20 2023 +0700
+
+    create productImport : đang fix
+
+[33mcommit 26d1d24ce26acb7bf0f9b0db5d36d47968f477f7[m
+Merge: 7b11d54 101eed4
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jun 6 17:22:53 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit 7b11d54d14d079baab4dd542d10e6e6e7a44d3cb[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jun 6 17:22:31 2023 +0700
+
+    no message
+
+[33mcommit 02e70b1d2e587360d3916c49ec686d416b037058[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue Jun 6 17:22:00 2023 +0700
+
+    update view creat product
+
+[33mcommit 101eed4a0d3da328812b7902ee44774db0f4aa30[m
+Merge: 2859316 ad6d10a
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue Jun 6 17:20:04 2023 +0700
+
+    Merge pull request #14 from ginnguyen123/phuoc_dev
+    
+    update api brand, api product
+
+[33mcommit ad6d10a0a21e28f6d81098cda3ddf527753f62e4[m
+Author: chauphuoc <chauphuoc1996@gmail.com>
+Date:   Tue Jun 6 17:09:24 2023 +0700
+
+    update api brand, api product
+
+[33mcommit 7f2dfaad7c4cf115a79a060fcb4c3847a3744932[m
+Author: sen <sen20312123@gmail.com>
+Date:   Tue Jun 6 11:17:54 2023 +0700
+
+    create
+
+[33mcommit fa1589f7329bb85464132f960b9d71baf5da6afe[m
+Author: sen <sen20312123@gmail.com>
+Date:   Tue Jun 6 10:25:55 2023 +0700
+
+    create
+
+[33mcommit f0e50bf3a3b36ff31930cb9317e5605a47f60f53[m
+Merge: b481220 2859316
+Author: sen <sen20312123@gmail.com>
+Date:   Mon Jun 5 17:58:07 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+    
+    # Conflicts:
+    #       src/main/java/cg/dto/productImport/ProductImportCreDTO.java
+    #       src/main/java/cg/model/media/Media.java
+    #       src/main/java/cg/model/product/ProductImport.java
+
+[33mcommit b48122089964c5618a249993841486d2db0ad073[m
+Author: sen <sen20312123@gmail.com>
+Date:   Mon Jun 5 10:32:26 2023 +0700
+
+    5/6/2023
+
+[33mcommit 28593167f72e852f464e12027e99405d3eb8f68d[m[33m ([m[1;32mphuoc1_dev[m[33m, [m[1;32mdevelopment[m[33m)[m
+Merge: 16567e7 6ae8db1
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Mon Jun 5 00:04:36 2023 +0700
+
+    Merge pull request #13 from ginnguyen123/nghia_dev
+    
+    api product create
+
+[33mcommit 6ae8db1b8c3711242bd6c89833e3dcab6a758cf4[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Mon Jun 5 00:03:57 2023 +0700
+
+    api product create
+
+[33mcommit 16567e7db54fc8ff3c770687f19fe638409472ad[m
+Merge: 153540f 5d3d662
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 2 00:36:00 2023 +0700
+
+    Merge pull request #12 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit 5d3d6625a38b794519246e44c2ffc724cb799890[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 2 00:35:04 2023 +0700
+
+    update ProductImportService conflict
+
+[33mcommit 97782b06c1d1866a8bf66ca2d53f6f52972798e0[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 2 00:18:52 2023 +0700
+
+    update UploadUtils conflict
+
+[33mcommit 153540f9a80d39b2cc01d72c28b18bcced1ed459[m
+Merge: 843b469 afb570b
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri Jun 2 00:09:05 2023 +0700
+
+    Merge pull request #11 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit afb570b6372a8299e5a743a10df7a346852eccd2[m
+Merge: f0def39 843b469
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Fri Jun 2 00:07:49 2023 +0700
+
+    update
+
+[33mcommit f0def39ffd18114a2a0735489b4399fcc196287d[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 1 23:54:50 2023 +0700
+
+    brandapi, categoryapi
+
+[33mcommit 7b4479f6e73e0b487459fa1a74a8987a1aefa426[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Thu Jun 1 23:22:28 2023 +0700
+
+    api-category, api-brand
+
+[33mcommit 843b4696ed0e2431b9474ace965d17e65af1b678[m
+Merge: 439096b c475dcf
+Author: sen <sen20312123@gmail.com>
+Date:   Thu Jun 1 16:33:55 2023 +0700
+
+    Merge branch 'development' into nhan_dev_test_code
+
+[33mcommit 439096b0cf5ec3e49f41f521916b3abc9d265235[m
+Author: sen <sen20312123@gmail.com>
+Date:   Thu Jun 1 16:29:09 2023 +0700
+
+    create some dto class, config cloudinary, exception
+
+[33mcommit 8c1fb1788f878f25a6eaefbf27ee20f553aa3470[m
+Author: sen <sen20312123@gmail.com>
+Date:   Wed May 31 14:14:45 2023 +0700
+
+    no message
+
+[33mcommit c475dcf8876b65785b237bd0f4550d47f99f8c71[m
+Merge: 4829a79 110ec0e
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed May 31 13:56:22 2023 +0700
+
+    Merge pull request #9 from ginnguyen123/nhan_dev_1
+    
+    Nhan dev 1
+
+[33mcommit 110ec0e16587c424f6d97817d6eff382bc5d8ad3[m
+Author: sen <sen20312123@gmail.com>
+Date:   Wed May 31 13:44:26 2023 +0700
+
+    no message
+
+[33mcommit 3ee713fa2b2d6728b51ccad18cbfa32699fbc4f1[m
+Merge: 00d9462 4829a79
+Author: sen <sen20312123@gmail.com>
+Date:   Wed May 31 09:09:45 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+
+[33mcommit 4829a799bd1c0d86cf1b3e855233475c8f13feb0[m
+Merge: d4c8acf cd3eab1
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed May 31 09:07:09 2023 +0700
+
+    Merge pull request #8 from ginnguyen123/nghia_dev
+    
+    update 31-05
+
+[33mcommit cd3eab149d60943e5f9a7bd756c9263d3defb640[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed May 31 09:06:39 2023 +0700
+
+    update 31-05
+
+[33mcommit 00d9462e219a06fbd75828a0f3d1728b2ae56150[m
+Merge: 8008f3e d4c8acf
+Author: sen <sen20312123@gmail.com>
+Date:   Wed May 31 08:34:25 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nhan_dev_1
+
+[33mcommit 8008f3e642f95585c2c23755f5f64405c7f7fb1e[m
+Author: sen <sen20312123@gmail.com>
+Date:   Wed May 31 08:33:16 2023 +0700
+
+    no message
+
+[33mcommit 0e4c557d34d218d7b327e64cfcb601e349db1823[m
+Author: sen <sen20312123@gmail.com>
+Date:   Wed May 31 08:32:57 2023 +0700
+
+    no message
+
+[33mcommit d4c8acf802fb2acae49f86a7b1c0e72fb16eb0c7[m
+Merge: 8fbe8b5 92ce3c2
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Tue May 30 17:33:22 2023 +0700
+
+    Merge pull request #7 from ginnguyen123/nghia_dev
+    
+    model-product-ProductImport
+
+[33mcommit 92ce3c2b559f400de0f82780d74e49f509803d25[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Tue May 30 17:32:24 2023 +0700
+
+    model-product-ProductImport
+
+[33mcommit d07415a93e5aa548d22bea2a270ee1b71ac36883[m
+Merge: a28c27b 8fbe8b5
+Author: sen <sen20312123@gmail.com>
+Date:   Tue May 30 16:15:45 2023 +0700
+
+    view
+
+[33mcommit a28c27b76272e8b4a0e3cfca3b20b09446f33261[m
+Author: sen <sen20312123@gmail.com>
+Date:   Mon May 29 09:19:04 2023 +0700
+
+    view
+
+[33mcommit 8fbe8b5a06ba3fd567dc0615079cd19287e3190e[m
+Merge: ab92f8f 2d9f7f4
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Sat May 27 14:19:50 2023 +0700
+
+    Merge pull request #6 from ginnguyen123/nghia_dev
+    
+    basic view
+
+[33mcommit 2d9f7f4f113926fe049415adb9659e49ab8e1341[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Sat May 27 14:19:09 2023 +0700
+
+    basic view
+
+[33mcommit ab92f8f2804809ae755205a9b386dd70eb02accf[m
+Merge: fd90501 5b037bd
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Fri May 26 14:43:14 2023 +0700
+
+    Merge pull request #5 from ginnguyen123/nhan_dev_1
+    
+    model
+
+[33mcommit 5b037bdb6f95be83d6a50ecd541b054359e8dffd[m
+Author: sen <sen20312123@gmail.com>
+Date:   Fri May 26 08:12:49 2023 +0700
+
+    model
+
+[33mcommit fd905014114990241e5865bfad4be7e4ea0beaaa[m
+Merge: ae9f47f 7d7b99b
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Thu May 25 15:04:42 2023 +0700
+
+    Merge pull request #4 from ginnguyen123/nhan_dev_1
+    
+    view
+
+[33mcommit 7d7b99b01c07a48210bbdb6707ba494392475025[m
+Author: sen <sen20312123@gmail.com>
+Date:   Wed May 24 17:27:59 2023 +0700
+
+    view
+
+[33mcommit ae9f47f1648dc1d1bd68c8b9d3c910459c8e4912[m
+Merge: 6d60f97 f90e0c1
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed May 24 11:16:45 2023 +0700
+
+    Merge pull request #3 from ginnguyen123/nghia_dev
+    
+    Nghia dev
+
+[33mcommit f90e0c1718174a59f69dbbdef1afba714938677e[m
+Merge: 3abbf98 6d60f97
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed May 24 11:14:52 2023 +0700
+
+    Merge branch 'development' of https://github.com/ginnguyen123/project_final into nghia_dev
+
+[33mcommit 3abbf98fe13daa7795914413593a89adc9ec12d6[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed May 24 11:14:17 2023 +0700
+
+    delete
+
+[33mcommit e1904557140a2b274187690fe5692482bf52a91d[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed May 24 10:59:57 2023 +0700
+
+    24/05
+
+[33mcommit 6d60f973e273ad96046eab803b1f98b455ad1124[m
+Merge: ddc9fc6 0c601e5
+Author: ginnguyen123 <112856360+ginnguyen123@users.noreply.github.com>
+Date:   Wed May 24 10:29:59 2023 +0700
+
+    Merge pull request #1 from ginnguyen123/dung_dev
+    
+    dung_dev update
+
+[33mcommit 0c601e58bd9c5fa476fe15bc7fd6dbc29d0de034[m
+Author: dung1993 <crorstar1704@gmail.com>
+Date:   Wed May 24 10:24:50 2023 +0700
+
+    dung_dev update
+
+[33mcommit ddc9fc64d178048c21031e9ad2b74b13d10d971e[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: ginnguyen123 <nhuunghia95@gmail.com>
+Date:   Wed May 24 10:15:48 2023 +0700
+
+    first commit

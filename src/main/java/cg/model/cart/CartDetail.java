@@ -102,6 +102,7 @@ public class CartDetail extends BaseEntity {
 
     public CartDetailResDTO toCartDetailResDTO() {
         return new CartDetailResDTO()
+                .setId(id)
                 .setProductId(product.getId())
                 .setColor(color)
                 .setSize(size)

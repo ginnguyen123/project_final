@@ -1,7 +1,9 @@
 package cg.service.products;
 
 import cg.dto.product.*;
+import cg.dto.product.client.FilterRes;
 import cg.dto.product.client.ProductResClientDTO;
+import cg.dto.product.client.ProductSearchResClientDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
@@ -16,6 +18,7 @@ import cg.utils.AppConstant;
 import cg.utils.AppUtils;
 import cg.utils.ExistedInDb;
 import cg.utils.UploadUtils;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,6 +39,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ProductService implements IProductService {
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private ProductRepository productRepository;
@@ -51,6 +59,9 @@ public class ProductService implements IProductService {
 
     @Autowired
     private DiscountRepository discountRepository;
+
+    @Autowired
+    private ProductImportRepository productImportRepository;
 
     @Autowired
     private UploadUtils uploadUtils;
@@ -95,33 +106,129 @@ public class ProductService implements IProductService {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
         Page<Product> productPage = productRepository.findAllByCategoryToday(id, LocalDate.now(),pageable);
-        System.out.println(productPage);
         List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+
         return dtoList;
     }
 
     @Override
-    public List<ProductResClientDTO> findAllByCategoryFilter(Long id,Long min,Long max ,Pageable pageable) {
+    public ProductSearchResClientDTO findAllByKeyWordSearch(String keyword, Pageable pageable) {
+        ProductSearchResClientDTO searchResClient = new ProductSearchResClientDTO();
+        if (keyword.isEmpty())
+            return searchResClient;
+        LocalDate today = LocalDate.now();
+        String kw = "%" + keyword + "%";
+        Page<Product> idPage = productRepository.findAllBySearchFromClient(kw,today,keyword,pageable);
+        if (idPage.getContent().size() == 0)
+            return searchResClient;
+        System.out.println(idPage.getContent());
+        List<ProductResClientDTO> productResClientDTOS = idPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+        searchResClient.setProducts(productResClientDTOS);
+        searchResClient.setTotalPages(idPage.getTotalPages());
+        searchResClient.setTotalElements((int) idPage.getTotalElements());
+        searchResClient.setKeyword(keyword);
+        return searchResClient;
+    }
+
+    @Override
+    public List<ProductResClientDTO> findAllByCategoryFilter(Long id, FilterRes filter, Pageable pageable) {
         LocalDate localDate = LocalDate.now();
-        if (min == null )
-            min = 0l;
-
-        if (max == null)
-            max = 1000000000l;
-
-        if (min == 0 && max == 0)
-            max = 1000000000l;
+        List<List<Long>> minMaxPrices = filter.getMinMax();
+        List<String> colors = filter.getColors();
+        List<String> sizes = filter.getSizes();
+        Integer page = pageable.getPageNumber();
+        Integer pageSize = pageable.getPageSize();
+        String field = "";
+        String sortBy = "";
 
         Optional<Category> categoryOp = categoryRepository.findById(id);
         if (!categoryOp.isPresent()) {
             throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
         }
 
-        Page<Product> productPage = productRepository.findAllByCategoryFilter(id,localDate,min,max,pageable);
+        StringBuffer strBb = new StringBuffer();
 
-        List<ProductResClientDTO> dtoList = productPage.getContent().stream().map(i ->i.toProductResClientDTO()).collect(Collectors.toList());
-        System.out.println(dtoList);
-        return dtoList;
+        strBb.append("SELECT prod.id " +
+                "FROM products AS prod " +
+                "INNER JOIN product_import AS imp ON imp.product_id = prod.id " +
+                "LEFT JOIN category AS cate ON cate.id = prod.category_id " +
+                "LEFT JOIN discounts AS disc ON disc.id = prod.discount_id " +
+                "WHERE prod.deleted = 0 " +
+                "AND prod.category_id = :id " +
+                "AND imp.quantity > 0 " +
+                "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) ");
+
+        if (colors.size() != 0)
+            strBb.append("AND imp.color IN :colors ");
+        if(sizes.size() != 0)
+            strBb.append("AND imp.size IN :sizes ");
+
+        //check mảng 2 chiều [[min, max]] (mảng 2xn) để nối chuỗi vào câu query
+        if (minMaxPrices.size() != 0){
+            strBb.append(" AND (");
+            for (int i = 0; i < minMaxPrices.size(); i++){
+                strBb.append("prod.prices BETWEEN :min");
+                strBb.append(i);
+                strBb.append(" AND :max");
+                strBb.append(i);
+                strBb.append(" ");
+                if (i < minMaxPrices.size() - 1)
+                    strBb.append(" OR ");
+            }
+            strBb.append(" ) ");
+        }
+        strBb.append(" GROUP BY prod.id ");
+
+        if (pageable.getSort().isSorted()){
+            String strSort = pageable.getSort().toString();
+            pageable.getSort().ascending().toString();
+            field = strSort.split(":")[0];
+            sortBy = strSort.split(":")[1].trim();
+            strBb.append("ORDER BY prod.");
+            strBb.append(field);
+            strBb.append(" ");
+            strBb.append(sortBy);
+            strBb.append("  ");
+        }
+//        phân trang
+        strBb.append("LIMIT :page,:pageSizes ");
+
+        System.out.println("------------------------------------------------------");
+        System.out.println(strBb);
+
+        Query query = entityManager.createNativeQuery(strBb.toString());
+        query.setParameter("id", id);
+        query.setParameter("today", localDate);
+        query.setParameter("page", page);
+        query.setParameter("pageSizes", pageSize);
+
+        if (colors.size() != 0)
+            query.setParameter("colors",colors);
+        if (sizes.size() != 0)
+            query.setParameter("sizes", sizes);
+
+        if (minMaxPrices.size() != 0){
+            for (int i = 0; i < minMaxPrices.size(); i++){
+                Long min = minMaxPrices.get(i).get(0);
+                Long max = minMaxPrices.get(i).get(1);
+                String paraMin = "min" + i;
+                String paraMax = "max" + i;
+                query.setParameter(paraMin, min);
+                query.setParameter(paraMax, max);
+            }
+        }
+        List<Product> products = new ArrayList<>();
+        List<?> listQuery =  query.getResultList();
+        if(listQuery.size() == 0){
+            return new ArrayList<>();
+        }
+        for (int i = 0; i<listQuery.size(); i++){
+            Product product = productRepository.getById(Long.parseLong(String.valueOf(listQuery.get(i))));
+            products.add(product);
+        }
+        if (products.size() == 0)
+            return null;
+        return products.stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
     }
 
     @Override

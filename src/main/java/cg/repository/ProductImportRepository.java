@@ -1,5 +1,6 @@
 package cg.repository;
 
+import cg.dto.productImport.ProductImpListResDTO;
 import cg.dto.productImport.ProductImportDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.enums.EColor;
@@ -21,7 +22,6 @@ import java.util.Optional;
 public interface ProductImportRepository extends JpaRepository<ProductImport, Long> {
 
     List<ProductImport> findAllByProductId(Long productId);
-
 
     @Query("SELECT NEW cg.dto.productImport.ProductImportDTO (" +
             "pi.id, " +
@@ -57,7 +57,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
     List<ProductImportDTO> findAllByDeletedIsFalse();
 
     @Query("SELECT NEW cg.dto.productImport.ProductImportDTO (" +
-            "pi.id, " +
+            "pi.id, " + 
             "pi.size, " +
             "pi.color, " +
             "pi.code, " +
@@ -75,6 +75,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "AND pi.deleted = false"
     )
     Page<ProductImportDTO> pageableByKeywordAndDate( ProductImportRequest request, Pageable pageable);
+
     @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
         "pi.product.id, " +
         "pi.size, " +
@@ -145,5 +146,23 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
             "GROUP BY imp.size", nativeQuery = true)
     List<ESize> findAllSizeCategory(@Param("categoryId") Long id, @Param("today")LocalDate today);
+
+    @Query(value = "SELECT NEW cg.dto.productImport.ProductImpListResDTO(prodImp.id, prod.id, prodImp.size, " +
+            "prodImp.color, prodImp.price, prodImp.quantityExist, prodImp.selled, prodImp.productStatus, prod.title, prodImp.date_added) " +
+            "FROM ProductImport AS prodImp " +
+            "INNER JOIN Product AS prod ON prod = prodImp.product " +
+            "WHERE prod.deleted = FALSE AND prodImp.deleted = FALSE " +
+            "OR prod.title LIKE :search " +
+            "OR prod.category.name LIKE :search " +
+            "OR prod.code LIKE :search " +
+            "OR prod.brand.name LIKE :search " +
+            "OR prod.price = :search " +
+            "OR prodImp.price = :search " +
+            "OR prodImp.code LIKE :search " +
+            "OR prodImp.quantityExist = :search " +
+            "OR prodImp.quantity = :search " +
+            "OR prodImp.quantityExist = :search " +
+            "GROUP BY prodImp.id ")
+    Page<ProductImpListResDTO> findAllForDataGrid(@Param("search")String search ,Pageable pageable);
 
 }

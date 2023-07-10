@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface IProductImportService extends IGeneralService<ProductImport, Long> {
 
     ProductImportCreResDTO create(ProductImportCreReqDTO productImportCreReqDTO);
@@ -35,6 +34,7 @@ public interface IProductImportService extends IGeneralService<ProductImport, Lo
 
     List<ESize> getAllSizeByCategory(Long id);
 
-
     List<EColor> getAllColorByProductAndQuantity(Long productId);
+
+    Page<ProductImpListResDTO> getAllForDataGrid(String search,Pageable pageable);
 }

@@ -128,11 +128,11 @@ public class ProductImportService implements IProductImportService {
         productImport.setCode(code);
         productImport.setPrice(price);
         productImport.setQuantity(Long.valueOf(productImportCreReqDTO.getQuantity()));
+        productImport.setQuantityExist(Long.valueOf(productImportCreReqDTO.getQuantity())); // set lai so san pham nhap kho = sl con trong kho
         productImport.setProductStatus(status);
         productImport.setProduct(product);
-
+        productImport.setSelled(0l); // set sl da ban = 0
         return save(productImport).toProductImportCreResDTO();
-
 
     }
 
@@ -203,10 +203,15 @@ public class ProductImportService implements IProductImportService {
         return productImportRepository.findAllSizeCategory(id,today);
     }
 
-
-
     @Override
     public List<EColor> getAllColorByProductAndQuantity(Long productId) {
         return productImportRepository.getAllColorByProductAndQuantity(productId);
+    }
+
+    @Override
+    public Page<ProductImpListResDTO> getAllForDataGrid(String search, Pageable pageable) {
+        String keyword = "%" + search + "%";
+        Page<ProductImpListResDTO> productImps = productImportRepository.findAllForDataGrid(keyword, pageable);
+        return productImps;
     }
 }
