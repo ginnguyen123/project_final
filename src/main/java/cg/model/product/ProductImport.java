@@ -33,7 +33,6 @@ public class ProductImport extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ESize size;
 
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EColor color;

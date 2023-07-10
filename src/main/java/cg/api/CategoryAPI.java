@@ -64,7 +64,7 @@ public class CategoryAPI {
         return new ResponseEntity<>(categoryDTOS,HttpStatus.OK);
     }
 
-    @GetMapping("/get/{categoryId}")
+    @PostMapping ("/get/{categoryId}")
     public ResponseEntity<?> getCategoryById(@PathVariable Long categoryId) {
         if (categoryId == null){
             throw new DataInputException("Category does not exist");

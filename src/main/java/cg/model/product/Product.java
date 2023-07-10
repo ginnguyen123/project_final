@@ -1,14 +1,11 @@
 package cg.model.product;
 
-
-import cg.dto.category.CategoryChildDTO;
 import cg.dto.product.*;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.BaseEntity;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
-
 import cg.model.discount.Discount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,8 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import cg.model.media.Media;
 import lombok.experimental.Accessors;
-import org.thymeleaf.spring5.processor.SpringInputFileFieldTagProcessor;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -126,7 +121,7 @@ public class Product extends BaseEntity {
                 .setCategoryId(category.getId())
                 .setCategoryName(category.getName())
                 .setImages(productAvatarList.stream().map(item -> item.toMediaDTO()).collect(Collectors.toList()))
-                //xu ly truyen vao list ProductImportResDTO hoac thay doi voi mot class moi
+                .setDiscount(discount.getDiscount())
                 .setProductImportResDTOS(quantityProductImports)
 //                .setProductImportResDTOS(productImports.stream().map(item->item.toProductImportDTOWithSizeColor()).collect(Collectors.toList()))
                 ;
@@ -225,5 +220,6 @@ public class Product extends BaseEntity {
         }
         return clientDTO;
     }
+
 }
 

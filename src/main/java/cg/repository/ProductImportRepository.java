@@ -22,7 +22,6 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
 
     List<ProductImport> findAllByProductId(Long productId);
 
-
     @Query("SELECT NEW cg.dto.productImport.ProductImportDTO (" +
             "pi.id, " +
             "pi.size, " +
@@ -75,6 +74,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "AND pi.deleted = false"
     )
     Page<ProductImportDTO> pageableByKeywordAndDate( ProductImportRequest request, Pageable pageable);
+
     @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
         "pi.product.id, " +
         "pi.size, " +
