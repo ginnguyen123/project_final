@@ -28,7 +28,7 @@
     let price;
     let quantityMin;
     let quantityMax;
-    let size = +$('#size-page-imp').val();
+    let size = $('#size-page-imp').val();
     let dataByDataGrid = [];
     const URL = 'http://localhost:8086/api/product-import' ;
 
@@ -76,7 +76,7 @@
     page.loadData.getAllProductImportForDataGrid = () =>{
         return $.ajax({
             type: 'GET',
-            url: page.urls.getAllProductImportForDataGird,
+            url: page.urls.getAllProductImportForDataGird + `?size=${size}&sort=id,desc&page=${currentPageNumber}&keyword=${keyword}`,
         })
             .done((data)=>{
                 console.log('--------getAllProductImportForDataGrid---------');
@@ -92,6 +92,7 @@
 
                 let strPage = page.commands.renderPagination(currentPageNumber, totalElements, totalPages );
                 $('#paginationUl').empty().append(strPage);
+                addAllEvent();
             })
             .fail((error)=>{
                 console.log(error);
@@ -104,7 +105,7 @@
         keyword = page.elements.keyword.val();
         quantityMin = page.elements.myRangeMin.val();
         quantityMax = page.elements.myRangeMax.val();
-        size = +$('#size-page-imp').val();
+        size = $('#size-page-imp').val();
         let obj = {
             currentPageNumber: currentPageNumber,
             keyword:keyword,
@@ -130,7 +131,7 @@
                 console.log(data)
                 page.elements.tbodyTableImport.empty();
                 listProductImport = data.content;
-                size = +$('#size-page-imp').val();
+                size = $('#size-page-imp').val();
 
                 currentPageNumber = data.pageable.pageNumber
 
@@ -242,7 +243,7 @@
                 {
                     dataField: 'id',
                     dataType: 'number',
-                        visible: true,
+                        visible: false,
                 },
                 {
                     type: "buttons",
@@ -336,12 +337,15 @@
             fromDate =  page.elements.dateInput.val();
            toDate = page.elements.dateOutput.val();
             keyword = page.elements.keyword.val();
-            quantityMin = page.elements.myRangeMin.val();
-            quantityMax = page.elements.myRangeMax.val();
+            // quantityMin = page.elements.myRangeMin.val();
+            // quantityMax = page.elements.myRangeMax.val();
             currentPageNumber= pageNumber;
-            size = +$('#size-page-imp').val();
+            size = $('#size-page-imp').val();
+            page.loadData.getAllProductImportForDataGrid().then(()=>{
+                page.loadData.getAllProductImportByDataGrid();
+            });
 
-            page.loadData.getAllProductImport();
+            // page.loadData.getAllProductImport();
         })
     }
 
@@ -613,7 +617,10 @@
 
         $('#size-page-imp').on('change', function (){
             size = $('#size-page-imp').val();
-            page.loadData.getAllProductImport();
+            page.loadData.getAllProductImportForDataGrid().then(()=>{
+                page.loadData.getAllProductImportByDataGrid();
+            });
+            // page.loadData.getAllProductImport();
         })
 
         // page.elements.btnSearch.on("click", function () {
