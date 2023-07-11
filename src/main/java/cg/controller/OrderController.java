@@ -1,7 +1,9 @@
 package cg.controller;
 
+import cg.dto.cart.CartCreResDTO;
 import cg.dto.cart.CartDTO;
 import cg.dto.cart.CartUpReqDTO;
+import cg.dto.cart.CartUpResDTO;
 import cg.dto.cartDetail.CartDetailDTO;
 import cg.dto.cartDetail.CartDetailUpReqDTO;
 import cg.dto.product.ProductDTO;
@@ -12,6 +14,7 @@ import cg.model.enums.ESize;
 import cg.model.product.Product;
 import cg.repository.CartDetailRepository;
 import cg.service.cart.ICartService;
+import cg.service.cartDetail.ICartDetailService;
 import cg.service.products.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +31,9 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/carts")
 public class OrderController {
+
+    @Autowired
+    private ICartDetailService cartDetailService;
 
     @Autowired
     private IProductService productService;
@@ -51,8 +57,9 @@ public class OrderController {
             return "errors/pages-404";
         }
         Cart cart = cartOptional.get();
-        System.out.print(cart);
-        CartUpReqDTO cartDTO = cart.toCartUpReqDTO();
+        List<CartDetail> cartDetail = cartDetailService.findAllByCart_IdAndDeletedIsFalse(cart.getId());
+        cart.setCartDetails(cartDetail);
+        CartCreResDTO cartDTO = cart.toCartCreResDTO();
 
         obj.put("cart", cartDTO);
         model.addAttribute("data", obj);

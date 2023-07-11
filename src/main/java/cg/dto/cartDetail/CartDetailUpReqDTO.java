@@ -25,9 +25,9 @@ public class CartDetailUpReqDTO implements Validator {
     private Long quantity;
     private ESize size;
     private EColor color;
-    private ECartStatus status;
     private String productTitle;
     private BigDecimal productPrice;
+    private BigDecimal totalAmountDetail;
 
 
     public CartDetail toCartDetail() {

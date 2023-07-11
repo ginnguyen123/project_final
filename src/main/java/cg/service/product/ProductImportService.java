@@ -1,6 +1,5 @@
 package cg.service.product;
 
-import cg.dto.product.ProductDTO;
 import cg.dto.productImport.*;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
@@ -27,7 +26,6 @@ import java.math.BigDecimal;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -130,11 +128,11 @@ public class ProductImportService implements IProductImportService {
         productImport.setCode(code);
         productImport.setPrice(price);
         productImport.setQuantity(Long.valueOf(productImportCreReqDTO.getQuantity()));
+        productImport.setQuantityExist(Long.valueOf(productImportCreReqDTO.getQuantity())); // set lai so san pham nhap kho = sl con trong kho
         productImport.setProductStatus(status);
         productImport.setProduct(product);
-
+        productImport.setSelled(0l); // set sl da ban = 0
         return save(productImport).toProductImportCreResDTO();
-
 
     }
 
@@ -203,5 +201,17 @@ public class ProductImportService implements IProductImportService {
         }
         LocalDate today = LocalDate.now();
         return productImportRepository.findAllSizeCategory(id,today);
+    }
+
+    @Override
+    public List<EColor> getAllColorByProductAndQuantity(Long productId) {
+        return productImportRepository.getAllColorByProductAndQuantity(productId);
+    }
+
+    @Override
+    public Page<ProductImpListResDTO> getAllForDataGrid(String search, Pageable pageable) {
+        String keyword = "%" + search + "%";
+        Page<ProductImpListResDTO> productImps = productImportRepository.findAllForDataGrid(keyword, pageable);
+        return productImps;
     }
 }

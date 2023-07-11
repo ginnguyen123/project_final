@@ -1,10 +1,10 @@
 package cg.repository;
 
+import cg.dto.productImport.ProductImpListResDTO;
 import cg.dto.productImport.ProductImportDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
-import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import cg.utils.ProductImportRequest;
 import org.springframework.data.domain.Page;
@@ -86,6 +86,45 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
         "GROUP BY pi.product.id, pi.size, pi.color, pi.productStatus")
         List<ProductImportResDTO> findQuantityProductImportBySizeAndColor(@Param("productId") Long productId);
 
+//    @Query(value = "SELECT p.product_id, p.size, p.color, SUM(p.quantity) " +
+//            "FROM product_import p " +
+//            "GROUP BY p.product_id, p.size, p.color", nativeQuery = true)
+//    @Query(value = "SELECT NEW cg.dto.productImport.ProductImportDTO(pi.) " +
+//            "FROM product_import pi",nativeQuery = true)
+
+// Tao ra 1 ProductImport DTO moi voi size, color ,... ENum => hung gia tri tu productimport
+//        @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
+//            "pi.product.id, " +
+//            "pi.size, " +
+//            "pi.color, " +
+//            "pi.productStatus, " +
+//            "SUM(pi.quantity)) " +
+//            "FROM ProductImport AS pi where pi.product.id = :productId " +
+//            "GROUP BY pi.product.id, pi.size, pi.color, pi.productStatus")
+//            List<ProductImportResDTO> findQuantityProductImportBySizeAndColor(@Param("productId") Long productId);
+
+    @Query(value = "SELECT SUM(pi.quantity) " +
+            "FROM product_import AS pi " +
+            "where pi.product_id = :productId " +
+            "AND pi.color = :color " +
+            "AND pi.size = :size " +
+            "AND pi.deleted = FALSE " +
+            "GROUP BY pi.product_id, pi.size, pi.color",nativeQuery = true)
+    Long checkQuantityProductImportBySizeAndColor(@Param("productId") Long productId,
+                                                                       @Param("color")String color,
+                                                                      @Param("size")String size);
+
+    @Query(value = "SELECT pi.color  FROM product_import AS pi  WHERE pi.product_id = :productId AND pi.quantity>0 AND pi.deleted = 0 GROUP BY pi.color", nativeQuery = true)
+    List<EColor> getAllColorByProductAndQuantity(@Param("productId") Long productId);
+
+    @Query("SELECT SUM(pi.quantity) " +
+            "FROM ProductImport AS pi " +
+            "where pi.product.id = :productId " +
+            "AND pi.deleted = FALSE " +
+            "AND pi.quantity > 0 " +
+            "GROUP BY pi.product.id")
+    Long checkQuantityProductImport(@Param("productId") Long productId);
+
     @Query(value = "SELECT imp.color FROM product_import AS imp " +
             "INNER JOIN products AS prod " +
             "LEFT JOIN discounts AS disc ON prod.discount_id = disc.id " +
@@ -107,4 +146,23 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
             "GROUP BY imp.size", nativeQuery = true)
     List<ESize> findAllSizeCategory(@Param("categoryId") Long id, @Param("today")LocalDate today);
+
+    @Query(value = "SELECT NEW cg.dto.productImport.ProductImpListResDTO(prodImp.id, prod.id, prodImp.size, " +
+            "prodImp.color, prodImp.price, prodImp.quantity,prodImp.quantityExist, prodImp.selled, prodImp.productStatus, prod.title, prodImp.date_added) " +
+            "FROM ProductImport AS prodImp " +
+            "INNER JOIN Product AS prod ON prod = prodImp.product " +
+            "WHERE prod.deleted = FALSE AND prodImp.deleted = FALSE " +
+            "AND (prod.title LIKE :search " +
+            "OR prod.category.name LIKE :search " +
+            "OR prod.code LIKE :search " +
+            "OR prod.brand.name LIKE :search " +
+            "OR prod.price = :search " +
+            "OR prodImp.price = :search " +
+            "OR prodImp.code LIKE :search " +
+            "OR prodImp.quantityExist = :search " +
+            "OR prodImp.quantity = :search " +
+            "OR prodImp.quantityExist = :search) " +
+            "GROUP BY prodImp.id ")
+    Page<ProductImpListResDTO> findAllForDataGrid(@Param("search")String search ,Pageable pageable);
+
 }

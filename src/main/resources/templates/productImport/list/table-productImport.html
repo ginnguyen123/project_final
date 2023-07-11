@@ -4,6 +4,8 @@
 <head>
     <title>Danh sách sản phẩm</title>
     <th:block th:replace="layout/head :: head"/>
+
+
     <style>
         .btn-sort{
             display: flex;
@@ -70,7 +72,7 @@
         <div class="col-md-12">
             <div class="tile">
                 <div class="tile-body">
-                    <div class="row element-button">
+                    <div class="row element-button"  id="formSearch">
                             <div class="col-sm-2 d-flex align-items-center">
                                 <div class="col-12 d-flex justify-content-start">
                                     <a class="btn btn-add btn-sm" href="/product-import/create" id="add"
@@ -79,105 +81,46 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-end col-sm-10">
-                                <div class="input-group justify-content-end" style="padding: 3px 0px;">
-                                    <input type="text" id="keyword" class="form-control-sm" placeholder="Search..."/>
-                                    <button class="btn btn-primary btn-sm" style="margin-bottom: 0"  type="button" id="btnSearch">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
-                                <div class="ms-2 me-2 d-flex align-items-center">
-                                    <a class="btn btn-secondary btn-sm" id="delete" style="margin-bottom: 0; padding: 5.5px 9px;" title="Xóa">
-                                        <i class="fas fa-trash-alt me-2"></i>Xóa </a>
-                                </div>
 
-                            </div>
-                            <div class=" row" id="formSearch">
-                                <div class="col-sm-4 d-flex">
-                                    <div class="col-sm-2">
-                                        <span>Từ ngày</span>
-                                        <input id="myInput" type="date" placeholder="Search.." class="search">
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <span>Đến ngày</span>
-                                        <input id="myOutput" type="date" placeholder="Search.." class="search">
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-
-                                </div>
-
-                            </div>
-
+                            <div class=" row">
                     </div>
-                    <table class="table table-hover table-bordered" id="tbProductImport">
-                        <thead>
-                        <tr>
-                            <th><input type="checkbox" id="all-delete"></th>
-                            <th>Mã</th>
-                            <th>Kích cỡ</th>
-                            <th>Màu sắc</th>
-                            <th>
-                                <div class="d-flex me">
-                                    <div class="btn-sort me-2">
-                                        <div id="asc-code" class="up-down-sort">
-                                            <a class="up-button">
-                                                <i class="fa-solid fa-caret-up"></i>
-                                            </a>
-                                        </div>
-
-                                        <div id="desc-code" class="up-down-sort">
-                                            <a class="down-button">
-                                                <i class="fa-solid fa-caret-down"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <span>Giá</span>
-                                </div>
-                            </th>
-                            <th>Số lượng</th>
-                            <th>Tình trạng</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Ngày nhập</th>
-                            <th>Tính năng</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-<!--                        paginationUl-->
-                    </table>
+<!--                    <div id="tbProductImport">-->
+<!--                    </div>-->
+                        <div id="gridContainer">
+                        </div>
                 </div>
-                <nav aria-label="Page navigation example d-flex">
-                    <div class="d-flex justify-content-end">
-                        <span>Size:</span>
-                        <div class="ms-2 me-3">
-                            <select id="size-page-imp" class="form-select form-select-sm">
-                                <option>10</option>
-                                <option>20</option>
-                                <option>50</option>
-                                <option>100</option>
-                            </select>
+
+                    <nav aria-label="Page navigation example d-flex">
+                        <div class="d-flex justify-content-end">
+                            <span>Size:</span>
+                            <div class="ms-2 me-3">
+                                <select id="size-page-imp" class="form-select form-select-sm">
+                                    <option>10</option>
+                                    <option>20</option>
+                                    <option>50</option>
+                                    <option>100</option>
+                                </select>
+                            </div>
+                            <div>
+                                <ul id="paginationUl" class="pagination">
+                                    <!--                  <li id="page-back" class="page-item">-->
+                                    <!--                    <a class="page-link"aria-label="Previous">-->
+                                    <!--                      <span aria-hidden="true">&laquo;</span>-->
+                                    <!--                    </a>-->
+                                    <!--                  </li>-->
+                                    <!--                  <li class="page-item"><a class="page-link">1</a></li>-->
+                                    <!--                  <li class="page-item"><a class="page-link">2</a></li>-->
+                                    <!--                  <li class="page-item"><a class="page-link">3</a></li>-->
+                                    <!--                  <li id="page-next" class="page-item">-->
+                                    <!--                    <a class="page-link" aria-label="Next">-->
+                                    <!--                      <span aria-hidden="true">&raquo;</span>-->
+                                    <!--                    </a>-->
+<!--                                                      </li>-->
+                                </ul>
+                            </div>
                         </div>
-                        <div>
-                            <ul id="paginationUl" class="pagination">
-                                <!--                  <li id="page-back" class="page-item">-->
-                                <!--                    <a class="page-link"aria-label="Previous">-->
-                                <!--                      <span aria-hidden="true">&laquo;</span>-->
-                                <!--                    </a>-->
-                                <!--                  </li>-->
-                                <!--                  <li class="page-item"><a class="page-link">1</a></li>-->
-                                <!--                  <li class="page-item"><a class="page-link">2</a></li>-->
-                                <!--                  <li class="page-item"><a class="page-link">3</a></li>-->
-                                <!--                  <li id="page-next" class="page-item">-->
-                                <!--                    <a class="page-link" aria-label="Next">-->
-                                <!--                      <span aria-hidden="true">&raquo;</span>-->
-                                <!--                    </a>-->
-                                <!--                  </li>-->
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
+                    </nav>
+            </div>
             </div>
         </div>
     </div>
@@ -185,6 +128,7 @@
 </main>
 
 <!-- javascripts for application to work-->
+
 <th:block th:replace="layout/script :: script"/>
 <th:block th:replace="productImport/list/productImport :: productImport"/>
 

@@ -19,7 +19,7 @@ public interface ICartService extends IGeneralService<Cart,Long> {
     BigDecimal getTotalAmountCart(Cart cart);
     Page<CartListResponse> pageableByKeyword(CartRequest request, Pageable pageable);
 
-    void create(CartCreReqDTO cartCreReqDTO);
+    Cart create(CartCreReqDTO cartCreReqDTO);
 
     Optional<CartDTO> getCartDTOByIdDeletedIsFalse(Long id);
 

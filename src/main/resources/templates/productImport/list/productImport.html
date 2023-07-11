@@ -5,6 +5,7 @@
     const page = {
         urls:{
             getAllProductImport : AppBase.API_PRODUCT_IMPORT,
+            getAllProductImportForDataGird: AppBase.API_PRODUCT_IMPORT + '/data-grid',
             updateProductImport : AppBase.API_PRODUCT_IMPORT,
             getAllProductImportPageSearch : AppBase.API_PRODUCT_IMPORT + '/search'
         },
@@ -27,8 +28,41 @@
     let price;
     let quantityMin;
     let quantityMax;
-    let size = +$('#size-page-imp').val();
+    let size = $('#size-page-imp').val();
+    let dataByDataGrid = [];
+    const URL = 'http://localhost:8086/api/product-import' ;
 
+    let collapsed = false;
+    const discountCellTemplate = function (container, options) {
+        $('<div/>').dxBullet({
+            onIncidentOccurred: null,
+            size: {
+                width: 150,
+                height: 35,
+            },
+            margin: {
+                top: 5,
+                bottom: 0,
+                left: 5,
+            },
+            showTarget: false,
+            showZeroLevel: true,
+            value: options.value * 100,
+            startScaleValue: 0,
+            endScaleValue: 100,
+            tooltip: {
+                enabled: true,
+                font: {
+                    size: 18,
+                },
+                paddingTopBottom: 2,
+                customizeTooltip() {
+                    return { text: options.text };
+                },
+                zIndex: 5,
+            },
+        }).appendTo(container);
+    };
 
     page.elements.tbodyTableImport = $('#tbProductImport tbody');
     page.elements.formSearch = $('#formSearch');
@@ -39,13 +73,39 @@
     page.elements.myRangeMin = $("#myRangeMin")
     page.elements.myRangeMax = $("#myRangeMax")
 
+    page.loadData.getAllProductImportForDataGrid = () =>{
+        return $.ajax({
+            type: 'GET',
+            url: page.urls.getAllProductImportForDataGird + `?size=${size}&sort=id,desc&page=${currentPageNumber}&keyword=${keyword}`,
+        })
+            .done((data)=>{
+                console.log('--------getAllProductImportForDataGrid---------');
+                console.log(data)
+                dataByDataGrid = data.content;
+                size = +$('#size-page-imp').val();
+
+                currentPageNumber = data.pageable.pageNumber
+
+                totalPages = data.totalPages;
+
+                totalElements = data.totalElements;
+
+                let strPage = page.commands.renderPagination(currentPageNumber, totalElements, totalPages );
+                $('#paginationUl').empty().append(strPage);
+                addAllEvent();
+            })
+            .fail((error)=>{
+                console.log(error);
+            })
+    }
+
     page.loadData.getAllProductImport = () =>{
         fromDate =  page.elements.dateInput.val();
         toDate = page.elements.dateOutput.val();
         keyword = page.elements.keyword.val();
         quantityMin = page.elements.myRangeMin.val();
         quantityMax = page.elements.myRangeMax.val();
-        size = +$('#size-page-imp').val();
+        size = $('#size-page-imp').val();
         let obj = {
             currentPageNumber: currentPageNumber,
             keyword:keyword,
@@ -56,7 +116,7 @@
         }
         console.log('obj'+obj)
 
-        $.ajax({
+        return $.ajax({
             type: 'POST',
             headers: {
                 'accept': 'application/json',
@@ -71,7 +131,7 @@
                 console.log(data)
                 page.elements.tbodyTableImport.empty();
                 listProductImport = data.content;
-                size = +$('#size-page-imp').val();
+                size = $('#size-page-imp').val();
 
                 currentPageNumber = data.pageable.pageNumber
 
@@ -97,18 +157,195 @@
 
     }
 
+    page.loadData.getAllProductImportByDataGrid = () =>{
+        $('#gridContainer').dxDataGrid({
+            dataSource: dataByDataGrid,
+            keyExpr: 'id',
+            allowColumnReordering: true,
+            showBorders: true,
+            grouping: {
+                autoExpandAll: true,
+            },
+            searchPanel: {
+                visible: true,
+            },
+            // paging: {
+            //     pageSize: 10,
+            // },
+            // pager: {
+            //     visible: true,
+            //     allowedPageSizes: [5, 10, 50,100],
+            //     showPageSizeSelector: true,
+            //     showInfo: true,
+            //     showNavigationButtons: true,
+            // },
+            remoteOperations: false,
+            groupPanel: {
+                visible: true,
+            },
+            // editing: {
+            //     mode: 'popup',
+            //     allowUpdating: true,
+            //     allowAdding: true,
+            //     // allowDeleting: true,
+            // },
+
+            rowAlternationEnabled: true,
+            columns: [
+                {
+                    dataField: 'title',
+                    caption: 'Sản phẩm',
+                    groupIndex: 0,
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'size',
+                    caption: 'Kích cỡ',
+                    dataType: 'string',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'color',
+                    caption: 'Màu',
+                    dataType: 'string',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'prices',
+                    caption: 'Giá',
+                    dataType: 'number',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'quantities',
+                    caption: 'Số lượng nhập',
+                    dataType: 'number',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'quantitiesExist',
+                    caption: 'Số lượng còn',
+                    dataType: 'number',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'selled',
+                    caption: 'Đã bán',
+                    dataType: 'number',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'dateAdded',
+                    caption: 'Ngày nhập kho',
+                    dataType: 'string',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'id',
+                    dataType: 'number',
+                        visible: false,
+                },
+                {
+                    type: "buttons",
+                    buttons: ["edit", {
+                        text: "Edit",
+                        // hint: "My Command",
+                        onClick: function (e) {
+                            console.log('-------------------')
+                            console.log(e)
+                            let idProductImp = e.row.data.id;
+                            page.loadData.findProductById(idProductImp).then((productImport) => {
+                                currentId = productImport.id;
+                                console.log(productImport)
+
+                                page.dialogs.elements.priceUp.val(productImport.price);
+                                page.dialogs.elements.quantityUp.val(productImport.quantity);
+                                page.dialogs.elements.sizeUp.val(productImport.size);
+                                page.dialogs.elements.colorUp.val(productImport.color);
+                                page.dialogs.elements.selectProduct.val(productImport.product.id);
+                                page.dialogs.elements.dateAdded.val(productImport.date_added);
+                                page.dialogs.elements.demoUp.text(productImport.quantity);
+
+                                page.dialogs.elements.modalUpdate.modal("show");
+                            })
+                                .catch((error) => {
+                                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_404);
+                                });
+                        }
+                    }]
+                }
+            ],
+
+
+            // onSaving(e) {
+            //     const change = e.changes[0];
+            //     console.log(change);
+            //
+            //     if (change) {
+            //         e.cancel = true;
+            //         // loadPanel.show();
+            //         e.promise = saveChange(URL, change)
+            //             // .always(() => { loadPanel.hide(); })
+            //             .then((data) => {
+            //                 console.log(data);
+            //                 // let orders = e.component.option('dataSource');
+            //
+            //                 if (change.type === 'update') {
+            //                     change.dataByDataGrid = data;
+            //                 }
+            //                 if (change.type === 'insert') {
+            //                     change.dataByDataGrid = data;
+            //                 }
+            //                 // products = DevExpress.data.applyChanges(orders, [change], { keyExpr: 'id' });
+            //             });
+            //     }
+            // },
+        },).dxDataGrid('instance');
+
+        function saveChange(url, change) {
+            switch (change.type) {
+                case 'update':
+                    return sendRequest(`${url}/${change.key}`, 'PATCH', { key: change.key, values: JSON.stringify(change.data) });
+                // case 'update':
+                //     return ;
+                default:
+                    return null;
+            }
+        }
+
+        function sendRequest(url, method, dataByDataGrid) {
+            const d = $.Deferred();
+
+            $.ajax(url, {
+                method,
+                dataByDataGrid,
+                cache: false,
+                xhrFields: { withCredentials: true },
+            }).then((result) => {
+                d.resolve(method === 'PATCH' ? result.dataByDataGrid : result);
+            }, (xhr) => {
+                d.reject(xhr.responseJSON ? xhr.responseJSON.Message : xhr.statusText);
+            });
+
+            return d.promise();
+        }
+    }
+
     page.commands.addEventChangePage = () => {
         $('.page-link').on('click', function () {
             let pageNumber = $(this).data('page');
             fromDate =  page.elements.dateInput.val();
            toDate = page.elements.dateOutput.val();
             keyword = page.elements.keyword.val();
-            quantityMin = page.elements.myRangeMin.val();
-            quantityMax = page.elements.myRangeMax.val();
+            // quantityMin = page.elements.myRangeMin.val();
+            // quantityMax = page.elements.myRangeMax.val();
             currentPageNumber= pageNumber;
-            size = +$('#size-page-imp').val();
+            size = $('#size-page-imp').val();
+            page.loadData.getAllProductImportForDataGrid().then(()=>{
+                page.loadData.getAllProductImportByDataGrid();
+            });
 
-            page.loadData.getAllProductImport();
+            // page.loadData.getAllProductImport();
         })
     }
 
@@ -174,7 +411,6 @@
 
         return str;
     }
-
     function addEventDeleteClick() {
         $(".delete").on('click', function () {
             let productId = $(this).data('id');
@@ -243,7 +479,7 @@
 
     page.dialogs.elements.modalUpdate = $('#ModalUP');
 
-    page.dialogs.commands.doUpdateImport = () => {
+    page.dialogs.commands.doUpdateImport = () =>    {
         let size = page.dialogs.elements.sizeUp.find(':selected').val().trim();
         let color = page.dialogs.elements.colorUp.find(':selected').val().trim();
         let date_added = page.dialogs.elements.dateAdded.val().trim();
@@ -339,7 +575,6 @@
         page.commands.addEventChangePage();
     }
 
-
     page.dialogs.elements.formUpdateImport.validate({
         rules: {
             priceUp: {
@@ -382,8 +617,10 @@
 
         $('#size-page-imp').on('change', function (){
             size = $('#size-page-imp').val();
-            page.loadData.getAllProductImport();
-
+            page.loadData.getAllProductImportForDataGrid().then(()=>{
+                page.loadData.getAllProductImportByDataGrid();
+            });
+            // page.loadData.getAllProductImport();
         })
 
         // page.elements.btnSearch.on("click", function () {
@@ -395,7 +632,10 @@
     }
 
     page.commands.loadData = () =>{
-        page.loadData.getAllProductImport();
+        page.loadData.getAllProductImportForDataGrid().then(()=>{
+            page.loadData.getAllProductImportByDataGrid();
+        });
+
 
 
     };
@@ -403,6 +643,7 @@
         page.commands.loadData();
         page.initializeControlEvent();
     })
+
 </script>
 
 </th:block>

@@ -8,11 +8,12 @@ import cg.service.IGeneralService;
 import cg.utils.ProductImportRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 
 public interface IProductImportService extends IGeneralService<ProductImport, Long> {
 
@@ -33,4 +34,7 @@ public interface IProductImportService extends IGeneralService<ProductImport, Lo
 
     List<ESize> getAllSizeByCategory(Long id);
 
+    List<EColor> getAllColorByProductAndQuantity(Long productId);
+
+    Page<ProductImpListResDTO> getAllForDataGrid(String search,Pageable pageable);
 }
