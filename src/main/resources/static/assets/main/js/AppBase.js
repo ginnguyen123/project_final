@@ -285,7 +285,7 @@ class AppBase{
                         </tr>`
     }
 
-    static renderCart(item){
+    static renderCart(item,i){
         return`   <tr id="tr_${item.id}">
                     <td> <input type="checkbox" id="delete_${item.id}"> </td>
                     <td>${item.id}</td>
@@ -296,7 +296,7 @@ class AppBase{
             currency: 'VND'
         }).format(item.total)}</td>
                     <td>${item.address}</td>
-                    <td><span class="btn-add btn-sm">${item.status}</span></td>
+                    <td><span class="btn-add btn-sm status${item.id} " data-id="${i}"  >${item.status}</span></td>
                     
                     <td><button class="btn btn-trash btn-sm delete" type="button"
                                 title="Xóa" data-id="${item.id}"><i class="fas fa-trash-alt"></i>
@@ -307,12 +307,20 @@ class AppBase{
                   </tr>`
     }
     static renderCartDetail(item){
+
+
         return`   <tr id="tr_${item.id}">
                     <td> <input type="checkbox" id="delete_${item.id}"> </td>
-                    <td>${item.id}</td>
-                    <td>${item.productTitle}</td>
-                    <td>${item.color}</td>
-                    <td>${item.size}</td>
+                    <td>
+                     <select class="form-control-add productName"  id="${item.id}" name="productName">
+                                
+                      </select></td>
+                    <td> <select class="form-control-add color" data-id="${item.color}" id="${item.color}${item.id}" name="color">
+                                
+                      </select></td>
+                    <td> <select class="form-control-add size" data-id="${item.size}" id="${item.size}${item.id}" name="size">
+                                
+                      </select></td>
                     <td>${new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
@@ -321,16 +329,13 @@ class AppBase{
                     <td>${new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
-        }).format(item.totalAmount)}</td>
-                    <td><span class="btn-add btn-sm">${item.status}</span></td>
-                    
-                    <td><button class="btn btn-trash btn-sm delete" type="button"
-                                title="Xóa" data-id="${item.id}"><i class="fas fa-trash-alt"></i>
+        }).format(item.totalAmountDetail)}</td>
+                    <td><button class="btn btn-trash btn-sm delete " type="button"
+                                title="Xóa"  data-id="${item.id}"><i class="fas fa-trash-alt"></i>
                     </button>
-                      <button class="btn btn-edit btn-sm edit" type="button"
-                              title="Sửa" data-id="${item.id}"><i class="fa fa-edit"></i></button>
                     </td>
-                  </tr>`
+                  </tr>
+                `
     }
 
 
@@ -424,15 +429,16 @@ class Cart{
 }
 
 class CartDetail{
-    constructor(id,productsName,color,size,price,quantity,totalAmount,status) {
+    constructor(id,productsName,color,size,price,quantity,totalAmountDetail,status) {
         this.id = id;
         this.productsName = productsName;
         this.color = color;
         this.size = size;
         this.price = price;
         this.quantity = quantity;
-        this.totalAmount = totalAmount;
+        this.totalAmountDetail = totalAmountDetail;
         this.status = status;
     }
 }
+
 

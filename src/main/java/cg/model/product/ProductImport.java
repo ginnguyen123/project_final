@@ -44,7 +44,13 @@ public class ProductImport extends BaseEntity {
     private BigDecimal price;
 
     @Column(nullable = false)
-    private Long quantity;
+    private Long quantity; // sl hang nhap kho
+
+    @Column
+    private Long selled; // sl da ban
+
+    @Column(name = "quantity_exists")
+    private Long quantityExist; // sl hang con trong kho
 
     @Column(nullable = false)
     private LocalDate date_added;

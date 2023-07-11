@@ -1,11 +1,14 @@
         <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="update-orderJs" th:inline="javascript">
 
+
+
     <script>
 
         let pageCart = {
             urls: {
-                getAllCartDetail: AppBase.API_CART_DETAIL
+                getAllCartDetail: AppBase.API_CART_DETAIL,
+                getAllProducts :AppBase.API_PRODUCT
             },
             elements: {},
             loadData: {},
@@ -18,10 +21,13 @@
         }
         let locationRegion = new LocationRegion();
         let idCartDetail;
+        let color;
         pageCart.dialogs.elements.locationRegionIdUp = $('#locationRegionIdUp');
         pageCart.dialogs.elements.provinceUp = $('#provinceUp');
         pageCart.dialogs.elements.districtUp = $('#districtUp');
         pageCart.dialogs.elements.wardUp = $('#wardsUp');
+        pageCart.dialogs.elements.productNameUp = $('.productName');
+
         pageCart.dialogs.elements.addressUp = $('#addressUp');
 
         pageCart.dialogs.loadData.getAllProvinces = () => {
@@ -52,9 +58,7 @@
                 .done((data) => {
                     // console.log(data)
                     let dir = data.results;
-                    console.log("-------data-------")
-                    console.log(data)
-                    console.log(dir)
+
                     pageCart.dialogs.elements.districtUp.empty();
                     $.each(dir, (i, item) => {
                         let str = `<option value="${item.district_id}">${item.district_name}</option>`;
@@ -95,10 +99,7 @@
                     url: pageCart.urls.getAllCartDetail + id
                 })
                     .done((data)=>{
-                        $.each(data, (i, item)=>{
-                            let str = AppBase.renderCartDetail(item);
-                            $('#tbCartDetail').append(str);
-                        })
+
                     })
                     .fail((jqXHR)=>{
                         console.log(jqXHR);
@@ -106,27 +107,84 @@
 
         }
 
+        pageCart.loadData.getProductName = () =>{
+
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getAllProducts
+            })
+                .done((data)=>{
+                    $('.productName').empty();
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item.id}">${item.title}</option>`;
+                        $('.productName').append(str);
+                    })
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+
+        }
+
+        // pageCart.loadData.getSize = () =>{
+        //
+        //     return $.ajax({
+        //         type: 'GET',
+        //         url: pageCart.urls.getAllCartDetail +'sizes'
+        //     })
+        //         .done((data)=>{
+        //             $('.size').empty();
+        //             $.each(data, (i, item) => {
+        //                 let str = `<option value="${item}">${item}</option>`;
+        //                 $('.size').append(str);
+        //             })
+        //
+        //         })
+        //         .fail((jqXHR)=>{
+        //             console.log(jqXHR);
+        //         })
+        //
+        // }
+
+        // pageCart.loadData.getColor = () =>{
+        //     return $.ajax({
+        //         type: 'GET',
+        //         url: pageCart.urls.getAllCartDetail +'colors'
+        //     })
+        //         .done((data)=>{
+        //             $('.color').empty();
+        //             $.each(data, (i, item) => {
+        //                 let str = `<option value="${item}">${item}</option>`;
+        //                 $('.color').append(str);
+        //             })
+        //
+        //         })
+        //         .fail((jqXHR)=>{
+        //             console.log(jqXHR);
+        //         })
+        //
+        // }
 
         pageCart.loadData.getCart = () => {
             /*<![CDATA[*/
             let data = /*[[${data}]]*/ 'default';
             let cart = data.cart;
-            let name_receiver = data.cart.name_receiver;
-            let phone_receiver = data.cart.phone_receiver;
-            let locationRegion = data.cart.locationRegion;
-            let status = data.cart.status;
-            let idCart = data.cart.id;
-            let totalAmount = data.cart.totalAmount;
-            let address = data.cart.locationRegion.address;
-            console.log(data);
+            console.log('cart'+cart)
+            let name_receiver = cart.name_receiver;
+            let phone_receiver = cart.phone_receiver;
+            let locationRegion = cart.locationRegion;
+            let status = cart.status;
+            let idCart = cart.id;
+            let listCartDetail = cart.cartDetailDTOList;
+            let totalAmount = cart.totalAmount;
+            let address = cart.locationRegion.address;
+
             $('#nameReceiverUp').val(name_receiver);
             $('#phoneReceiverUp').val(phone_receiver);
             $('#totalAmountUp').val(totalAmount);
             $('#statusUp').val(status);
             $('#addressUp').val(address);
-
-
-
             pageCart.dialogs.loadData.getAllProvinces().then(() => {
                 pageCart.dialogs.elements.provinceUp.val(locationRegion.provinceId)
             })
@@ -136,50 +194,170 @@
             pageCart.dialogs.loadData.getAllWardsByDistrict(locationRegion.districtId).then(() => {
                 pageCart.dialogs.elements.wardUp.val(locationRegion.wardId)
             })
+            console.log('cartDetail'+JSON.stringify(listCartDetail))
+            $.each(listCartDetail, (i, item)=>{
+                let str = AppBase.renderCartDetail(item);
 
-            pageCart.loadData.getAllCartDetail(idCart).then(()=>{
-                $('#tbCartDetail').val();
+                $('#tbCartDetail').append(str);
+                $(`#${item.size}${item.id}`).empty();
+                let str2 = `<option value="${item.size}">${item.size}</option>`
+                $(`#${item.size}${item.id}`).append(str2)
+                $(`#${item.color}${item.id}`).empty()
+                let str3 = `<option value="${item.color}">${item.color}</option>`
+                $(`#${item.color}${item.id}`).append(str3)
+
+
                 addEventDeleteClick();
             });
-
-
-
-
-            // page.loadData.getAllCategoryParent().then(()=>{
-            //     $('#categoryUp').val(product.category.id);
-            //     let categoryId = product.category.id;
-            //     page.loadData.getAllCategoryChildByCategogyId(categoryId,  page.elements.categoryChild);
-            // })
+            pageCart.loadData.getProductName().then(()=>{
+                $.each(listCartDetail, (i, item)=>{
+                    $(`#${item.id}`).val(item.productId)
+                })
+            });
+            // pageCart.loadData.getSize().then(()=>{
+            //     console.log('cartDetail'+JSON.stringify(listCartDetail))
+            //     $.each(listCartDetail, (i, item)=>{
+            //         $(`#${item.size}${item.id}`).val(item.size)
             //
-            // page.loadData.getAllDiscount().then(()=>{
-            //     if (discount != null){
-            //         page.elements.discountUpdate.val(discount.id);
-            //     }
-            // })
-            // page.loadData.getAllBrand().then(()=>{
-            //     page.elements.brandUp.val(product.brand.id);
-            // })
-            // let strAvatar = AppBase.avatar_image_thumbnail(product.avatar);
-            // page.elements.showAvatar.append(strAvatar);
             //
-            // if (mediaObj.length != 0){
-            //     page.dialogs.commands.showImagesObj(mediaObj);
-            // }
+            //     })
+            // });
+
+            // pageCart.loadData.getAllColor().then(()=>{
+            //     console.log(listCartDetail)
+            //     $.each(listCartDetail, (i, item)=>{
             //
-            // // hiển thị decreption
-            // $('#productDescriptionUp').val(product.description);
-            // $('#productDescriptionUp').cleditor();
+            //         $(`#${item.color}${item.id}`).val(item.color)
+            //     })
+            // });
 
             /*]]>*/
         }
 
+        pageCart.loadData.checkQuantityBySizeAndColor = (idProduct) =>{
+            let sizeObj = $('.size').data('id');
+            let colorObj = $('.color').data('id');
+            let obj={
+                id:idProduct,
+                size: sizeObj,
+                color: colorObj
+            }
+            return $.ajax({
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'POST',
+                url: pageCart.urls.getAllCartDetail + 'size_color',
+                data: JSON.stringify(obj)
+            })
+                .done(()=>{
+
+                })
+                .fail((error)=>{
+                    console.log(error)
+                })
+        }
+
+        function addChangeSize() {
+            // tách 2 hàm : color theo idProduct và size theo color
+            $('.size').on('change', function (item){
+                color = $(`#${item.color}${item.id}`).find('select option').val();
+                let size = $(`#${item.size}${item.id}`).find('select option').val();
+                let obj = {
+                    color: color,
+                    size : size
+                }
+                if (size !== null ){
+                    pageCart.loadData.getAllSize(color).then(()=>{
+                    })
+                }
+            })
+        }
+        function addChangeColor() {
+            // tách 2 hàm : color theo idProduct và size theo color
+            $('.color').on('change', function (item){
+                color = $(`#${item.color}${item.id}`).find('select option').val();
+                let obj = {
+                    color: color,
+                    size : size
+                }
+               if (color !== null ){
+                  pageCart.loadData.getAllColor(idProduct).then(()=>{
+                  })
+               }
+            })
+        }
+        function changeProduct(){
+            $('.productName').on('change', function (){
+                let idPro = +$(this).find(':selected').val();
+                idProduct = idPro;
+
+                pageCart.loadData.getAllColor(idPro)
+
+                pageCart.loadData.checkQuantityBySizeAndColor(idPro).then((quantity)=>{
+
+                    if (quantity===0){
+                        AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.ERROR_400);
+                    }else {
+
+                        pageCart.loadData.getAllColor(idPro)
+                    }
+                })
+
+            })
+        }
+
+        pageCart.loadData.getAllColor = (idProduct) =>{
+           return $.ajax({
+                headers: {
+                    'accept': 'application/json',
+                    'content-type': 'application/json'
+                },
+                type: "GET",
+                url: pageCart.urls.getAllCartDetail + "color/product/" + idProduct,
+            })
+                .done((data) => {
+
+                    console.log('color'+data);
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item}">${item}</option>`;
+                        $(".color").append(str);
+
+                    })
+                })
+                .fail((error) => {
+                    console.log(error)
+                    // AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_UPDATED);
+                })
+        }
+
+        pageCart.loadData.getAllSize = (color) =>{
+            $.ajax({
+                headers: {
+                    'accept': 'application/json',
+                    'content-type': 'application/json'
+                },
+                type: "GET",
+                url: pageCart.urls.getAllCartDetail + "color/product/" + idProduct,
+
+            })
+                .done((data) => {
+                    console.log(data);
+                    $("#tr_" + idCartDetail).remove();
+                    AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
+                })
+                .fail((error) => {
+                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_UPDATED);
+                })
+        }
+        function doUpdate(){
+
+        }
         function addEventDeleteClick() {
             $(".delete").on('click', function () {
                 let cartId = $(this).data('id');
                 pageCart.loadData.findCartById(cartId).then((data) => {
                      idCartDetail = data.id;
-                    console.log("-------data------");
-                    console.log(data.id);
+
                     AppBase.showDeleteCartItemConfirmDialog().then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
@@ -250,6 +428,9 @@
             pageCart.loadData.getCart();
         }
         pageCart.initializeControlEvent = () => {
+            addChangeColor();
+            addChangeSize();
+            changeProduct();
 
 
         }

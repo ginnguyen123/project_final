@@ -20,6 +20,7 @@ import java.util.Optional;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
+
     @Query("SELECT cr FROM Cart AS cr " +
             " join CartDetail cd on cr.id = cd.cart.id " +
             " join Customer  cus on cus.id = cr.customer.id" +
