@@ -25,6 +25,7 @@ import java.util.Optional;
 public class ProductImportUpReqDTO implements Validator {
 
     private Long id;
+
     private String size;
 
 

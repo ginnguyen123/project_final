@@ -20,21 +20,24 @@ public class ProductImpListResDTO {
     private String size;
     private String color;
     private Long prices;
-    private Long quantities;
+    private Long quantitiesExist;
     private Long selled;
     private String status;
     private String title;
     private String dateAdded;
+    private Long quantities;
 
-    public ProductImpListResDTO(Long id, Long idProduct, ESize size, EColor color, BigDecimal prices, Long quantities,
+
+    public ProductImpListResDTO(Long id, Long idProduct, ESize size, EColor color, BigDecimal prices, Long quantities,Long quantitiesExist,
                                 Long selled, EProductStatus status, String title, LocalDate dateAdded){
-        String formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(dateAdded);
+        String formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy").format(dateAdded);
         this.id = id;
         this.idProduct = idProduct;
         this.size = size.getValue();
         this.color = color.getValue();
         this.prices = prices.longValue();
         this.quantities = quantities;
+        this.quantitiesExist = quantitiesExist;
         this.selled = selled;
         this.status = status.getValue();
         this.title = title;

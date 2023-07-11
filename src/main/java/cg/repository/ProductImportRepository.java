@@ -148,7 +148,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
     List<ESize> findAllSizeCategory(@Param("categoryId") Long id, @Param("today")LocalDate today);
 
     @Query(value = "SELECT NEW cg.dto.productImport.ProductImpListResDTO(prodImp.id, prod.id, prodImp.size, " +
-            "prodImp.color, prodImp.price, prodImp.quantityExist, prodImp.selled, prodImp.productStatus, prod.title, prodImp.date_added) " +
+            "prodImp.color, prodImp.price, prodImp.quantity,prodImp.quantityExist, prodImp.selled, prodImp.productStatus, prod.title, prodImp.date_added) " +
             "FROM ProductImport AS prodImp " +
             "INNER JOIN Product AS prod ON prod = prodImp.product " +
             "WHERE prod.deleted = FALSE AND prodImp.deleted = FALSE " +

@@ -30,6 +30,7 @@
     let quantityMax;
     let size = +$('#size-page-imp').val();
     let dataByDataGrid = [];
+    const URL = 'http://localhost:8086/api/product-import' ;
 
     let collapsed = false;
     const discountCellTemplate = function (container, options) {
@@ -81,6 +82,16 @@
                 console.log('--------getAllProductImportForDataGrid---------');
                 console.log(data)
                 dataByDataGrid = data.content;
+                size = +$('#size-page-imp').val();
+
+                currentPageNumber = data.pageable.pageNumber
+
+                totalPages = data.totalPages;
+
+                totalElements = data.totalElements;
+
+                let strPage = page.commands.renderPagination(currentPageNumber, totalElements, totalPages );
+                $('#paginationUl').empty().append(strPage);
             })
             .fail((error)=>{
                 console.log(error);
@@ -148,7 +159,7 @@
     page.loadData.getAllProductImportByDataGrid = () =>{
         $('#gridContainer').dxDataGrid({
             dataSource: dataByDataGrid,
-            keyExpr: 'idProduct',
+            keyExpr: 'id',
             allowColumnReordering: true,
             showBorders: true,
             grouping: {
@@ -157,28 +168,29 @@
             searchPanel: {
                 visible: true,
             },
-            paging: {
-                pageSize: 10,
-            },
-            pager: {
-                visible: true,
-                allowedPageSizes: [5, 10, 50,100],
-                showPageSizeSelector: true,
-                showInfo: true,
-                showNavigationButtons: true,
-            },
+            // paging: {
+            //     pageSize: 10,
+            // },
+            // pager: {
+            //     visible: true,
+            //     allowedPageSizes: [5, 10, 50,100],
+            //     showPageSizeSelector: true,
+            //     showInfo: true,
+            //     showNavigationButtons: true,
+            // },
             remoteOperations: false,
             groupPanel: {
                 visible: true,
             },
+            // editing: {
+            //     mode: 'popup',
+            //     allowUpdating: true,
+            //     allowAdding: true,
+            //     // allowDeleting: true,
+            // },
+
             rowAlternationEnabled: true,
             columns: [
-                // {
-                //     dataField: 'title',
-                //     caption: 'Sản phẩm',
-                //     groupIndex: 1,
-                //     alignment: 'center',
-                // },
                 {
                     dataField: 'title',
                     caption: 'Sản phẩm',
@@ -205,7 +217,13 @@
                 },
                 {
                     dataField: 'quantities',
-                    caption: 'Số lượng',
+                    caption: 'Số lượng nhập',
+                    dataType: 'number',
+                    alignment: 'center',
+                },
+                {
+                    dataField: 'quantitiesExist',
+                    caption: 'Số lượng còn',
                     dataType: 'number',
                     alignment: 'center',
                 },
@@ -221,9 +239,95 @@
                     dataType: 'string',
                     alignment: 'center',
                 },
+                {
+                    dataField: 'id',
+                    dataType: 'number',
+                        visible: true,
+                },
+                {
+                    type: "buttons",
+                    buttons: ["edit", {
+                        text: "Edit",
+                        // hint: "My Command",
+                        onClick: function (e) {
+                            console.log('-------------------')
+                            console.log(e)
+                            let idProductImp = e.row.data.id;
+                            page.loadData.findProductById(idProductImp).then((productImport) => {
+                                currentId = productImport.id;
+                                console.log(productImport)
 
+                                page.dialogs.elements.priceUp.val(productImport.price);
+                                page.dialogs.elements.quantityUp.val(productImport.quantity);
+                                page.dialogs.elements.sizeUp.val(productImport.size);
+                                page.dialogs.elements.colorUp.val(productImport.color);
+                                page.dialogs.elements.selectProduct.val(productImport.product.id);
+                                page.dialogs.elements.dateAdded.val(productImport.date_added);
+                                page.dialogs.elements.demoUp.text(productImport.quantity);
+
+                                page.dialogs.elements.modalUpdate.modal("show");
+                            })
+                                .catch((error) => {
+                                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_404);
+                                });
+                        }
+                    }]
+                }
             ],
+
+
+            // onSaving(e) {
+            //     const change = e.changes[0];
+            //     console.log(change);
+            //
+            //     if (change) {
+            //         e.cancel = true;
+            //         // loadPanel.show();
+            //         e.promise = saveChange(URL, change)
+            //             // .always(() => { loadPanel.hide(); })
+            //             .then((data) => {
+            //                 console.log(data);
+            //                 // let orders = e.component.option('dataSource');
+            //
+            //                 if (change.type === 'update') {
+            //                     change.dataByDataGrid = data;
+            //                 }
+            //                 if (change.type === 'insert') {
+            //                     change.dataByDataGrid = data;
+            //                 }
+            //                 // products = DevExpress.data.applyChanges(orders, [change], { keyExpr: 'id' });
+            //             });
+            //     }
+            // },
         },).dxDataGrid('instance');
+
+        function saveChange(url, change) {
+            switch (change.type) {
+                case 'update':
+                    return sendRequest(`${url}/${change.key}`, 'PATCH', { key: change.key, values: JSON.stringify(change.data) });
+                // case 'update':
+                //     return ;
+                default:
+                    return null;
+            }
+        }
+
+        function sendRequest(url, method, dataByDataGrid) {
+            const d = $.Deferred();
+
+            $.ajax(url, {
+                method,
+                dataByDataGrid,
+                cache: false,
+                xhrFields: { withCredentials: true },
+            }).then((result) => {
+                d.resolve(method === 'PATCH' ? result.dataByDataGrid : result);
+            }, (xhr) => {
+                d.reject(xhr.responseJSON ? xhr.responseJSON.Message : xhr.statusText);
+            });
+
+            return d.promise();
+        }
     }
 
     page.commands.addEventChangePage = () => {
@@ -371,7 +475,7 @@
 
     page.dialogs.elements.modalUpdate = $('#ModalUP');
 
-    page.dialogs.commands.doUpdateImport = () => {
+    page.dialogs.commands.doUpdateImport = () =>    {
         let size = page.dialogs.elements.sizeUp.find(':selected').val().trim();
         let color = page.dialogs.elements.colorUp.find(':selected').val().trim();
         let date_added = page.dialogs.elements.dateAdded.val().trim();
@@ -510,7 +614,6 @@
         $('#size-page-imp').on('change', function (){
             size = $('#size-page-imp').val();
             page.loadData.getAllProductImport();
-
         })
 
         // page.elements.btnSearch.on("click", function () {
@@ -529,72 +632,11 @@
 
 
     };
-    // $(()=>{
-    //     page.commands.loadData();
-    //     page.initializeControlEvent();
-    // })
-    $(function () {
-        const dataGrid = $("#tbProductImport").dxDataGrid({
-            dataSource: product,
-            keyExpr: "productId",
+    $(()=>{
+        page.commands.loadData();
+        page.initializeControlEvent();
+    })
 
-            columns: [
-                {
-                    dataField: "Tên sản phẩm"
-                },
-                {
-                    dataField: "Màu sắc"
-                }, {
-                    dataField: "Kích cỡ"
-                }, {
-                    dataField: "Số lượng"
-                }, {
-                    dataField: "Giá"
-
-                }, {
-                    dataField: "HireDate",
-                    dataType: "date"
-                },
-                // ...
-                {
-                    dataField: "Country",
-                    cellTemplate: function (container, info) {
-                        console.log('template')
-                        const currentEmployeeData = info.data;
-                        container.append(
-                            $(`<div>Hello ${currentEmployeeData.Country}</div>`)
-                        );
-                    }
-                },
-                {
-                    type: "buttons",
-                    buttons: ["edit", {
-                        text: "Edit",
-                        hint: "My Command",
-                        onClick: function (e) {
-                            console.log(e)
-                        }
-                    }]
-                }
-                // ...
-            ],
-            selection: { mode: "single" },
-            onSelectionChanged: function (e) {
-                console.log('demo')
-                e.component.byKey(e.currentSelectedRowKeys[0]).done(employee => {
-                    if (employee) {
-                        $("#selected-employee").text(`Selected employee: ${employee.FullName}`);
-                    }
-                });
-            },
-            customizeColumns: function (columns) {
-                console.log(columns);
-            },
-            grouping: {
-                autoExpandAll: true,
-            },
-        });
-    });
 </script>
 
 </th:block>

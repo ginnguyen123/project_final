@@ -10,16 +10,16 @@ import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.model.enums.ECartStatus;
-<<<<<<< HEAD
+
 
 import cg.model.customer.Customer;
 
 import cg.model.location_region.LocationRegion;
 
-=======
+
 import cg.model.customer.Customer;
 import cg.model.location_region.LocationRegion;
->>>>>>> a36631df63684db7be34c483a927da526267e6a0
+
 import cg.model.product.Product;
 import cg.service.ExistService;
 import cg.service.cart.ICartService;
