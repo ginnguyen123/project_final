@@ -136,7 +136,7 @@
         page.loadData.findProductById = function (id){
             return $.ajax({
                 type: 'GET',
-                url: page.urls.findProductById + '/' + id
+                url: 'http://localhost:8086/api/products/find-by-id' + '/' + id
             })
                 .done((data) => {
 
@@ -288,8 +288,30 @@
         }
 
         page.dialogs.commands.evenDelete = function (){
-            page.elements.btnDelete.on('click', function (){
-            //     chưa viết sự kiện xóa
+            $('.delete').on('click', function (){
+                let id = $(this).data('id');
+                page.loadData.findProductById(id).then((data)=>{
+                    currentIdProduct = id;
+                    AppBase.showDeleteCartItemConfirmDialog().then((result)=>{
+                        if (result.isConfirmed){
+                            $.ajax({
+                                headers: {
+                                    'accept': 'application/json',
+                                    'content-type': 'application/json'
+                                },
+                                type: "DELETE",
+                                url: 'http://localhost:8086/api/products' + "/" + currentIdProduct
+                            })
+                                .done(() => {
+                                    $("#tr_" + currentIdProduct).remove();
+                                    AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_DELETED);
+                                })
+                                .fail((error) => {
+                                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_DELETED);
+                                })
+                        }
+                    })
+                })
             })
         }
 
