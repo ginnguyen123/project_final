@@ -32,9 +32,10 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "p.id,p.code,p.productAvatar,p.title,p.price,p.category.name" +
             ") " +
             "FROM Product p " +
-            "WHERE  p.title like :search " +
+            "WHERE (p.title like :search " +
             "OR p.code LIKE :search " +
-            "OR p.price = :search" )
+            "OR p.price = :search) " +
+            "AND p.deleted = FALSE " )
     Page<ProductListResponse> findAllWithSearch(@Param("search") String search, Pageable pageable);
 
 //    query search ở trang home

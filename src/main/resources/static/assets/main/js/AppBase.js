@@ -159,11 +159,11 @@ class AppBase{
     }
 
     static renderProduct(item){
-        let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/${item.avatar.fileFolder}/${item.avatar.fileName}`
-        return `<tr id="tr_${item.id}">
-                    <td>
-                      <input type="checkbox" id="delete_${item.id}">
-                    </td>
+        let image_thumbnail = `${AppBase.CLOUDINARY_URL}/${AppBase.SCALE_IMAGE_W_80_H_80_Q_85}/${item.avatar.fileFolder}/${item.avatar.fileName}`;
+        // <td>
+        //   <input type="checkbox" id="delete_${item.id}">
+        // </td>
+        return `<tr id="tr_${item.id}">        
                     <td>${item.code}</td>
                     <td class="d-flex justify-content-center align-items-center" style="border: none">
                         <img src="${image_thumbnail}"/>
