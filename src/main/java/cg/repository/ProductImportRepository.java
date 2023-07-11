@@ -152,7 +152,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "FROM ProductImport AS prodImp " +
             "INNER JOIN Product AS prod ON prod = prodImp.product " +
             "WHERE prod.deleted = FALSE AND prodImp.deleted = FALSE " +
-            "OR prod.title LIKE :search " +
+            "AND (prod.title LIKE :search " +
             "OR prod.category.name LIKE :search " +
             "OR prod.code LIKE :search " +
             "OR prod.brand.name LIKE :search " +
@@ -161,7 +161,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "OR prodImp.code LIKE :search " +
             "OR prodImp.quantityExist = :search " +
             "OR prodImp.quantity = :search " +
-            "OR prodImp.quantityExist = :search " +
+            "OR prodImp.quantityExist = :search) " +
             "GROUP BY prodImp.id ")
     Page<ProductImpListResDTO> findAllForDataGrid(@Param("search")String search ,Pageable pageable);
 
