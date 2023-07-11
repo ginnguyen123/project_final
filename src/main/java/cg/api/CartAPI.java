@@ -84,6 +84,14 @@ public class CartAPI {
         return new ResponseEntity<>(cartDetailResDTOS,HttpStatus.OK);
     }
 
+    @GetMapping("/amount/{customerId}")
+    public ResponseEntity<?> getTotalAmountCart(@PathVariable Long customerId) {
+        ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
+        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
+        CartResDTO cartResDTO = cart.toCartResDTO();
+        return new ResponseEntity<>(cartResDTO, HttpStatus.OK);
+    }
+
     @PatchMapping("/cart-details/{customerId}/{cartDetailId}")
     public ResponseEntity<?> increaseQuantityCartDetail(@PathVariable Long customerId,@PathVariable Long cartDetailId, @RequestBody Long quantity) {
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");

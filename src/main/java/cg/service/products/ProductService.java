@@ -184,8 +184,15 @@ public class ProductService implements IProductService {
             pageable.getSort().ascending().toString();
             field = strSort.split(":")[0];
             sortBy = strSort.split(":")[1].trim();
-            strBb.append("ORDER BY prod.");
-            strBb.append(field);
+            if(field.equals("bestseller")){
+                strBb.append("ORDER BY COUNT(imp.selled) ");
+            }
+            else if (field.equals("inventory")) {
+                strBb.append("ORDER BY COUNT(imp.quantity_exists) ");
+            } else {
+                strBb.append("ORDER BY prod.");
+                strBb.append(field);
+            }
             strBb.append(" ");
             strBb.append(sortBy);
             strBb.append("  ");
