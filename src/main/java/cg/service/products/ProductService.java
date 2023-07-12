@@ -184,7 +184,7 @@ public class ProductService implements IProductService {
             pageable.getSort().ascending().toString();
             field = strSort.split(":")[0];
             sortBy = strSort.split(":")[1].trim();
-            strBb.append("ORDER BY prod.");
+            strBb.append("ORDER BY ");
             strBb.append(field);
             strBb.append(" ");
             strBb.append(sortBy);
