@@ -25,7 +25,7 @@ public class CartDetailNotCart implements Validator {
     private BigDecimal productPrice;
     private Long idProduct;
     private Long idCart;
-    private ECartStatus status;
+
 
     public CartDetailNotCart(CartDetail cartDetail) {
         this.id = cartDetail.getId();

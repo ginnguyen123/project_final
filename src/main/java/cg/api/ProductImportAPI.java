@@ -106,4 +106,10 @@ public class ProductImportAPI {
         List<String> strSizes = sizes.stream().map(i -> i.getValue()).collect(Collectors.toList());
         return new ResponseEntity<>(strSizes, HttpStatus.OK);
     }
+
+    @GetMapping("/data-grid")
+    public ResponseEntity<?> getAllForDataGrid(@RequestParam(required = false, defaultValue = "") String search, Pageable pageable){
+        Page<ProductImpListResDTO> productImps = productImportService.getAllForDataGrid(search, pageable);
+        return new ResponseEntity<>(productImps, HttpStatus.OK);
+    }
 }

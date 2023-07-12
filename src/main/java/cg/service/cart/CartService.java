@@ -102,7 +102,7 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public void create(CartCreReqDTO cartCreReqDTO) {
+    public Cart create(CartCreReqDTO cartCreReqDTO) {
         String email = cartCreReqDTO.getEmail();
         Optional<Customer> customerOptional = customerRepository.findCustomerByEmail(email);
         Customer customer = new Customer();
@@ -118,11 +118,12 @@ public class CartService implements ICartService {
             }
         } else if (customerOptional.isEmpty()) {
             customer.setEmail(cartCreReqDTO.getEmail());
+            customer.getUser();
             customerRepository.save(customer);
             locationRegion.setId(null);
             locationRegionRepository.save(locationRegion);
         }
-        ECartStatus status = ECartStatus.getECartStatus("UNPAID");
+//        ECartStatus status = ECartStatus.getECartStatus("UNPAID");
         Cart cart = new Cart();
         cart.setName_receiver(cartCreReqDTO.getReceivedName());
         cart.setPhone_receiver(cartCreReqDTO.getReceivedPhone());
@@ -148,6 +149,7 @@ public class CartService implements ICartService {
         cart.setCustomer(customer);
         cartRepository.save(cart);
         cartDetailRepository.saveAll(cartDetails);
+        return cart;
     }
 
     @Override

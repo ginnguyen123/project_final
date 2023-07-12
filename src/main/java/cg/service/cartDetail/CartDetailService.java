@@ -8,6 +8,7 @@ import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.model.product.Product;
 import cg.repository.CartDetailRepository;
+import cg.repository.ProductImportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,20 +24,39 @@ public class CartDetailService implements ICartDetailService{
     @Autowired
     CartDetailRepository cartDetailRepository;
 
+    @Autowired
+    private ProductImportRepository productImportRepository;
+
     @Override
     public List<CartDetail> findAll() {
         return null;
     }
 
+
+//    @Override
+//    public Long getCartDetailWithProductAndSizeAndColor(ESize size , EColor color , Long idProduct) {
+//        Long quantityImp = productImportRepository.checkQuantityProductImportBySizeAndColor(idProduct,color,size);
+//        //ajax -> check so luong -> data = 123
+//
+//        return quantityImp;
+//    }
+
     @Override
+    public Long getCartDetailWithProduct(Long idProduct) {
+        Long quantityImp = productImportRepository.checkQuantityProductImport(idProduct);
+        return quantityImp;
+    }
+
+    @Override
+    public List<CartDetail> findAllByCart_IdAndDeletedIsFalse(Long id) {
+        return cartDetailRepository.findAllByCart_IdAndDeletedIsFalse(id);
+    }
+
     public List<CartDetail> findCartDetailsByCartAndDeletedIsFalse(Cart cart) {
         return cartDetailRepository.findCartDetailsByCartAndDeletedIsFalse(cart);
     }
 
-    @Override
-    public List<CartDetail> findAllByCart_IdAndAndDeletedIsFalse(Long id) {
-        return cartDetailRepository.findAllByCart_IdAndAndDeletedIsFalse(id);
-    }
+
 
     @Override
     public Optional<CartDetailDTO> getByIdAndDeletedIsFalse(Long id) {
@@ -77,7 +97,6 @@ public class CartDetailService implements ICartDetailService{
         cartDetail.setColor(cartDetailUpReqDTO.getColor());
         cartDetail.setSize(cartDetailUpReqDTO.getSize());
         cartDetail.setQuantity(cartDetailUpReqDTO.getQuantity());
-        cartDetail.setCart(new Cart().setStatus(cartDetailUpReqDTO.getStatus()));
         cartDetailRepository.save(cartDetail);
         return new CartDetailNotCart(cartDetail);
     }

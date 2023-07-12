@@ -23,6 +23,7 @@ public class CartDetailCreReqDTO implements Validator {
     private ESize size;
     private EColor color;
 
+
     public CartDetail toCartDetail() {
         return new CartDetail()
                 .setId(null)
