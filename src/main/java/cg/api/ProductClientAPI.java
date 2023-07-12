@@ -72,8 +72,8 @@ public class ProductClientAPI {
         }
         return new ResponseEntity<>(productService.findAllByCategoryFilter(id,filterRes, pageable),HttpStatus.OK);
     }
-    @PostMapping("search")
-    private ResponseEntity<?> getAllProductFilter(@RequestBody String keyWord, Pageable pageable){
+    @PostMapping("/search")
+    private ResponseEntity<?> getAllProductFilter(@RequestParam(defaultValue = "", value = "keyword") String keyWord, Pageable pageable){
         return new ResponseEntity<>(productService.findAllByKeyWordSearch(keyWord, pageable),HttpStatus.OK);
     }
 }
