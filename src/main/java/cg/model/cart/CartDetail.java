@@ -54,9 +54,6 @@ public class CartDetail extends BaseEntity {
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;
 
-    //id,quantity,tAmount,size,color,cartID,productID, name,price
-
-
     public CartDetailDTO toCartDetailDTO() {
         return new CartDetailDTO()
                 .setProductId(product.getId())
@@ -96,10 +93,6 @@ public class CartDetail extends BaseEntity {
                 ;
     }
 
-
-
-
-
     public CartDetailResDTO toCartDetailResDTO() {
         return new CartDetailResDTO()
                 .setId(id)
@@ -113,8 +106,5 @@ public class CartDetail extends BaseEntity {
                 .setAvt(product.getProductAvatar().getFileUrl());
 
     }
-
-
-
 
 }

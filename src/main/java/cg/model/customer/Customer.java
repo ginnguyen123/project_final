@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class Customer extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_names")
+    @Column(name = "full_names", nullable = false)
     private String fullName;
 
     @Column(nullable = false, unique = true)
@@ -39,13 +40,13 @@ public class Customer extends BaseEntity {
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
-
+    @Enumerated(EnumType.STRING)
     private ESex sex;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
-//
+
 //    @OneToMany(mappedBy = "customer")
 //    private List<Cart> carts;
     @Column
@@ -79,5 +80,20 @@ public class Customer extends BaseEntity {
                 .setPhone(phone)
                 .setLocationRegionDTOS(locationRegionDTOS)
                 ;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", sex=" + sex +
+                ", user=" + user +
+                ", phone='" + phone + '\'' +
+                ", locationRegions=" + locationRegions +
+                ", carts=" + carts +
+                '}';
     }
 }
