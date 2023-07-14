@@ -28,7 +28,7 @@ public class CustomerService implements ICustomerService, ExistService {
 
     @Override
     public Customer save(Customer customer) {
-        return null;
+        return customerRepository.save(customer);
     }
 
     @Override
@@ -54,5 +54,10 @@ public class CustomerService implements ICustomerService, ExistService {
     @Override
     public boolean exist(Object id) {
         return customerRepository.existsById((Long) id);
+    }
+
+    @Override
+    public Boolean isEmail(String email) {
+        return customerRepository.existsByEmail(email);
     }
 }

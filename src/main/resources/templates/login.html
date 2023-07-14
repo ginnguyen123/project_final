@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>Login</title>
+    <th:block th:replace="layout/head :: head"/>
+</head>
+
+<body>
+
+<div class="wrapper-page">
+    <div class="card">
+
+        <div class="card-body">
+            <h4 class="text-muted text-center m-t-0"><b>Sign In</b></h4>
+
+            <form class="form-horizontal m-t-20" method="post">
+
+                <div class="form-group">
+                    <div class="col-12">
+                        <input class="form-control" id="usernameLogin" type="text" required="" placeholder="Username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-12">
+                        <input class="form-control" id="passwordLogin" type="password" required="" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group text-center m-t-40">
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary btn-block btn-lg waves-effect waves-light" id="btnLogin">Log In</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" src="/assets/iziToast-v1.4.0/iziToast-1.4.0.js"></script>
+<script type="text/javascript" src="/assets/jQuery/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="/assets/jQuery/jquery.validate-1.19.3.min.js"></script>
+<script type="text/javascript" src="/assets/sweetalert2/sweetalert2.all.min.js"></script>
+<script src="/assets/main/js/AppBase.js"></script>
+
+<script>
+    $('#btnLogin').on('click', ()=>{
+        let username = $('#usernameLogin').val();
+        let password = $('#passwordLogin').val();
+
+        let obj = {
+            username,
+            password
+        }
+
+        $.ajax({
+            type: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'content-type': 'application/json'
+            },
+            url: 'http://localhost:8086/api/auth/login',
+            data: JSON.stringify(obj)
+        })
+            .done(()=>{
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Logged in successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+
+                setTimeout(() => {
+                    location.href = "/";
+                }, 2000);
+            })
+
+            .fail((jqXHR)=>{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: 'Login failed!',
+                })
+            })
+    })
+</script>
+
+</body>
+
+</html>
