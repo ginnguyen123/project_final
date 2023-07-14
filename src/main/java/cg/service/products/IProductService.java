@@ -4,18 +4,14 @@ import cg.dto.product.*;
 import cg.dto.product.client.FilterRes;
 import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.product.client.ProductSearchResClientDTO;
-import cg.model.category.Category;
-import cg.model.enums.EColor;
-import cg.model.enums.ESize;
 import cg.model.product.Product;
-import cg.service.ExistService;
 import cg.service.IGeneralService;
+import cg.utils.ProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public interface IProductService extends IGeneralService<Product,Long> {
@@ -41,4 +37,6 @@ public interface IProductService extends IGeneralService<Product,Long> {
     List<ProductResClientDTO> findAllByCategoryFilter(Long id, FilterRes filter, Pageable pageable);
 
     ProductSearchResClientDTO findAllByKeyWordSearch(String keyword, Pageable pageable);
+
+    Page<Product> getAllForDataGrid(ProductRequest request , Pageable pageable);
 }

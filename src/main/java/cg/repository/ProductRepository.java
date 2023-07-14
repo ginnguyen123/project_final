@@ -2,9 +2,11 @@ package cg.repository;
 
 
 import cg.dto.product.ProductListResponse;
-import cg.dto.product.client.ProductResClientDTO;
 
+import cg.dto.productImport.ProductImpListResDTO;
+import cg.model.enums.EProductStatus;
 import cg.model.product.Product;
+import cg.utils.ProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,6 +29,30 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             " ,p.discount_id FROM products p INNER JOIN product_import pi " +
             "ON p.id=pi.product_id WHERE p.category_id= :idCategory AND pi.quantity>0 group by p.id  LIMIT 10", nativeQuery = true)
     List<Product> findProductsByCategoryWithLimit( @Param("idCategory") Long idCategory);
+
+    @Query(value = "SELECT prod.id , prod.title " +
+            "FROM Product AS prod " +
+            "INNER JOIN ProductImport AS prodImp ON prodImp.product.id = prod.id " +
+            "WHERE prod.deleted = FALSE " +
+            "OR (prod.title LIKE :#{#search.keyword} " +
+            "OR prod.code LIKE :#{#search.keyword} )" +
+            "OR (prodImp.date_added BETWEEN :#{#search.fromDate} AND :#{#search.toDate} " +
+            "OR :#{#search.fromDate} IS NULL) " +
+            "OR prodImp.productStatus = :status " +
+            "GROUP BY prod.id")
+    Page<Product> findProductsWithLimit(ProductRequest search,
+                                        @Param("status") EProductStatus status, Pageable pageable);
+
+    @Query(value = "SELECT prod.id , prod.title " +
+            "FROM Product AS prod " +
+            "INNER JOIN ProductImport AS prodImp ON prodImp.product.id = prod.id " +
+            "WHERE prod.deleted = FALSE " +
+            "OR (prod.title LIKE :#{#search.keyword} " +
+            "OR prod.code LIKE :#{#search.keyword} )" +
+            "OR (prodImp.date_added BETWEEN :#{#search.fromDate} AND :#{#search.toDate} " +
+            "OR :#{#search.fromDate} IS NULL) " +
+            "GROUP BY prod.id")
+    Page<Product> findProductsWithLimitNoStatus(ProductRequest search,Pageable pageable);
 
     @Query(value = "SELECT NEW cg.dto.product.ProductListResponse(" +
             "p.id,p.code,p.productAvatar,p.title,p.price,p.category.name" +
@@ -134,5 +160,26 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Long> findAllByDiscountTime(@Param("day") LocalDate date);
 
     List<Product> findByDeletedAndIdIn(boolean deleted, Collection<Long> id);
+
+
+    @Query(value = "SELECT NEW cg.dto.productImport.ProductImpListResDTO(prod.id,prodImp.id, prodImp.size,prodImp.color, prodImp.price, " +
+            "prodImp.quantity,prodImp.quantityExist, prodImp.selled, prodImp.productStatus, prod.title, prodImp.date_added) " +
+            "FROM Product AS prod " +
+            "INNER JOIN ProductImport AS prodImp ON prodImp.product.id = prod.id " +
+            "WHERE prod.deleted = FALSE AND prodImp.deleted = FALSE " +
+            "AND (prod.title LIKE :#{#search.keyword} " +
+//            "OR prod.category.name LIKE :#{#search.keyword} " +
+            "OR prod.code LIKE :#{#search.keyword} )" +
+//            "OR prod.brand.name LIKE :#{#search.keyword} " +
+//            "OR prod.price = :#{#search.keyword} " +
+//            "OR prodImp.price = :#{#search.keyword} " +
+//            "OR prodImp.code LIKE :#{#search.keyword}) " +
+//            "OR prodImp.quantity = :#{#search.keyword} " +
+//            "OR prodImp.quantityExist = :#{#search.keyword} " +
+            "AND (prodImp.date_added BETWEEN :#{#search.fromDate} AND :#{#search.toDate} " +
+            "OR :#{#search.fromDate} IS NULL) " +
+            "AND prod.id IN :#{#search.idProduct}" )
+//            "GROUP BY prodImp.id ")
+    Page<ProductImpListResDTO> findAllForDataGrid(ProductRequest search , Pageable pageable);
 
 }

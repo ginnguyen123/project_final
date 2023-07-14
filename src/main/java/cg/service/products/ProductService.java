@@ -8,17 +8,12 @@ import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
-import cg.model.enums.EColor;
-import cg.model.enums.ESize;
+import cg.model.enums.EProductStatus;
 import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
 import cg.service.media.IUploadMediaService;
-import cg.utils.AppConstant;
-import cg.utils.AppUtils;
-import cg.utils.ExistedInDb;
-import cg.utils.UploadUtils;
-import io.swagger.models.auth.In;
+import cg.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -128,6 +123,18 @@ public class ProductService implements IProductService {
         searchResClient.setTotalElements((int) idPage.getTotalElements());
         searchResClient.setKeyword(keyword);
         return searchResClient;
+    }
+
+    @Override
+    public Page<Product> getAllForDataGrid(ProductRequest request  , Pageable pageable) {
+
+        if(request.getKeyword() !=null){
+            request.setKeyword("%"+request.getKeyword()+"%");
+        }
+        String strStatus = request.getStatus();
+//        EProductStatus productStatus = EProductStatus.getEProductStatus(strStatus);
+        Page<Product> products = productRepository.findProductsWithLimit(request, EProductStatus.valueOf(strStatus), pageable);
+        return products;
     }
 
     @Override

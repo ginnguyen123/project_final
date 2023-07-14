@@ -156,6 +156,11 @@ public class Product extends BaseEntity {
         this.title = title;
         this.price = price;
     }
+    public Product(Long id, String title) {
+        this.id = id;
+        this.title = title;
+
+    }
 
     public ProductUpdaCateResDTO toProductUpdaCateResDTO(){
         String strPrice = String.valueOf(price.longValue());

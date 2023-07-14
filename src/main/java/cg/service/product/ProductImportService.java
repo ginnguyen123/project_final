@@ -16,12 +16,14 @@ import cg.service.products.IProductService;
 import cg.utils.AppConstant;
 import cg.utils.AppUtils;
 import cg.utils.ProductImportRequest;
+import cg.utils.ProductRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 
 import java.time.LocalDate;
@@ -69,7 +71,7 @@ public class ProductImportService implements IProductImportService {
     }
 
     @Override
-    public Page<ProductImportDTO> pageableByKeywordAndDate(ProductImportRequest request, Pageable pageable) {
+    public Page<ProductImportDTO> pageableByKeywordAndDate(ProductRequest request, Pageable pageable) {
         if(request.getKeyword() !=null){
             request.setKeyword("%"+request.getKeyword()+"%");
         }
@@ -209,9 +211,13 @@ public class ProductImportService implements IProductImportService {
     }
 
     @Override
-    public Page<ProductImpListResDTO> getAllForDataGrid(String search, Pageable pageable) {
-        String keyword = "%" + search + "%";
-        Page<ProductImpListResDTO> productImps = productImportRepository.findAllForDataGrid(keyword, pageable);
-        return productImps;
+    public List<ProductImpListResDTO> getAllByIdProduct(ProductImportRequest request) {
+        if(request.getKeyword() !=null){
+            request.setKeyword("%"+request.getKeyword()+"%");
+        }
+        List<Long> idProduct = request.getIdProducts();
+        String status = request.getStatus();
+        EProductStatus productStatus = EProductStatus.valueOf(status);
+        return productImportRepository.getAllByIdProduct(request,idProduct,productStatus);
     }
 }

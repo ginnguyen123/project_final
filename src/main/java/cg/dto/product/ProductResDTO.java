@@ -58,6 +58,11 @@ public class ProductResDTO {
         this.urlImage = urlImage;
     }
 
+    public ProductResDTO(Long id, String title){
+        this.id = id;
+        this.title = title;
+    }
+
 
 }
 
