@@ -52,6 +52,7 @@ public class Bill extends BaseEntity {
     private Customer customer;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ECartStatus status;
 
 

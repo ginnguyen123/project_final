@@ -1,6 +1,6 @@
 package cg.service.user;
 
-import cg.dto.userDTO.UserClientResRegisterDTO;
+import cg.model.customer.Customer;
 import cg.model.user.User;
 import cg.service.IGeneralService;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,5 +14,5 @@ public interface IUserService extends IGeneralService<User,Long>, UserDetailsSer
 
     Boolean existsByUsername(String email);
 
-    User register(UserClientResRegisterDTO userResRegister);
+    User findUserByCustomer(Customer customer);
 }

@@ -3,11 +3,12 @@ package cg.service.user;
 
 import cg.dto.userDTO.UserClientResRegisterDTO;
 import cg.model.customer.Customer;
-import cg.model.user.Role;
 import cg.model.user.User;
 import cg.model.user.UserPrinciple;
 import cg.repository.CustomerRepository;
 import cg.repository.UserRepository;
+import cg.service.customer.ICustomerService;
+import cg.utils.AppUtils;
 import cg.service.customer.ICustomerService;
 import cg.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,11 @@ public class UserServiceImpl implements IUserService{
     @Override
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public User findUserByCustomer(Customer customer) {
+        return userRepository.findUserByCustomer(customer);
     }
 
     @Override

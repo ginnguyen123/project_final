@@ -27,7 +27,7 @@ public class BillServiceImpl implements IBillService{
 
     @Override
     public Bill save(Bill bill) {
-        return null;
+        return billRepository.save(bill);
     }
 
     @Override
