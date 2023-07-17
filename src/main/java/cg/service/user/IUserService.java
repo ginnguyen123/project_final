@@ -1,5 +1,6 @@
 package cg.service.user;
 
+import cg.dto.userDTO.UserClientResRegisterDTO;
 import cg.model.customer.Customer;
 import cg.model.user.User;
 import cg.service.IGeneralService;
@@ -15,4 +16,6 @@ public interface IUserService extends IGeneralService<User,Long>, UserDetailsSer
     Boolean existsByUsername(String email);
 
     User findUserByCustomer(Customer customer);
+
+    User register(UserClientResRegisterDTO userResRegister);
 }
