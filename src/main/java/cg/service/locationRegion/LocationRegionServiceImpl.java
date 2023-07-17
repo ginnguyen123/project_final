@@ -31,7 +31,7 @@ public class LocationRegionServiceImpl implements ILocationRegionService {
 
     @Override
     public LocationRegion save(LocationRegion locationRegion) {
-        return null;
+        return locationRegionRepository.save(locationRegion);
     }
 
     @Override
@@ -48,4 +48,11 @@ public class LocationRegionServiceImpl implements ILocationRegionService {
     public List<LocationRegion> findAllByCustomer(Customer customer) {
         return locationRegionRepository.findAllByCustomer(customer);
     }
+
+    @Override
+    public LocationRegion findLocationRegionByAddress(String address) {
+        return locationRegionRepository.findLocationRegionByAddress(address);
+    }
+
+
 }
