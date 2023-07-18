@@ -70,14 +70,14 @@
     page.elements.dateInput = $("#myInput");
     page.elements.dateOutput = $("#myOutput");
     page.elements.keyword = $("#keyword");
-    page.elements.status = $("#status")
+    // page.elements.status = $("#status")
 
     page.loadData.getAllProductImportForDataGrid = () =>{
         page.loadData.findProductByIdLimit().then((data)=>{
             fromDate =  page.elements.dateInput.val();
             toDate = page.elements.dateOutput.val();
             keyword = page.elements.keyword.val();
-            status = page.elements.status.val();
+            // status = page.elements.status.val();
             idProductList = data.content.map(function (i) {
                 return i[0];
             });
@@ -85,11 +85,9 @@
                 idProducts : idProductList,
                 fromDate:fromDate,
                 toDate :toDate,
-                keyword :keyword,
-                status:status
+                keyword :keyword
+                // status:status
             }
-            console.log("objProductImport")
-            console.log(objProductImport)
             $.ajax({
                 type: 'POST',
                 headers: {
@@ -113,6 +111,13 @@
                         showBorders: true,
                         grouping: {
                             autoExpandAll: true,
+                            allowCollapsing: true
+                        },
+                        paging: {
+                            enabled: false
+                        },
+                        searchPanel: {
+                            visible: false
                         },
                         remoteOperations: false,
                         groupPanel: {
@@ -220,13 +225,13 @@
         fromDate =  page.elements.dateInput.val();
         toDate = page.elements.dateOutput.val();
         keyword = page.elements.keyword.val();
-        status = page.elements.status.val();
+        // status = page.elements.status.val();
         let obj = {
             currentPageNumber: currentPageNumber,
             keyword:keyword,
             fromDate: fromDate,
-            toDate:toDate,
-            status: status
+            toDate:toDate
+            // status: status
         }
         console.log(obj)
         return $.ajax({
@@ -239,11 +244,7 @@
             data: JSON.stringify(obj)
         })
             .done((data) => {
-                console.log('----------------')
-                console.log(data)
                 idProductList = data.content;
-                console.log('--------idProduct--------')
-                console.log(idProductList)
                 size = $('#size-page-imp').val();
                 currentPageNumber = data.pageable.pageNumber
                 totalPages = data.totalPages;
@@ -262,7 +263,7 @@
             fromDate =  page.elements.dateInput.val();
            toDate = page.elements.dateOutput.val();
             keyword = page.elements.keyword.val();
-            status = page.elements.status.val();
+            // status = page.elements.status.val();
             // quantityMin = page.elements.myRangeMin.val();
             // quantityMax = page.elements.myRangeMax.val();
             currentPageNumber= pageNumber;
@@ -277,7 +278,7 @@
         fromDate =  page.elements.dateInput.val();
         toDate = page.elements.dateOutput.val();
         keyword = page.elements.keyword.val();
-        status = page.elements.status.val();
+        // status = page.elements.status.val();
         currentPageNumber= 0;
         size = $('#size-page-imp').val();
         page.loadData.getAllProductImportForDataGrid();
@@ -540,9 +541,9 @@
 
         $('#size-page-imp').on('change', function (){
             size = $('#size-page-imp').val();
-            page.loadData.getAllProductImportForDataGrid().then(()=>{
-                page.loadData.getAllProductImportByDataGrid();
-            });
+            page.loadData.getAllProductImportForDataGrid();
+
+
             // page.loadData.getAllProductImport();
         })
 

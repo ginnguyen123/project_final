@@ -6,6 +6,7 @@ import cg.dto.product.client.ProductResClientDTO;
 import cg.dto.product.client.ProductSearchResClientDTO;
 import cg.model.product.Product;
 import cg.service.IGeneralService;
+import cg.utils.ProductImportRequest;
 import cg.utils.ProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,4 +40,8 @@ public interface IProductService extends IGeneralService<Product,Long> {
     ProductSearchResClientDTO findAllByKeyWordSearch(String keyword, Pageable pageable);
 
     Page<Product> getAllForDataGrid(ProductRequest request , Pageable pageable);
+
+
+
+
 }

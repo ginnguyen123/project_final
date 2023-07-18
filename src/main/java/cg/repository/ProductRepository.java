@@ -34,25 +34,24 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "FROM Product AS prod " +
             "INNER JOIN ProductImport AS prodImp ON prodImp.product.id = prod.id " +
             "WHERE prod.deleted = FALSE " +
-            "OR (prod.title LIKE :#{#search.keyword} " +
+            "AND ((prod.title LIKE :#{#search.keyword} " +
             "OR prod.code LIKE :#{#search.keyword} )" +
-            "OR (prodImp.date_added BETWEEN :#{#search.fromDate} AND :#{#search.toDate} " +
-            "OR :#{#search.fromDate} IS NULL) " +
-            "OR prodImp.productStatus = :status " +
+            "OR (prodImp.date_added BETWEEN :#{#search.fromDate} AND :#{#search.toDate} )) " +
             "GROUP BY prod.id")
-    Page<Product> findProductsWithLimit(ProductRequest search,
-                                        @Param("status") EProductStatus status, Pageable pageable);
+    Page<Product> findProductsWithLimit(ProductRequest search, Pageable pageable);
+    // search.fromDate = ""- > NULL
+    // search.fromDate = "12-07-23" -> DATE
 
-    @Query(value = "SELECT prod.id , prod.title " +
-            "FROM Product AS prod " +
-            "INNER JOIN ProductImport AS prodImp ON prodImp.product.id = prod.id " +
-            "WHERE prod.deleted = FALSE " +
-            "OR (prod.title LIKE :#{#search.keyword} " +
-            "OR prod.code LIKE :#{#search.keyword} )" +
-            "OR (prodImp.date_added BETWEEN :#{#search.fromDate} AND :#{#search.toDate} " +
-            "OR :#{#search.fromDate} IS NULL) " +
-            "GROUP BY prod.id")
-    Page<Product> findProductsWithLimitNoStatus(ProductRequest search,Pageable pageable);
+//    @Query(value = "SELECT prod.id , prod.title " +
+//            "FROM Product AS prod " +
+//            "INNER JOIN ProductImport AS prodImp ON prodImp.product.id = prod.id " +
+//            "WHERE prod.deleted = FALSE " +
+//            "OR (prod.title LIKE :#{#search.keyword} " +
+//            "OR prod.code LIKE :#{#search.keyword} )" +
+//            "OR (prodImp.date_added BETWEEN :#{#search.fromDate} AND :#{#search.toDate} " +
+//            "OR :#{#search.fromDate} IS NULL) " +
+//            "GROUP BY prod.id")
+//    Page<Product> findProductsWithLimitNoStatus(ProductRequest search,Pageable pageable);
 
     @Query(value = "SELECT NEW cg.dto.product.ProductListResponse(" +
             "p.id,p.code,p.productAvatar,p.title,p.price,p.category.name" +

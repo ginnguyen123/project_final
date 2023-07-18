@@ -1,6 +1,7 @@
 package cg.api;
 
 import cg.dto.product.*;
+import cg.dto.productImport.ProductImpListResDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
@@ -15,10 +16,7 @@ import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
 import cg.service.product.IProductImportService;
 import cg.service.products.IProductService;
-import cg.utils.AppConstant;
-import cg.utils.AppUtils;
-import cg.utils.ProductRequest;
-import cg.utils.UploadUtils;
+import cg.utils.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

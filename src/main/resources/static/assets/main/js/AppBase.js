@@ -287,7 +287,7 @@ class AppBase{
 
     static renderCart(item,i){
         return`   <tr id="tr_${item.id}">
-                    <td> <input type="checkbox" id="delete_${item.id}"> </td>
+                 
                     <td>${item.id}</td>
                     <td>${item.customerName}</td>
                     <td>${item.productsName}</td>
@@ -301,14 +301,14 @@ class AppBase{
                     <td><button class="btn btn-trash btn-sm delete" type="button"
                                 title="Xóa" data-id="${item.id}"><i class="fas fa-trash-alt"></i>
                     </button>
-                      <button class="btn btn-edit btn-sm edit" type="button"
-                              title="Sửa" data-id="${item.id}"><i class="fa fa-edit"></i></button>
+                      <button class="btn btn-edit btn-sm edit" onclick="window.location.assign('carts/update/${item.id}')" type="button"
+                              title="Sửa" data-id="${item.id}">
+                              <i class="fa fa-edit"></i>
+                              </button>
                     </td>
                   </tr>`
     }
     static renderCartDetail(item){
-
-
         return`   <tr id="tr_${item.id}">
                     <td> <input type="checkbox" id="delete_${item.id}"> </td>
                     <td>
@@ -321,7 +321,7 @@ class AppBase{
                     <td> <select class="form-control-add size" data-id="${item.size}" id="${item.size}${item.id}" name="size">
                                 
                       </select></td>
-                    <td>${new Intl.NumberFormat('vi-VN', {
+                    <td class="productPrice product${item.productId}" data-id="${item.productPrice}" id="productPrice${item.id}" name="productPrice">${new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
         }).format(item.productPrice)}</td>
@@ -337,7 +337,6 @@ class AppBase{
                   </tr>
                 `
     }
-
 
 
 }

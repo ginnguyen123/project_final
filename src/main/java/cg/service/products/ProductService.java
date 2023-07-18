@@ -131,11 +131,10 @@ public class ProductService implements IProductService {
         if(request.getKeyword() !=null){
             request.setKeyword("%"+request.getKeyword()+"%");
         }
-        String strStatus = request.getStatus();
-//        EProductStatus productStatus = EProductStatus.getEProductStatus(strStatus);
-        Page<Product> products = productRepository.findProductsWithLimit(request, EProductStatus.valueOf(strStatus), pageable);
+        Page<Product> products = productRepository.findProductsWithLimit(request, pageable);
         return products;
     }
+
 
     @Override
     public List<ProductResClientDTO> findAllByCategoryFilter(Long id, FilterRes filter, Pageable pageable) {
@@ -339,4 +338,6 @@ public class ProductService implements IProductService {
         save(product);
         return product;
     }
+
+
 }

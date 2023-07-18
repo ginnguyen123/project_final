@@ -216,8 +216,8 @@ public class ProductImportService implements IProductImportService {
             request.setKeyword("%"+request.getKeyword()+"%");
         }
         List<Long> idProduct = request.getIdProducts();
-        String status = request.getStatus();
-        EProductStatus productStatus = EProductStatus.valueOf(status);
-        return productImportRepository.getAllByIdProduct(request,idProduct,productStatus);
+        return productImportRepository.getAllByIdProduct(request,idProduct);
     }
+
+
 }

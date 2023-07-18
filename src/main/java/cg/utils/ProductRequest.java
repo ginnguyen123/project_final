@@ -18,6 +18,6 @@ public class ProductRequest {
     private LocalDate toDate;
 
     private String keyword;
-
-    private String status;
+//
+//    private String status;
 }

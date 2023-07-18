@@ -38,4 +38,5 @@ public interface IProductImportService extends IGeneralService<ProductImport, Lo
     List<EColor> getAllColorByProductAndQuantity(Long productId);
 
     List<ProductImpListResDTO> getAllByIdProduct(ProductImportRequest request);
+
 }

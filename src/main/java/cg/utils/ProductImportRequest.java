@@ -19,7 +19,7 @@ public class ProductImportRequest {
 
     private String keyword;
 
-    private String status;
+//    private String status;
 
     private List<Long> idProducts;
 }
