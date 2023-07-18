@@ -311,13 +311,14 @@ class AppBase{
     static renderCartDetail(item){
         return`   <tr id="tr_${item.id}">
                     <td>
-                     <select class="form-control-add productName"  id="${item.id}" name="productName">
+                     <select class="form-control-add productName" data-title="${item.id}"  id="${item.id}" name="productName">
+                                
+                      </select>
+                     </td>
+                    <td> <select class="form-control-add color" data-title="${item.id}" data-id="${item.color}" id="${item.color}${item.id}" name="color">
                                 
                       </select></td>
-                    <td> <select class="form-control-add color" data-id="${item.color}" id="${item.color}${item.id}" name="color">
-                                
-                      </select></td>
-                    <td> <select class="form-control-add size" data-id="${item.size}" id="${item.size}${item.id}" name="size">
+                    <td> <select class="form-control-add size" data-title="${item.id}" data-id="${item.size}" id="${item.size}${item.id}" name="size">
                                 
                       </select></td>
                     <td class="productPrice product${item.productId}" data-id="${item.productPrice}" id="productPrice${item.id}" name="productPrice">${new Intl.NumberFormat('vi-VN', {
