@@ -310,7 +310,6 @@ class AppBase{
     }
     static renderCartDetail(item){
         return`   <tr id="tr_${item.id}">
-                    <td> <input type="checkbox" id="delete_${item.id}"> </td>
                     <td>
                      <select class="form-control-add productName"  id="${item.id}" name="productName">
                                 

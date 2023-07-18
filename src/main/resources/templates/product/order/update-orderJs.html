@@ -206,7 +206,7 @@
                     $.each(listCartDetail, (i, item)=>{
                         $(`#${item.id}`).val(item.productId)
                     })
-                    addEventChangePriceUp(listCartDetail.id);
+                    addEventChangeProduct();
                 });
                 pageCart.loadData.getSize().then(()=>{
                     $.each(listCartDetail, (i, item)=>{
@@ -240,14 +240,9 @@
                 data:JSON.stringify(objCartDetail)
             })
                 .done((data)=>{
-                    console.log("-----------")
                     console.log(data)
-                    $.each(data, (i, item) => {
                         let str = AppBase.renderCartDetail(data)
-                            $('#tr_' + item.id).replaceWith(str)
-
-                    })
-
+                            $('#tr_' + data.id).replaceWith(str)
                 })
                 .fail((jqXHR)=>{
                     console.log(jqXHR);
@@ -347,12 +342,10 @@
 
         }
 
-        function addEventChangePriceUp(id) {
+        function addEventChangeProduct() {
             $('.productName').on("change", function () {
-
-                pageCart.loadData.findCartById(id).then((data) => {
                     // phải tìm id của cartDetail
-                    idCartDetail = data.id;
+                    idCartDetail = "1";
                 let productId = $(this).val();
                 let colorPri = $('.color').val();
 
@@ -363,7 +356,7 @@
                 pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri)
 
             })
-        })
+
         }
 
 

@@ -130,11 +130,11 @@ public class CartDetailAPI {
 
     @PostMapping("/product-imp-cart-detail")
     public ResponseEntity<?> getProductImp(@RequestBody CartDetailListReqDTO cartDetailListRes){
-        Long idCartDetail = cartDetailListRes.getId();
+
         Long idProductRes = cartDetailListRes.getIdProduct();
         EColor color = cartDetailListRes.getColor();
         ESize size = cartDetailListRes.getSize();
-        Long idProduct = productImportRepository.findProductBySizeAndColor(idCartDetail,idProductRes,
+        Long idProduct = productImportRepository.findProductBySizeAndColor(idProductRes,
                  color.getValue(), size.getValue());
 
         if (idProduct == null ){ // trường hợp product không có sản phẩm có size có color phù hợp
@@ -144,10 +144,13 @@ public class CartDetailAPI {
         }
 
         Optional<Product> productOp = productService.findById(idProduct); // lấy được id Product + title
-        Long quantity = productImportRepository.checkQuantityProductImportByIdCartDetailAndSizeAndColor(idCartDetail,idProductRes,
+        Long quantity = productImportRepository.checkQuantityProductImportBySizeAndColor(idProductRes,
                 color.getValue(),size.getValue()); // lấy được số lượng sản phẩm còn trong kho
+        Long quantityProduct = 0l;
         CartDetailUpResDTO cartDetailUpRes = new CartDetailUpResDTO(cartDetailListRes.getId(),
-                idProductRes, quantity,size,  color,productOp.get().getTitle(), productOp.get().getPrice());
+                idProductRes, quantity,size,  color,quantityProduct,productOp.get().getTitle(), productOp.get().getPrice());
+
+
         return new ResponseEntity<>(cartDetailUpRes, HttpStatus.OK);
     }
 }

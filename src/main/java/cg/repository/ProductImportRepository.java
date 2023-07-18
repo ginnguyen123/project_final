@@ -116,29 +116,15 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
     Long checkQuantityProductImportBySizeAndColor(@Param("productId") Long productId,
                                                                        @Param("color")String color,
                                                                       @Param("size")String size);
-    @Query(value = "SELECT SUM(pi.quantity) " +
-            "FROM product_import AS pi " +
-            "where pi.product_id = :productId " +
-            "AND pi.id = :id " +
-            "AND pi.color = :color " +
-            "AND pi.size = :size " +
-            "AND pi.deleted = FALSE " +
-            "GROUP BY pi.product_id ",nativeQuery = true)
-    Long checkQuantityProductImportByIdCartDetailAndSizeAndColor(@Param("productId") Long productId,
-                                                  @Param("id") Long id,
-                                                  @Param("color")String color,
-                                                  @Param("size")String size);
 
     @Query(value = "SELECT pi.product_id " +
             "FROM product_import AS pi " +
             "where pi.product_id = :productId " +
-            "AND pi.id = :id " +
             "AND pi.color = :color " +
             "AND pi.size = :size " +
             "AND pi.deleted = FALSE " +
             "GROUP BY pi.product_id",nativeQuery = true)
     Long findProductBySizeAndColor(@Param("productId") Long productId,
-                                   @Param("id") Long id,
                                                      @Param("color")String color,
                                                      @Param("size")String size);
 
