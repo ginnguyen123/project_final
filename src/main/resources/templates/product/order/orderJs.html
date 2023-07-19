@@ -56,6 +56,7 @@
                 .done((data) => {
                     $('#cartTable tbody').empty();
                     listCart = data.content;
+                    console.log(listCart)
                     currentPageNumber = data.pageable.pageNumber
 
                     totalPages = data.totalPages;

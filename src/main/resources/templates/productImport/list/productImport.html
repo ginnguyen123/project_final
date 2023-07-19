@@ -1,6 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <th:block th:fragment="productImport">
 
+
 <script>
     const page = {
         urls:{
@@ -143,12 +144,20 @@
                                 caption: 'Màu',
                                 dataType: 'string',
                                 alignment: 'center',
+
                             },
                             {
                                 dataField: 'prices',
                                 caption: 'Giá',
                                 dataType: 'number',
                                 alignment: 'center',
+                                format: {
+                                    formatter: function (value) {
+                                        // Định dạng số từ 200000 thành 200,000đ
+                                        let formattedValue = value.toLocaleString('en-US'); // Định dạng số thành chuỗi có dấu phẩy
+                                        return formattedValue + "đ";
+                                    }
+                                }
                             },
                             {
                                 dataField: 'quantities',
@@ -173,7 +182,23 @@
                                 caption: 'Trạng thái ',
                                 dataType: 'string',
                                 alignment: 'center',
+                                cellTemplate: function(container, options) {
+                                    let status = options.value;
+                                    container.addClass("status-cell");
+                                    container.text(status);
+                                    if (status === "STOCKING") {
+                                        container.css("color", "green");
+                                        container.css("font-weight","bold");
+                                        container.css("font-size","13px");
+                                    } else if (status === "OUT_STOCK") {
+                                        container.css("color", "red");
+                                        container.css("font-weight","bold");
+                                        container.css("font-size","13px");
+                                    }
+                                }
+
                             },
+
                             {
                                 dataField: 'dateAdded',
                                 caption: 'Ngày nhập kho',
@@ -208,6 +233,19 @@
                             }
                         ],
                     },).dxDataGrid('instance');
+
+                    function getStatusColor(status) {
+                        // Hàm trả về mã màu tương ứng với trạng thái
+                        // Ví dụ: "success" - màu xanh lá cây, "error" - màu đỏ, vv.
+                        // Bạn có thể tùy chỉnh logic để trả về mã màu phù hợp với từng trạng thái
+                        if (status === "STOCKING") {
+                            return "green";
+                        } else if (status === "OUT_STOCK") {
+                            return "red";
+                        } else {
+                            return "black";
+                        }
+                    }
 
                     let strPage = page.commands.renderPagination(currentPageNumber, totalElements, totalPages );
                     $('#paginationUl').empty().append(strPage);
@@ -373,9 +411,13 @@
             .done((data) => {
                 console.log(data)
 
-                $('.select-search').select2({
-                    dropdownParent: $('#ModalUP')
+                $('#ModalUP').on('shown.bs.modal', function() {
+                    $('.select-search').select2({
+                        dropdownAutoWidth: true,
+                        dropdownParent: $('#ModalUP')
+                    });
                 });
+
 
             })
             .fail(() => {
@@ -480,18 +522,7 @@
                 });
         })
     }
-    function convertName(name){
-        let name123 = name.toLowerCase();
-        console.log(name123)
-        let arr = name123.split('');
-        let a = arr[0].toUpperCase();
-        console.log(arr)
-        for (let i = 1; i< arr.length; i++){
-            console.log(arr[i])
-            a += arr[i];
-        }
-        return a;
-    }
+
 
     function addAllEvent(){
         addEventEditClick();
@@ -567,6 +598,9 @@
     $(()=>{
         page.commands.loadData();
         page.initializeControlEvent();
+
+
+
     })
 
 </script>

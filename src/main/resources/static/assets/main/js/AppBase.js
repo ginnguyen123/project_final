@@ -286,9 +286,16 @@ class AppBase{
     }
 
     static renderCart(item,i){
+
+        let str = `${item.createdAt}`
+        let date = new Date(str);
         return`   <tr id="tr_${item.id}">
-                 
-                    <td>${item.id}</td>
+                 <td>${new Intl.DateTimeFormat('vi-VN',{
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+            }
+        ).format(date)}</td>
                     <td>${item.customerName}</td>
                     <td>${item.productsName}</td>
                     <td>${new Intl.NumberFormat('vi-VN', {
@@ -311,7 +318,7 @@ class AppBase{
     static renderCartDetail(item){
         return`   <tr id="tr_${item.id}">
                     <td>
-                     <select class="form-control-add productName" data-title="${item.id}"  id="${item.id}" name="productName">
+                     <select class="form-control-add productName" data-id="${item.id}"  id="product_${item.id}" name="productName">
                                 
                       </select>
                      </td>
@@ -325,7 +332,11 @@ class AppBase{
             style: 'currency',
             currency: 'VND'
         }).format(item.productPrice)}</td>
-                    <td>${item.quantity}</td>
+                    <td class="quantity" id="quantity_${item.id}" data-id="${item.id}">
+                    <input id="quantityIn_${item.id}"  value="${item.quantity}" class="test-hidden">
+                    <span id="test-show_${item.id}"> ${item.quantity}</span>
+                    
+                    </td>
                     <td>${new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
@@ -339,7 +350,10 @@ class AppBase{
     }
 
 
+
+
 }
+
 
 class Brand{
     constructor(id, name){
@@ -439,5 +453,6 @@ class CartDetail{
         this.status = status;
     }
 }
+
 
 

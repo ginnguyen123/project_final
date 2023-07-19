@@ -130,7 +130,7 @@ public class CartDetailAPI {
 
     @PostMapping("/product-imp-cart-detail")
     public ResponseEntity<?> getProductImp(@RequestBody CartDetailListReqDTO cartDetailListRes){
-
+        Long quantityFE = cartDetailListRes.getQuantity();
         Long idProductRes = cartDetailListRes.getIdProduct();
         EColor color = cartDetailListRes.getColor();
         ESize size = cartDetailListRes.getSize();
@@ -138,19 +138,31 @@ public class CartDetailAPI {
                  color.getValue(), size.getValue());
 
         if (idProduct == null ){ // trường hợp product không có sản phẩm có size có color phù hợp
-            Long zeroQuantity = 0l;
+            Long zeroQuantity = 0L;
             CartDetailUpResDTO productIsNull = new CartDetailUpResDTO();
             return new ResponseEntity<>(productIsNull, HttpStatus.OK);
         }
 
-        Optional<Product> productOp = productService.findById(idProduct); // lấy được id Product + title
-        Long quantity = productImportRepository.checkQuantityProductImportBySizeAndColor(idProductRes,
-                color.getValue(),size.getValue()); // lấy được số lượng sản phẩm còn trong kho
-        Long quantityProduct = 0l;
-        CartDetailUpResDTO cartDetailUpRes = new CartDetailUpResDTO(cartDetailListRes.getId(),
-                idProductRes, quantity,size,  color,quantityProduct,productOp.get().getTitle(), productOp.get().getPrice());
+            Optional<Product> productOp = productService.findById(idProduct); // lấy được id Product + title
+            Long quantityImport = productImportRepository.checkQuantityProductImportBySizeAndColor(idProductRes,
+                    color.getValue(),size.getValue()); // lấy được số lượng sản phẩm còn trong kho
+
+            CartDetailUpResDTO cartDetailUpRes = new CartDetailUpResDTO();
+                    cartDetailUpRes.setId(cartDetailListRes.getId());
+                    cartDetailUpRes.setProductId(idProductRes);
+                    cartDetailUpRes.setProductImpQuantity(quantityImport);
+                    cartDetailUpRes.setSize(size);
+                    cartDetailUpRes.setColor(color);
+                    cartDetailUpRes.setProductTitle(productOp.get().getTitle());
+                    cartDetailUpRes.setProductPrice(productOp.get().getPrice());
+                    if (quantityFE==null){
+                        quantityFE = 0L;
+                        cartDetailUpRes.setQuantity(quantityFE);
+                    }else {
+                        cartDetailUpRes.setQuantity(quantityFE);
+                    }
 
 
-        return new ResponseEntity<>(cartDetailUpRes, HttpStatus.OK);
-    }
+            return new ResponseEntity<>(cartDetailUpRes,HttpStatus.OK);
+        }
 }

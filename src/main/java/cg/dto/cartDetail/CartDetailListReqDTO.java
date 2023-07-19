@@ -14,4 +14,5 @@ public class CartDetailListReqDTO {
     private Long idProduct;
     private EColor color;
     private ESize size;
+    private Long quantity;
 }

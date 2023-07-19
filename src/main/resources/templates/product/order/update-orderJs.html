@@ -117,6 +117,7 @@
             })
                 .done((data)=>{
                     $('.productName').empty();
+
                     $.each(data, (i, item) => {
                         let str = `<option value="${item.id}">${item.title}</option>`;
                         $('.productName').append(str);
@@ -163,6 +164,7 @@
                         $('.color').append(str);
                     })
 
+
                 })
                 .fail((jqXHR)=>{
                     console.log(jqXHR);
@@ -207,9 +209,9 @@
                 $('#tbCartDetail').append(str);
                 pageCart.loadData.getProductName().then(()=>{
                     $.each(listCartDetail, (i, item)=>{
-                        $(`#${item.id}`).val(item.productId)
+                        $(`#product_${item.id}`).val(item.productId)
                     })
-                    addEventChangeProduct();
+
                 });
                 pageCart.loadData.getSize().then(()=>{
                     $.each(listCartDetail, (i, item)=>{
@@ -221,20 +223,20 @@
                         $(`#${item.color}${item.id}`).val(item.color)
                     })
                 });
-                addEventDeleteClick();
             });
+
+            addEventDeleteClick();
             /*]]>*/
         }
 
-        pageCart.loadData.getCartDetail = (id,idProduct, color, size) =>{
+        pageCart.loadData.getCartDetail = (id,idProduct, color, size,quantity) =>{
             let objCartDetail = {
                 id:id,
                 idProduct:idProduct,
                 size:size,
-                color:color
+                color:color,
+                quantity:quantity
             }
-            console.log("-----------")
-            console.log(objCartDetail)
             return $.ajax({
                 dataType: 'json',
                 contentType: 'application/json',
@@ -243,9 +245,21 @@
                 data:JSON.stringify(objCartDetail)
             })
                 .done((data)=>{
+                    console.log("data------")
                     console.log(data)
                         let str = AppBase.renderCartDetail(data)
-                            $('#tr_' + data.id).replaceWith(str)
+                            $('#tr_' + id).replaceWith(str)
+                    pageCart.loadData.getProductName().then(()=>{
+                        $(`#product_${data.id}`).val(data.productId);
+                    });
+                    pageCart.loadData.getColor().then(()=>{
+                        $(`#${data.color}${data.id}`).val(data.color);
+                    });
+                    pageCart.loadData.getSize().then(()=>{
+                        $(`#${data.size}${data.id}`).val(data.size);
+                    });
+
+
                 })
                 .fail((jqXHR)=>{
                     console.log(jqXHR);
@@ -348,25 +362,61 @@
         function addEventChangeProduct() {
             $('.productName').on("change", function () {
                     // phải tìm id của cartDetail
-                let idCartDetail = $(this).data("title");
-                console.log("idCartDetail")
-                console.log(idCartDetail)
+                let idCartDetail = $(this).data("id");
                 let productId = $(this).val();
-                console.log("productId")
-                console.log(productId)
                 let colorPri = $('.color').val();
-                console.log("colorPri")
-                console.log(colorPri)
                 let sizePri = $('.size').val();
-                console.log("sizePri")
-                console.log(sizePri)
+                let quantity = $('.quantity input').val();
+                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity)
 
-                // pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri)
+
+            })
+
+        }
+        function addEventChangeColor() {
+            $('.color').on("change", function () {
+                // phải tìm id của cartDetail
+                let idCartDetail = $(this).data("id");
+                let productId = $(this).val();
+                let colorPri = $('.color').val();
+                let sizePri = $('.size').val();
+                let quantity = $('.quantity input').val();
+                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity)
+
+
+            })
+
+        }
+        function addEventChangeSize() {
+            $('.size').on("change", function () {
+                // phải tìm id của cartDetail
+                let idCartDetail = $(this).data("id");
+                let productId = $(this).val();
+                let colorPri = $('.color').val();
+                let sizePri = $('.size').val();
+                let quantity = $('.quantity input').val();
+                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity)
+
 
             })
 
         }
 
+        function onChangeQuantity() {
+            $(document).ready(function (){
+                    $('.quantity').on('dblclick' ,function () {
+                        let idCartDetail = $(this).data("id");
+                        $(`#quantityIn_${idCartDetail}`).removeClass('test-hidden');
+                        $(`#test-show_${idCartDetail}`).addClass('test-hidden');
+                        // let quantity = $(this).val();
+                    // let quantityUp = `<input id="quantityInput" > ${quantity}`;
+                    //     console.log(quantity)
+                    //     console.log(quantityUp)
+                    // $('#quantityInput').val(quantityUp);
+                })
+            })
+
+        }
 
         function addEventChangeProvinceUp() {
             pageCart.dialogs.elements.provinceUp.on("change", function () {
@@ -396,10 +446,15 @@
             pageCart.loadData.getCart();
         }
         pageCart.initializeControlEvent = () => {
-
+            addEventChangeProduct();
+            addEventChangeColor();
+            addEventChangeSize();
+            onChangeQuantity();
             //change thay đổi sản phẩm
             // change size
             // change màu
+
+
 
         }
         $(() => {
