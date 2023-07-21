@@ -286,9 +286,16 @@ class AppBase{
     }
 
     static renderCart(item,i){
+
+        let str = `${item.createdAt}`
+        let date = new Date(str);
         return`   <tr id="tr_${item.id}">
-                    <td> <input type="checkbox" id="delete_${item.id}"> </td>
-                    <td>${item.id}</td>
+                 <td>${new Intl.DateTimeFormat('vi-VN',{
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+            }
+        ).format(date)}</td>
                     <td>${item.customerName}</td>
                     <td>${item.productsName}</td>
                     <td>${new Intl.NumberFormat('vi-VN', {
@@ -301,32 +308,36 @@ class AppBase{
                     <td><button class="btn btn-trash btn-sm delete" type="button"
                                 title="Xóa" data-id="${item.id}"><i class="fas fa-trash-alt"></i>
                     </button>
-                      <button class="btn btn-edit btn-sm edit" type="button"
-                              title="Sửa" data-id="${item.id}"><i class="fa fa-edit"></i></button>
+                      <button class="btn btn-edit btn-sm edit" onclick="window.location.assign('carts/update/${item.id}')" type="button"
+                              title="Sửa" data-id="${item.id}">
+                              <i class="fa fa-edit"></i>
+                              </button>
                     </td>
                   </tr>`
     }
     static renderCartDetail(item){
-
-
         return`   <tr id="tr_${item.id}">
-                    <td> <input type="checkbox" id="delete_${item.id}"> </td>
                     <td>
-                     <select class="form-control-add productName"  id="${item.id}" name="productName">
+                     <select class="form-control-add productName" data-id="${item.id}"  id="product_${item.id}" name="productName">
+                                
+                      </select>
+                     </td>
+                    <td> <select class="form-control-add color" data-title="${item.id}" data-id="${item.id}" id="color_${item.id}" name="color">
                                 
                       </select></td>
-                    <td> <select class="form-control-add color" data-id="${item.color}" id="${item.color}${item.id}" name="color">
+                    <td> <select class="form-control-add size" data-title="${item.id}" data-id="${item.id}" id="size_${item.id}" name="size">
                                 
                       </select></td>
-                    <td> <select class="form-control-add size" data-id="${item.size}" id="${item.size}${item.id}" name="size">
-                                
-                      </select></td>
-                    <td>${new Intl.NumberFormat('vi-VN', {
+                    <td class="productPrice product${item.productId}" data-id="${item.productPrice}" id="productPrice${item.id}" name="productPrice">${new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
         }).format(item.productPrice)}</td>
-                    <td>${item.quantity}</td>
-                    <td>${new Intl.NumberFormat('vi-VN', {
+                    <td class="quantity" id="quantity_${item.id}" data-id="${item.id}">
+                    <input id="quantityIn_${item.id}"  value="${item.quantity}" class="test-hidden">
+                    <span id="test-show_${item.id}"> ${item.quantity}</span>
+                    
+                    </td>
+                    <td id="totalAmount_${item.id}">${new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
         }).format(item.totalAmountDetail)}</td>
@@ -340,7 +351,9 @@ class AppBase{
 
 
 
+
 }
+
 
 class Brand{
     constructor(id, name){
@@ -440,5 +453,6 @@ class CartDetail{
         this.status = status;
     }
 }
+
 
 

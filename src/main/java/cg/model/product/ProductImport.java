@@ -56,6 +56,7 @@ public class ProductImport extends BaseEntity {
     private LocalDate date_added;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private EProductStatus productStatus;
 
     @ManyToOne

@@ -55,19 +55,23 @@
                class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
             <div class="row">
               <div class="col-sm-12 col-md-6">
-                <div class="dataTables_length" id="sampleTable_length"><label>Hiện <select
+                <div class="dataTables_length" id="sampleTable_length">
+                  <label>Hiện <select
                         name="sampleTable_length" aria-controls="sampleTable"
                         class="form-control form-control-sm" id="sizePage">
                   <option value="10">10</option>
                   <option value="25">25</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
-                </select> danh mục</label></div>
+                </select> danh mục</label>
+                </div>
               </div>
               <div class="col-sm-12 col-md-6">
-                <div id="sampleTable_filter" class="dataTables_filter"><label>Tìm kiếm:<input
+                <div id="sampleTable_filter" class="dataTables_filter">
+                  <label>Tìm kiếm:<input
                         type="search" class="form-control form-control-sm search" id="keyword" placeholder=""
-                        aria-controls="sampleTable"></label></div>
+                        aria-controls="sampleTable"></label>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -76,12 +80,10 @@
                        id="cartTable" role="grid" aria-describedby="sampleTable_info">
                   <thead>
                   <tr role="row">
-                    <th width="10" class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label=": activate to sort column descending"
-                        style="width: 13px;"><input type="checkbox" id="all"></th>
                     <th class="sorting" tabindex="0" aria-controls="sampleTable"
                         rowspan="1" colspan="1"
                         aria-label="ID đơn hàng: activate to sort column ascending"
-                        style="width: 69.9531px;">ID đơn hàng</th>
+                        style="width: 69.9531px;">Ngày tạo đơn</th>
                     <th class="sorting" tabindex="0" aria-controls="sampleTable"
                         rowspan="1" colspan="1"
                         aria-label="Khách hàng: activate to sort column ascending"

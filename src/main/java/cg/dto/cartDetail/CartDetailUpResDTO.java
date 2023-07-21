@@ -1,10 +1,7 @@
 package cg.dto.cartDetail;
 
-import cg.model.cart.Cart;
-import cg.model.cart.CartDetail;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
-import cg.model.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,17 +13,16 @@ import java.math.BigDecimal;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartDetailResDTO {
+public class CartDetailUpResDTO {
     private Long id;
-
     private Long productId;
-    private EColor color;
+    private Long productImpQuantity;
     private ESize size;
+    private EColor color;
     private Long quantity;
-    private BigDecimal price;
-    private String title;
-    private BigDecimal totalAmountItem;
-    private String avt;
+    private String productTitle;
+    private BigDecimal productPrice;
+    private BigDecimal total;
 
 
 }

@@ -4,15 +4,16 @@ import cg.dto.productImport.*;
 
 import cg.exception.ResourceNotFoundException;
 import cg.model.enums.EColor;
+import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
 import cg.model.product.ProductImport;
+import cg.repository.ProductImportRepository;
 import cg.service.product.IProductImportService;
 import cg.service.products.IProductService;
 import cg.utils.AppUtils;
 import cg.utils.ProductImportRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +37,24 @@ public class ProductImportAPI {
     private IProductService productService;
 
     @Autowired
+    private ProductImportRepository productImportRepository;
+
+    @Autowired
     private AppUtils appUtils;
 
-    @PostMapping("/search")
-    public ResponseEntity<?> pageableByKeywordAndDate(@RequestBody ProductImportRequest request, Pageable pageable) {
-        Page<ProductImportDTO> productImportList = productImportService.pageableByKeywordAndDate(request, pageable);
-        return new ResponseEntity<>(productImportList, HttpStatus.OK);
+//    @PostMapping("/search")
+//    public ResponseEntity<?> pageableByKeywordAndDate(@RequestBody ProductImportRequest request, Pageable pageable) {
+//        Page<ProductImpListResDTO> productImportList = productService.getAllForDataGrid(request, pageable);
+//        return new ResponseEntity<>(productImportList, HttpStatus.OK);
+//    }
+
+    @PostMapping("/by-id-product")
+    public ResponseEntity<?> getAllByIdProduct(@RequestBody ProductImportRequest request) {
+        List<ProductImpListResDTO> productImportRequests = productImportService.getAllByIdProduct(request);
+        // List<Long> idProducts, keyword,
+        return new ResponseEntity<>(productImportRequests,HttpStatus.OK);
     }
+
     @PostMapping
     public ResponseEntity<?> createNewProductImport(
             @Validated ProductImportCreReqDTO productImportCreReqDTO,
@@ -107,9 +119,9 @@ public class ProductImportAPI {
         return new ResponseEntity<>(strSizes, HttpStatus.OK);
     }
 
-    @GetMapping("/data-grid")
-    public ResponseEntity<?> getAllForDataGrid(@RequestParam(required = false, defaultValue = "") String search, Pageable pageable){
-        Page<ProductImpListResDTO> productImps = productImportService.getAllForDataGrid(search, pageable);
-        return new ResponseEntity<>(productImps, HttpStatus.OK);
-    }
+//    @GetMapping("/data-grid")
+//    public ResponseEntity<?> getAllForDataGrid(@RequestParam(required = false, defaultValue = "") String search, Pageable pageable){
+//        Page<ProductImpListResDTO> productImps = productImportService.getAllForDataGrid(search, pageable);
+//        return new ResponseEntity<>(productImps, HttpStatus.OK);
+//    }
 }

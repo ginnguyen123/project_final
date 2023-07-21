@@ -4,9 +4,12 @@ import cg.dto.productImport.ProductImpListResDTO;
 import cg.dto.productImport.ProductImportDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.model.enums.EColor;
+import cg.model.enums.EProductStatus;
 import cg.model.enums.ESize;
+import cg.model.product.Product;
 import cg.model.product.ProductImport;
 import cg.utils.ProductImportRequest;
+import cg.utils.ProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -74,7 +77,7 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "AND (:#{#request.fromDate} is null or pi.date_added BETWEEN :#{#request.fromDate} AND :#{#request.toDate}) " +
             "AND pi.deleted = false"
     )
-    Page<ProductImportDTO> pageableByKeywordAndDate( ProductImportRequest request, Pageable pageable);
+    Page<ProductImportDTO> pageableByKeywordAndDate(ProductRequest request, Pageable pageable);
 
     @Query("SELECT NEW cg.dto.productImport.ProductImportResDTO(" +
         "pi.product.id, " +
@@ -109,10 +112,21 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "AND pi.color = :color " +
             "AND pi.size = :size " +
             "AND pi.deleted = FALSE " +
-            "GROUP BY pi.product_id, pi.size, pi.color",nativeQuery = true)
+            "GROUP BY pi.product_id ",nativeQuery = true)
     Long checkQuantityProductImportBySizeAndColor(@Param("productId") Long productId,
                                                                        @Param("color")String color,
                                                                       @Param("size")String size);
+
+    @Query(value = "SELECT pi.product_id " +
+            "FROM product_import AS pi " +
+            "where pi.product_id = :productId " +
+            "AND pi.color = :color " +
+            "AND pi.size = :size " +
+            "AND pi.deleted = FALSE " +
+            "GROUP BY pi.product_id",nativeQuery = true)
+    Long findProductBySizeAndColor(@Param("productId") Long productId,
+                                                     @Param("color")String color,
+                                                     @Param("size")String size);
 
     @Query(value = "SELECT pi.color  FROM product_import AS pi  WHERE pi.product_id = :productId AND pi.quantity>0 AND pi.deleted = 0 GROUP BY pi.color", nativeQuery = true)
     List<EColor> getAllColorByProductAndQuantity(@Param("productId") Long productId);
@@ -147,22 +161,51 @@ public interface ProductImportRepository extends JpaRepository<ProductImport, Lo
             "GROUP BY imp.size", nativeQuery = true)
     List<ESize> findAllSizeCategory(@Param("categoryId") Long id, @Param("today")LocalDate today);
 
-    @Query(value = "SELECT NEW cg.dto.productImport.ProductImpListResDTO(prodImp.id, prod.id, prodImp.size, " +
+    @Query(value = "SELECT NEW cg.dto.productImport.ProductImpListResDTO( prod.id,prodImp.id, prodImp.size, " +
             "prodImp.color, prodImp.price, prodImp.quantity,prodImp.quantityExist, prodImp.selled, prodImp.productStatus, prod.title, prodImp.date_added) " +
             "FROM ProductImport AS prodImp " +
             "INNER JOIN Product AS prod ON prod = prodImp.product " +
             "WHERE prod.deleted = FALSE AND prodImp.deleted = FALSE " +
-            "AND (prod.title LIKE :search " +
-            "OR prod.category.name LIKE :search " +
-            "OR prod.code LIKE :search " +
-            "OR prod.brand.name LIKE :search " +
-            "OR prod.price = :search " +
-            "OR prodImp.price = :search " +
-            "OR prodImp.code LIKE :search " +
-            "OR prodImp.quantityExist = :search " +
-            "OR prodImp.quantity = :search " +
-            "OR prodImp.quantityExist = :search) " +
+            "AND (prod.title LIKE :#{#search.keyword} " +
+//            "OR prod.category.name LIKE :#{#search.keyword} " +
+            "OR prod.code LIKE :#{#search.keyword} )" +
+//            "OR prod.brand.name LIKE :#{#search.keyword} " +
+//            "OR prod.price = :#{#search.keyword} " +
+//            "OR prodImp.price = :#{#search.keyword} " +
+//            "OR prodImp.code LIKE :#{#search.keyword}) " +
+//            "OR prodImp.quantity = :#{#search.keyword} " +
+//            "OR prodImp.quantityExist = :#{#search.keyword} " +
+            "AND (prodImp.date_added BETWEEN :#{#search.fromDate} AND :#{#search.toDate} " +
+            "OR :#{#search.fromDate} IS NULL) " +
+            "AND prodImp.product.id IN :#{#search.idProduct} " +
             "GROUP BY prodImp.id ")
-    Page<ProductImpListResDTO> findAllForDataGrid(@Param("search")String search ,Pageable pageable);
+    Page<ProductImpListResDTO> findAllForDataGrid(ProductRequest search , Pageable pageable);
+
+    @Query(value = "SELECT NEW cg.dto.productImport.ProductImpListResDTO(prod.id,prodImp.id, prodImp.size, " +
+            "prodImp.color, prodImp.price, prodImp.quantity,prodImp.quantityExist, prodImp.selled, prodImp.productStatus, prod.title, prodImp.date_added) " +
+            "FROM ProductImport AS prodImp " +
+            "INNER JOIN Product AS prod ON prod.id = prodImp.product.id " +
+            "WHERE prod.deleted = FALSE AND prodImp.deleted = FALSE " +
+            "AND prod.id IN :idProducts " +
+            "AND (prod.title LIKE :#{#request.keyword} " +
+            "AND (prodImp.date_added BETWEEN :#{#request.fromDate} AND :#{#request.toDate} " +
+            "OR :#{#request.fromDate} IS NULL))")
+    List<ProductImpListResDTO> getAllByIdProduct(ProductImportRequest request,
+                                                 @Param("idProducts") List<Long> idProducts);
+
+    @Query(value = "SELECT NEW cg.dto.productImport.ProductImpListResDTO(prod.id,prodImp.id, prodImp.size, " +
+            "prodImp.color, prodImp.price, prodImp.quantity,prodImp.quantityExist, prodImp.selled, prodImp.productStatus, prod.title, prodImp.date_added) " +
+            "FROM ProductImport AS prodImp " +
+            "INNER JOIN Product AS prod ON prod.id = prodImp.product.id " +
+            "WHERE prod.deleted = FALSE AND prodImp.deleted = FALSE " +
+            "AND prod.id IN :idProducts " +
+            "AND (prod.title LIKE :#{#request.keyword} " +
+            "OR (prodImp.date_added BETWEEN :#{#request.fromDate} AND :#{#request.toDate} " +
+            "OR :#{#request.fromDate} IS NULL))" +
+            "AND :#{#request.status} = :status " )
+
+    List<ProductImpListResDTO> getAllByIdProductNotSearchStatus(ProductImportRequest request,
+                                                                @Param("status")String status,
+                                                            @Param("idProducts") List<Long> idProducts);
 
 }

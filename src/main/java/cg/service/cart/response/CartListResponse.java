@@ -5,6 +5,7 @@ import cg.model.enums.ECartStatus;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Data
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class CartListResponse {
     private Long id;
-
+    private Date createdAt;
     private String customerName;
 
     private String productsName;
@@ -26,6 +27,7 @@ public class CartListResponse {
 
     public CartListResponse(Cart cart){
         id = cart.getId();
+        createdAt = cart.getCreatedAt();
         customerName = cart.getName_receiver();
         total = cart.getTotalAmount();
         productsName = cart.getCartDetails().stream().map(p -> p.getProduct().getTitle()).collect(Collectors.joining(", "));

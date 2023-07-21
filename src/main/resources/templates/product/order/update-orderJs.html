@@ -20,8 +20,10 @@
             }
         }
         let locationRegion = new LocationRegion();
-        let idCartDetail;
+        let cartDetail = new CartDetail();
+        let idCurrentCartDetail;
         let color;
+        let sizes;
         pageCart.dialogs.elements.locationRegionIdUp = $('#locationRegionIdUp');
         pageCart.dialogs.elements.provinceUp = $('#provinceUp');
         pageCart.dialogs.elements.districtUp = $('#districtUp');
@@ -108,13 +110,13 @@
         }
 
         pageCart.loadData.getProductName = () =>{
-
             return $.ajax({
                 type: 'GET',
                 url: pageCart.urls.getAllProducts
             })
                 .done((data)=>{
                     $('.productName').empty();
+
                     $.each(data, (i, item) => {
                         let str = `<option value="${item.id}">${item.title}</option>`;
                         $('.productName').append(str);
@@ -127,50 +129,109 @@
 
         }
 
-        // pageCart.loadData.getSize = () =>{
-        //
-        //     return $.ajax({
-        //         type: 'GET',
-        //         url: pageCart.urls.getAllCartDetail +'sizes'
-        //     })
-        //         .done((data)=>{
-        //             $('.size').empty();
-        //             $.each(data, (i, item) => {
-        //                 let str = `<option value="${item}">${item}</option>`;
-        //                 $('.size').append(str);
-        //             })
-        //
-        //         })
-        //         .fail((jqXHR)=>{
-        //             console.log(jqXHR);
-        //         })
-        //
-        // }
+        pageCart.loadData.getProductNameByElement = (element) =>{
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getAllProducts
+            })
+                .done((data)=>{
+                    element.empty();
 
-        // pageCart.loadData.getColor = () =>{
-        //     return $.ajax({
-        //         type: 'GET',
-        //         url: pageCart.urls.getAllCartDetail +'colors'
-        //     })
-        //         .done((data)=>{
-        //             $('.color').empty();
-        //             $.each(data, (i, item) => {
-        //                 let str = `<option value="${item}">${item}</option>`;
-        //                 $('.color').append(str);
-        //             })
-        //
-        //         })
-        //         .fail((jqXHR)=>{
-        //             console.log(jqXHR);
-        //         })
-        //
-        // }
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item.id}">${item.title}</option>`;
+                        element.append(str);
+                    })
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+        }
+
+        pageCart.loadData.getSize = () =>{
+
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getAllCartDetail +'sizes'
+            })
+                .done((data)=>{
+                    $('.size').empty();
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item}">${item}</option>`;
+                        $('.size').append(str);
+                    })
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+
+        }
+        pageCart.loadData.getSizeByElement = (element) =>{
+
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getAllCartDetail +'sizes'
+            })
+                .done((data)=>{
+                    element.empty();
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item}">${item}</option>`;
+                        element.append(str);
+                    })
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+
+        }
+
+        pageCart.loadData.getColor = () =>{
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getAllCartDetail +'colors'
+            })
+                .done((data)=>{
+                    $('.color').empty();
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item}">${item}</option>`;
+                        $('.color').append(str);
+                    })
+
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+
+        }
+        pageCart.loadData.getColorByElement = (element) =>{
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getAllCartDetail +'colors'
+            })
+                .done((data)=>{
+                    element.empty();
+                    $.each(data, (i, item) => {
+                        let str = `<option value="${item}">${item}</option>`;
+                        element.append(str);
+                    })
+
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+
+        }
 
         pageCart.loadData.getCart = () => {
             /*<![CDATA[*/
             let data = /*[[${data}]]*/ 'default';
             let cart = data.cart;
-            console.log('cart'+cart)
+            console.log(" pageCart.loadData.getCart");
+            console.log(cart)
             let name_receiver = cart.name_receiver;
             let phone_receiver = cart.phone_receiver;
             let locationRegion = cart.locationRegion;
@@ -188,50 +249,144 @@
             pageCart.dialogs.loadData.getAllProvinces().then(() => {
                 pageCart.dialogs.elements.provinceUp.val(locationRegion.provinceId)
             })
+
             pageCart.dialogs.loadData.getAllDistrictsByProvince(locationRegion.provinceId).then(() => {
                 pageCart.dialogs.elements.districtUp.val(locationRegion.districtId)
             })
+
             pageCart.dialogs.loadData.getAllWardsByDistrict(locationRegion.districtId).then(() => {
                 pageCart.dialogs.elements.wardUp.val(locationRegion.wardId)
             })
-            console.log('cartDetail'+JSON.stringify(listCartDetail))
+
             $.each(listCartDetail, (i, item)=>{
                 let str = AppBase.renderCartDetail(item);
-
                 $('#tbCartDetail').append(str);
-                $(`#${item.size}${item.id}`).empty();
-                let str2 = `<option value="${item.size}">${item.size}</option>`
-                $(`#${item.size}${item.id}`).append(str2)
-                $(`#${item.color}${item.id}`).empty()
-                let str3 = `<option value="${item.color}">${item.color}</option>`
-                $(`#${item.color}${item.id}`).append(str3)
+                pageCart.loadData.getProductName().then(()=>{
+                    $.each(listCartDetail, (i, item)=>{
+                        $(`#product_${item.id}`).val(item.productId)
+                    })
 
-
-                addEventDeleteClick();
+                });
+                pageCart.loadData.getSize().then(()=>{
+                    $.each(listCartDetail, (i, item)=>{
+                        $(`#size_${item.id}`).val(item.size)
+                    })
+                });
+                pageCart.loadData.getColor().then(()=>{
+                    $.each(listCartDetail, (i, item)=>{
+                        $(`#color_${item.id}`).val(item.color)
+                    })
+                });
             });
-            pageCart.loadData.getProductName().then(()=>{
-                $.each(listCartDetail, (i, item)=>{
-                    $(`#${item.id}`).val(item.productId)
-                })
-            });
-            // pageCart.loadData.getSize().then(()=>{
-            //     console.log('cartDetail'+JSON.stringify(listCartDetail))
-            //     $.each(listCartDetail, (i, item)=>{
-            //         $(`#${item.size}${item.id}`).val(item.size)
-            //
-            //
-            //     })
-            // });
 
-            // pageCart.loadData.getAllColor().then(()=>{
-            //     console.log(listCartDetail)
-            //     $.each(listCartDetail, (i, item)=>{
-            //
-            //         $(`#${item.color}${item.id}`).val(item.color)
-            //     })
-            // });
+            onChangeQuantity();
+            addEventChangeProduct();
+            addEventChangeColor();
+            addEventChangeSize();
 
+            addEventDeleteClick();
             /*]]>*/
+        }
+
+        function changeTotalAmountByProduct(id){
+            let price = $(`#productPrice${id}`).text();
+            let product = document.getElementById(`product_${id}`);
+            console.log(product)
+            let valueQuantity = $(`#quantityIn_${id}`).val();
+            if (valueQuantity !== undefined && valueQuantity !== null) {
+                product.addEventListener("select", function () {
+                    console.log("addEventListener")
+                    let quantityProduct = +quantity.value;
+                    let strPriceProduct = price;
+                    let amountNumber = parseInt(strPriceProduct.replace(/đ|\./g, ""));
+                    let totalAmount = amountNumber * quantityProduct;
+                    let strTotalAmount = AppBase.removeFormatNumberSpace(totalAmount);
+                    let formatter = new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(strTotalAmount)
+                    $(`#totalAmount_${id}`).text(formatter);
+                })
+            }
+        }
+        function changeTotalAmountByQuantity(id){
+            let price = $(`#productPrice${id}`).text();
+            let quantity = document.getElementById(`quantityIn_${id}`);
+            let valueQuantity = $(`#quantityIn_${id}`).val();
+            if (valueQuantity !== undefined && valueQuantity !== null) {
+            quantity.addEventListener("input", function () {
+                console.log("addEventListener")
+                let quantityProduct = +quantity.value;
+                let strPriceProduct = price;
+                let amountNumber = parseInt(strPriceProduct.replace(/đ|\./g, ""));
+                let totalAmount = amountNumber * quantityProduct;
+                let strTotalAmount = AppBase.removeFormatNumberSpace(totalAmount);
+                let formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(strTotalAmount)
+                $(`#totalAmount_${id}`).text(formatter);
+                })
+            }
+        }
+
+        pageCart.loadData.getCartDetail = (id,idProduct, color, size,quantity,price) =>{
+            let objCartDetail = {
+                id:id,
+                idProduct:idProduct,
+                size:size,
+                color:color,
+                quantity:quantity,
+                productPrice:price
+            }
+            return $.ajax({
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'POST',
+                url: pageCart.urls.getAllCartDetail +'product-imp-cart-detail',
+                data:JSON.stringify(objCartDetail)
+            })
+                .done((data)=>{
+                    console.log("data------")
+                    console.log(data.productImpQuantity)
+                        let str = AppBase.renderCartDetail(data)
+                            $('#tr_' + id).replaceWith(str)
+
+                    if (data.productImpQuantity == null || data.productImpQuantity === 0)
+                        AppBase.IziToast.showErrorAlert("Sản phẩm hết hàng")
+
+                    pageCart.loadData.getProductNameByElement($(`#product_${data.id}`)).then(()=>{
+                        $(`#product_${data.id}`).val(idProduct);
+
+                    });
+                    pageCart.loadData.getColorByElement($(`#color_${data.id}`)).then(()=>{
+                        $(`#color_${data.id}`).val(color);
+                    });
+                    pageCart.loadData.getSizeByElement($(`#size_${data.id}`)).then(()=>{
+                        $(`#size_${data.id}`).val(size);
+                    });
+                    pageCart.loadData.getPrice(idProduct).then(()=>{
+                        $(`#productPrice${data.id}`).val(price);
+                    })
+                    changeTotalAmountByProduct(id)
+                    changeTotalAmountByQuantity(id);
+                    onChangeQuantity();
+                    addEventChangeProduct();
+                    addEventChangeColor();
+                    addEventChangeSize();
+
+
+
+
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+            // call api http://localhost:8086/api/cart-details/product-imp-cart-detail
+            // => trả về data => log data ra xem
+            //let str = App.renderCartDetail(data)
+            // $('#tr_'idCartDetail).replacewith(str)
         }
 
         pageCart.loadData.checkQuantityBySizeAndColor = (idProduct) =>{
@@ -257,98 +412,6 @@
                 })
         }
 
-        function addChangeSize() {
-            // tách 2 hàm : color theo idProduct và size theo color
-            $('.size').on('change', function (item){
-                color = $(`#${item.color}${item.id}`).find('select option').val();
-                let size = $(`#${item.size}${item.id}`).find('select option').val();
-                let obj = {
-                    color: color,
-                    size : size
-                }
-                if (size !== null ){
-                    pageCart.loadData.getAllSize(color).then(()=>{
-                    })
-                }
-            })
-        }
-        function addChangeColor() {
-            // tách 2 hàm : color theo idProduct và size theo color
-            $('.color').on('change', function (item){
-                color = $(`#${item.color}${item.id}`).find('select option').val();
-                let obj = {
-                    color: color,
-                    size : size
-                }
-               if (color !== null ){
-                  pageCart.loadData.getAllColor(idProduct).then(()=>{
-                  })
-               }
-            })
-        }
-        function changeProduct(){
-            $('.productName').on('change', function (){
-                let idPro = +$(this).find(':selected').val();
-                idProduct = idPro;
-
-                pageCart.loadData.getAllColor(idPro)
-
-                pageCart.loadData.checkQuantityBySizeAndColor(idPro).then((quantity)=>{
-
-                    if (quantity===0){
-                        AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.ERROR_400);
-                    }else {
-
-                        pageCart.loadData.getAllColor(idPro)
-                    }
-                })
-
-            })
-        }
-
-        pageCart.loadData.getAllColor = (idProduct) =>{
-           return $.ajax({
-                headers: {
-                    'accept': 'application/json',
-                    'content-type': 'application/json'
-                },
-                type: "GET",
-                url: pageCart.urls.getAllCartDetail + "color/product/" + idProduct,
-            })
-                .done((data) => {
-
-                    console.log('color'+data);
-                    $.each(data, (i, item) => {
-                        let str = `<option value="${item}">${item}</option>`;
-                        $(".color").append(str);
-
-                    })
-                })
-                .fail((error) => {
-                    console.log(error)
-                    // AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_UPDATED);
-                })
-        }
-
-        pageCart.loadData.getAllSize = (color) =>{
-            $.ajax({
-                headers: {
-                    'accept': 'application/json',
-                    'content-type': 'application/json'
-                },
-                type: "GET",
-                url: pageCart.urls.getAllCartDetail + "color/product/" + idProduct,
-
-            })
-                .done((data) => {
-                    console.log(data);
-                    $("#tr_" + idCartDetail).remove();
-                    AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
-                })
-                .fail((error) => {
-                    AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_UPDATED);
-                })
-        }
         function doUpdate(){
 
         }
@@ -357,7 +420,6 @@
                 let cartId = $(this).data('id');
                 pageCart.loadData.findCartById(cartId).then((data) => {
                      idCartDetail = data.id;
-
                     AppBase.showDeleteCartItemConfirmDialog().then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
@@ -400,6 +462,90 @@
                 })
         }
 
+        pageCart.loadData.getPrice = (idProduct) =>{
+            return $.ajax({
+                type: 'GET',
+                url: pageCart.urls.getAllCartDetail +'price/' + idProduct
+            })
+                .done((price)=>{
+
+
+                })
+                .fail((jqXHR)=>{
+                    console.log(jqXHR);
+                })
+
+        }
+
+        function addEventChangeProduct() {
+            $('.productName').on("change", function () {
+                    // phải tìm id của cartDetail
+                let idCartDetail = $(this).data("id");
+                let productId = $(this).val();
+                let colorPri = $('.color').val();
+                let sizePri = $('.size').val();
+                let quantity = $('.quantity input').val();
+                console.log("------quantity")
+                console.log(quantity)
+                let price = $(`.productPrice`).val();
+                console.log("------price")
+                console.log(price)
+                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price)
+                changeTotalAmountByProduct(idCartDetail)
+
+
+            })
+
+        }
+        function addEventChangeColor() {
+            $('.color').on("change", function () {
+                // phải tìm id của cartDetail
+                let idCartDetail = $(this).data("id");
+                let productId = $('.productName').val();
+                let colorPri = $(this).val();
+                let sizePri = $('.size').val();
+                let quantity = $('.quantity input').val();
+                let price = $(`.productPrice`).val();
+                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price)
+
+
+            })
+
+        }
+        function addEventChangeSize() {
+            $('.size').on("change", function () {
+                // phải tìm id của cartDetail
+                let idCartDetail = $(this).data("id");
+                let productId = $('.productName').val();
+                let colorPri = $('.color').val();
+                let sizePri = $(this).val();
+                let quantity = $('.quantity input').val();
+                let price = $(`.productPrice`).in();
+                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price)
+
+
+            })
+
+        }
+
+        function onChangeQuantity() {
+            $(document).ready(function (){
+                    $('.quantity').on('dblclick' ,function () {
+                        let idCartDetail = $(this).data("id");
+                        // idCurrentCartDetail = idCartDetail;
+                        $(`#quantityIn_${idCartDetail}`).removeClass('test-hidden');
+                        $(`#test-show_${idCartDetail}`).addClass('test-hidden');
+                        changeTotalAmountByQuantity(idCartDetail)
+                        // let quantity = $(this).val();
+                    // let quantityUp = `<input id="quantityInput" > ${quantity}`;
+                    //     console.log(quantity)
+                    //     console.log(quantityUp)
+                    // $('#quantityInput').val(quantityUp);
+                })
+            })
+
+        }
+
         function addEventChangeProvinceUp() {
             pageCart.dialogs.elements.provinceUp.on("change", function () {
                 let provinceId = $(this).val();
@@ -428,9 +574,8 @@
             pageCart.loadData.getCart();
         }
         pageCart.initializeControlEvent = () => {
-            addChangeColor();
-            addChangeSize();
-            changeProduct();
+
+
 
 
         }
@@ -438,6 +583,11 @@
             pageCart.commands.loadData();
 
             pageCart.initializeControlEvent();
+
+
+
+
         })
     </script>
+
 </th:block>

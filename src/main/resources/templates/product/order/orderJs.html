@@ -56,6 +56,7 @@
                 .done((data) => {
                     $('#cartTable tbody').empty();
                     listCart = data.content;
+                    console.log(listCart)
                     currentPageNumber = data.pageable.pageNumber
 
                     totalPages = data.totalPages;
@@ -95,7 +96,7 @@
 
         page.commands.addEventChangeStatus = () => {
             listCart.forEach(e => {
-                $('.status' + e.id).on('click', function () {
+                $('.status' + e.id).on('dblclick', function () {
                     $.ajax({
                         type: 'PATCH',
                         headers: {'accept': 'application/json', 'content-type': 'application/json'},

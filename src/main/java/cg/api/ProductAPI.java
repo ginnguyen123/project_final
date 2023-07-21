@@ -1,6 +1,7 @@
 package cg.api;
 
 import cg.dto.product.*;
+import cg.dto.productImport.ProductImpListResDTO;
 import cg.dto.productImport.ProductImportResDTO;
 import cg.exception.DataInputException;
 import cg.model.brand.Brand;
@@ -8,22 +9,18 @@ import cg.model.category.Category;
 import cg.model.discount.Discount;
 import cg.model.media.Media;
 import cg.model.product.Product;
+import cg.repository.ProductRepository;
 import cg.service.brand.IBrandService;
 import cg.service.category.ICategoryService;
 import cg.service.discount.IDiscountService;
 import cg.service.media.IUploadMediaService;
 import cg.service.product.IProductImportService;
 import cg.service.products.IProductService;
-import cg.utils.AppConstant;
-import cg.utils.AppUtils;
-import cg.utils.UploadUtils;
+import cg.utils.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -64,6 +61,9 @@ public class ProductAPI {
     @Autowired
     private IProductImportService productImportService;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     @GetMapping
     private ResponseEntity<?> getAllProductsDeleteFalse() {
         List<Product> products = productService.findAllByDeletedFalse();
@@ -94,6 +94,17 @@ public class ProductAPI {
 
         return new ResponseEntity<>(productResDTO,HttpStatus.OK);
     }
+    @PostMapping("/id-limit")
+    public ResponseEntity<?> findIdWithLimit(@RequestBody ProductRequest request , Pageable pageable){
+            Page<Product> productPage = productService.getAllForDataGrid(request ,pageable);
+        return new ResponseEntity<>(productPage, HttpStatus.OK);
+    }
+
+//    @PostMapping("/search")
+//    public ResponseEntity<?> pageableByKeywordAndDate(@RequestBody ProductImportRequest request, Pageable pageable) {
+//        Page<ProductImpListResDTO> productImportList = productService.getAllForDataGrid(request, pageable);
+//        return new ResponseEntity<>(productImportList, HttpStatus.OK);
+//    }
 
     @GetMapping("/find-by-id/{id}")
     public ResponseEntity<?> findProductByIdForDb(@PathVariable Long id){
@@ -477,4 +488,6 @@ public class ProductAPI {
         search = "%" + search + "%";
         return new ResponseEntity<>(productService.findProductWithPaginationAndSortAndSearch(search, pageable),HttpStatus.OK);
     }
+
+
 }
