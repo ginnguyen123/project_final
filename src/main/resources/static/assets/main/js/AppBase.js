@@ -316,7 +316,7 @@ class AppBase{
                   </tr>`
     }
     static renderCartDetail(item){
-        return`   <tr id="tr_${item.id}">
+        return`   <tr id="tr_${item.id}" data-id="${item.id}">
                     <td>
                      <select class="form-control-add productName" data-id="${item.id}"  id="product_${item.id}" name="productName">
                                 
@@ -337,7 +337,7 @@ class AppBase{
                     <span id="test-show_${item.id}"> ${item.quantity}</span>
                     
                     </td>
-                    <td id="totalAmount_${item.id}">${new Intl.NumberFormat('vi-VN', {
+                    <td class="totalAmount" id="totalAmount_${item.id}">${new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
         }).format(item.totalAmountDetail)}</td>
@@ -442,15 +442,15 @@ class Cart{
 }
 
 class CartDetail{
-    constructor(id,productsName,color,size,price,quantity,totalAmountDetail,status) {
+    constructor(id,productsName,color,size,quantity) {
         this.id = id;
-        this.productsName = productsName;
+        this.productsId = productsName;
         this.color = color;
         this.size = size;
-        this.price = price;
+        // this.price = price;
         this.quantity = quantity;
-        this.totalAmountDetail = totalAmountDetail;
-        this.status = status;
+        // this.totalAmountDetail = totalAmountDetail;
+        // this.status = status;
     }
 }
 

@@ -7,6 +7,7 @@
 
         let pageCart = {
             urls: {
+                getAllCart :AppBase.API_CART,
                 getAllCartDetail: AppBase.API_CART_DETAIL,
                 getAllProducts :AppBase.API_PRODUCT
             },
@@ -22,8 +23,12 @@
         let locationRegion = new LocationRegion();
         let cartDetail = new CartDetail();
         let idCurrentCartDetail;
+        let idCurrentLocationRegion;
         let color;
         let sizes;
+        let idCurrentCart;
+        let listIdCartDetail = [];
+        let listCartDetailObj = [];
         pageCart.dialogs.elements.locationRegionIdUp = $('#locationRegionIdUp');
         pageCart.dialogs.elements.provinceUp = $('#provinceUp');
         pageCart.dialogs.elements.districtUp = $('#districtUp');
@@ -52,6 +57,7 @@
                     AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_404);
                 })
         }
+
         pageCart.dialogs.loadData.getAllDistrictsByProvince = (provinceId) => {
             return $.ajax({
                 type: 'GET',
@@ -75,6 +81,7 @@
                     AppBase.IziToast.showErrorAlert(AppBase.AlertMessageVi.ERROR_404);
                 })
         }
+
         pageCart.dialogs.loadData.getAllWardsByDistrict = (districtId) => {
             return $.ajax({
                 type: 'GET',
@@ -95,13 +102,12 @@
         }
 
         pageCart.loadData.getAllCartDetail = (id) =>{
-
                 return $.ajax({
                     type: 'GET',
                     url: pageCart.urls.getAllCartDetail + id
                 })
                     .done((data)=>{
-
+                        console.log(data);
                     })
                     .fail((jqXHR)=>{
                         console.log(jqXHR);
@@ -167,6 +173,7 @@
                 })
 
         }
+
         pageCart.loadData.getSizeByElement = (element) =>{
 
             return $.ajax({
@@ -206,6 +213,7 @@
                 })
 
         }
+
         pageCart.loadData.getColorByElement = (element) =>{
             return $.ajax({
                 type: 'GET',
@@ -235,8 +243,10 @@
             let name_receiver = cart.name_receiver;
             let phone_receiver = cart.phone_receiver;
             let locationRegion = cart.locationRegion;
+            idCurrentLocationRegion = locationRegion.id;
             let status = cart.status;
             let idCart = cart.id;
+            idCurrentCart = idCart
             let listCartDetail = cart.cartDetailDTOList;
             let totalAmount = cart.totalAmount;
             let address = cart.locationRegion.address;
@@ -290,16 +300,12 @@
 
         function changeTotalAmountByProduct(id){
             let price = $(`#productPrice${id}`).text();
-            let product = document.getElementById(`product_${id}`);
-            console.log(product)
             let valueQuantity = $(`#quantityIn_${id}`).val();
             if (valueQuantity !== undefined && valueQuantity !== null) {
-                product.addEventListener("select", function () {
-                    console.log("addEventListener")
-                    let quantityProduct = +quantity.value;
-                    let strPriceProduct = price;
-                    let amountNumber = parseInt(strPriceProduct.replace(/đ|\./g, ""));
-                    let totalAmount = amountNumber * quantityProduct;
+                $(`#product_${id}`).on('change', function(){
+                    console.log("changeTotalAmountByProduct")
+                    let amountNumber = parseInt(price.replace(/đ|\./g, ""));
+                    let totalAmount = amountNumber * valueQuantity;
                     let strTotalAmount = AppBase.removeFormatNumberSpace(totalAmount);
                     let formatter = new Intl.NumberFormat('vi-VN', {
                         style: 'currency',
@@ -307,6 +313,19 @@
                     }).format(strTotalAmount)
                     $(`#totalAmount_${id}`).text(formatter);
                 })
+                // product.addEventListener("click", function () {
+                //     console.log(price)
+                //     console.log(quantity)
+                //     let quantityProduct = quantity.value;
+                //     let amountNumber = parseInt(price.replace(/đ|\./g, ""));
+                //     let totalAmount = amountNumber * quantityProduct;
+                //     let strTotalAmount = AppBase.removeFormatNumberSpace(totalAmount);
+                //     let formatter = new Intl.NumberFormat('vi-VN', {
+                //         style: 'currency',
+                //         currency: 'VND'
+                //     }).format(strTotalAmount)
+                //     $(`#totalAmount_${id}`).text(formatter);
+                // })
             }
         }
         function changeTotalAmountByQuantity(id){
@@ -317,8 +336,8 @@
             quantity.addEventListener("input", function () {
                 console.log("addEventListener")
                 let quantityProduct = +quantity.value;
-                let strPriceProduct = price;
-                let amountNumber = parseInt(strPriceProduct.replace(/đ|\./g, ""));
+
+                let amountNumber = parseInt(price.replace(/đ|\./g, ""));
                 let totalAmount = amountNumber * quantityProduct;
                 let strTotalAmount = AppBase.removeFormatNumberSpace(totalAmount);
                 let formatter = new Intl.NumberFormat('vi-VN', {
@@ -330,15 +349,18 @@
             }
         }
 
-        pageCart.loadData.getCartDetail = (id,idProduct, color, size,quantity,price) =>{
+        pageCart.loadData.getCartDetail = (id,idProduct, color, size,quantity,price,total) =>{
             let objCartDetail = {
                 id:id,
                 idProduct:idProduct,
                 size:size,
                 color:color,
                 quantity:quantity,
-                productPrice:price
+                productPrice:price,
+                totalAmountDetail:total
             }
+            console.log("------------")
+            console.log(objCartDetail)
             return $.ajax({
                 dataType: 'json',
                 contentType: 'application/json',
@@ -349,8 +371,8 @@
                 .done((data)=>{
                     console.log("data------")
                     console.log(data.productImpQuantity)
-                        let str = AppBase.renderCartDetail(data)
-                            $('#tr_' + id).replaceWith(str)
+                        let str = AppBase.renderCartDetail(data);
+                        $('#tr_' + id).replaceWith(str);
 
                     if (data.productImpQuantity == null || data.productImpQuantity === 0)
                         AppBase.IziToast.showErrorAlert("Sản phẩm hết hàng")
@@ -368,16 +390,11 @@
                     pageCart.loadData.getPrice(idProduct).then(()=>{
                         $(`#productPrice${data.id}`).val(price);
                     })
-                    changeTotalAmountByProduct(id)
                     changeTotalAmountByQuantity(id);
                     onChangeQuantity();
                     addEventChangeProduct();
                     addEventChangeColor();
                     addEventChangeSize();
-
-
-
-
 
                 })
                 .fail((jqXHR)=>{
@@ -412,8 +429,50 @@
                 })
         }
 
-        function doUpdate(){
+        function doUpdateCart(){
+            let customer = $('#nameReceiverUp').val();
+            let phone = $('#phoneReceiverUp').val();
+            let province = $('#provinceUp').val();
+            let district = $('#districtUp').val();
+            let wards = $('#wardsUp').val();
+            let address = $('#addressUp').val();
 
+
+
+            let objCart = {
+                name_receiver:customer,
+                phone_receiver:phone,
+                locationRegion :{
+                    id: idCurrentLocationRegion,
+                    provinceId:province,
+                    districtId :district,
+                    wardId:wards,
+                    address:address
+                },
+                cartDetailDTOList: listCartDetailObj
+            }
+
+            $.ajax({
+                dataType: 'json',
+                contentType: 'application/json',
+                type: "PATCH",
+                url: pageCart.urls.getAllCart + "/" + idCurrentCart,
+                data: JSON.stringify(objCart)
+            })
+                .done((data) => {
+                    console.log("---------")
+                    console.log(data)
+                    // let str = AppBase.renderProductImport(data);
+                    // $("#tr_" + currentId).replaceWith(str);
+                    //
+                    // AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
+                    //
+                    // addAllEvent();
+
+                })
+                .fail((jqXHR) => {
+
+                })
         }
         function addEventDeleteClick() {
             $(".delete").on('click', function () {
@@ -482,16 +541,14 @@
                     // phải tìm id của cartDetail
                 let idCartDetail = $(this).data("id");
                 let productId = $(this).val();
-                let colorPri = $('.color').val();
-                let sizePri = $('.size').val();
+                let colorPri = $(`#color_${idCartDetail}`).val();
+                let sizePri = $(`#size_${idCartDetail}`).val();
                 let quantity = $('.quantity input').val();
-                console.log("------quantity")
-                console.log(quantity)
                 let price = $(`.productPrice`).val();
-                console.log("------price")
-                console.log(price)
-                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price)
-                changeTotalAmountByProduct(idCartDetail)
+                let total = $(`.totalAmount`).val();
+                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price,total)
+                // changeTotalAmountByProduct(idCartDetail);
+
 
 
             })
@@ -501,12 +558,13 @@
             $('.color').on("change", function () {
                 // phải tìm id của cartDetail
                 let idCartDetail = $(this).data("id");
-                let productId = $('.productName').val();
+                let productId = $(`#product_${idCartDetail}`).val();
                 let colorPri = $(this).val();
-                let sizePri = $('.size').val();
+                let sizePri = $(`#size_${idCartDetail}`).val();
                 let quantity = $('.quantity input').val();
                 let price = $(`.productPrice`).val();
-                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price)
+                let total = $(`.totalAmount`).val();
+                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price,total)
 
 
             })
@@ -516,12 +574,13 @@
             $('.size').on("change", function () {
                 // phải tìm id của cartDetail
                 let idCartDetail = $(this).data("id");
-                let productId = $('.productName').val();
-                let colorPri = $('.color').val();
+                let productId = $(`#product_${idCartDetail}`).val();
+                let colorPri = $(`#color_${idCartDetail}`).val();
                 let sizePri = $(this).val();
                 let quantity = $('.quantity input').val();
-                let price = $(`.productPrice`).in();
-                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price)
+                let price = $(`.productPrice`).val();
+                let total = $(`.totalAmount`).val();
+                pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price,total)
 
 
             })
@@ -572,9 +631,26 @@
 
         pageCart.commands.loadData = () => {
             pageCart.loadData.getCart();
+
         }
         pageCart.initializeControlEvent = () => {
-
+            $('#btnSaveProductUpdate').on('click', ()=>{
+                pageCart.loadData.getAllCartDetail(idCurrentCart).then((data)=>{
+                    listIdCartDetail = data.map(function (e){
+                        return e.id;
+                    })
+                    listCartDetailObj = listIdCartDetail.map(function (idCartDetail){
+                        let idProduct = $(`#product_${idCartDetail}`).val();
+                        let color = $(`#color_${idCartDetail}`).val();
+                        let size = $(`#size_${idCartDetail}`).val();
+                        let quantity = $(`#quantityIn_${idCartDetail}`).val();
+                        return new CartDetail(idCartDetail, idProduct, color, size, quantity)
+                    })
+                    console.log(listCartDetailObj)
+                })
+                // $('#frmUpdateCart').trigger('submit');
+                doUpdateCart();
+            })
 
 
 

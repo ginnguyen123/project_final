@@ -29,7 +29,6 @@
         page.elements.total = $("#total")
         page.elements.sizePage = $("#sizePage");
 
-
         page.loadData.getAllCart = () => {
             keyword = page.elements.keyword.val();
             total = page.elements.total.val();
@@ -109,7 +108,6 @@
             })
         }
 
-
         page.elements.formSearch.on('change', '.search', () => {
             keyword = page.elements.keyword.val();
             total = page.elements.total.val();
@@ -176,7 +174,6 @@
             return str;
         }
 
-
         function addEventDeleteClick() {
             $(".delete").on('click', function () {
                 let cartId = $(this).data('id');
@@ -224,7 +221,6 @@
 
                 })
         }
-
 
         function addAllEvent() {
             // addEventEditClick();

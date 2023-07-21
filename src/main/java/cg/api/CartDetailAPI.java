@@ -134,6 +134,7 @@ public class CartDetailAPI {
         Long idProductRes = cartDetailListRes.getIdProduct();
         EColor color = cartDetailListRes.getColor();
         ESize size = cartDetailListRes.getSize();
+
         Long idProduct = productImportRepository.findProductBySizeAndColor(idProductRes,
                  color.getValue(), size.getValue());
 
@@ -141,14 +142,15 @@ public class CartDetailAPI {
             CartDetailUpResDTO productIsNull = new CartDetailUpResDTO();
             productIsNull.setQuantity(0L);
             productIsNull.setId(cartDetailListRes.getId());
-            productIsNull.setTotal(BigDecimal.ONE);
+            productIsNull.setTotalAmountDetail(BigDecimal.ZERO);
             return new ResponseEntity<>(productIsNull, HttpStatus.OK);
         }
 
             Optional<Product> productOp = productService.findById(idProduct); // lấy được id Product + title
             Long quantityImport = productImportRepository.checkQuantityProductImportBySizeAndColor(idProductRes,
                     color.getValue(),size.getValue()); // lấy được số lượng sản phẩm còn trong kho
-
+            BigDecimal price = productOp.get().getPrice();
+            BigDecimal quantityBigDecimal = BigDecimal.valueOf(quantityFE);
             CartDetailUpResDTO cartDetailUpRes = new CartDetailUpResDTO();
                     cartDetailUpRes.setId(cartDetailListRes.getId());
                     cartDetailUpRes.setProductId(idProductRes);
@@ -157,13 +159,9 @@ public class CartDetailAPI {
                     cartDetailUpRes.setColor(color);
                     cartDetailUpRes.setProductTitle(productOp.get().getTitle());
                     cartDetailUpRes.setProductPrice(productOp.get().getPrice());
-                    if (quantityFE==null){
-                        quantityFE = 0L;
-                        cartDetailUpRes.setQuantity(quantityFE);
-                    }else {
-                        cartDetailUpRes.setQuantity(quantityFE);
-                    }
-
+                    cartDetailUpRes.setQuantity(quantityFE);
+                    BigDecimal total = quantityBigDecimal.multiply(price);
+                    cartDetailUpRes.setTotalAmountDetail(total);
 
             return new ResponseEntity<>(cartDetailUpRes,HttpStatus.OK);
         }

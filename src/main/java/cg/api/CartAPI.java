@@ -235,7 +235,7 @@ public class CartAPI {
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateCart(@PathVariable Long id, @Validated @RequestBody CartUpReqDTO cartUpReqDTO, BindingResult bindingResult ) throws IOException {
         new CartUpReqDTO().validate(cartUpReqDTO,bindingResult);
-
+        System.out.println(id);
         cartUpReqDTO.setId(id);
 
         if (bindingResult.hasFieldErrors()) {
