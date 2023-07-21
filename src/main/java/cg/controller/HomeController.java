@@ -20,4 +20,9 @@ public class HomeController {
 //        return "product/add-product";
 //    }
 
+    @GetMapping("/login")
+    public String showLoginPage(){
+        return "login";
+    }
+
 }

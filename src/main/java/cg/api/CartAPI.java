@@ -7,8 +7,10 @@ import cg.dto.customerDTO.CustomerDTO;
 import cg.dto.locationRegionDTO.LocationRegionDTO;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
+import cg.model.bill.Bill;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
+import cg.model.customer.Customer;
 import cg.model.enums.ECartStatus;
 
 
@@ -21,13 +23,21 @@ import cg.model.customer.Customer;
 import cg.model.location_region.LocationRegion;
 
 import cg.model.product.Product;
+import cg.model.user.User;
+import cg.repository.CartRepository;
+import cg.repository.LocationRegionRepository;
 import cg.service.ExistService;
+
+import cg.exception.ResourceNotFoundException;
+import cg.model.cart.Cart;
+import cg.service.bill.IBillService;
 import cg.service.cart.ICartService;
 import cg.service.cart.response.CartListResponse;
 import cg.service.cartDetail.ICartDetailService;
 import cg.service.customer.ICustomerService;
 import cg.service.locationRegion.ILocationRegionService;
 import cg.service.products.IProductService;
+import cg.service.user.IUserService;
 import cg.utils.AppUtils;
 import cg.utils.CartRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +45,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -48,6 +61,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/carts")
 public class CartAPI {
+    @Autowired
+    IBillService billService;
+
+    @Autowired
+    IUserService userService;
 
     @Autowired
     IProductService productService;
@@ -67,6 +85,12 @@ public class CartAPI {
 
     @Autowired
     private ILocationRegionService locationRegionService;
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private LocationRegionRepository locationRegionRepository;
 
     @GetMapping
     public ResponseEntity<?> getAllDeleteFalse() {
@@ -268,5 +292,31 @@ public class CartAPI {
 
         CustomerDTO customerDTO = customer.toCustomerDTO(locationRegionDTOS);
         return new ResponseEntity<>(customerDTO,HttpStatus.OK);
+    }
+
+    @PatchMapping("/checkout")
+    public ResponseEntity<?> createCheckoutCart (@Valid @RequestBody CartCheckoutDTO cartCheckoutDTO) {
+        Optional<Cart> cartOptional = cartRepository.findById(cartCheckoutDTO.getCartId());
+        Cart cart = cartOptional.get();
+        cart.setStatus(ECartStatus.UNPAID);
+        cart.setPhone_receiver(cartCheckoutDTO.getPhone_receiver());
+        cart.setName_receiver(cartCheckoutDTO.getName_receiver());
+        LocationRegion locationRegion = cartCheckoutDTO.getLocationRegion().toLocationRegion(cart.getCustomer());
+        locationRegionRepository.save(locationRegion);
+        //LocationRegion savedLocationRegion = locationRegionService.findLocationRegionByAddress(cartCheckoutDTO.getLocationRegion().getAddress());
+        cart.setLocationRegion(locationRegion);
+        cartRepository.saveAndFlush(cart);
+        Bill bill = new Bill();
+        bill.setPhone_receiver(cart.getPhone_receiver());
+        bill.setName_receiver(cart.getName_receiver());
+        bill.setLocationRegion(locationRegion);
+        bill.setTotalAmount(cart.getTotalAmount());
+        Customer customer = cart.getCustomer();
+        User user = userService.findUserByCustomer(customer);
+        bill.setUser(user);
+        bill.setCustomer(customer);
+        bill.setStatus(cart.getStatus());
+        billService.save(bill);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

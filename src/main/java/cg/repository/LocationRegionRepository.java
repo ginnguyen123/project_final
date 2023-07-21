@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface LocationRegionRepository extends JpaRepository<LocationRegion, Long> {
 
+    LocationRegion findLocationRegionByAddress(String address);
+
     List<LocationRegion> findAllByCustomer(Customer customer);
 }

@@ -9,4 +9,7 @@ import java.util.List;
 public interface ILocationRegionService extends IGeneralService<LocationRegion, Long> {
 
     List<LocationRegion> findAllByCustomer(Customer customer);
+
+
+    LocationRegion findLocationRegionByAddress(String address);
 }

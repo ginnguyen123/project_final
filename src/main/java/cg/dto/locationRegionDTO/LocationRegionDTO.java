@@ -45,7 +45,8 @@ public class LocationRegionDTO {
                 .setDistrictName(districtName)
                 .setWardId(wardId)
                 .setWardName(wardName)
-                .setAddress(address);
+                .setAddress(address)
+                ;
 
     }
 }

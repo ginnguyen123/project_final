@@ -1,9 +1,6 @@
 package cg.model.cart;
 
-import cg.dto.cart.CartCreResDTO;
-import cg.dto.cart.CartDTO;
-import cg.dto.cart.CartResDTO;
-import cg.dto.cart.CartUpReqDTO;
+import cg.dto.cart.*;
 import cg.dto.cart.CartUpResDTO;
 import cg.model.BaseEntity;
 import cg.model.customer.Customer;
@@ -36,7 +33,7 @@ public class Cart extends BaseEntity {
 
 
     @Column(nullable = true)
-    @Pattern(regexp = "[0-9]*")
+    @Pattern(regexp = "[0-9]{10}")
     private String phone_receiver;
 
     @Column(nullable = true)
@@ -120,5 +117,16 @@ public class Cart extends BaseEntity {
                 .setLocationRegion(locationRegion.toLocationRegionDTO())
                 .setCartDetailDTOList(cartDetails.stream().map(item -> item.toCartDetailUpReqDTO()).collect(Collectors.toList()));
 
+    }
+
+    public CartCheckoutDTO toCartCheckoutDTO() {
+        return new CartCheckoutDTO()
+                .setCartId(id)
+                .setPhone_receiver(phone_receiver)
+                .setName_receiver(name_receiver)
+                .setLocationRegion(locationRegion.toLocationRegionDTO())
+                .setCartDetailResDTOList(cartDetails.stream().map(item->item.toCartDetailResDTO()).collect(Collectors.toList()))
+                .setTotalAmount(totalAmount)
+                .setCustomerId(customer.getId());
     }
 }

@@ -8,19 +8,25 @@ import cg.exception.DataInputException;
 import cg.model.brand.Brand;
 import cg.model.category.Category;
 import cg.model.discount.Discount;
-import cg.model.enums.EProductStatus;
+
 import cg.model.media.Media;
 import cg.model.product.Product;
 import cg.repository.*;
 import cg.service.media.IUploadMediaService;
+
 import cg.utils.*;
+
+import cg.utils.AppConstant;
+import cg.utils.AppUtils;
+import cg.utils.ExistedInDb;
+import cg.utils.UploadUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -126,6 +132,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+
     public Page<Product> getAllForDataGrid(ProductRequest request  , Pageable pageable) {
 
         if(request.getKeyword() !=null){
@@ -138,6 +145,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<ProductResClientDTO> findAllByCategoryFilter(Long id, FilterRes filter, Pageable pageable) {
+
         LocalDate localDate = LocalDate.now();
         List<List<Long>> minMaxPrices = filter.getMinMax();
         List<String> colors = filter.getColors();
@@ -241,7 +249,8 @@ public class ProductService implements IProductService {
         }
         if (products.size() == 0)
             return null;
-        return products.stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+        List<ProductResClientDTO> list = products.stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+        return list;
     }
 
     @Override
