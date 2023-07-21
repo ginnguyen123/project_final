@@ -234,19 +234,6 @@
                         ],
                     },).dxDataGrid('instance');
 
-                    function getStatusColor(status) {
-                        // Hàm trả về mã màu tương ứng với trạng thái
-                        // Ví dụ: "success" - màu xanh lá cây, "error" - màu đỏ, vv.
-                        // Bạn có thể tùy chỉnh logic để trả về mã màu phù hợp với từng trạng thái
-                        if (status === "STOCKING") {
-                            return "green";
-                        } else if (status === "OUT_STOCK") {
-                            return "red";
-                        } else {
-                            return "black";
-                        }
-                    }
-
                     let strPage = page.commands.renderPagination(currentPageNumber, totalElements, totalPages );
                     $('#paginationUl').empty().append(strPage);
                     addAllEvent();
