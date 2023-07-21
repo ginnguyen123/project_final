@@ -57,10 +57,10 @@ public class AuthAPI {
 
     @PostMapping("/client/register")
     public ResponseEntity<?> register(@RequestBody @Validated UserClientResRegisterDTO userResRegister){
-        RoleDTO role = userResRegister.getRole();
-        role.setId(3l);
-        role.setCode("CUSTOMER");
-        userResRegister.setRole(role);
+//        RoleDTO role = userResRegister.getRole();
+//        role.setId(3l);
+//        role.setCode("CUSTOMER");
+//        userResRegister.setRole(role);
         Boolean isUserName = userService.existsByUsername(userResRegister.getUsername());
         Boolean isEmail = customerService.isEmail(userResRegister.getCustomer().getEmail());
 
@@ -102,7 +102,7 @@ public class AuthAPI {
                     jwt,
                     currentUser.getId(),
                     userDetails.getUsername(),
-                    currentUser.getUsername(),
+                    currentUser.getCustomer().getFullName(),
                     userDetails.getAuthorities()
             );
 //        lưu mã xác thực JWT xuống cookie + set time + set domain

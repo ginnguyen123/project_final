@@ -35,7 +35,7 @@ public class CustomerResRegisterDTO {
                 .setFullName(fullName)
                 .setEmail(email)
                 .setPhone(phone)
-                .setSex(ESex.valueOf(sex));
+                .setSex(ESex.valueOf(sex.toUpperCase()));
     }
 
 }

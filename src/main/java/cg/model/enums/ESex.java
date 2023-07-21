@@ -3,8 +3,8 @@ package cg.model.enums;
 import java.awt.datatransfer.FlavorEvent;
 
 public enum ESex {
-    MALE ("Male"),
-    FEMALE ("Female");
+    MALE ("MALE"),
+    FEMALE ("FEMALE");
 
     private final String value;
 

@@ -60,4 +60,14 @@ public class CustomerService implements ICustomerService, ExistService {
     public Boolean isEmail(String email) {
         return customerRepository.existsByEmail(email);
     }
+
+    @Override
+    public List<Customer> findCustomerByDeletedIsFalse() {
+        return customerRepository.findCustomerByDeletedIsFalse();
+    }
+
+    @Override
+    public Optional<Customer> findCustomerByDeletedIsFalseAndUser_Username(String username) {
+        return customerRepository.findCustomerByDeletedIsFalseAndUser_Username(username);
+    }
 }
