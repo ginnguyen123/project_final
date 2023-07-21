@@ -1,18 +1,21 @@
 package cg.model.customer;
 
 import cg.dto.customerDTO.CustomerDTO;
+import cg.dto.customerDTO.CustomerInfoDTO;
 import cg.dto.locationRegionDTO.LocationRegionDTO;
 import cg.model.BaseEntity;
 import cg.model.cart.Cart;
 import cg.model.enums.ESex;
 import cg.model.location_region.LocationRegion;
 import cg.model.user.User;
+import cg.utils.AppUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -68,6 +71,12 @@ public class Customer extends BaseEntity {
                 .setPhone(phone)
                 .setLocationRegionDTOS(locationRegions.stream().map(LocationRegion::toLocationRegionDTO).collect(Collectors.toList()))
                 ;
+    }
+
+    public CustomerInfoDTO toCustomerInfo(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String strDayOfBirth = simpleDateFormat.format(dateOfBirth);
+        return new CustomerInfoDTO(id, fullName, email, phone, strDayOfBirth);
     }
 
     public CustomerDTO toCustomerDTO(List<LocationRegionDTO> locationRegionDTOS) {
