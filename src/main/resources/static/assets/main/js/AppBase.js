@@ -322,10 +322,10 @@ class AppBase{
                                 
                       </select>
                      </td>
-                    <td> <select class="form-control-add color" data-title="${item.id}" data-id="${item.color}" id="${item.color}${item.id}" name="color">
+                    <td> <select class="form-control-add color" data-title="${item.id}" data-id="${item.id}" id="color_${item.id}" name="color">
                                 
                       </select></td>
-                    <td> <select class="form-control-add size" data-title="${item.id}" data-id="${item.size}" id="${item.size}${item.id}" name="size">
+                    <td> <select class="form-control-add size" data-title="${item.id}" data-id="${item.id}" id="size_${item.id}" name="size">
                                 
                       </select></td>
                     <td class="productPrice product${item.productId}" data-id="${item.productPrice}" id="productPrice${item.id}" name="productPrice">${new Intl.NumberFormat('vi-VN', {
@@ -337,7 +337,7 @@ class AppBase{
                     <span id="test-show_${item.id}"> ${item.quantity}</span>
                     
                     </td>
-                    <td>${new Intl.NumberFormat('vi-VN', {
+                    <td id="totalAmount_${item.id}">${new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
         }).format(item.totalAmountDetail)}</td>

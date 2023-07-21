@@ -138,8 +138,10 @@ public class CartDetailAPI {
                  color.getValue(), size.getValue());
 
         if (idProduct == null ){ // trường hợp product không có sản phẩm có size có color phù hợp
-            Long zeroQuantity = 0L;
             CartDetailUpResDTO productIsNull = new CartDetailUpResDTO();
+            productIsNull.setQuantity(0L);
+            productIsNull.setId(cartDetailListRes.getId());
+            productIsNull.setTotal(BigDecimal.ONE);
             return new ResponseEntity<>(productIsNull, HttpStatus.OK);
         }
 

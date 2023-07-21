@@ -22,6 +22,7 @@ public class CartDetailUpResDTO {
     private Long quantity;
     private String productTitle;
     private BigDecimal productPrice;
+    private BigDecimal total;
 
 
 }
