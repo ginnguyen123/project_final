@@ -1,9 +1,11 @@
 package cg.security;
 
+import cg.security.oauth2.CustomOAuth2UserService;
+import cg.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import cg.security.oauth2.OAuth2AuthenticationFailureHandler;
+import cg.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import cg.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,13 +26,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
+
+    @Autowired
+    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    @Autowired
+    private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+    @Autowired
     private IUserService userService;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
-
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
+    }
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManager() throws Exception {
@@ -52,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(10);
     }
 
+
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
@@ -64,24 +79,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(
                         "/api/**",
-                        "/api/auth/login",
+                        "/api/auth/**",
                         "/api/auth/register",
                         "/api/customers/register",
                         "/login",
                         "/logout",
-                        "/carts/**"
+                        "/carts/**",
+                        "/google",
+                        "/**"
                 ).permitAll()
 //                .antMatchers("/histories").hasAnyAuthority("ADMIN")
                 .antMatchers("/resources/**", "/assets/**").permitAll()
-                .antMatchers(
-                        "/v3/api-docs",
-                        "/swagger-resources/configuration/ui",
-                        "/configuration/ui",
-                        "/swagger-resources",
-                        "/swagger-resources/configuration/security",
-                        "/configuration/security",
-                        "/swagger-ui/**"
-                ).permitAll()
+//                .antMatchers(
+//                        "/v3/api-docs",
+//                        "/swagger-resources/configuration/ui",
+//                        "/configuration/ui",
+//                        "/swagger-resources",
+//                        "/swagger-resources/configuration/security",
+//                        "/configuration/security",
+//                        "/swagger-ui/**"
+//                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -92,6 +109,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/home")
                 .deleteCookies("JWT")
                 .invalidateHttpSession(true)
+                .and()
+                .oauth2Login()
+                .loginPage("/login")
+                    .authorizationEndpoint()
+                    .baseUri("/oauth2/authorize")
+                    .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                .and()
+                    .redirectionEndpoint()
+                    .baseUri("/oauth2/callback/*")
+                .and()
+                    .userInfoEndpoint()
+                    .userService(customOAuth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler)
         ;
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

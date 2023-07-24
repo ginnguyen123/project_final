@@ -14,6 +14,9 @@ import cg.service.role.IRoleService;
 import cg.service.user.IUserService;
 import cg.utils.AppConstant;
 import cg.utils.AppUtils;
+import cg.utils.GooglePojo;
+import cg.utils.GoogleUtils;
+import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -31,10 +34,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @RestController
-    @RequestMapping("/api/auth")
+@RequestMapping("/api/auth")
 public class AuthAPI {
 
     @Autowired
@@ -54,6 +58,10 @@ public class AuthAPI {
 
     @Autowired
     private ICustomerService customerService;
+
+    @Autowired
+    private GoogleUtils googleUtils;
+
 
     @PostMapping("/client/register")
     public ResponseEntity<?> register(@RequestBody @Validated UserClientResRegisterDTO userResRegister){
@@ -123,4 +131,6 @@ public class AuthAPI {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
+
 }

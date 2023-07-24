@@ -11,6 +11,19 @@
 <div class="wrapper-page">
     <div class="card">
 
+<!--        <div>-->
+<!--            <a href="http://localhost:8086/login/oauth2/code/facebook">Login Facebook</a>-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <a href="/google">Login google</a>-->
+<!--        </div>-->
+
+<!--        <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8086/login&response_type=code-->
+<!--    &client_id=465017811197-cre9oqecgs2u0rrhpcoockngtiua6g55.apps.googleusercontent.com&approval_prompt=force">Login google</a>-->
+
+        <a href="http://localhost:8086/oauth2/authorize/google?redirect_uri=http://localhost:8086/oauth2/redirect">Login google</a>
+
         <div class="card-body">
             <h4 class="text-muted text-center m-t-0"><b>Sign In</b></h4>
 
@@ -73,7 +86,7 @@
                 })
 
                 setTimeout(() => {
-                    location.href = "/";
+                    location.href = "/product-import";
                 }, 2000);
             })
 

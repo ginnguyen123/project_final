@@ -75,8 +75,8 @@ public class Customer extends BaseEntity {
 
     public CustomerInfoDTO toCustomerInfo(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        String strDayOfBirth = simpleDateFormat.format(dateOfBirth);
-        return new CustomerInfoDTO(id, fullName, email, phone, strDayOfBirth);
+        String strDateOfBirth = simpleDateFormat.format(dateOfBirth);
+        return new CustomerInfoDTO(id, fullName, email, phone, strDateOfBirth);
     }
 
     public CustomerDTO toCustomerDTO(List<LocationRegionDTO> locationRegionDTOS) {
