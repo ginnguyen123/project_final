@@ -77,6 +77,7 @@ public class ProductAPI {
         List<ProductResDTO> productCreResDTOS = products.stream().map(item -> item.toVisitedAndRelatedProductResDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(productCreResDTOS, HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> findProductById(@PathVariable Long id){
         if (id == null){

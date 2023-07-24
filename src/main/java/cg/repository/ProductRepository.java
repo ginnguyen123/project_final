@@ -75,11 +75,12 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "AND prod.deleted = 0 " +
             "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
             "AND (prod.title LIKE :search " +
-            "OR prod.code LIKE :code " +
+            "OR prod.code = :code " +
             "OR prodImp.color LIKE :search " +
             "OR bra.name LIKE :search " +
             "OR cate.name LIKE :search) " +
-            "GROUP BY prod.id",
+            "GROUP BY prod.id"
+            ,
             countQuery = "SELECT prod.id, prod.created_at, prod.created_by, prod.deleted, prod.update_at, prod.update_by, prod.discount_id, " +
                     "prod.code, prod.description, prod.prices, prod.title, prod.brand_id, prod.category_id,prod.product_avatar_id " +
                     "FROM products AS prod " +
@@ -90,12 +91,13 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
                     "WHERE prodImp.quantity > 0 " +
                     "AND prod.deleted = 0 " +
                     "AND (:today BETWEEN disc.start_date AND disc.end_date OR prod.discount_id IS NULL) " +
-                    "OR prod.title LIKE :search " +
-                    "OR prod.code LIKE :code " +
+                    "AND (prod.title LIKE :search " +
+                    "OR prod.code = :code " +
                     "OR prodImp.color LIKE :search " +
                     "OR bra.name LIKE :search " +
-                    "OR cate.name LIKE :search " +
-                    "GROUP BY prod.id",nativeQuery = true)
+                    "OR cate.name LIKE :search) " +
+                    "GROUP BY prod.id"
+            ,nativeQuery = true)
     Page<Product> findAllBySearchFromClient(@Param("search") String search,
                                             @Param("today") LocalDate today,
                                             @Param("code") String code,
