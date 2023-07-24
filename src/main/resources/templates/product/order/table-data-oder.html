@@ -45,12 +45,6 @@
     <div class="col-md-12">
       <div class="tile">
         <div class="tile-body">
-          <div class="row element-button">
-            <div class="col-sm-2">
-              <a class="btn btn-delete btn-sm delete" type="button" title="Xóa"
-                 onclick="myFunction(this)"><i class="fas fa-trash-alt"></i> Xóa tất cả </a>
-            </div>
-          </div>
           <div id="sampleTable_wrapper"
                class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
             <div class="row">
@@ -66,7 +60,7 @@
                 </select> danh mục</label>
                 </div>
               </div>
-              <div class="col-sm-12 col-md-6">
+              <div class="col-sm-12 col-md-6" id="formSearch">
                 <div id="sampleTable_filter" class="dataTables_filter">
                   <label>Tìm kiếm:<input
                         type="search" class="form-control form-control-sm search" id="keyword" placeholder=""
