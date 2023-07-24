@@ -444,7 +444,7 @@ class Cart{
 class CartDetail{
     constructor(id,productsName,color,size,quantity) {
         this.id = id;
-        this.productsId = productsName;
+        this.productId = productsName;
         this.color = color;
         this.size = size;
         // this.price = price;

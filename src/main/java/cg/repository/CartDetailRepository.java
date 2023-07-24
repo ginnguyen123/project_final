@@ -18,8 +18,6 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
 
     List<CartDetail> findAllByCart_IdAndDeletedIsFalse(Long id);
 
-    List<CartDetail> findAllByCart_IdAndAndDeletedIsFalse(Long id);
-
 
     List<CartDetail> findCartDetailsByCartAndDeletedIsFalse(Cart cart);
 
