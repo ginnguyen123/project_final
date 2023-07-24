@@ -13,6 +13,7 @@ import cg.model.enums.EColor;
 import cg.model.enums.ESize;
 import cg.model.location_region.LocationRegion;
 import cg.model.product.Product;
+import cg.model.user.User;
 import cg.repository.*;
 import cg.service.cart.response.CartListResponse;
 import cg.service.cartDetail.CartDetailService;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -113,12 +115,12 @@ public class CartService implements ICartService {
             Optional<LocationRegion> optionalLocationRegion = locationRegionRepository.findById(idLocationRegion);
             if (optionalLocationRegion.isPresent()) {
                 List<LocationRegion> locationRegionsOfCustomer = customer.getLocationRegions();
-                LocationRegion lcReve = locationRegionsOfCustomer.stream().filter(i -> i.getId() == idLocationRegion).collect(Collectors.toList()).get(0);
+                LocationRegion lcReve = locationRegionsOfCustomer.stream().filter(i -> Objects.equals(i.getId(), idLocationRegion)).collect(Collectors.toList()).get(0);
                 locationRegion = lcReve;
             }
         } else if (customerOptional.isEmpty()) {
             customer.setEmail(cartCreReqDTO.getEmail());
-            customer.getUser();
+            customer.setUser(new User());
             customerRepository.save(customer);
             locationRegion.setId(null);
             locationRegionRepository.save(locationRegion);
@@ -208,6 +210,7 @@ public class CartService implements ICartService {
         BigDecimal totalTotal = BigDecimal.ZERO;
         List<CartDetail> cartDetails = new ArrayList<>();
         for (CartDetailUpReqDTO item : cartDetailDTOList) {
+            Long idCartDetail = item.getId();
             CartDetail cartDetail = item.toCartDetail();
             Optional<Product> product = productRepository.findById(item.getProductId());
             BigDecimal price = product.get().getPrice();
@@ -215,16 +218,19 @@ public class CartService implements ICartService {
             BigDecimal totalLe = price.multiply(BigDecimal.valueOf(quantity));
             cartDetail.setTotalAmount(totalLe);
             totalTotal = totalTotal.add(totalLe);
+            cartDetail.setId(idCartDetail);
             cartDetail.setProduct(product.get());
             cartDetail.setCart(cart);
             cartDetails.add(cartDetail);
         }
-        List<CartDetail> cartDetailList = cartDetailRepository.saveAll(cartDetails);
+
         cart.setTotalAmount(totalTotal);
         Optional<LocationRegion> locationRegion = locationRegionRepository.findById(cartUpReqDTO.getLocationRegion().getId());
         cart.setLocationRegion(locationRegion.get());
-        cart.setCartDetails(cartDetailList);
+        cart.setCartDetails(cartDetails);
+        cartDetailRepository.saveAll(cartDetails);
         cartRepository.save(cart);
+
         CartUpResDTO cartUpResDTO = new CartUpResDTO(cart);
         return cartUpResDTO;
     }

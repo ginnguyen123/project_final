@@ -437,8 +437,6 @@
             let wards = $('#wardsUp').val();
             let address = $('#addressUp').val();
 
-
-
             let objCart = {
                 name_receiver:customer,
                 phone_receiver:phone,
@@ -452,6 +450,7 @@
                 cartDetailDTOList: listCartDetailObj
             }
 
+            console.log("objCart",objCart)
             $.ajax({
                 dataType: 'json',
                 contentType: 'application/json',
@@ -460,14 +459,11 @@
                 data: JSON.stringify(objCart)
             })
                 .done((data) => {
-                    console.log("---------")
-                    console.log(data)
-                    // let str = AppBase.renderProductImport(data);
-                    // $("#tr_" + currentId).replaceWith(str);
-                    //
-                    // AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
-                    //
+                   AppBase.IziToast.showSuccessAlert(AppBase.AlertMessageVi.SUCCESS_UPDATED);
                     // addAllEvent();
+                    setTimeout(()=>{
+                        location.href = "/carts"
+                    }, 1000);
 
                 })
                 .fail((jqXHR) => {
@@ -548,9 +544,6 @@
                 let total = $(`.totalAmount`).val();
                 pageCart.loadData.getCartDetail(idCartDetail,productId, colorPri, sizePri,quantity,price,total)
                 // changeTotalAmountByProduct(idCartDetail);
-
-
-
             })
 
         }
@@ -633,6 +626,51 @@
             pageCart.loadData.getCart();
 
         }
+
+        $('#frmUpdateCart').validate({
+            rules: {
+                nameReceiverUp: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 20
+                },
+                phoneReceiverUp: {
+                    required: true,
+                },
+                provinceUp: {
+                    required: true,
+                },
+                districtUp: {
+                    required: true,
+                },
+                wardUp: {
+                    required: true,
+                }
+
+            },
+            messages: {
+                nameReceiverUp: {
+                    required: 'Full name is required',
+                    minlength: 'Min character of full name is ${0}',
+                    maxlength: 'Max character of full name is ${0}'
+                },
+                phoneReceiverUp: {
+                    required: 'Phone is required',
+                },
+                provinceUp: {
+                    required: "Select province",
+                },
+                districtUp: {
+                    required: "Select district",
+                },
+                wardUp: {
+                    required: "Select ward"
+                }
+            },
+            submitHandler: function () {
+                doUpdateCart();
+            }
+        })
         pageCart.initializeControlEvent = () => {
             $('#btnSaveProductUpdate').on('click', ()=>{
                 pageCart.loadData.getAllCartDetail(idCurrentCart).then((data)=>{
@@ -646,10 +684,9 @@
                         let quantity = $(`#quantityIn_${idCartDetail}`).val();
                         return new CartDetail(idCartDetail, idProduct, color, size, quantity)
                     })
-                    console.log(listCartDetailObj)
+                    $('#frmUpdateCart').trigger('submit');
                 })
-                // $('#frmUpdateCart').trigger('submit');
-                doUpdateCart();
+
             })
 
 
