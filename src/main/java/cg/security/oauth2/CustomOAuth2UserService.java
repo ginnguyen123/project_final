@@ -10,6 +10,7 @@ import cg.repository.CustomerRepository;
 import cg.repository.UserRepository;
 import cg.security.oauth2.user.OAuth2UserInfo;
 import cg.security.oauth2.user.OAuth2UserInfoFactory;
+import cg.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -29,6 +30,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private IUserService userService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -69,7 +73,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             //tài khoản mới hoàn toàn
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
         }
-        return null;
+
+        return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
 
@@ -80,7 +85,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         newUser.setId(null);
         newUser.setUsername(oAuth2UserInfo.getEmail());
-        newUser.setPassword("");
         newUser.setProvider(EAuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         Role role = new Role(3L, null, ERole.ROLE_CUSTOMER);
         newUser.setRole(role);

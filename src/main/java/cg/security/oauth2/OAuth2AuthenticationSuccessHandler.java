@@ -39,7 +39,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         String targetUrl = determineTargetUrl(request, response, authentication);
-
+        System.out.println("onAuthenticationSuccess");
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
@@ -50,16 +50,20 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        System.out.println("----------------------determineTargetUrl--------------------");
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
-        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            throw new DataInputException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
-        }
+//        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+//            throw new DataInputException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
+//        }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         String token = jwtService.generateTokenLogin(authentication);
+
+        System.out.println("---------jwtService.generateTokenLogin-------------");
+        System.out.println(token);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("JWT", token)
@@ -72,6 +76,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private boolean isAuthorizedRedirectUri(String uri) {
+        System.out.println(uri);
         URI clientRedirectUri = URI.create(uri);
 
         return appProperties.getOauth2().getAuthorizedRedirectUris()

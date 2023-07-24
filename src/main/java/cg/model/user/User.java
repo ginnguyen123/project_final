@@ -25,7 +25,7 @@ public class User extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String username;
-
+    @Column(nullable = true)
     private String password;
 
     @OneToOne(mappedBy = "user")
