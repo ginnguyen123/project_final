@@ -5,7 +5,6 @@ import cg.model.customer.Customer;
 import cg.model.user.User;
 import cg.service.IGeneralService;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
 import java.util.Optional;
 
 public interface IUserService extends IGeneralService<User,Long>, UserDetailsService {

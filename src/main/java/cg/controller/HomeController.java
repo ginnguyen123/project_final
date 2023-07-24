@@ -39,7 +39,8 @@ public class HomeController {
 //    }
 
     @GetMapping("/login")
-    public String showLoginPage(){
+    public String showLoginPage(HttpServletRequest request, HttpServletResponse response){
+        String code = request.getParameter("code");
         System.out.println("sdklákláklá");
 
         return "login";
