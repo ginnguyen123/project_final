@@ -120,14 +120,18 @@ public class ProductService implements IProductService {
         LocalDate today = LocalDate.now();
         String kw = "%" + keyword + "%";
         Page<Product> idPage = productRepository.findAllBySearchFromClient(kw,today,keyword,pageable);
+
         if (idPage.getContent().size() == 0)
             return searchResClient;
         System.out.println(idPage.getContent());
         List<ProductResClientDTO> productResClientDTOS = idPage.getContent().stream().map(i -> i.toProductResClientDTO()).collect(Collectors.toList());
+
         searchResClient.setProducts(productResClientDTOS);
         searchResClient.setTotalPages(idPage.getTotalPages());
         searchResClient.setTotalElements((int) idPage.getTotalElements());
+
         searchResClient.setKeyword(keyword);
+
         return searchResClient;
     }
 
