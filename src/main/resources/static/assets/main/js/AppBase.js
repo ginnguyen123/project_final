@@ -290,10 +290,10 @@ class AppBase{
         let str = `${item.createdAt}`
         let date = new Date(str);
         return`   <tr id="tr_${item.id}">
-                 <td>${new Intl.DateTimeFormat('vi-VN',{
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
+                           <td>${new Intl.DateTimeFormat('vi-VN',{
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
             }
         ).format(date)}</td>
                     <td>${item.customerName}</td>
