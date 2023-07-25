@@ -2,6 +2,7 @@ class AppBase{
     static DOMAIN_SERVER = location.origin;
     static API_SERVER = this.DOMAIN_SERVER + '/api';
     static API_PRODUCT = this.API_SERVER + '/products';
+    static REPORT_API = this.API_SERVER +'/report';
     static API_PRODUCT_IMPORT = this.API_SERVER + '/product-import';
     static API_BRAND = this.API_SERVER + '/brands';
     static API_CART_DETAIL = this.API_SERVER + '/cart-details/';
