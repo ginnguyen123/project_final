@@ -1,5 +1,8 @@
 package cg.service.bill;
 
+import cg.dto.report.DayToDayReportDTO;
+import cg.dto.report.ReportDTO;
+import cg.dto.report.YearReportDTO;
 import cg.model.bill.Bill;
 import cg.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,4 +47,7 @@ public class BillServiceImpl implements IBillService{
     public List<Bill> findAllByDeletedFalse() {
         return billRepository.findAllByDeletedFalse();
     }
+
+
+
 }

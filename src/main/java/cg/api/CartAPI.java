@@ -104,6 +104,7 @@ public class CartAPI {
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
         List<CartDetail> cartDetailList = cartDetailService.findCartDetailsByCartAndDeletedIsFalse(cart);
+        //Da tinh totalAmount CartDetail
         List<CartDetailResDTO> cartDetailResDTOS = cartDetailList.stream().map(item->item.toCartDetailResDTO()).collect(Collectors.toList());
         return new ResponseEntity<>(cartDetailResDTOS,HttpStatus.OK);
     }
@@ -192,6 +193,7 @@ public class CartAPI {
                     Product product = productOptional.get();
                     BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, new_quantity);
                     item.setTotalAmount(totalAmount);
+                    item.setCart(cart);
                     cartDetailService.save(item);
                     check = true;
                     break;

@@ -3,6 +3,10 @@ package cg.service.cart;
 import cg.dto.cart.*;
 import cg.dto.cartDetail.CartDetailCreReqDTO;
 import cg.dto.cartDetail.CartDetailUpReqDTO;
+import cg.dto.report.ProductReportDTO;
+import cg.dto.report.DayToDayReportDTO;
+import cg.dto.report.ReportDTO;
+import cg.dto.report.YearReportDTO;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
 import cg.model.cart.Cart;
@@ -16,7 +20,6 @@ import cg.model.product.Product;
 import cg.model.user.User;
 import cg.repository.*;
 import cg.service.cart.response.CartListResponse;
-import cg.service.cartDetail.CartDetailService;
 import cg.service.cartDetail.ICartDetailService;
 import cg.service.products.IProductService;
 import cg.utils.CartRequest;
@@ -27,7 +30,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -197,6 +203,39 @@ public class CartService implements ICartService {
     }
 
     @Override
+    public ReportDTO getReportOfDay(String day) {
+        return cartRepository.getReportOfDay(day);
+    }
+
+    @Override
+    public List<DayToDayReportDTO> getReportFromDayToDay(String startDay, String endDay) {
+        return cartRepository.getReportFromDayToDay(startDay, endDay);
+    }
+
+    @Override
+    public List<ProductReportDTO> getBestSeller(Pageable pageable) {
+        Page<ProductReportDTO> page = cartRepository.getBestSeller(pageable);
+        return page.getContent();
+    }
+
+    @Override
+    public List<YearReportDTO> getReportByYear(int year) {
+        return cartRepository.getReportByYear(year);
+    }
+
+    @Override
+    public YearReportDTO getReportByMonth(int year, int month) {
+        return cartRepository.getReportByMonth(year,month);
+    }
+
+    @Override
+    public List<ProductReportDTO> getTop5ProductUnMarketTableCurrentMonth(Pageable pageable) {
+        Page<ProductReportDTO> page = cartRepository.getTop5ProductUnMarketTableCurrentMonth(pageable);
+        return page.getContent();
+    }
+
+
+    @Override
     public CartUpResDTO update(CartUpReqDTO cartUpReqDTO) {
         Optional<Cart> optionalCart = cartRepository.findById(cartUpReqDTO.getId());
         if (!optionalCart.isPresent()) {
@@ -247,6 +286,27 @@ public class CartService implements ICartService {
             totalAmountCart = item.getTotalAmount().add(totalAmountCart);
         }
         return totalAmountCart;
+    }
+    public Date getDateByString(String dateString){
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+        try {
+            // Parse the input date string into a Date object
+            Date date = inputDateFormat.parse(dateString);
+
+            // Format the Date object back into a string
+            String formattedDate = outputDateFormat.format(date);
+
+            System.out.println("Original date string: " + dateString);
+            System.out.println("Parsed Date: " + date);
+            System.out.println("Formatted date string: " + formattedDate);
+            return date;
+        } catch (ParseException e) {
+            System.out.println("Error occurred while parsing the date: " + e.getMessage());
+            return null;
+        }
+
     }
 
 }
