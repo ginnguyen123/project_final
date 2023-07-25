@@ -287,10 +287,15 @@ class AppBase{
 
     static renderCart(item,i){
 
-        // let str = `${item.createdAt}`
-        // let date = new Date(str);
+        let str = `${item.createdAt}`
+        let date = new Date(str);
         return`   <tr id="tr_${item.id}">
-                    <td>${item.createdAt}</td>
+                           <td>${new Intl.DateTimeFormat('vi-VN',{
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }
+        ).format(date)}</td>
                     <td>${item.customerName}</td>
                     <td>${item.productsName}</td>
                     <td>${new Intl.NumberFormat('vi-VN', {
