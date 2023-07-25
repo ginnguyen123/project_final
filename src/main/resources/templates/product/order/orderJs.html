@@ -21,23 +21,27 @@
         let keyword;
         let total;
         let sizePage;
+        let createdAt;
 
 
         page.elements.formSearch = $('#formSearch');
         page.elements.btnSearch = $('#bthSearch');
         page.elements.keyword = $("#keyword");
-        page.elements.total = $("#total")
+        page.elements.total = $("#total");
         page.elements.sizePage = $("#sizePage");
+        page.elements.myInput = $("#myInput");
 
         page.loadData.getAllCart = () => {
             keyword = page.elements.keyword.val();
-            total = page.elements.total.val();
+            // total = page.elements.total.val();
             sizePage = page.elements.sizePage.val();
+            // createdAt = page.elements.myInput.val();
             let obj = {
                 currentPageNumber: currentPageNumber,
                 keyword: keyword,
-                total: total,
+                // total: total,
                 sizePage: sizePage
+                // createdAt:createdAt
             }
             console.log('obj' + obj)
 
@@ -47,7 +51,7 @@
                     'accept': 'application/json',
                     'content-type': 'application/json'
                 },
-                url: page.urls.getAllCartPageSearch + `/search?size=${obj.sizePage}&sort=${obj.total},desc&page=${obj.currentPageNumber}&keyword=${obj.keyword}`,
+                url: page.urls.getAllCartPageSearch + `/search?size=${obj.sizePage}&page=${obj.currentPageNumber}&keyword=${obj.keyword}`,
                 data: JSON.stringify(obj)
                 // search?size=2&sort=id,desc
             })
@@ -85,11 +89,22 @@
             $('.page-link').on('click', function () {
                 let pageNumber = $(this).data('page');
                 keyword = page.elements.keyword.val();
-                total = page.elements.total.val();
+                // total = page.elements.total.val();
                 sizePage = page.elements.sizePage.val();
+                // createdAt = page.elements.myInput.val();
                 currentPageNumber = pageNumber;
                 console.log('add event')
                 page.loadData.getAllCart();
+            })
+        }
+        page.commands.changeSize = () => {
+            $('#sizePage').on('change', function (){
+            keyword = page.elements.keyword.val();
+            // total = page.elements.total.val();
+            sizePage = page.elements.sizePage.val();
+            // createdAt = page.elements.myInput.val();
+            currentPageNumber = 0;
+            page.loadData.getAllCart();
             })
         }
 
@@ -110,8 +125,9 @@
 
         page.elements.formSearch.on('change', '.search', () => {
             keyword = page.elements.keyword.val();
-            total = page.elements.total.val();
+            // total = page.elements.total.val();
             sizePage = page.elements.sizePage.val();
+            // createdAt = page.elements.myInput.val();
             currentPageNumber = 0;
             page.loadData.getAllCart();
         })
@@ -228,11 +244,14 @@
             page.commands.addEventChangeStatus();
 
             page.commands.addEventChangePage();
+            page.commands.changeSize();
 
         }
 
 
         page.initializeControlEvent = function () {
+
+
 
             // page.elements.btnUpImport.on('click', () => {
             //   page.dialogs.elements.formUpdateImport.trigger("submit");

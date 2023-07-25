@@ -28,7 +28,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             " join Customer  cus on cus.id = cr.customer.id" +
             " join LocationRegion lr on cr.locationRegion.id = lr.id " +
 
-            "WHERE (cus.fullName LIKE :#{#request.keyword} or " +
+            "WHERE (cr.name_receiver LIKE :#{#request.keyword} or " +
             "cd.product.title LIKE :#{#request.keyword} or " +
             "lr.districtName LIKE :#{#request.keyword} or " +
             "lr.wardName LIKE :#{#request.keyword} or " +
