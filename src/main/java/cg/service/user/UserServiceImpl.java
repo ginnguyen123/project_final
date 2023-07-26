@@ -3,6 +3,7 @@ package cg.service.user;
 
 import cg.dto.userDTO.UserClientResRegisterDTO;
 import cg.model.customer.Customer;
+import cg.model.enums.EAuthProvider;
 import cg.model.user.User;
 import cg.model.user.UserPrinciple;
 import cg.repository.CustomerRepository;
@@ -95,7 +96,9 @@ public class UserServiceImpl implements IUserService{
     @Override
     public User register(UserClientResRegisterDTO userResRegister) {
         userResRegister.setId(null);
-        User user = save(userResRegister.toUser());
+        User user = userResRegister.toUser();
+        user.setProvider(EAuthProvider.local);
+        User user1 = save(user);
         String str = userResRegister.getCustomer().getDateOfBirth().toString();
         Date date = appUtils.stringToDate(str);
         Customer customer = userResRegister.getCustomer().toCustomer();
@@ -104,6 +107,6 @@ public class UserServiceImpl implements IUserService{
         customer.setDateOfBirth(date);
         System.out.println(customer.toString());
         customerService.save(customer);
-        return user;
+        return user1;
     }
 }

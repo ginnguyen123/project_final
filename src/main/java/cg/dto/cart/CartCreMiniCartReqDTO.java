@@ -16,8 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartCreMiniCartReqDTO {
-    @NotNull
-    @ExistInDb(entity = Customer.class)
+    private Long userId;
     private Long customerId;
     private Long productId;
     private BigDecimal price;
