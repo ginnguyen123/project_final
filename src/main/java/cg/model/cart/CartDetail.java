@@ -104,7 +104,18 @@ public class CartDetail extends BaseEntity {
                 .setTitle(product.getTitle())
                 .setTotalAmountItem(totalAmount)
                 .setAvt(product.getProductAvatar().getFileUrl());
-
     }
 
+    @Override
+    public String toString() {
+        return "CartDetail{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", totalAmount=" + totalAmount +
+                ", size=" + size +
+                ", color=" + color +
+                ", cart=" + cart +
+                ", product=" + product.getId() +
+                '}';
+    }
 }

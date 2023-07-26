@@ -16,8 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartCreMiniCartReqDTO {
-    private Long userId;
-    private Long customerId;
+    private String username;
     private Long productId;
     private BigDecimal price;
     private String size;

@@ -33,7 +33,7 @@ public interface ICartService extends IGeneralService<Cart,Long> {
 
 //    Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status);
 
-    Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status);
+    Cart findCartsByCustomerIdAndStatusIsCart(Long userId, ECartStatus status);
 
     public CartDetail createNewCartDetail(CartCreMiniCartReqDTO cartCreMiniCartReqDTO, Cart cart);
 

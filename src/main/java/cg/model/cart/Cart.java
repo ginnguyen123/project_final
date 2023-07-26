@@ -53,7 +53,7 @@ public class Cart extends BaseEntity {
 
 
     @Column(nullable = true)
-//    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private ECartStatus status;
 
     @OneToMany(mappedBy = "cart",fetch = FetchType.EAGER)
