@@ -13,16 +13,16 @@ public class AppProperties {
     private final OAuth2 oauth2 = new OAuth2();
 
     public static class Auth {
-        private String tokenSecret;
+        private String tokenSecret = "GoiTenToiNheBanThanHoiCoToiLuonCungChiaSotDeRoiTaLaiCoThemNiemTin";
         private long tokenExpirationMsec;
 
         public String getTokenSecret() {
             return tokenSecret;
         }
 
-        public void setTokenSecret(String tokenSecret) {
-            this.tokenSecret = tokenSecret;
-        }
+//        public void setTokenSecret(String tokenSecret) {
+//            this.tokenSecret = tokenSecret;
+//        }
 
         public long getTokenExpirationMsec() {
             return tokenExpirationMsec;

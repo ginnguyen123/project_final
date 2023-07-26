@@ -47,7 +47,7 @@ public class Customer extends BaseEntity {
     private ESex sex;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
 
 //    @OneToMany(mappedBy = "customer")

@@ -60,7 +60,7 @@ public class Cart extends BaseEntity {
     private List<CartDetail> cartDetails;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = true)
     private Customer customer;
 
     public CartDTO toCartDTO() {
