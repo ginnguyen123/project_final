@@ -7,6 +7,7 @@ import cg.dto.customerDTO.CustomerDTO;
 import cg.dto.locationRegionDTO.LocationRegionDTO;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
+import cg.model.JwtResponse;
 import cg.model.bill.Bill;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
@@ -45,6 +46,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -170,6 +172,8 @@ public class CartAPI {
 
     @PostMapping("/add")
     public  ResponseEntity<?> addToCart(@RequestBody CartCreMiniCartReqDTO cartCreMiniCartReqDTO) {
+        //check đã đăng nhập chưa nếu chưa thì giữ nguyên nếu có set id bằng current i
+        Long userId = cartCreMiniCartReqDTO.getUserId();
         Long customerId = cartCreMiniCartReqDTO.getCustomerId();
         Customer customer = customerService.findById(customerId).get();
         String status_str = cartCreMiniCartReqDTO.getStatus();
@@ -182,6 +186,7 @@ public class CartAPI {
             CartDetail cartDetail = new CartDetail();
 
             for (CartDetail item : cartDetailList) {
+
                 if (item.getProduct().getId()==cartCreMiniCartReqDTO.getProductId() && item.getSize().getValue().equals(cartCreMiniCartReqDTO.getSize()) && item.getColor().getValue().equals(cartCreMiniCartReqDTO.getColor())) {
                     Long current_quantity = item.getQuantity();
                     Long new_quantity = cartCreMiniCartReqDTO.getQuantity() + current_quantity;
@@ -199,7 +204,7 @@ public class CartAPI {
                     break;
                 } else {
                     cartDetail = cartService.createNewCartDetail(cartCreMiniCartReqDTO, cart);
-
+                    cartDetail.setCart(cart);
                 }
             }
             if (!check) {
@@ -217,11 +222,19 @@ public class CartAPI {
             cartDetail_size = cartDetailList.size();
         } else {
             Cart newCart = new Cart();
+            newCart.setId(null);
             newCart.setCustomer(customer);
+            User user = userService.findById(userId).get();
+            newCart.setUser(user);
             newCart.setStatus(ECartStatus.getECartStatus(cartCreMiniCartReqDTO.getStatus()));
+            newCart = cartService.save(newCart);
             CartDetail cartDetail = cartService.createNewCartDetail(cartCreMiniCartReqDTO, newCart);
+            cartDetail.setCart(newCart);
             List<CartDetail> cartDetailList = new ArrayList<>();
             cartDetailList.add(cartDetail);
+            for (CartDetail cartDetail1 : cartDetailList){
+                cartDetail1.setCart(newCart);
+            }
             newCart.setCartDetails(cartDetailList);
             newCart.setTotalAmount(cartDetail.getTotalAmount());
             cartService.save(newCart);
