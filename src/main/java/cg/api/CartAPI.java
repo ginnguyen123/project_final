@@ -7,32 +7,19 @@ import cg.dto.customerDTO.CustomerDTO;
 import cg.dto.locationRegionDTO.LocationRegionDTO;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
-import cg.model.JwtResponse;
 import cg.model.bill.Bill;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.model.customer.Customer;
 import cg.model.enums.ECartStatus;
-
-
-import cg.model.customer.Customer;
-
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
 import cg.model.location_region.LocationRegion;
-
-
-import cg.model.customer.Customer;
-import cg.model.location_region.LocationRegion;
-
 import cg.model.product.Product;
 import cg.model.user.User;
 import cg.repository.CartRepository;
 import cg.repository.LocationRegionRepository;
 import cg.service.ExistService;
-
-import cg.exception.ResourceNotFoundException;
-import cg.model.cart.Cart;
 import cg.service.bill.IBillService;
 import cg.service.cart.ICartService;
 import cg.service.cart.response.CartListResponse;
@@ -49,13 +36,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.sound.midi.MidiFileFormat;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -186,16 +169,62 @@ public class CartAPI {
         Product product = productService.findById(idProduct).get();
         ESize size = ESize.getESize(cartCreMiniCartReqDTO.getSize());
         EColor color = EColor.getEColor(cartCreMiniCartReqDTO.getColor());
+        String status_str = cartCreMiniCartReqDTO.getStatus();
+        ECartStatus status = ECartStatus.getECartStatus(status_str);
         User currentUser = null;
-        int cartDetail_size = 0;
-
+        int numOfProductInCart = 0;
         if (userOp.isPresent()){
             currentUser = userOp.get();
-//            Customer customer = customerService.findCustomerByDeletedIsFalseAndUser_Username(currentUser.getUsername()).get();
-            String status_str = cartCreMiniCartReqDTO.getStatus();
-            ECartStatus status = ECartStatus.getECartStatus(status_str);
-            Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(currentUser.getId(), status);
-            if (cart != null){
+            Cart currentCart = cartService.findCartsByCustomerIdAndStatusIsCart(currentUser.getId(), status);
+            if (currentCart != null){
+                List<CartDetail> cartDetails = currentCart.getCartDetails();
+                boolean checkChange = true;
+                for (CartDetail cartDetail : cartDetails){
+                    if (cartDetail.getProduct().getId() == idProduct
+                            && cartDetail.getSize().getValue().equals(cartCreMiniCartReqDTO.getSize())
+                            && cartDetail.getColor().getValue().equals(cartCreMiniCartReqDTO.getColor())){
+                        Long newQuantity = cartDetail.getQuantity() + cartCreMiniCartReqDTO.getQuantity();
+                        BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, newQuantity);
+                        cartDetail.setQuantity(newQuantity);
+                        cartDetail.setTotalAmount(totalAmount);
+                        checkChange = false;
+                        break;
+                    }
+                }
+                if (checkChange){
+                    BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
+                    CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), totalAmount, size, color, currentCart, product);
+                    cartDetails.add(newCartDetail);
+                }
+                cartDetailService.saveAll(cartDetails);
+                BigDecimal newTotalAmountCart = cartDetailService.totalAmoutByCart(currentCart);
+                currentCart.setTotalAmount(newTotalAmountCart);
+                cartService.save(currentCart);
+                return new ResponseEntity<>(new AddCartResDTO(currentCart.getId(), currentCart.getCartDetails().size()), HttpStatus.OK);
+            }
+            else {
+                Cart newCart = new Cart();
+                newCart.setId(null);
+                newCart.setUser(currentUser);
+                newCart.setStatus(ECartStatus.ISCART);
+                newCart = cartService.save(newCart);
+                List<CartDetail> cartDetails = new ArrayList<>();
+                BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
+                CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), totalAmount, size, color, newCart, product);
+                cartDetails.add(newCartDetail);
+                cartDetails = cartDetailService.saveAll(cartDetails);
+                newCart.setCartDetails(cartDetails);
+                BigDecimal newTotalAmountCart = cartDetailService.totalAmoutByCart(newCart);
+                newCart.setTotalAmount(newTotalAmountCart);
+                cartService.save(newCart);
+                return new ResponseEntity<>(new AddCartResDTO(newCart.getId(), newCart.getCartDetails().size()), HttpStatus.OK);
+            }
+        }
+
+        else {
+            Optional<Cart> cartOp = cartService.findById(cartCreMiniCartReqDTO.getCardId());
+            if (cartOp.isPresent()){
+                Cart cart = cartOp.get();
                 List<CartDetail> cartDetails = cart.getCartDetails();
                 boolean checkChange = true;
                 for (CartDetail cartDetail : cartDetails){
@@ -219,12 +248,11 @@ public class CartAPI {
                 BigDecimal newTotalAmountCart = cartDetailService.totalAmoutByCart(cart);
                 cart.setTotalAmount(newTotalAmountCart);
                 cartService.save(cart);
-                cartDetail_size = cart.getCartDetails().size();
+                return new ResponseEntity<>(new AddCartResDTO(cart.getId(), cart.getCartDetails().size()), HttpStatus.OK);
             }
             else {
                 Cart newCart = new Cart();
                 newCart.setId(null);
-                newCart.setUser(currentUser);
                 newCart.setStatus(ECartStatus.ISCART);
                 newCart = cartService.save(newCart);
                 List<CartDetail> cartDetails = new ArrayList<>();
@@ -232,17 +260,12 @@ public class CartAPI {
                 CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), totalAmount, size, color, newCart, product);
                 cartDetails.add(newCartDetail);
                 cartDetails = cartDetailService.saveAll(cartDetails);
-                newCart.setCartDetails(cartDetails);
                 BigDecimal newTotalAmountCart = cartDetailService.totalAmoutByCart(newCart);
                 newCart.setTotalAmount(newTotalAmountCart);
                 cartService.save(newCart);
-                cartDetail_size = newCart.getCartDetails().size();
+                return new ResponseEntity<>(new AddCartResDTO(newCart.getId(), cartDetails.size()), HttpStatus.OK);
             }
         }
-//        else {
-//
-//        }
-        return new ResponseEntity<>(cartDetail_size, HttpStatus.OK);
     }
 
 
