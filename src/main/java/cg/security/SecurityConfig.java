@@ -88,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/google"
                 ).permitAll()
 //                .antMatchers("/histories").hasAnyAuthority("ADMIN")
-                .antMatchers("/resources/**", "/assets/**").permitAll()
+                .antMatchers("/resources/**", "/assets/**","/static/**").permitAll()
 //                .antMatchers(
 //                        "/v3/api-docs",
 //                        "/swagger-resources/configuration/ui",
