@@ -2,6 +2,7 @@ package cg.security.oauth2;
 
 import cg.exception.DataInputException;
 import cg.service.jwt.JwtService;
+import cg.service.jwt.TokenProvider;
 import cg.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -24,22 +25,25 @@ import static cg.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private TokenProvider tokenProvider;
     private AppProperties appProperties;
-    private JwtService jwtService;
+//    private JwtService jwtService;
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Autowired
-    OAuth2AuthenticationSuccessHandler(JwtService jwtService, AppProperties appProperties,
+    OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider, AppProperties appProperties,
                                        HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository){
-        this.jwtService = jwtService;
+        this.tokenProvider = tokenProvider;
         this.appProperties = appProperties;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String targetUrl = determineTargetUrl(request, response, authentication);
-        System.out.println("onAuthenticationSuccess");
+        System.out.println("---------targetUrl----------");
+        System.out.println(targetUrl);
+
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
@@ -50,7 +54,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        System.out.println("----------------------determineTargetUrl--------------------");
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
@@ -59,14 +62,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 //        }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        System.out.println("---------targetUrl---------");
+        System.out.println(targetUrl);
 
-        String token = jwtService.generateTokenLogin(authentication);
-
-        System.out.println("---------jwtService.generateTokenLogin-------------");
+        String token = tokenProvider.createToken(authentication);
+        System.out.println("-----------token-----------");
         System.out.println(token);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("JWT", token)
+                .queryParam("token", token)
                 .build().toUriString();
     }
 
