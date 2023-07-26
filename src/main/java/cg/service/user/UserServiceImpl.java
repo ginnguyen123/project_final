@@ -103,7 +103,7 @@ public class UserServiceImpl implements IUserService{
         Date date = appUtils.stringToDate(str);
         Customer customer = userResRegister.getCustomer().toCustomer();
         customer.setId(null);
-        customer.setUser(user);
+        customer.setUser(user1);
         customer.setDateOfBirth(date);
         System.out.println(customer.toString());
         customerService.save(customer);

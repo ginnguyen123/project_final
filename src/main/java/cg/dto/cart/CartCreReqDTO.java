@@ -30,9 +30,6 @@ public class CartCreReqDTO implements Validator {
     private LocationRegionDTO locationRegion;
     private String status;
 
-
-
-
     @Override
     public boolean supports(Class<?> clazz) {
         return false;
