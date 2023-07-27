@@ -20,6 +20,7 @@ import cg.model.enums.ESize;
 import cg.model.location_region.LocationRegion;
 import cg.model.product.Product;
 import cg.model.user.User;
+import cg.repository.CartDetailRepository;
 import cg.repository.CartRepository;
 import cg.repository.LocationRegionRepository;
 import cg.service.ExistService;
@@ -39,9 +40,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -52,6 +58,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/carts")
+@Transactional
 public class CartAPI {
     @Autowired
     IBillService billService;
@@ -91,8 +98,12 @@ public class CartAPI {
         return new ResponseEntity<>(cartDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/cart-details/{customerId}")
-    public ResponseEntity<?> getAllCartDetails(@PathVariable Long customerId) {
+    @GetMapping("/cart-details/{username}")
+    public ResponseEntity<?> getAllCartDetails(@PathVariable String username) {
+
+
+
+        Long customerId = userService.findByUsername(username).get().getCustomer().getId();
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
         List<CartDetail> cartDetailList = cartDetailService.findCartDetailsByCartAndDeletedIsFalse(cart);
@@ -101,17 +112,24 @@ public class CartAPI {
         return new ResponseEntity<>(cartDetailResDTOS,HttpStatus.OK);
     }
 
-    @GetMapping("/amount/{customerId}")
-    public ResponseEntity<?> getTotalAmountCart(@PathVariable Long customerId) {
+    @GetMapping("/amount/{username}")
+    public ResponseEntity<?> getTotalAmountCart(@PathVariable String username) {
+
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
+        Customer customer = userService.findByUsername(username).get().getCustomer();
+        Long customerId = customer.getId();
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
+        if(cart == null){
+            cart = cartService.save(new Cart().setStatus(ECartStatus.ISCART).setCustomer(customer));
+        }
         CartResDTO cartResDTO = cart.toCartResDTO();
         return new ResponseEntity<>(cartResDTO, HttpStatus.OK);
     }
 
-    @PatchMapping("/cart-details/{customerId}/{cartDetailId}")
-    public ResponseEntity<?> increaseQuantityCartDetail(@PathVariable Long customerId,@PathVariable Long cartDetailId, @RequestBody Long quantity) {
+    @PatchMapping("/cart-details/{username}/{cartDetailId}")
+    public ResponseEntity<?> increaseQuantityCartDetail(@PathVariable String username,@PathVariable Long cartDetailId, @RequestBody Long quantity) {
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
+        Long customerId = userService.findByUsername(username).get().getId();
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
         CartDetail cartDetail = cartDetailService.findById(cartDetailId).get();
         Product product = cartDetail.getProduct();
@@ -127,8 +145,9 @@ public class CartAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/cart-details/{customerId}/{cartDetailId}")
-    public ResponseEntity<?> removeCartDetail(@PathVariable Long customerId, @PathVariable Long cartDetailId) {
+    @DeleteMapping("/cart-details/{username}/{cartDetailId}")
+    public ResponseEntity<?> removeCartDetail(@PathVariable String username, @PathVariable Long cartDetailId) {
+        Long customerId = userService.findByUsername(username).get().getCustomer().getId();
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
         CartDetail cartDetail = cartDetailService.findById(cartDetailId).get();
@@ -160,173 +179,73 @@ public class CartAPI {
         return new ResponseEntity<>(cartCreResDTO,HttpStatus.OK);
     }
     @PostMapping("/add")
-    public ResponseEntity<?> addToCart(@RequestBody CartCheckOut cartCheckOut){
-        Optional<User> userOp = userService.findByUsername(cartCheckOut.getUsername());
-        Long idCart = cartCheckOut.getCardId();
-        LocationRegionReceicer location = cartCheckOut.getLocationRegion();
-        List<CartCreMiniCartReqDTO> cartDetails = cartCheckOut.getCartDetails();
-        String status = cartCheckOut.getStatus();
-
-        if (cartDetails.size() != 0){
-            for (CartCreMiniCartReqDTO item : cartDetails){
-                idCart = addCartDetails(userOp, idCart, item.getProductId(),
-                            item.getQuantity(), item.getSize(), item.getColor(), status);
-            }
-        }
-
-        if (idCart != null){
-            Cart currentCart = cartService.findById(idCart).get();
-            LocationRegion locationRegion = location.toLocationRegion();
-            locationRegion = locationRegionService.save(locationRegion);
-            currentCart.setLocationRegion(locationRegion);
-            currentCart.setName_receiver(cartCheckOut.getReceiverName());
-            currentCart.setPhone_receiver(cartCheckOut.getPhone());
-            BigDecimal totalAmount = cartDetailService.totalAmoutByCart(currentCart);
-            currentCart.setTotalAmount(totalAmount);
-            currentCart = cartService.save(currentCart);
-
-            return new ResponseEntity<>(new AddCartResDTO(currentCart.getId(), currentCart.getCartDetails().size()),
-                    HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    public  ResponseEntity<?> addToCart(@RequestBody CartCreMiniCartReqDTO cartCreMiniCartReqDTO) {
+        User user = userService.findByUsername(cartCreMiniCartReqDTO.getUsername()).get();
 
 
-    private Long addCartDetails(Optional<User> userOp, Long idCart, Long idProduct,
-                                 Long quantity, String strSize, String strColor, String status_str) {
-        if (!productService.findById(idProduct).isPresent()){
-            throw new DataInputException(AppConstant.ENTITY_NOT_EXIT_ERROR);
-        }
-
-        Product product = productService.findById(idProduct).get();
-        BigDecimal prices = product.getPrice();
-        Discount discount = product.getDiscount();
-        ESize size = ESize.getESize(strSize);
-        EColor color = EColor.getEColor(strColor);
+        Customer customer = user.getCustomer();
+        String status_str = cartCreMiniCartReqDTO.getStatus();
         ECartStatus status = ECartStatus.getECartStatus(status_str);
-        User currentUser = null;
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        BigDecimal amountCartDetail = BigDecimal.ZERO;
-        if (userOp.isPresent()){
-            currentUser = userOp.get();
-            Cart currentCart = cartService.findCartsByCustomerIdAndStatusIsCart(currentUser.getId(), status);
-            if (currentCart != null){
-                List<CartDetail> cartDetails = currentCart.getCartDetails();
-                boolean checkChange = true;
-                for (CartDetail cartDetail : cartDetails){
-                    if (cartDetail.getProduct().getId() == idProduct
-                            && cartDetail.getSize().getValue().equals(strSize)
-                            && cartDetail.getColor().getValue().equals(strColor)){
-                        Long newQuantity = cartDetail.getQuantity() + quantity;
-                        if (discount != null){
-                            amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, newQuantity);
-                        }else {
-                            amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-                        }
-                        cartDetail.setQuantity(newQuantity);
-                        cartDetail.setTotalAmount(amountCartDetail);
-                        checkChange = false;
-                        break;
-                    }
-                }
-                if (checkChange){
-                    if (discount != null){
-                        amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, quantity);
-                    }else {
-                        amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-                    }
+        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(user.getCustomer().getId(), status);
+        Boolean check = false;
+        int cartDetail_size;
+        if (cart != null) {
+            List<CartDetail> cartDetailList = cart.getCartDetails();
+            CartDetail cartDetail = new CartDetail();
 
-                    CartDetail newCartDetail = new CartDetail(null, quantity, amountCartDetail, size, color, currentCart, product);
-                    cartDetails.add(newCartDetail);
+            for (CartDetail item : cartDetailList) {
+                if (item.getProduct().getId()==cartCreMiniCartReqDTO.getProductId() && item.getSize().getValue().equals(cartCreMiniCartReqDTO.getSize()) && item.getColor().getValue().equals(cartCreMiniCartReqDTO.getColor())) {
+                    Long current_quantity = item.getQuantity();
+                    Long new_quantity = cartCreMiniCartReqDTO.getQuantity() + current_quantity;
+                    item.setQuantity(new_quantity);
+                    Optional<Product> productOptional = productService.findById(cartCreMiniCartReqDTO.getProductId());
+                    if (!productOptional.isPresent()) {
+                        throw new DataInputException("Product is not found");
+                    }
+                    Product product = productOptional.get();
+                    BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, new_quantity);
+                    item.setTotalAmount(totalAmount);
+                    item.setCart(cart);
+                    cartDetailService.save(item);
+                    check = true;
+                    break;
+                } else {
+                    cartDetail = cartService.createNewCartDetail(cartCreMiniCartReqDTO, cart);
+
                 }
-                cartDetailService.saveAll(cartDetails);
-                BigDecimal newTotalAmountCart = cartDetailService.totalAmoutByCart(currentCart);
-                currentCart.setTotalAmount(newTotalAmountCart);
-                currentCart = cartService.save(currentCart);
-                return currentCart.getId();
             }
-            else {
-                Cart newCart = new Cart();
-                newCart.setId(null);
-                newCart.setUser(currentUser);
-                newCart.setStatus(ECartStatus.ISCART);
-                newCart = cartService.save(newCart);
-                List<CartDetail> cartDetails = new ArrayList<>();
-                if (discount != null){
-                    amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, quantity);
-                }
-                else {
-                    amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-                }
-                CartDetail newCartDetail = new CartDetail(null, quantity, amountCartDetail, size, color, newCart, product);
-                cartDetails.add(newCartDetail);
-                cartDetails = cartDetailService.saveAll(cartDetails);
-                newCart.setCartDetails(cartDetails);
-                BigDecimal newTotalAmountCart = cartDetailService.totalAmoutByCart(newCart);
-                newCart.setTotalAmount(newTotalAmountCart);
-                newCart = cartService.save(newCart);
-                return newCartDetail.getId();
+            if (!check) {
+                cartDetailList.add(cartDetail);
+                cartDetailService.save(cartDetail);
             }
+
+            BigDecimal total = BigDecimal.ZERO;
+            for (CartDetail item : cartDetailList) {
+                total = total.add(item.getTotalAmount());
+            }
+            cart.setTotalAmount(total);
+
+            cartService.save(cart);
+            cartDetail_size = cartDetailList.size();
+        } else {
+            Cart newCart = new Cart();
+            newCart.setCustomer(customer);
+            newCart.setStatus(ECartStatus.getECartStatus(cartCreMiniCartReqDTO.getStatus()));
+            CartDetail cartDetail = cartService.createNewCartDetail(cartCreMiniCartReqDTO, newCart);
+            List<CartDetail> cartDetailList = new ArrayList<>();
+            cartDetailList.add(cartDetail);
+            newCart.setCartDetails(cartDetailList);
+            newCart.setTotalAmount(cartDetail.getTotalAmount());
+            cartService.save(newCart);
+            cartDetailService.save(cartDetail);
+            cartDetail_size = cartDetailList.size();
         }
 
-        else {
-            if (idCart != null){
-                Optional<Cart> cartOp = cartService.findById(idCart);
-                Cart cart = cartOp.get();
-                List<CartDetail> cartDetails = cart.getCartDetails();
-                boolean checkChange = true;
-                for (CartDetail cartDetail : cartDetails){
-                    if (cartDetail.getProduct().getId() == idProduct
-                            && cartDetail.getSize().getValue().equals(strSize)
-                            && cartDetail.getColor().getValue().equals(strColor)){
-                        Long newQuantity = cartDetail.getQuantity() + quantity;
-                        amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, newQuantity);
-                        cartDetail.setQuantity(newQuantity);
-                        cartDetail.setTotalAmount(amountCartDetail);
-                        checkChange = false;
-                        break;
-                    }
-                }
-                if (checkChange){
-                    if (discount != null){
-                        amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, quantity);
-                    }
-                    else {
-                        amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-                    }
-                    CartDetail newCartDetail = new CartDetail(null, quantity, amountCartDetail, size, color, cart, product);
-                    cartDetails.add(newCartDetail);
-                }
-                cartDetailService.saveAll(cartDetails);
-                BigDecimal newTotalAmountCart = cartDetailService.totalAmoutByCart(cart);
-                cart.setTotalAmount(newTotalAmountCart);
-                cart = cartService.save(cart);
-                return cart.getId();
-            }
-            else {
-                Cart newCart = new Cart();
-                newCart.setId(null);
-                newCart.setStatus(ECartStatus.ISCART);
-                newCart = cartService.save(newCart);
-                List<CartDetail> cartDetails = new ArrayList<>();
-                if (discount != null){
-                    amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, quantity);
-                }
-                else {
-                    amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-                }
-                amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, quantity);
-                CartDetail newCartDetail = new CartDetail(null, quantity, amountCartDetail, size, color, newCart, product);
-                cartDetails.add(newCartDetail);
-                cartDetails = cartDetailService.saveAll(cartDetails);
-                BigDecimal newTotalAmountCart = cartDetailService.totalAmoutByCart(newCart);
-                newCart.setTotalAmount(newTotalAmountCart);
-                newCart = cartService.save(newCart);
-                return newCart.getId();
-            }
-        }
+        return new ResponseEntity<>(cartDetail_size,HttpStatus.OK);
+
     }
+
+
 
 
     @PatchMapping("/{id}")
@@ -376,13 +295,10 @@ public class CartAPI {
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<?> getCustomerCheckout(@PathVariable Long customerId) {
-        Optional<Customer> customerOptional = customerService.findById(customerId);
-        if (!customerOptional.isPresent()) {
-            throw new DataInputException("customer is not found");
-        }
-            Customer customer = customerOptional.get();
+    @GetMapping("/customer/{username}")
+    public ResponseEntity<?> getCustomerCheckout(@PathVariable String username) {
+        Customer customer = userService.findByUsername(username).get().getCustomer();
+
         List<LocationRegion> locationRegions = locationRegionService.findAllByCustomer(customer);
 
         List<LocationRegionDTO> locationRegionDTOS = locationRegions.stream().map(LocationRegion::toLocationRegionDTO).collect(Collectors.toList());
@@ -390,30 +306,47 @@ public class CartAPI {
         CustomerDTO customerDTO = customer.toCustomerDTO(locationRegionDTOS);
         return new ResponseEntity<>(customerDTO,HttpStatus.OK);
     }
-
+    @Autowired
+    private CartDetailRepository cartDetailRepository;
     @PatchMapping("/checkout")
     public ResponseEntity<?> createCheckoutCart (@Valid @RequestBody CartCheckoutDTO cartCheckoutDTO) {
-        Optional<Cart> cartOptional = cartRepository.findById(cartCheckoutDTO.getCartId());
-        Cart cart = cartOptional.get();
+        Cart cart = new Cart();
+        if(cartCheckoutDTO.getUsername() != null){
+            User user = userService.findByUsername(cartCheckoutDTO.getUsername()).get();
+
+            cart = cartRepository.findCartsByCustomerIdAndStatusIsCart(user.getCustomer().getId(), ECartStatus.ISCART);
+            cart.setCustomer(user.getCustomer());
+        }
+
+
         cart.setStatus(ECartStatus.UNPAID);
         cart.setPhone_receiver(cartCheckoutDTO.getPhone_receiver());
         cart.setName_receiver(cartCheckoutDTO.getName_receiver());
+
         LocationRegion locationRegion = cartCheckoutDTO.getLocationRegion().toLocationRegion(cart.getCustomer());
         locationRegionRepository.save(locationRegion);
         //LocationRegion savedLocationRegion = locationRegionService.findLocationRegionByAddress(cartCheckoutDTO.getLocationRegion().getAddress());
         cart.setLocationRegion(locationRegion);
-        cartRepository.saveAndFlush(cart);
-        Bill bill = new Bill();
-        bill.setPhone_receiver(cart.getPhone_receiver());
-        bill.setName_receiver(cart.getName_receiver());
-        bill.setLocationRegion(locationRegion);
-        bill.setTotalAmount(cart.getTotalAmount());
-        Customer customer = cart.getCustomer();
-        User user = userService.findUserByCustomer(customer);
-        bill.setUser(user);
-        bill.setCustomer(customer);
-        bill.setStatus(cart.getStatus());
-        billService.save(bill);
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        cart = cartRepository.saveAndFlush(cart);
+        if(cartCheckoutDTO.getUsername() == null){
+            List<CartDetail> cartDetails = new ArrayList<>();
+            for (var cartDetailDTO : cartCheckoutDTO.getCartDetailResDTOList()) {
+                CartDetail cartDetail = new CartDetail();
+                cartDetail.setCart(cart);
+                cartDetail.setProduct(new Product().setId(cartDetailDTO.getId()));
+                cartDetail.setSize(cartDetailDTO.getSize());
+                cartDetail.setQuantity(cartDetailDTO.getQuantity());
+                cartDetail.setColor(cartDetailDTO.getColor());
+                cartDetail.setTotalAmount(cartDetailDTO.getPrice().multiply(new BigDecimal(String.valueOf(cartDetailDTO.getQuantity()))));
+                cartDetails.add(cartDetail);
+                totalAmount =totalAmount.add(cartDetail.getTotalAmount());
+
+            }
+            cart.setTotalAmount(totalAmount);
+            cartRepository.save(cart);
+            cartDetailRepository.saveAll(cartDetails);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
