@@ -1,7 +1,5 @@
 package cg.api;
 
-
-import cg.dto.customerDTO.CustomerDTO;
 import cg.dto.customerDTO.CustomerInfoDTO;
 import cg.model.customer.Customer;
 import cg.service.customer.ICustomerService;
@@ -11,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor

@@ -26,6 +26,7 @@ public class CartCheckoutDTO implements Validator {
     private BigDecimal totalAmount;
     private List<CartDetailResDTO> cartDetailResDTOList;
     private Long customerId;
+    private String username;
 
     @Override
     public boolean supports(Class<?> clazz) {
