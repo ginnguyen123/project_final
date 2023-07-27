@@ -172,7 +172,6 @@ public class CartAPI {
         String status_str = cartCreMiniCartReqDTO.getStatus();
         ECartStatus status = ECartStatus.getECartStatus(status_str);
         User currentUser = null;
-        int numOfProductInCart = 0;
         if (userOp.isPresent()){
             currentUser = userOp.get();
             Cart currentCart = cartService.findCartsByCustomerIdAndStatusIsCart(currentUser.getId(), status);
@@ -222,8 +221,8 @@ public class CartAPI {
         }
 
         else {
-            Optional<Cart> cartOp = cartService.findById(cartCreMiniCartReqDTO.getCardId());
-            if (cartOp.isPresent()){
+            if (cartCreMiniCartReqDTO.getCardId() != null){
+                Optional<Cart> cartOp = cartService.findById(cartCreMiniCartReqDTO.getCardId());
                 Cart cart = cartOp.get();
                 List<CartDetail> cartDetails = cart.getCartDetails();
                 boolean checkChange = true;
