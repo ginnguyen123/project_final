@@ -251,7 +251,12 @@ public class CartAPI {
                             && cartDetail.getSize().getValue().equals(cartCreMiniCartReqDTO.getSize())
                             && cartDetail.getColor().getValue().equals(cartCreMiniCartReqDTO.getColor())){
                         Long newQuantity = cartDetail.getQuantity() + cartCreMiniCartReqDTO.getQuantity();
-                        amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, newQuantity);
+                        if (discount != null){
+                            amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
+                        }
+                        else {
+                            amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+                        }
                         cartDetail.setQuantity(newQuantity);
                         cartDetail.setTotalAmount(amountCartDetail);
                         checkChange = false;

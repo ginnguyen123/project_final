@@ -2,11 +2,14 @@ package cg.api;
 
 
 import cg.dto.customerDTO.CustomerDTO;
+import cg.dto.customerDTO.CustomerInfoDTO;
 import cg.model.customer.Customer;
 import cg.service.customer.ICustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +31,8 @@ public class CustomerAPI {
 //    }
 
     @GetMapping
-    private ResponseEntity<?> getCustomerByUsername(@RequestParam String username){
+    private ResponseEntity<?> getCustomerByUsername(@RequestParam(defaultValue = "") String username){
+
         Optional<Customer> customerOptional = customerService.findCustomerByDeletedIsFalseAndUser_Username(username);
 
         if(!customerOptional.isPresent()){
@@ -37,7 +41,16 @@ public class CustomerAPI {
 
         Customer customer = customerOptional.get();
 
-        return new ResponseEntity<>(customer.toCustomerInfo(),HttpStatus.OK);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUsername = null;
+        if (principal instanceof UserDetails) {
+            currentUsername = ((UserDetails)principal).getUsername();
+        } else {
+            currentUsername = principal.toString();
+        }
+        CustomerInfoDTO customerInfo = customer.toCustomerInfo();
+        customerInfo.setCurrentUsername(currentUsername);
+        return new ResponseEntity<>(customerInfo,HttpStatus.OK);
 
     }
 }
