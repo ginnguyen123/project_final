@@ -11,6 +11,7 @@ import cg.model.bill.Bill;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.model.customer.Customer;
+import cg.model.discount.Discount;
 import cg.model.enums.ECartStatus;
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
@@ -167,11 +168,16 @@ public class CartAPI {
         }
 
         Product product = productService.findById(idProduct).get();
+        Long quantity = cartCreMiniCartReqDTO.getQuantity();
+        BigDecimal prices = product.getPrice();
+        Discount discount = product.getDiscount();
         ESize size = ESize.getESize(cartCreMiniCartReqDTO.getSize());
         EColor color = EColor.getEColor(cartCreMiniCartReqDTO.getColor());
         String status_str = cartCreMiniCartReqDTO.getStatus();
         ECartStatus status = ECartStatus.getECartStatus(status_str);
         User currentUser = null;
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        BigDecimal amountCartDetail = BigDecimal.ZERO;
         if (userOp.isPresent()){
             currentUser = userOp.get();
             Cart currentCart = cartService.findCartsByCustomerIdAndStatusIsCart(currentUser.getId(), status);
@@ -183,16 +189,25 @@ public class CartAPI {
                             && cartDetail.getSize().getValue().equals(cartCreMiniCartReqDTO.getSize())
                             && cartDetail.getColor().getValue().equals(cartCreMiniCartReqDTO.getColor())){
                         Long newQuantity = cartDetail.getQuantity() + cartCreMiniCartReqDTO.getQuantity();
-                        BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, newQuantity);
+                        if (discount != null){
+                            amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, newQuantity);
+                        }else {
+                            amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+                        }
                         cartDetail.setQuantity(newQuantity);
-                        cartDetail.setTotalAmount(totalAmount);
+                        cartDetail.setTotalAmount(amountCartDetail);
                         checkChange = false;
                         break;
                     }
                 }
                 if (checkChange){
-                    BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
-                    CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), totalAmount, size, color, currentCart, product);
+                    if (discount != null){
+                        amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
+                    }else {
+                        amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+                    }
+
+                    CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), amountCartDetail, size, color, currentCart, product);
                     cartDetails.add(newCartDetail);
                 }
                 cartDetailService.saveAll(cartDetails);
@@ -208,8 +223,13 @@ public class CartAPI {
                 newCart.setStatus(ECartStatus.ISCART);
                 newCart = cartService.save(newCart);
                 List<CartDetail> cartDetails = new ArrayList<>();
-                BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
-                CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), totalAmount, size, color, newCart, product);
+                if (discount != null){
+                    amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
+                }
+                else {
+                    amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+                }
+                CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), amountCartDetail, size, color, newCart, product);
                 cartDetails.add(newCartDetail);
                 cartDetails = cartDetailService.saveAll(cartDetails);
                 newCart.setCartDetails(cartDetails);
@@ -231,16 +251,21 @@ public class CartAPI {
                             && cartDetail.getSize().getValue().equals(cartCreMiniCartReqDTO.getSize())
                             && cartDetail.getColor().getValue().equals(cartCreMiniCartReqDTO.getColor())){
                         Long newQuantity = cartDetail.getQuantity() + cartCreMiniCartReqDTO.getQuantity();
-                        BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, newQuantity);
+                        amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, newQuantity);
                         cartDetail.setQuantity(newQuantity);
-                        cartDetail.setTotalAmount(totalAmount);
+                        cartDetail.setTotalAmount(amountCartDetail);
                         checkChange = false;
                         break;
                     }
                 }
                 if (checkChange){
-                    BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
-                    CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), totalAmount, size, color, cart, product);
+                    if (discount != null){
+                        amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
+                    }
+                    else {
+                        amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+                    }
+                    CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), amountCartDetail, size, color, cart, product);
                     cartDetails.add(newCartDetail);
                 }
                 cartDetailService.saveAll(cartDetails);
@@ -255,8 +280,13 @@ public class CartAPI {
                 newCart.setStatus(ECartStatus.ISCART);
                 newCart = cartService.save(newCart);
                 List<CartDetail> cartDetails = new ArrayList<>();
-                BigDecimal totalAmount = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
-                CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), totalAmount, size, color, newCart, product);
+                if (discount != null){
+                    amountCartDetail = cartDetailService.getTotalAmountCartDetail(product, cartCreMiniCartReqDTO.getQuantity());
+                }
+                else {
+                    amountCartDetail = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+                }
+                CartDetail newCartDetail = new CartDetail(null, cartCreMiniCartReqDTO.getQuantity(), amountCartDetail, size, color, newCart, product);
                 cartDetails.add(newCartDetail);
                 cartDetails = cartDetailService.saveAll(cartDetails);
                 BigDecimal newTotalAmountCart = cartDetailService.totalAmoutByCart(newCart);
