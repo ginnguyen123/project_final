@@ -40,9 +40,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        System.out.println("==============================================================================");
+        System.out.println("===================onAuthenticationSuccess====================================");
         String targetUrl = determineTargetUrl(request, response, authentication);
-        System.out.println("---------targetUrl----------");
-        System.out.println(targetUrl);
 
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -62,12 +62,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 //        }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        System.out.println("---------targetUrl---------");
-        System.out.println(targetUrl);
 
         String token = tokenProvider.createToken(authentication);
-        System.out.println("-----------token-----------");
-        System.out.println(token);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
