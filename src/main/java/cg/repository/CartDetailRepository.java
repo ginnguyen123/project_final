@@ -7,6 +7,7 @@ import cg.model.cart.CartDetail;
 import cg.model.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -32,4 +33,9 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
     @Query("SELECT p.price  FROM Product AS p " +
             " where p.id = :id")
     BigDecimal getPriceWithProduct(Long id);
+
+    @Query("SELECT SUM(detail.totalAmount) FROM CartDetail detail WHERE detail.cart = :cart ")
+    BigDecimal totalAmoutByCart(@Param("cart")Cart cart);
+
+
 }

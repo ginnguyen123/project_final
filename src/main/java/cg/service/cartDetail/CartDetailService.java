@@ -74,6 +74,11 @@ public class CartDetailService implements ICartDetailService{
     }
 
     @Override
+    public List<CartDetail> saveAll(List<CartDetail> details) {
+        return cartDetailRepository.saveAll(details);
+    }
+
+    @Override
     public void delete(CartDetail cartDetail) {
         cartDetail.setDeleted(true);
         cartDetailRepository.save(cartDetail);
@@ -109,5 +114,8 @@ public class CartDetailService implements ICartDetailService{
         return totalAmount;
     }
 
-
+    @Override
+    public BigDecimal totalAmoutByCart(Cart cart) {
+        return cartDetailRepository.totalAmoutByCart(cart);
+    }
 }
