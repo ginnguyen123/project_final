@@ -279,8 +279,8 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status) {
-        return cartRepository.findCartsByCustomerIdAndStatusIsCart(customerId,status);
+    public Cart findCartsByCustomerIdAndStatusIsCart(Long userId, ECartStatus status) {
+        return cartRepository.findCartsByCustomerIdAndStatusIsCart(userId,status);
     }
     public BigDecimal getTotalAmountCart(Cart cart) {
         List<CartDetail> cartDetailList = cartDetailService.findCartDetailsByCartAndDeletedIsFalse(cart);

@@ -38,7 +38,7 @@ public class LocationRegion {
     private String address;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = true)
     private Customer customer;
 
     public LocationRegionDTO toLocationRegionDTO() {

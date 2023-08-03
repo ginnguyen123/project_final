@@ -37,5 +37,4 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
     @Query("SELECT SUM(detail.totalAmount) FROM CartDetail detail WHERE detail.cart = :cart ")
     BigDecimal totalAmoutByCart(@Param("cart")Cart cart);
 
-
 }

@@ -42,7 +42,6 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     Page<Cart> pageableByKeyword(CartRequest request, Pageable pageable);
 
 
-
     @Query("SELECT NEW cg.dto.cart.CartDTO (pi.id,pi.customer.id,pi.totalAmount,pi.locationRegion.id,pi.status) " +
             "FROM Cart AS pi " +
             "WHERE pi.deleted = false " +
@@ -68,7 +67,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "AND DATE_FORMAT(cart.createdAt,'%Y-%m-%d')<:endDay " +
             "AND cart.status = 'PAID' " +
             "GROUP BY DATE_FORMAT(cart.createdAt,'%Y-%m-%d') ORDER BY DATE_FORMAT(cart.createdAt,'%Y-%m-%d')")
-    List<DayToDayReportDTO> getReportFromDayToDay(@Param("startDay") String startDay,@Param("endDay") String endDay);
+    List<DayToDayReportDTO> getReportFromDayToDay(@Param("startDay") String startDay, @Param("endDay") String endDay);
 
     @Query("SELECT NEW cg.dto.report.ProductReportDTO(p.id,p.productAvatar.fileUrl, p.title, SUM(cdt.quantity) ,SUM(cdt.totalAmount)) " +
             "FROM Product AS p " +
@@ -77,8 +76,8 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "GROUP BY p.id ORDER BY SUM(cdt.quantity) DESC ")
     Page<ProductReportDTO> getBestSeller(Pageable pageable);
 
-    @Query("SELECT c FROM Cart AS c WHERE c.customer.id = :customerId AND c.status = :status")
-    Cart findCartsByCustomerIdAndStatusIsCart(@Param("customerId")Long customerId , @Param("status") ECartStatus status);
+    @Query("SELECT c FROM Cart AS c WHERE c.customer.id = :userId AND c.status = :status")
+    Cart findCartsByCustomerIdAndStatusIsCart(@Param("userId") Long userId, @Param("status") ECartStatus status);
 
     @Query("SELECT NEW cg.dto.report.YearReportDTO (" +
             "YEAR(c.createdAt), " +
@@ -104,7 +103,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "AND c.status = 'PAID' " +
             "GROUP BY MONTH(c.createdAt)"
     )
-    YearReportDTO getReportByMonth( @Param("year") int year,@Param("month") int month);
+    YearReportDTO getReportByMonth(@Param("year") int year, @Param("month") int month);
 
     @Query("SELECT NEW cg.dto.report.ProductReportDTO(p.id,p.productAvatar.fileUrl, p.title, SUM(cdt.quantity) ,SUM(cdt.totalAmount)) " +
             "FROM Product AS p " +
@@ -113,7 +112,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "GROUP BY p.id ORDER BY SUM(cdt.quantity) ASC ")
     Page<ProductReportDTO> getTop5ProductUnMarketTableCurrentMonth(Pageable pageable);
 
-    @Query("SELECT c FROM Cart c WHERE c.user = : user AND c.status = :status ")
+    @Query("SELECT c FROM Cart c WHERE c.user = :user AND c.status = :status ")
     Optional<Cart> findCartsByUserAndStatusIsCart(@Param("user") User user, @Param("status") ECartStatus status);
 
 }

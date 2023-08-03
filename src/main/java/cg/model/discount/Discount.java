@@ -28,7 +28,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-            @Table(name = "discounts")
+@Table(name = "discounts")
 @Accessors(chain = true)
 public class Discount extends BaseEntity {
     @Id

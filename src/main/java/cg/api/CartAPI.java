@@ -1,39 +1,25 @@
 package cg.api;
 
 import cg.dto.cart.*;
-
 import cg.dto.cartDetail.CartDetailResDTO;
 import cg.dto.customerDTO.CustomerDTO;
 import cg.dto.locationRegionDTO.LocationRegionDTO;
 import cg.exception.DataInputException;
 import cg.exception.ResourceNotFoundException;
-import cg.model.JwtResponse;
-import cg.model.bill.Bill;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.model.customer.Customer;
 import cg.model.discount.Discount;
 import cg.model.enums.ECartStatus;
-
-
-import cg.model.customer.Customer;
-
 import cg.model.enums.EColor;
 import cg.model.enums.ESize;
 import cg.model.location_region.LocationRegion;
-
-
-import cg.model.customer.Customer;
-import cg.model.location_region.LocationRegion;
-
 import cg.model.product.Product;
 import cg.model.user.User;
+import cg.repository.CartDetailRepository;
 import cg.repository.CartRepository;
 import cg.repository.LocationRegionRepository;
 import cg.service.ExistService;
-
-import cg.exception.ResourceNotFoundException;
-import cg.model.cart.Cart;
 import cg.service.bill.IBillService;
 import cg.service.cart.ICartService;
 import cg.service.cart.response.CartListResponse;
@@ -50,12 +36,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -66,6 +51,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/carts")
+@Transactional
 public class CartAPI {
     @Autowired
     IBillService billService;
@@ -105,8 +91,12 @@ public class CartAPI {
         return new ResponseEntity<>(cartDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/cart-details/{customerId}")
-    public ResponseEntity<?> getAllCartDetails(@PathVariable Long customerId) {
+    @GetMapping("/cart-details/{username}")
+    public ResponseEntity<?> getAllCartDetails(@PathVariable String username) {
+
+
+
+        Long customerId = userService.findByUsername(username).get().getCustomer().getId();
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
         List<CartDetail> cartDetailList = cartDetailService.findCartDetailsByCartAndDeletedIsFalse(cart);
@@ -115,17 +105,24 @@ public class CartAPI {
         return new ResponseEntity<>(cartDetailResDTOS,HttpStatus.OK);
     }
 
-    @GetMapping("/amount/{customerId}")
-    public ResponseEntity<?> getTotalAmountCart(@PathVariable Long customerId) {
+    @GetMapping("/amount/{username}")
+    public ResponseEntity<?> getTotalAmountCart(@PathVariable String username) {
+
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
+        Customer customer = userService.findByUsername(username).get().getCustomer();
+        Long customerId = customer.getId();
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
+        if(cart == null){
+            cart = cartService.save(new Cart().setStatus(ECartStatus.ISCART).setCustomer(customer));
+        }
         CartResDTO cartResDTO = cart.toCartResDTO();
         return new ResponseEntity<>(cartResDTO, HttpStatus.OK);
     }
 
-    @PatchMapping("/cart-details/{customerId}/{cartDetailId}")
-    public ResponseEntity<?> increaseQuantityCartDetail(@PathVariable Long customerId,@PathVariable Long cartDetailId, @RequestBody Long quantity) {
+    @PatchMapping("/cart-details/{username}/{cartDetailId}")
+    public ResponseEntity<?> increaseQuantityCartDetail(@PathVariable String username,@PathVariable Long cartDetailId, @RequestBody Long quantity) {
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
+        Long customerId = userService.findByUsername(username).get().getId();
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
         CartDetail cartDetail = cartDetailService.findById(cartDetailId).get();
         Product product = cartDetail.getProduct();
@@ -141,8 +138,9 @@ public class CartAPI {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/cart-details/{customerId}/{cartDetailId}")
-    public ResponseEntity<?> removeCartDetail(@PathVariable Long customerId, @PathVariable Long cartDetailId) {
+    @DeleteMapping("/cart-details/{username}/{cartDetailId}")
+    public ResponseEntity<?> removeCartDetail(@PathVariable String username, @PathVariable Long cartDetailId) {
+        Long customerId = userService.findByUsername(username).get().getCustomer().getId();
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
         Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
         CartDetail cartDetail = cartDetailService.findById(cartDetailId).get();
@@ -173,7 +171,6 @@ public class CartAPI {
         CartCreResDTO cartCreResDTO = cart.toCartCreResDTO();
         return new ResponseEntity<>(cartCreResDTO,HttpStatus.OK);
     }
-
     @PostMapping("/add")
     public  ResponseEntity<?> addToCart(@RequestBody CartCreMiniCartReqDTO cartCreMiniCartReqDTO) {
         //check đã đăng nhập chưa nếu chưa thì giữ nguyên nếu có set id bằng current i
@@ -282,6 +279,8 @@ public class CartAPI {
     }
 
 
+
+
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateCart(@PathVariable Long id, @Validated @RequestBody CartUpReqDTO cartUpReqDTO, BindingResult bindingResult ) throws IOException {
         new CartUpReqDTO().validate(cartUpReqDTO,bindingResult);
@@ -329,13 +328,10 @@ public class CartAPI {
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<?> getCustomerCheckout(@PathVariable Long customerId) {
-        Optional<Customer> customerOptional = customerService.findById(customerId);
-        if (!customerOptional.isPresent()) {
-            throw new DataInputException("customer is not found");
-        }
-            Customer customer = customerOptional.get();
+    @GetMapping("/customer/{username}")
+    public ResponseEntity<?> getCustomerCheckout(@PathVariable String username) {
+        Customer customer = userService.findByUsername(username).get().getCustomer();
+
         List<LocationRegion> locationRegions = locationRegionService.findAllByCustomer(customer);
 
         List<LocationRegionDTO> locationRegionDTOS = locationRegions.stream().map(LocationRegion::toLocationRegionDTO).collect(Collectors.toList());
@@ -343,30 +339,47 @@ public class CartAPI {
         CustomerDTO customerDTO = customer.toCustomerDTO(locationRegionDTOS);
         return new ResponseEntity<>(customerDTO,HttpStatus.OK);
     }
-
+    @Autowired
+    private CartDetailRepository cartDetailRepository;
     @PatchMapping("/checkout")
     public ResponseEntity<?> createCheckoutCart (@Valid @RequestBody CartCheckoutDTO cartCheckoutDTO) {
-        Optional<Cart> cartOptional = cartRepository.findById(cartCheckoutDTO.getCartId());
-        Cart cart = cartOptional.get();
+        Cart cart = new Cart();
+        if(cartCheckoutDTO.getUsername() != null){
+            User user = userService.findByUsername(cartCheckoutDTO.getUsername()).get();
+
+            cart = cartRepository.findCartsByCustomerIdAndStatusIsCart(user.getCustomer().getId(), ECartStatus.ISCART);
+            cart.setCustomer(user.getCustomer());
+        }
+
+
         cart.setStatus(ECartStatus.UNPAID);
         cart.setPhone_receiver(cartCheckoutDTO.getPhone_receiver());
         cart.setName_receiver(cartCheckoutDTO.getName_receiver());
+
         LocationRegion locationRegion = cartCheckoutDTO.getLocationRegion().toLocationRegion(cart.getCustomer());
         locationRegionRepository.save(locationRegion);
         //LocationRegion savedLocationRegion = locationRegionService.findLocationRegionByAddress(cartCheckoutDTO.getLocationRegion().getAddress());
         cart.setLocationRegion(locationRegion);
-        cartRepository.saveAndFlush(cart);
-        Bill bill = new Bill();
-        bill.setPhone_receiver(cart.getPhone_receiver());
-        bill.setName_receiver(cart.getName_receiver());
-        bill.setLocationRegion(locationRegion);
-        bill.setTotalAmount(cart.getTotalAmount());
-        Customer customer = cart.getCustomer();
-        User user = userService.findUserByCustomer(customer);
-        bill.setUser(user);
-        bill.setCustomer(customer);
-        bill.setStatus(cart.getStatus());
-        billService.save(bill);
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        cart = cartRepository.saveAndFlush(cart);
+        if(cartCheckoutDTO.getUsername() == null){
+            List<CartDetail> cartDetails = new ArrayList<>();
+            for (var cartDetailDTO : cartCheckoutDTO.getCartDetailResDTOList()) {
+                CartDetail cartDetail = new CartDetail();
+                cartDetail.setCart(cart);
+                cartDetail.setProduct(new Product().setId(cartDetailDTO.getId()));
+                cartDetail.setSize(cartDetailDTO.getSize());
+                cartDetail.setQuantity(cartDetailDTO.getQuantity());
+                cartDetail.setColor(cartDetailDTO.getColor());
+                cartDetail.setTotalAmount(cartDetailDTO.getPrice().multiply(new BigDecimal(String.valueOf(cartDetailDTO.getQuantity()))));
+                cartDetails.add(cartDetail);
+                totalAmount =totalAmount.add(cartDetail.getTotalAmount());
+
+            }
+            cart.setTotalAmount(totalAmount);
+            cartRepository.save(cart);
+            cartDetailRepository.saveAll(cartDetails);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
