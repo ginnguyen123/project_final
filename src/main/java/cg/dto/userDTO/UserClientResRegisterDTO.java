@@ -18,7 +18,7 @@ public class UserClientResRegisterDTO {
     @NotBlank(message = "The username" + AppConstant.NOT_BLANK_FIELD_ERROR)
     private String username;
     @NotBlank(message = "The password" + AppConstant.NOT_BLANK_FIELD_ERROR)
-    private String password;
+        private String password;
     private CustomerResRegisterDTO customer;
     private RoleDTO role;
 

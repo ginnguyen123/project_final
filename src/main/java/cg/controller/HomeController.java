@@ -31,7 +31,7 @@ public class HomeController {
     }
     @GetMapping("/home")
     public String showListProduct(){
-        return "index";
+        return "report/report";
     }
 //    @GetMapping("/create")
 //    public String showAddProduct(){

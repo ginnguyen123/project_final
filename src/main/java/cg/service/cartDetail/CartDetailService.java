@@ -74,8 +74,8 @@ public class CartDetailService implements ICartDetailService{
     }
 
     @Override
-    public List<CartDetail> saveAll(List<CartDetail> cartDetails) {
-        return cartDetailRepository.saveAll(cartDetails);
+    public List<CartDetail> saveAll(List<CartDetail> details) {
+        return cartDetailRepository.saveAll(details);
     }
 
     @Override

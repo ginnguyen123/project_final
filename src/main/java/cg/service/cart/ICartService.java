@@ -8,6 +8,7 @@ import cg.dto.report.YearReportDTO;
 import cg.model.cart.Cart;
 import cg.model.cart.CartDetail;
 import cg.model.enums.ECartStatus;
+import cg.model.user.User;
 import cg.service.IGeneralService;
 import cg.service.cart.response.CartListResponse;
 import cg.utils.CartRequest;
@@ -34,6 +35,8 @@ public interface ICartService extends IGeneralService<Cart,Long> {
 //    Cart findCartsByCustomerIdAndStatusIsCart(Long customerId, ECartStatus status);
 
     Cart findCartsByCustomerIdAndStatusIsCart(Long userId, ECartStatus status);
+
+    Optional<Cart> findCartsByUserAndStatusIsCart(User user, ECartStatus status);
 
     public CartDetail createNewCartDetail(CartCreMiniCartReqDTO cartCreMiniCartReqDTO, Cart cart);
 

@@ -94,6 +94,11 @@ public class CartService implements ICartService {
     }
 
     @Override
+    public Optional<Cart> findCartsByUserAndStatusIsCart(User user, ECartStatus status) {
+        return cartRepository.findCartsByUserAndStatusIsCart(user, status);
+    }
+
+    @Override
     public Page<CartDTO> findAllByFilters(CartRequest keyword, Pageable pageable) {
         return cartFilterRepository.findAllByFilters(keyword, pageable).map(Cart::toCartDTO);
     }
@@ -234,7 +239,6 @@ public class CartService implements ICartService {
         return page.getContent();
     }
 
-
     @Override
     public CartUpResDTO update(CartUpReqDTO cartUpReqDTO) {
         Optional<Cart> optionalCart = cartRepository.findById(cartUpReqDTO.getId());
@@ -278,7 +282,6 @@ public class CartService implements ICartService {
     public Cart findCartsByCustomerIdAndStatusIsCart(Long userId, ECartStatus status) {
         return cartRepository.findCartsByCustomerIdAndStatusIsCart(userId,status);
     }
-
     public BigDecimal getTotalAmountCart(Cart cart) {
         List<CartDetail> cartDetailList = cartDetailService.findCartDetailsByCartAndDeletedIsFalse(cart);
         BigDecimal totalAmountCart = BigDecimal.ZERO;

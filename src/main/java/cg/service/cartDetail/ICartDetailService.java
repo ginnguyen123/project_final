@@ -21,13 +21,13 @@ public interface ICartDetailService extends IGeneralService<CartDetail,Long> {
 
     List<CartDetail> findCartDetailsByCartAndDeletedIsFalse(Cart cart);
 
+    List<CartDetail> saveAll(List<CartDetail> details);
+
     Optional<CartDetailDTO> getByIdAndDeletedIsFalse(Long id);
 
     CartDetailNotCart update(CartDetailUpReqDTO cartDetailUpReqDTO);
 
     BigDecimal getTotalAmountCartDetail(Product product, Long new_quantity);
-
-    List<CartDetail> saveAll(List<CartDetail> cartDetails);
 
     BigDecimal totalAmoutByCart(Cart cart);
 }

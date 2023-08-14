@@ -34,7 +34,7 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
             " where p.id = :id")
     BigDecimal getPriceWithProduct(Long id);
 
-    @Query("SELECT SUM(cdt.totalAmount) FROM CartDetail cdt " +
-            "WHERE cdt.deleted = FALSE AND cdt.cart = :cart ")
-    BigDecimal totalAmoutByCart(@Param("cart") Cart cart);
+    @Query("SELECT SUM(detail.totalAmount) FROM CartDetail detail WHERE detail.cart = :cart ")
+    BigDecimal totalAmoutByCart(@Param("cart")Cart cart);
+
 }
