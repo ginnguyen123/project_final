@@ -76,7 +76,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "GROUP BY p.id ORDER BY SUM(cdt.quantity) DESC ")
     Page<ProductReportDTO> getBestSeller(Pageable pageable);
 
-    @Query("SELECT c FROM Cart AS c WHERE c.customer.id = :userId AND c.status = :status")
+    @Query("SELECT c FROM Cart AS c WHERE c.user.id = :userId AND c.status = :status")
     Cart findCartsByCustomerIdAndStatusIsCart(@Param("userId") Long userId, @Param("status") ECartStatus status);
 
     @Query("SELECT NEW cg.dto.report.YearReportDTO (" +

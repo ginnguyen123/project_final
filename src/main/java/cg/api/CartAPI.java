@@ -93,12 +93,8 @@ public class CartAPI {
 
     @GetMapping("/cart-details/{username}")
     public ResponseEntity<?> getAllCartDetails(@PathVariable String username) {
-
-
-
-        Long customerId = userService.findByUsername(username).get().getCustomer().getId();
-        ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
-        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
+        Long userId = userService.findByUsername(username).get().getId();
+        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(userId, ECartStatus.ISCART);
         List<CartDetail> cartDetailList = cartDetailService.findCartDetailsByCartAndDeletedIsFalse(cart);
         //Da tinh totalAmount CartDetail
         List<CartDetailResDTO> cartDetailResDTOS = cartDetailList.stream().map(item->item.toCartDetailResDTO()).collect(Collectors.toList());
@@ -122,8 +118,8 @@ public class CartAPI {
     @PatchMapping("/cart-details/{username}/{cartDetailId}")
     public ResponseEntity<?> increaseQuantityCartDetail(@PathVariable String username,@PathVariable Long cartDetailId, @RequestBody Long quantity) {
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
-        Long customerId = userService.findByUsername(username).get().getId();
-        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
+        Long userId = userService.findByUsername(username).get().getId();
+        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(userId, eCartStatus);
         CartDetail cartDetail = cartDetailService.findById(cartDetailId).get();
         Product product = cartDetail.getProduct();
         cartDetail.setQuantity(quantity);
@@ -140,9 +136,9 @@ public class CartAPI {
 
     @DeleteMapping("/cart-details/{username}/{cartDetailId}")
     public ResponseEntity<?> removeCartDetail(@PathVariable String username, @PathVariable Long cartDetailId) {
-        Long customerId = userService.findByUsername(username).get().getCustomer().getId();
+        Long userId = userService.findByUsername(username).get().getId();
         ECartStatus eCartStatus =  ECartStatus.getECartStatus("ISCART");
-        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(customerId, eCartStatus);
+        Cart cart = cartService.findCartsByCustomerIdAndStatusIsCart(userId, eCartStatus);
         CartDetail cartDetail = cartDetailService.findById(cartDetailId).get();
         cartDetail.setDeleted(true);
         cartDetailService.save(cartDetail);
@@ -187,7 +183,7 @@ public class CartAPI {
         Long quantity = cartCreMiniCartReqDTO.getQuantity();
         boolean isChangeProduct = false;
 
-        if (currentUserName != null && currentUserName.equals("")){
+        if (currentUserName != null && !currentUserName.equals("")){
             Optional<User> currentUserOp = userService.findByUsername(currentUserName);
             if (currentUserOp.isPresent()){
                 User currentUser = currentUserOp.get();
